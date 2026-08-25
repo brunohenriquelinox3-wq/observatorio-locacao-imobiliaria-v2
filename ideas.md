@@ -101,3 +101,6 @@ O símbolo será uma **bússola de lote**: dois arcos incompletos que sugerem um
 - O primeiro enquadramento trata bússola, wordmark e coordenada como artefato editorial protagonista, com hierarquia acima da navegação convencional.
 - A cada dois ou três capítulos, uma lâmina de respiro cartográfico interrompe os painéis operacionais: grade territorial, coordenada, nota de campo ou conclusão ampla.
 - Todo painel simulado funciona como placa de evidência: recorte, método, leitura interpretativa e consequência prática precisam aparecer antes da ação.
+- Motivos cartográficos ganham escala de abertura em capítulos de arquitetura, auditoria e métricas: anéis de coordenada, grades cadastrais, rotas pontilhadas e carimbos de campo devem aparecer como artefatos editoriais, não apenas como ícones.
+- Argila não preenche painéis neutros por conveniência. Ela marca decisão, risco, prioridade, recomendação e CTA; análise descritiva permanece em papel mineral, azul cadastral ou oliva contido.
+- A narrativa longa deve alternar entre painéis de trabalho e artefatos de campo assimétricos — spread territorial, placa de fonte, conclusão de caderno ou rota de evidência — para evitar o ritmo de relatório templated.

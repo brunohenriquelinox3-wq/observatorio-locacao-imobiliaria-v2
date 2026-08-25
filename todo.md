@@ -103,3 +103,13 @@
 - [x] Atualizar a estratégia consolidada, o modelo técnico e o backlog de implementação por ondas.
 - [x] Atualizar o observatório com a base Netlify + Supabase e validar desktop/mobile.
 - [x] Salvar checkpoint e entregar a revisão técnica.
+
+## Auditoria integral: organização, coerência e evolução da estratégia
+
+- [x] Definir matriz de auditoria para visão, domínio, dados, segurança, integração, operação, experiência, fontes e backlog.
+- [x] Inventariar os documentos, decisões, evidências, dependências e limites já produzidos.
+- [x] Confrontar a estratégia com práticas atuais de arquitetura, confiabilidade, segurança, dados e IA governada.
+- [x] Registrar lacunas, conflitos, duplicidades, riscos, owners e decisões de continuidade.
+- [x] Reorganizar a estratégia canônica, o protocolo de revisão e o backlog por ondas e gates verificáveis.
+- [x] Atualizar o observatório com a trilha de auditoria e validar em desktop e mobile.
+- [x] Salvar checkpoint e entregar a auditoria estratégica.

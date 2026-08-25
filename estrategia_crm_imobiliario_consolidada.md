@@ -258,6 +258,23 @@ O deploy também passa a fazer parte da governança. Alteração de schema, RLS,
 
 Essa arquitetura cria a superfície necessária para **explorar dados de forma mais intuitiva**, **entender melhor tendências** e **salvar ou compartilhar facilmente** recortes de gestão, preservando permissões e evidências. As regras de pagamento, fiscalidade, privacidade, retenção, KYC, assinatura e escrituração continuam configuráveis e sujeitas à validação por jurídico, DPO, contador/fiscal e parceiro financeiro habilitado.
 
+## 8.7 Auditoria integral: da pesquisa à engenharia disciplinada
+
+A auditoria integral confirmou a coerência da tese, dos domínios e da arquitetura, mas identificou que o próximo risco não é falta de ideias: é permitir que documentos, integrações e automações cresçam sem um único eixo de decisão. A estratégia passa a operar com uma hierarquia documental explícita: a estratégia consolidada fixa direção; modelo/jornadas/arquitetura definem constituição de produto e plataforma; protocolo/matriz/auditoria governam fonte e mudança; backlog traduz somente decisões já vinculadas a problema, dono, risco e critério de saída. [34]
+
+| Gate de engenharia | O que precisa estar provado | Bloqueia |
+| --- | --- | --- |
+| Segurança verificável | RLS, grants, payload, arquivo, função e fluxo crítico possuem testes de permitir/negar. | Exposição entre organizações/SPEs, comando por URL/API e função administrativa indevida. |
+| Comando transacional | Reserva, proposta, direito, fechamento e compensação declaram precondição, versão, alçada, idempotência e audit event. | Dupla reserva, direito repetido, alteração concorrente e callback reaplicado. |
+| Integração confiável | Cada parceiro tem contrato de dados, ownership, inbox/outbox, correlação, tentativa, exceção e reconciliação. | “Sincronização” sem fonte de verdade, suporte ou repetição segura. |
+| Operação e recuperação | SLI/SLO, log correlacionado, alerta acionável, runbook, RPO/RTO e teste de restore existem por jornada crítica. | Falha tardia de documento, callback, fila, exportação ou acesso. |
+| Release íntegro | Dependência, segredo, migration, policy, configuração e artefato passam por revisão, ambiente isolado e plano de reversão. | Mudança não rastreável, vulnerabilidade de cadeia ou migração sem recuperação. |
+| IA governada | Caso de uso, dado permitido, modelo/versão, medição, limite, aprovação e desligamento são registrados. | IA opaca atuando em cadastro, contrato, financeiro, acesso ou integração. |
+
+> **Regra de continuidade:** a linha de evolução passa a ser **constituição → rotina confiável → proposta/evidência → loteadora/carteira → subledger/integrações → inteligência controlada → escala disciplinada**. Nenhuma etapa “salta” fundação técnica, validação de domínio ou limites profissionais por urgência comercial.
+
+As referências atuais de segurança de aplicação/API, confiança zero, telemetria, confiabilidade, incidente, IA e cadeia de software não criam uma checklist universal; elas reforçam que acesso, mudança, evento, dependência e recomendação devem ser medidos e revisados de modo proporcional ao risco. [35]
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -333,3 +350,7 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [32] [Arquitetura de referência — CRM imobiliário sobre Netlify + Supabase](arquitetura_crm_netlify_supabase.md)
 
 [33] [Caderno de evidências — Netlify + Supabase](crm_netlify_supabase_evidencias.md)
+
+[34] [Auditoria integral — coerência e continuidade da estratégia](auditoria_estrategia_crm_relatorio.md)
+
+[35] [Caderno de evidências — auditoria integral do CRM](auditoria_estrategia_crm_evidencias.md)

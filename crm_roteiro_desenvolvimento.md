@@ -2,9 +2,9 @@
 
 ## Estratégia de execução
 
-O desenvolvimento deve seguir uma ordem de risco: primeiro validar se equipes registram e usam contexto comercial; depois validar se o dossiê reduz retrabalho; só então adicionar integrações, inteligência de mercado e automação contínua. Começar por um grande conjunto de integrações ou por um “ERP completo” elevaria complexidade antes de provar uso diário.
+O desenvolvimento deve seguir uma ordem de risco: primeiro constituir ambientes, segurança, vocabulário e pilotos; depois validar se equipes registram e usam contexto comercial; em seguida provar dossiê, loteadora, carteira e subledger antes de escalar integração e inteligência. Começar por um grande conjunto de integrações, por IA autônoma ou por um “ERP completo” elevaria complexidade antes de provar uso diário e integridade operacional.
 
-> **Ordem recomendada:** rotina do corretor → fluxo do gestor → dossiê da operação → inteligência territorial → integrações e atualização contínua.
+> **Ordem canônica auditada:** constituição técnica e de domínio → rotina do corretor/gestor → proposta e dossiê → loteadora e carteira → subledger e integrações → inteligência controlada → escala disciplinada.
 
 ## Arquitetura de produto futuro
 
@@ -34,16 +34,19 @@ flowchart TB
 | Inteligência | Métricas da operação, indicadores de mercado e evidências | Recorte, fonte, período e limitação sempre visíveis. |
 | Integrações | Troca controlada de dados com sistemas existentes | Adaptadores desacoplados e filas/reprocessamento para falhas. |
 
+> **Materialização obrigatória:** o app web será entregue pelo Netlify; identidade, Postgres, RLS, Storage privado, migrations, comandos transacionais e eventos duráveis usarão Supabase. A arquitetura detalhada, e não esta abstração, prevalece para decisões de implementação. [1]
+
 ## Fases de produto
 
 | Fase | Janela indicativa | Objetivo | Entrega verificável | Decisão de passagem |
 | --- | ---: | --- | --- | --- |
-| 0. Descoberta e desenho | 3–4 semanas | Mapear rotina real de 3–5 parceiros e congelar vocabulário inicial | Mapa de processos, modelo de dados v0, protótipo e linha de base | Parceiros reconhecem os estados e usam a mesma linguagem. |
-| 1. Núcleo operacional | 6–8 semanas | Criar espaço de trabalho, partes, ativos, atividades, tarefas e perfis de busca | Fila de trabalho, timeline, captura curta e qualificação por etapa | Usuários registram e recuperam contexto sem planilha paralela para o fluxo-piloto. |
-| 2. Proposta e dossiê | 6–8 semanas | Conectar ativo, partes, condições, versões, checklist e permissões | Pré-proposta, dossiê por finalidade, cofre e estados de evidência | Dossiês reduzem reabertura e proposta preserva histórico. |
-| 3. Vendas e lotes | 6–8 semanas | Adaptar núcleo para proprietário PF/PJ, comprador PF/PJ, lote e tabela | Captação de venda, lote/empreendimento, alçada e proposta de venda | Lotes são operados sem planilha paralela para tabela/condição. |
-| 4. Inteligência e pesquisa | 4–6 semanas | Expor indicadores, fonte, território, lacunas de carteira e catálogo de pesquisa | Painel de demanda, biblioteca de evidências e notas de mudança | Gestores usam painel em reunião de carteira e não só como relatório. |
-| 5. Integrações e escala | Contínua | Conectar sistemas prioritários e automatizar apenas fluxos comprovados | Adaptadores, sincronização monitorada e configuração por parceiro | Integração reduz duplicidade sem introduzir perda de rastreabilidade. |
+| 0. Constituição e descoberta | 3–4 semanas | Mapear rotina real de 3–5 parceiros e preparar ambientes, migrations, RLS, dados sintéticos e catálogo de decisão. | Mapa de processos, modelo de dados v0, protótipo, linha de base e suíte inicial de isolamento. | Parceiros reconhecem estados e vocabulário; ambiente reproduz policy e schema sem ajuste manual. |
+| 1. Núcleo operacional confiável | 6–8 semanas | Criar espaço de trabalho, partes, ativos, tarefas e perfis de busca sob escopo autorizado. | Fila de trabalho, timeline, captura curta, qualificação e audit event. | Usuários recuperam contexto sem planilha; usuário fora do escopo não lê ou altera dado/arquivo. |
+| 2. Proposta e dossiê | 6–8 semanas | Conectar ativo, partes, condição, versão, checklist, alçada e evidência privada. | Pré-proposta, dossiê por finalidade, cofre, retenção e estados de evidência. | Dossiê reduz reabertura; proposta preserva histórico e documento tem finalidade/acesso/versionamento. |
+| 3. Loteadora e carteira | 8–10 semanas | Adaptar o núcleo para lote, empreendimento, reserva, contrato, parcela e exceção. | Captação de venda, lote/empreendimento, estados paralelos, condição e carteira. | Lote não sofre venda concorrente e carteira aponta contrato, versão e responsável. |
+| 4. Subledger e integrações | 8–10 semanas | Ligar direito, recebível, retorno, conciliação e exportação a parceiro homologado. | Inbox/outbox, idempotência, divergência, lote contábil e workspace controlado. | Uma competência-piloto fecha com evento, regra, evidência e retorno sem ajuste manual de saldo. |
+| 5. Inteligência controlada | 4–6 semanas | Expor pesquisa, indicadores e IA assistiva sob fonte, permissão e avaliação. | Biblioteca de evidências, painel territorial, registro de IA e notas de mudança. | Gestão explica recorte; insight de IA guarda fonte, aprovação e resultado. |
+| 6. Escala disciplinada | Contínua | Ampliar parceiros, regiões e integrações comprovadas sem perder controle. | SLO, alertas, recovery, supply chain, teste de carga e recertificação. | Escala preserva rastreabilidade, segurança, suporte e conciliação. |
 
 ## Primeiro MVP: o que entra e o que espera
 
@@ -108,3 +111,7 @@ flowchart TB
 3. Construir o núcleo de parte, ativo, busca, tarefa e timeline antes do módulo documental complexo.
 4. Medir adoção diária e redução de contexto perdido antes de vender integrações ou inteligência avançada.
 5. Após o dossiê funcionar, escolher com os parceiros quais fontes de pesquisa devem alimentar o centro de evidências e qual alternativa de atualização é financeiramente justificada.
+
+## Referência de arquitetura e auditoria
+
+[1] [Arquitetura de referência — CRM sobre Netlify + Supabase](arquitetura_crm_netlify_supabase.md)

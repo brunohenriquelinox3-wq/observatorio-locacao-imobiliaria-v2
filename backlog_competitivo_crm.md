@@ -49,6 +49,21 @@ Este backlog é uma **fila de hipótese de produto**, não um compromisso comerc
 | PLAT-11 | Observar risco antes da perda | Logs estruturados, métricas de RLS, integração, job, latência, erro, custo e alerta. | Fundação | Erro crítico tem correlação, owner, alerta e procedimento de resposta definidos. |
 | PLAT-12 | Entregar mudanças com segurança | Pipeline de preview → homologação → produção, checklist de schema, feature flag, rollback de app e migration compensatória. | Fundação | Nenhuma mudança de dados/policy crítica alcança produção sem teste, revisão e plano de reversão. |
 
+## Auditoria, confiabilidade e engenharia segura
+
+| ID | Resultado | Requisito | Prioridade | Critério de aceitação |
+| --- | --- | --- | --- | --- |
+| AUD-01 | Manter uma linha única de decisão | Índice de fontes de verdade, hierarquia documental, decisão versionada e ligação entre fonte → requisito → teste → release. | Fundação | Toda decisão ativa de alto impacto aponta documento canônico, owner, vigência, dependência e critério de revisão. |
+| AUD-02 | Verificar autorização, não apenas declará-la | Matriz de escopo e suíte de testes de permitir/negar por organização, SPE, carteira, objeto, propriedade, arquivo e função. | Fundação | Testes impedem acesso/leitura/alteração fora do escopo por interface, URL, API, exportação e Storage. |
+| AUD-03 | Tornar regras críticas reproduzíveis | Catálogo de comandos para reserva, proposta, contrato, direito, fechamento e compensação com precondição, versão, idempotência e audit event. | Fundação | Repetição, concorrência e estado inválido não produzem dupla reserva, direito ou efeito econômico. |
+| AUD-04 | Operar por sinal de usuário | Catálogo inicial de SLI/SLO para leitura, comando, upload, callback, fila, conciliação e exportação; alerta acionável e correlação. | Fundação | Cada jornada crítica tem medida, limiar, owner, link de investigação e ação de resposta. |
+| AUD-05 | Recuperar sem apagar a história | Runbooks para acesso, migration, documento, callback, fila, integração e restauração; exercícios e postmortem sem culpabilização. | Fundação | Um exercício demonstra mitigação, comunicação, recuperação e ação corretiva rastreável. |
+| AUD-06 | Conhecer o que chegou à produção | Inventário/SBOM de dependências, alerta de vulnerabilidade, origem de build, branch protegida, segregação de segredo e promoção de artefato. | Fundação | Release crítico tem revisão independente, dependências inventariadas, segredo por ambiente e caminho de rollback. |
+| AUD-07 | Integrar fornecedor por contrato explícito | Ficha por parceiro com ownership, payload, finalidade, dado mínimo, autenticação, idempotência, SLA, erro, replay, retenção e saída. | Diferencial | Nenhuma integração sensível entra em homologação sem contrato de dados e teste de callback/reconciliação. |
+| AUD-08 | Governar IA ao longo do ciclo | Registro de caso de uso, dado permitido, modelo/versão, avaliação, erro, aprovação, feedback, limite e kill switch. | Diferencial | Nenhuma IA de risco é liberada sem avaliação documentada e reversão/pausa operável. |
+| AUD-09 | Confiar nas métricas de gestão | Catálogo de métrica com pergunta, unidade, fórmula, recorte, fonte, atualização, lineage, limitação e owner. | Diferencial | Todo painel crítico abre definição e origem, e número não é usado como promessa sem contexto. |
+| AUD-10 | Escalar com resposta medida | Orçamento de desempenho e custo, teste de carga por jornada, revisão de capacidade e recertificação periódica. | Evolução | Crescimento de organização, carteira e documento mantém as metas acordadas ou abre plano de capacidade. |
+
 ## Revisão de priorização
 
-O backlog deve ser revisado após cada piloto mensal. Uma prioridade só sobe quando houver problema repetido, impacto mensurável, viabilidade de integração e dono operacional. Uma hipótese pode ser rebaixada ou removida sem apagar o registro da decisão anterior.
+O backlog deve ser revisado após cada piloto mensal. Uma prioridade só sobe quando houver problema repetido, impacto mensurável, viabilidade de integração e dono operacional. Itens `AUD-*` bloqueiam mudança sensível quando seu critério não estiver comprovado; uma hipótese pode ser rebaixada ou removida sem apagar o registro da decisão anterior.
