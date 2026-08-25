@@ -21,16 +21,23 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { ArrowUpRight, Compass, LayoutDashboard, LockKeyhole, LogOut, PanelLeft, Users, type LucideIcon } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
+import "../admin-access.css";
 
-const menuItems = [
+const defaultMenuItems = [
   { icon: LayoutDashboard, label: "Page 1", path: "/" },
   { icon: Users, label: "Page 2", path: "/some-path" },
 ];
+
+export type DashboardNavigationItem = {
+  icon: LucideIcon;
+  label: string;
+  path: string;
+};
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
 const DEFAULT_WIDTH = 280;
@@ -39,8 +46,12 @@ const MAX_WIDTH = 480;
 
 export default function DashboardLayout({
   children,
+  navigationItems = defaultMenuItems,
+  navigationTitle = "Navegação",
 }: {
   children: React.ReactNode;
+  navigationItems?: DashboardNavigationItem[];
+  navigationTitle?: string;
 }) {
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY);
@@ -58,24 +69,40 @@ export default function DashboardLayout({
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center gap-8 p-8 max-w-md w-full">
-          <div className="flex flex-col items-center gap-6">
-            <h1 className="text-2xl font-semibold tracking-tight text-center">
-              Sign in to continue
-            </h1>
-            <p className="text-sm text-muted-foreground text-center max-w-sm">
-              Access to this dashboard requires authentication. Continue to launch the login flow.
-            </p>
+      <div className="admin-access-gate">
+        <div className="admin-access-gate__grid" aria-hidden="true" />
+        <header className="admin-access-gate__masthead">
+          <div className="admin-access-gate__brand">
+            <div className="admin-access-gate__compass"><Compass size={22} /></div>
+            <span><b>Observatório</b><small>LOCAÇÃO · CRM</small></span>
           </div>
-          <Button
-            onClick={() => startLogin()}
-            size="lg"
-            className="w-full shadow-lg hover:shadow-xl transition-all"
-          >
-            Sign in
-          </Button>
-        </div>
+          <p>⌖ CRM.01 · ACESSO GOVERNADO</p>
+        </header>
+        <main className="admin-access-gate__sheet">
+          <aside className="admin-access-gate__rail" aria-hidden="true">
+            <span>ADMIN</span><i /><span>PLATAFORMA</span>
+          </aside>
+          <section className="admin-access-gate__content">
+            <p className="admin-access-gate__eyebrow">CAMADA RESTRITA · EVIDÊNCIA ANTES DE PRIVILÉGIO</p>
+            <h1>Entre na central que governa a plataforma — não os dados de cada cliente.</h1>
+            <p>
+              Este acesso protege organizações, permissões, sessões e trilhas de auditoria. A identidade é só o primeiro passo:
+              alçada, escopo e MFA continuam sendo verificados antes de qualquer comando sensível.
+            </p>
+            <div className="admin-access-gate__method">
+              <LockKeyhole size={18} />
+              <span><b>Rota de acesso</b><small>Autenticação → MFA → escopo vigente → policy</small></span>
+            </div>
+            <Button onClick={() => startLogin()} size="lg" className="admin-access-gate__cta">
+              Acessar área governada <ArrowUpRight size={17} />
+            </Button>
+          </section>
+          <footer className="admin-access-gate__note">
+            <span>CAMPO DE LEITURA</span>
+            <b>23° 33′ S · 46° 38′ W</b>
+            <p>Nenhum e-mail ou login recebe privilégio por si só.</p>
+          </footer>
+        </main>
       </div>
     );
   }
@@ -88,7 +115,11 @@ export default function DashboardLayout({
         } as CSSProperties
       }
     >
-      <DashboardLayoutContent setSidebarWidth={setSidebarWidth}>
+      <DashboardLayoutContent
+        setSidebarWidth={setSidebarWidth}
+        navigationItems={navigationItems}
+        navigationTitle={navigationTitle}
+      >
         {children}
       </DashboardLayoutContent>
     </SidebarProvider>
@@ -98,11 +129,15 @@ export default function DashboardLayout({
 type DashboardLayoutContentProps = {
   children: React.ReactNode;
   setSidebarWidth: (width: number) => void;
+  navigationItems: DashboardNavigationItem[];
+  navigationTitle: string;
 };
 
 function DashboardLayoutContent({
   children,
   setSidebarWidth,
+  navigationItems,
+  navigationTitle,
 }: DashboardLayoutContentProps) {
   const { user, logout } = useAuth();
   const [location, setLocation] = useLocation();
@@ -110,7 +145,7 @@ function DashboardLayoutContent({
   const isCollapsed = state === "collapsed";
   const [isResizing, setIsResizing] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const activeMenuItem = menuItems.find(item => item.path === location);
+  const activeMenuItem = navigationItems.find(item => item.path === location);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -169,7 +204,7 @@ function DashboardLayoutContent({
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="font-semibold tracking-tight truncate">
-                    Navigation
+                    {navigationTitle}
                   </span>
                 </div>
               ) : null}
@@ -178,7 +213,7 @@ function DashboardLayoutContent({
 
           <SidebarContent className="gap-0">
             <SidebarMenu className="px-2 py-1">
-              {menuItems.map(item => {
+              {navigationItems.map(item => {
                 const isActive = location === item.path;
                 return (
                   <SidebarMenuItem key={item.path}>

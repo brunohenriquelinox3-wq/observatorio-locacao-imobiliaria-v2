@@ -123,3 +123,7 @@ O símbolo será uma **bússola de lote**: dois arcos incompletos que sugerem um
 - A capa deve operar como selo cerimonial do Observatório: bússola, wordmark e CRM.01 têm escala de capa e precedem visualmente a navegação convencional.
 - A cada no máximo dois módulos operacionais, uma placa de fonte, rota de evidência, spread cartográfico ou conclusão editorial interrompe a sequência; a interface entra depois da tese.
 - O pente fino contínuo abre com a placa **diff → invariante → teste → release → repro**, fazendo evidência, leitura e consequência dominarem antes do controle interativo.
+- O gate de autenticação da Central de Plataforma funciona como **capa institucional de campo**: bússola, CRM.01, grade cadastral e coordenada abrem a experiência antes da CTA.
+- A microcopy de acesso explica a cadeia `autenticação → MFA → escopo vigente → policy`; login e e-mail nunca são apresentados como privilégio suficiente.
+- Argila aparece apenas na decisão de entrada ou alerta; azul cadastral estrutura a autoridade visual do acesso restrito.
+- Validação visual da capa de acesso: desktop e mobile preservam hierarquia editorial, CTA legível e ausência de overflow horizontal; o conteúdo administrativo autenticado será revisado quando houver uma sessão real com o papel autorizado.

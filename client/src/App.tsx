@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import VendasUrbanas from "./pages/VendasUrbanas";
 import CrmStrategy from "./pages/CrmStrategy";
+import PlatformAdmin from "./pages/PlatformAdmin";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -15,6 +16,7 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/vendas"} component={VendasUrbanas} />
       <Route path={"/crm"} component={CrmStrategy} />
+      <Route path={"/administracao"} component={PlatformAdmin} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

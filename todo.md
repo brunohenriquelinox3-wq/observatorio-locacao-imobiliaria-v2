@@ -219,7 +219,7 @@
 - [x] Apresentar e aprovar o contrato de escopo, segurança e critérios de aceite do painel de Super Admin governado.
 - [x] Definir e validar o caminho de infraestrutura Supabase-native para Auth, Postgres e RLS antes de criar migrations administrativas.
 - [x] Preparar a base full-stack e o modelo de organizações, memberships, grants, auditoria e bootstrap protegido.
-- [ ] Construir a primeira superfície do painel de Super Admin com casos vazios e controles de menor privilégio.
+- [x] Construir a primeira superfície do painel de Super Admin com casos vazios e controles de menor privilégio.
 - [ ] Implementar jornadas de criação de organização, delegação, suspensão e revogação com alçada e evidência.
 - [ ] Validar autenticação, MFA, RLS, permitir/negar, auditoria e recuperação; revisar desktop/mobile.
 - [ ] Salvar checkpoint e entregar a fundação administrativa.
