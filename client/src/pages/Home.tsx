@@ -85,7 +85,7 @@ export default function Home() {
     <div className="paper-noise" />
     <header className="site-header">
       <a href="#topo" className="brand"><img src={logo} alt="Símbolo Bússola de Lote" /><span><b>Observatório</b><small>LOCAÇÃO</small></span></a>
-      <nav><a href="#mercado">Mercado</a><a href="#cadastro">Cadastro</a><a href="#lancamento">Lançamento</a></nav>
+      <nav><a href="#mercado">Mercado</a><a href="#cadastro">Cadastro</a><a href="#lancamento">Lançamento</a><a href="/vendas">Vendas & lotes</a></nav>
       <a href="#cadastro" className="nav-cta">Ver modelo <ArrowDownRight className="h-4 w-4" /></a>
     </header>
 

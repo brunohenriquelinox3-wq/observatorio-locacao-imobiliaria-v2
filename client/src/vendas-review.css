@@ -1,0 +1,85 @@
+/* Caderno de Campo Urbano — revisão de evidência, bússola e semântica de decisão. */
+
+.sales-header .brand::after {
+  content: "⌾ V.02";
+  margin-left: 5px;
+  color: #C65A35;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .13em;
+}
+
+.sales-fact.clay {
+  position: relative;
+  border-color: #697657;
+  background: #E5E9DF;
+  color: #38503A;
+}
+.sales-fact.clay::before {
+  content: "⌾ SINAL DE OPORTUNIDADE";
+  display: block;
+  margin-bottom: 6px;
+  color: #506041;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+.sales-fact.clay > span, .sales-fact.clay .source-link { color: #506041; }
+.sales-fact.clay p { color: rgba(56,80,58,.74); }
+
+.sales-chart { position: relative; }
+.sales-chart::before {
+  content: "⌾ 56 CIDADES · RECORTE ABR/2026 · REFERÊNCIA DE ANÚNCIO";
+  position: absolute;
+  z-index: 2;
+  right: 29px;
+  bottom: 49px;
+  color: rgba(23,59,77,.42);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .09em;
+}
+
+.sales-detail::after {
+  content: "⌾ JORNADA DE EVIDÊNCIA";
+  position: absolute;
+  right: 22px;
+  top: 15px;
+  color: rgba(23,59,77,.36);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+.sales-map-card::after {
+  content: "N · E · S · W";
+  display: block;
+  margin-top: 4px;
+  color: rgba(224,177,141,.72);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .34em;
+}
+
+.lot-card::after {
+  content: "⌾ COORDENADA DE DILIGÊNCIA";
+  position: absolute;
+  left: 35px;
+  bottom: 24px;
+  color: rgba(224,177,141,.72);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .11em;
+}
+
+@media (max-width: 760px) {
+  .sales-chart::before { position: static; display: block; margin: 10px 0 -5px; }
+  .sales-detail::after { display: none; }
+  .lot-card::after { left: 24px; bottom: 18px; }
+}
