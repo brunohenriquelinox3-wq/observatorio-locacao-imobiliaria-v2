@@ -127,13 +127,32 @@ Essas abordagens são complementares. A escolha deve ser feita depois de três c
 | Inteligência e pesquisa | 4–6 semanas | Biblioteca de evidências, painel territorial, calendário de fontes e notas de mudança | Gestão usa pesquisa em revisão de carteira. |
 | Integrações e escala | Contínua | Adaptadores, sincronização monitorada e configuração controlada | Integração reduz retrabalho sem perder origem/versão. |
 
+## 8.1 Revisão do núcleo cadastral e da carteira
+
+O estudo de fichas cadastrais e carteira fornecido pelo parceiro reforça que o cadastro é uma infraestrutura de contrato e relacionamento, não uma tela isolada. A estratégia passa a adotar uma `Party` única para pessoa física ou jurídica, com papéis temporais, grupos de assinatura, relações de representação, dossiês por finalidade e evidências com origem, acesso, validade e revisão. Essa decisão permite que a mesma parte seja proprietária, compradora, locatária, representante, permutante ou sócia sem duplicação de dados. [12]
+
+O produto não deve aplicar um único estado “aprovado”. Ele passa a expor dimensões independentes — qualificação, representação, assinatura, capacidade, compliance, dossiê e relacionamento — porque uma pendência documental não significa, por si só, que uma parte esteja inelegível em todos os contextos. A coleta inicial permanece curta; renda, documentos, estado civil, fonte de recursos e evidências societárias só são abertos quando a finalidade, o instrumento ou a política aplicável justificam a solicitação.
+
+| Revisão incorporada | Resultado de produto | Proteção necessária |
+| --- | --- | --- |
+| `Party` + papéis temporais | Uma identidade atende a vários negócios e linhas de produto | Deduplicação assistida, origem de dado e acesso por função. |
+| Dossiê progressivo | Checklist de proposta, contrato, lote, permuta ou sociedade no momento certo | Não pedir documentos sem finalidade concreta. |
+| Representação e assinatura | Contato comercial deixa de ser confundido com assinante ou procurador | Avaliação humana de poderes e necessidade de participação. |
+| Crédito e compliance como casos | Decisões, condições e pendências ficam explicáveis e restritas | Nenhuma decisão automática opaca ou exposição ao comercial. |
+| Carteira em duas lentes | Relacionamento e recebível compartilham contexto sem se confundirem | CRM não substitui contabilidade, cobrança ou análise jurídica. |
+| Política de mercado versionada | Regras operacionais podem mudar por cenário e empreendimento | Versão, dono, data, exceção e reversão visíveis. |
+
+Na PLD/FT, a Lei nº 9.613/1998 inclui a promoção imobiliária e a compra e venda de imóveis entre atividades submetidas aos mecanismos de controle, e prevê identificação/cadastro atualizado, incluindo representantes autorizados e proprietários de pessoas jurídicas. [13] O CRM deve, portanto, sustentar casos restritos de compliance, trilha de evidências e política de retenção configurável; não deve transformar uma ficha comercial em uma conclusão de suspeita ou em uma comunicação automatizada. O Siscoaf é o ambiente oficial de comunicações e requisições às pessoas obrigadas, e qualquer integração futura requer habilitação, escopo e governança próprios. [14]
+
+Na proteção de dados, finalidade, adequação, necessidade, transparência, segurança e prestação de contas exigem que a plataforma registre a hipótese e a finalidade de cada coleta. A LGPD prevê várias bases legais, incluindo execução de contrato/procedimentos preliminares, obrigação legal/regulatória, legítimo interesse e proteção do crédito; consentimento é uma delas, não a etiqueta universal do cadastro. [15] A necessidade de assinatura ou participação de cônjuge também deve ser registrada como avaliação com evidência e responsável, não inferida automaticamente apenas por estado civil ou por uma regra de tela. [16]
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
 
 ## 10. Conclusão
 
-O caminho de ponta não é começar por inteligência artificial, integrações ou automação de documentos. É criar uma espinha dorsal confiável de partes, ativos, relações, propostas e evidências; fazer a equipe usá-la todos os dias; e permitir que pesquisa, dados territoriais e automações cresçam sobre essa base, com versão, governança e limites explícitos.
+O caminho de ponta não é começar por inteligência artificial, integrações ou automação de documentos. É criar uma espinha dorsal confiável de partes, ativos, relações, propostas, carteira e evidências; fazer a equipe usá-la todos os dias; e permitir que pesquisa, dados territoriais e automações cresçam sobre essa base, com versão, governança e limites explícitos.
 
 ## Referências
 
@@ -158,3 +177,13 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [10] [Planalto — Lei nº 6.766/1979 (Parcelamento do Solo Urbano)](https://www.planalto.gov.br/ccivil_03/leis/l6766.htm)
 
 [11] [Planalto — Lei nº 13.786/2018 (Distrato)](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13786.htm)
+
+[12] Estudo de fichas cadastrais e carteira de clientes — BHL Imóveis (arquivo fornecido pelo usuário, agosto de 2026)
+
+[13] [Planalto — Lei nº 9.613/1998 (texto compilado)](https://www.planalto.gov.br/ccivil_03/leis/l9613compilado.htm)
+
+[14] [COAF — Siscoaf](https://www.gov.br/coaf/pt-br/sistemas/siscoaf/siscoaf-info_nova)
+
+[15] [Planalto — Lei nº 13.709/2018 (LGPD)](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm)
+
+[16] [Planalto — Código Civil, Lei nº 10.406/2002](https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm)

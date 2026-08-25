@@ -92,3 +92,7 @@ flowchart LR
 Toda nova atualização recebida deve responder antes de entrar no backlog: **qual afirmação é nova? qual recorte ela cobre? qual decisão anterior ela confirma, contraria ou torna incerta? em qual módulo do CRM o efeito apareceria? qual é o risco de não mudar e o risco de mudar cedo demais?**
 
 Isso mantém a estratégia aberta à melhoria sem convertê-la em acúmulo de opiniões. O histórico de versões permite explicar por que um requisito existe, quando mudou e qual evidência sustentou a decisão.
+
+## Requisitos de ficha e carteira como objetos revisáveis
+
+O estudo BHL de fichas cadastrais e carteira foi incorporado como referência de domínio fornecida por parceiro. Seus campos, documentos, alertas e painéis não entram diretamente como formulário final: cada item passa a ser um `RequirementRecord` com finalidade, contexto, papel, condição, nível de necessidade, dado mínimo, fonte/política, responsável, vigência e retenção. Isso preserva a utilidade do estudo — cadastro completo onde necessário — sem converter práticas de mercado ou simplificações jurídicas em gates inflexíveis.

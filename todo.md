@@ -41,3 +41,13 @@
 - [x] Ampliar o centro de evidências para marcar alegações recebidas, fontes externas, nível de confiança, revisão e impacto de produto.
 - [x] Atualizar a estratégia consolidada e o observatório com as melhorias e testar em desktop e mobile.
 - [ ] Salvar novo checkpoint e entregar a versão revisável da estratégia.
+
+## Revisão contínua: fichas cadastrais e carteira
+
+- [x] Classificar no estudo recebido os campos, documentos, decisões e alertas por papel e linha de negócio.
+- [x] Validar as afirmações sensíveis sobre outorga, qualificação, PLD/FT, COAF e dados pessoais em fontes oficiais.
+- [x] Refinar o modelo canônico de pessoas, empresas, representação, grupo familiar, beneficiário final e relacionamento com ativo.
+- [x] Modelar cadastros progressivos, dossiês, pendências e estados de verificação por finalidade.
+- [x] Estruturar a visão de carteira por ciclo de vida, valor potencial, saúde documental e próxima ação sem score opaco.
+- [x] Atualizar o relatório e o observatório e testar em desktop e mobile.
+- [ ] Salvar novo checkpoint e entregar a revisão do núcleo cadastral.
