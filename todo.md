@@ -203,4 +203,4 @@
 - [x] Projetar a jornada de triagem, seleção de caso, leitura de evidências e decisão rastreável.
 - [x] Implementar a fila e o detalhe interativos no painel financeiro CUR-01/CUR-02.
 - [x] Validar build e experiência desktop/mobile; registrar as decisões de design aplicadas.
-- [ ] Salvar checkpoint e entregar o protótipo de divergências.
+- [x] Salvar checkpoint e entregar o protótipo de divergências.
