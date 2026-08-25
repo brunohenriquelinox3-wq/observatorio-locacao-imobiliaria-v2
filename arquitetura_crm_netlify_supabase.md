@@ -53,7 +53,7 @@ Cada tabela de domínio terá, conforme aplicável, `id` UUID/ULID, `organizatio
 
 | Grupo | Entidades canônicas | Regras de integridade |
 | --- | --- | --- |
-| Organização e acesso | `organizations`, `legal_entities`, `spe_entities`, `memberships`, `roles`, `permission_grants`, `access_reviews` | Membership expira/é revisado; papel não substitui escopo; AAL2 para ações sensíveis. |
+| Organização e acesso | `organizations`, `legal_entities`, `spe_entities`, `memberships`, `roles`, `permission_grants`, `access_reviews`, `platform_principals`, `administrative_grants`, `support_case_access`, `admin_audit_events` | Membership/grant expira e é revisado; papel não substitui escopo; AAL2 para comando privilegiado e auditoria append-only. |
 | Relações | `parties`, `party_profiles`, `relationships`, `powers`, `beneficial_interests` | Uma parte pode exercer vários papéis; identidade e relação são separadas. |
 | Ativo e comercial | `properties`, `developments`, `blocks`, `lots`, `inventory_units`, `listings`, `leads`, `deals`, `reservations`, `proposals` | Estoque é controlado por estado/versionamento; reserva não pode ser duplicada por concorrência. |
 | Contrato e financeiro operacional | `contracts`, `installments`, `receivables`, `economic_plans`, `distribution_entitlements`, `settlements`, `reconciliation_cases` | Eventos compensatórios preservam origem; split não nasce sem elegibilidade/aprovação. |
@@ -89,6 +89,12 @@ flowchart TD
 3. **MFA por risco.** AAL2 é exigido para mudança de acesso, exportação sensível, aprovação de distribuição, alteração de dados bancários/beneficiário, configuração de integração e ações de fechamento.
 4. **Chaves são segregadas.** A chave publicável pode estar no app; `service_role`, credenciais de ERP/pagamento e segredos de webhook só existem em runtime seguro. Não há chave privilegiada em `VITE_*`, log, preview compartilhado ou browser.
 5. **Admin não é superusuário cego.** Administrador continua sujeito a `organization_id`, escopo, auditoria e, em ações de risco, MFA/dupla aprovação.
+
+### 4.1 Administração privilegiada e separação de infraestrutura
+
+`platform_super_admin` responde por segurança e ciclo de vida da plataforma; ele não recebe leitura diária dos dados de uma locatária. `organization_admin`, `area_admin` e `operator` recebem somente o escopo delegado. Qualquer suporte a dado de cliente ocorre por `support_case_access` temporário, mascarado, finalístico e expirável. Break-glass usa incidente, MFA recente, duração curta, alerta, auditoria e revisão posterior; não cria uma permissão persistente.
+
+O Netlify Team Owner/Developer pertence à infraestrutura de entrega e não mapeia automaticamente para papel administrativo do CRM. Equipes, projetos, deploys e segredos de produção/homologação/sandbox ficam separados; audit log da hospedagem complementa o evento administrativo do produto, mas não o substitui. [17]
 
 ## 5. Evidências e arquivos privados
 
@@ -155,7 +161,7 @@ O plano de recuperação tem quatro trilhas independentes: rollback de app no Ne
 
 | Onda | Resultado técnico verificável | Prioridade |
 | --- | --- | --- |
-| **P0 — Fundação** | Repositório, ambientes separados, Auth, `organizations`/`memberships`, RLS testada, migrations, buckets privados, audit event e observabilidade mínima. | Bloqueadora. |
+| **P0 — Fundação administrativa** | Repositório, ambientes separados, Auth/MFA, bootstrap controlado, `platform_principals`, `organizations`/`memberships`, grants, RLS testada, `AdminAuditEvent`, revogação e observabilidade mínima. | Bloqueadora. |
 | **P1 — Núcleo comercial** | Parte/relação, inventário, lead, proposta e reserva com estados transacionais, leitura por escopo e evidências. | Alta. |
 | **P2 — Loteadora e carteira** | Gleba/empreendimento/lote, condições, contrato, parcela, direito econômico e workflow de exceção. | Alta. |
 | **P3 — Integrações financeiras** | Inbox/outbox, callbacks homologados, conciliação, split configurável, lote contábil/exportação e workspace controlado. | Condicionada a parceiro, contador e jurídico. |
@@ -210,3 +216,5 @@ O frontend usa error boundary como contenção de renderização por rota/painel
 [15] [Gates e runbooks operacionais](crm_netlify_supabase_gates_runbooks.md)
 
 [16] [Disciplina anti-erro — metodologia, catálogo, controles e relatórios](crm_engenharia_antierro_metodologia.md)
+
+[17] [Administração de plataforma — método, evidências, alçadas e implementação](crm_administracao_plataforma_metodologia.md) · [evidências](crm_administracao_plataforma_evidencias.md) · [modelo](crm_administracao_plataforma_modelo.md) · [blueprint](crm_administracao_plataforma_implementacao.md)

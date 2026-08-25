@@ -148,3 +148,13 @@
 - [x] Consolidar o estudo em auditoria, estratégia canônica, fontes, decisões e backlog priorizado.
 - [x] Atualizar o observatório e validar desktop/mobile.
 - [x] Registrar a cadência possível, salvar checkpoint e entregar a revisão autônoma.
+
+## Camada administrativa: Super Admin, admins subordinados e permissões
+
+- [x] Definir princípios, limites, contas de emergência, auditoria e critérios de uso da administração privilegiada.
+- [x] Pesquisar referências atuais de PAM, MFA, zero trust, ABAC, segregação de deveres e autorização em Supabase/Netlify.
+- [x] Modelar hierarquia de plataforma, organização, SPE, área e objeto com alçadas, vigência, delegação e recertificação.
+- [x] Projetar fluxos de Super Admin, Admin de organização, Admin de área e operador, com jornadas de entrada, mudança, suspensão e emergência.
+- [x] Traduzir o modelo para schema, RLS, funções transacionais, sessão reforçada, audit event e testes permitir/negar.
+- [x] Atualizar estratégia, arquitetura, backlog e observatório; validar desktop/mobile.
+- [ ] Salvar checkpoint e entregar a revisão da camada administrativa.

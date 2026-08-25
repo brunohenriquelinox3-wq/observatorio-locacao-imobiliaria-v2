@@ -40,7 +40,7 @@ flowchart TB
 
 | Fase | Janela indicativa | Objetivo | Entrega verificável | Decisão de passagem |
 | --- | ---: | --- | --- | --- |
-| 0. Constituição e descoberta | 3–4 semanas | Mapear rotina real de 3–5 parceiros e preparar ambientes, migrations, RLS, dados sintéticos e catálogo de decisão. | Mapa de processos, modelo de dados v0, protótipo, linha de base e suíte inicial de isolamento. | Parceiros reconhecem estados e vocabulário; ambiente reproduz policy e schema sem ajuste manual. |
+| 0. Fundação administrativa e descoberta | 3–4 semanas | Preparar ambientes, bootstrap controlado, Auth/MFA, organizações, memberships, grants, RLS, audit event, dados sintéticos e mapa de rotina de 3–5 parceiros. | Painel mínimo de plataforma, modelo de dados v0, revogação, convite, linha de base e suíte inicial de isolamento. | Principal sem grant não atravessa organização/arquivo/função; ambiente reproduz policy e schema sem ajuste manual. |
 | 1. Núcleo operacional confiável | 6–8 semanas | Criar espaço de trabalho, partes, ativos, tarefas e perfis de busca sob escopo autorizado. | Fila de trabalho, timeline, captura curta, qualificação e audit event. | Usuários recuperam contexto sem planilha; usuário fora do escopo não lê ou altera dado/arquivo. |
 | 2. Proposta e dossiê | 6–8 semanas | Conectar ativo, partes, condição, versão, checklist, alçada e evidência privada. | Pré-proposta, dossiê por finalidade, cofre, retenção e estados de evidência. | Dossiê reduz reabertura; proposta preserva histórico e documento tem finalidade/acesso/versionamento. |
 | 3. Loteadora e carteira | 8–10 semanas | Adaptar o núcleo para lote, empreendimento, reserva, contrato, parcela e exceção. | Captação de venda, lote/empreendimento, estados paralelos, condição e carteira. | Lote não sofre venda concorrente e carteira aponta contrato, versão e responsável. |
@@ -52,7 +52,7 @@ flowchart TB
 
 | Entra no MVP | Espera por evidência de uso |
 | --- | --- |
-| Multi-organização, usuários e papéis básicos | Marketplace, rede pública de corretores ou portal próprio. |
+| Painel mínimo de Super Admin governado, multi-organização, usuários, memberships, papéis e revogação | Marketplace, rede pública de corretores ou portal próprio. |
 | Partes PF/PJ, contatos, grupos e papéis temporais | Enriquecimento automático massivo de dados pessoais. |
 | Ativo residencial e lote com território estruturado | Avaliação automática de imóvel ou motor preditivo de preço. |
 | Perfil de busca, fila, tarefa, atividade e visita | Campanhas multicanal avançadas. |
@@ -106,11 +106,12 @@ flowchart TB
 
 ## Sequência de decisão para o fundador
 
-1. Selecionar **três parceiros-piloto**: uma imobiliária de locação, uma de vendas e uma operação de lotes/loteadora com equipe real.
-2. Executar a fase de descoberta usando casos reais, não listas genéricas de requisitos.
-3. Construir o núcleo de parte, ativo, busca, tarefa e timeline antes do módulo documental complexo.
-4. Medir adoção diária e redução de contexto perdido antes de vender integrações ou inteligência avançada.
-5. Após o dossiê funcionar, escolher com os parceiros quais fontes de pesquisa devem alimentar o centro de evidências e qual alternativa de atualização é financeiramente justificada.
+1. Construir o núcleo administrativo: bootstrap, MFA, organização, membership, RLS, grant, convite/revogação e audit event com testes permitir/negar.
+2. Selecionar **três parceiros-piloto**: uma imobiliária de locação, uma de vendas e uma operação de lotes/loteadora com equipe real.
+3. Executar a descoberta usando casos reais, não listas genéricas de requisitos.
+4. Construir o núcleo de parte, ativo, busca, tarefa e timeline antes do módulo documental complexo.
+5. Medir adoção diária e redução de contexto perdido antes de vender integrações ou inteligência avançada.
+6. Após o dossiê funcionar, escolher com os parceiros quais fontes de pesquisa devem alimentar o centro de evidências e qual alternativa de atualização é financeiramente justificada.
 
 ## Referência de arquitetura e auditoria
 

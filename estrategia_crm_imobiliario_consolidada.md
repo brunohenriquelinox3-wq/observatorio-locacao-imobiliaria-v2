@@ -140,6 +140,7 @@ Essas abordagens são complementares. A escolha deve ser feita depois de três c
 
 | Fase | Janela | Entregável | Critério de passagem |
 | --- | ---: | --- | --- |
+| Fundação administrativa | 2–3 semanas | Bootstrap controlado, principal de plataforma, organização inicial, membership, RLS, MFA, revogação e `AdminAuditEvent`. | Um usuário sem grant não atravessa organização, arquivo, função ou URL; todo comando privilegiado deixa evidência. |
 | Descoberta e vocabulário | 3–4 semanas | Mapa de operação de três parceiros, dicionário canônico e linha de base | Equipes reconhecem os mesmos estados e objetos. |
 | Núcleo operacional | 6–8 semanas | Party, asset, perfil de busca, tarefa, timeline e fila | A equipe recupera contexto sem planilha paralela. |
 | Proposta e dossiê | 6–8 semanas | Versões de proposta, checklist, evidência, cofre e permissões | Menos reabertura documental e histórico preservado. |
@@ -337,6 +338,22 @@ O produto deve expor superfícies distintas para comercial, lançamento/loteador
 
 Em ações que criam compromisso financeiro, legal ou alteração irreversível, a experiência deve permitir revisão, correção ou reversão compatível com o domínio. O erro informa em texto o item, a razão, a forma de correção e a consequência; cor, ícone e animação complementam, mas não substituem a descrição. A validação de cliente ajuda a operação, porém a validação de servidor é a autoridade. [46]
 
+## 8.11 Administração de plataforma: privilégio é responsabilidade, não atalho
+
+O primeiro painel a ser construído será a **camada administrativa de plataforma**, mas ela não será um “nível deus” com leitura invisível de todos os clientes. O Super Admin governa organizações, segurança, integrações homologadas, políticas globais, incidentes e suporte controlado; não herda por padrão carteira, dossiê, documento, proposta, saldo, distribuição ou dado de uma locatária. A cada ação, o produto avalia identidade, papel-base, organização/SPE, objeto, ação, finalidade, vigência, alçada, risco de sessão e policy; privilégio precisa ser menor, temporal e auditável. [47] [48]
+
+| Camada | Pergunta de trabalho | Pode fazer | Proteção que impede abuso |
+| --- | --- | --- | --- |
+| Super Admin de plataforma | A plataforma está segura, disponível e organizada? | Provisionar/suspender organização, gerir catálogo de capacidade, revogar principal, iniciar suporte just-in-time e abrir incidente. | MFA reforçada, comando transacional, dupla aprovação para policy global, auditoria imutável e ausência de leitura cotidiana de dados da locatária. |
+| Security Admin | Quem tem privilégio agora e por quê? | Gerir sessão, recertificação, suspensão, elevação e resposta a incidente. | Não opera comercial, recebível, split, carteira ou política de negócio. |
+| Admin de organização | Esta empresa delegou acessos corretamente? | Gerir members, áreas, SPEs, papéis locais, vigência e alçadas delegadas. | Não cruza organização nem edita guardrail de plataforma. |
+| Admin de área | A equipe local está configurada para trabalhar? | Filas, templates, delegação e workspace da área/unidade autorizada. | Não se autoeleva, não muda RLS e não aprova efeito acima do teto. |
+| Suporte temporário | Qual diagnóstico mínimo resolve o caso? | Consultar metadado mascarado e usar grant JIT aprovado por caso. | Caso, finalidade, selector de recurso, expiração, redaction e evento obrigatório. |
+
+O modelo combina RBAC para funções previsíveis e ABAC para contexto. O papel organiza o workspace; atributos decidem se uma ação pode ocorrer naquele objeto, para aquela organização, naquela hora e sob aquela finalidade. A mudança de acesso é um comando de domínio: cria/revoga membership ou grant, invalida/renova sessão conforme a policy, registra antes/depois redigido, correlation ID, motivo, aprovador e expiração. Claims de JWT aceleram a apresentação, mas não substituem o estado relacional vivo quando há revogação, delegação ou suporte temporário. [48]
+
+> **Regra de início:** não existe Super Admin escondido em variável de ambiente, `user_metadata`, botão de frontend ou claim não verificada. O primeiro incremento produz bootstrap controlado, MFA, organização, membership, RLS, `AdminAuditEvent`, convite/revogação e testes de permitir/negar; catálogo amplo de configurações só entra após essa fronteira sobreviver a abuso, expiração e recuperação.
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -438,3 +455,7 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [45] [DEM-CRM-01 — concorrência, comunidades e dores operacionais](crm_demanda_mercado_comunidades_01.md)
 
 [46] [UX-FIN-01 — experiência anti-erro para ações financeiras e críticas](crm_ux_financeiro_antierro_01.md)
+
+[47] [Administração de plataforma — carta de princípios e método](crm_administracao_plataforma_metodologia.md)
+
+[48] [Administração de plataforma — evidências, modelo e blueprint de implementação](crm_administracao_plataforma_evidencias.md) · [modelo de alçadas](crm_administracao_plataforma_modelo.md) · [implementação Netlify + Supabase](crm_administracao_plataforma_implementacao.md)

@@ -55,6 +55,20 @@ Este backlog é uma **fila de hipótese de produto**, não um compromisso comerc
 | PLAT-17 | Operar com sinal e resposta segura | Catálogo de alertas, correlation ID, dashboard por jornada, owners, runbooks e exercícios de incidente. | Fundação | Toda falha crítica aponta uma ação inicial segura, responsável, rota de escalonamento e evidência pós-incidente. |
 | PLAT-18 | Sustentar recuperação e capacidade | Teste de restore banco/objeto, RPO/RTO aprovados, carga sintética, orçamento de pool/fila/Storage/Realtime e regra de degradação. | Fundação | O piloto demonstra recuperação explicável e crescimento dentro de metas ou abre plano de capacidade antes da venda. |
 
+## Administração privilegiada e delegação governada
+
+| ID | Resultado | Requisito | Prioridade | Critério de aceitação |
+| --- | --- | --- | --- | --- |
+| ADM-01 | Evitar um “Super Admin” sem fronteira | `platform_principals`, bootstrap controlado, elegibilidade, MFA, recertificação, suspensão e recuperação sob procedimento registrado. | Fundação bloqueadora | Não existe papel privilegiado criado por frontend, variável, metadata editável ou claim sem validação de servidor/banco. |
+| ADM-02 | Isolar plataforma de locatária | `organizations`, memberships, escopo de SPE/unidade e RLS/Storage/RPC por organização. | Fundação bloqueadora | Super Admin sem caso de suporte não lê carteira, documento, proposta, saldo ou split de cliente; Admin de organização não cruza empresa. |
+| ADM-03 | Delegar sem escalar privilégio | Papéis de organização/área, alçada, vigência, delegação limitada, offboarding e recertificação. | Fundação | Admin de área não se autoeleva, não atribui `platform_*` e não delega acima do teto herdado. |
+| ADM-04 | Exigir sessão proporcional ao risco | MFA/AAL2, reautenticação, `amr`, duração, sessão/contexto e política por comando crítico. | Fundação | Sessão AAL1 não altera acesso, policy, integração, exportação, alçada ou comando financeiro sensível. |
+| ADM-05 | Registrar a decisão administrativa | `AdminAuditEvent` append-only com ator, sujeito, alvo, antes/depois redigido, motivo, correlação, resultado e retenção. | Fundação | Grant, revogação, convite, negação, expiração, suporte e break-glass têm evento reconstruível e não editável pela aplicação. |
+| ADM-06 | Dar suporte sem quebrar isolamento | `SupportCaseAccess` just-in-time, finalidade, selector mínimo, mascaramento, aprovação, expiração e encerramento. | Alta | Suporte vê apenas o recurso aprovado durante o caso; o acesso expira mesmo se o operador não encerrar a tela. |
+| ADM-07 | Operar emergência sem privilégio residual | Break-glass por incidente, MFA, duração curta, alerta, dupla revisão posterior e postmortem. | Alta | O fluxo falha quando o caminho normal existe e não deixa membership/grant persistente depois do prazo. |
+| ADM-08 | Separar administração do produto e infraestrutura | Matriz CRM ↔ Supabase ↔ Netlify para pessoas, segredos, projetos, deploys e auditorias. | Fundação | Owner/Developer de hospedagem não ganha papel CRM; papel CRM não recebe segredo, deploy ou acesso de infraestrutura por padrão. |
+| ADM-09 | Fazer autorização regressiva | pgTAP, RPC, Function e E2E para permitir/negar por organização, SPE, papel, AAL, vigência e suporte. | Fundação bloqueadora | CI bloqueia migration/release se isolamento, expiração, revogação, SoD ou audit atômico não estiverem provados. |
+
 ## Auditoria, confiabilidade e engenharia segura
 
 | ID | Resultado | Requisito | Prioridade | Critério de aceitação |
