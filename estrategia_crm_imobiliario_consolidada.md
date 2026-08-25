@@ -191,6 +191,22 @@ O Banco Central define instituição de pagamento como pessoa jurídica que viab
 
 Por fim, a Lei nº 8.934/1994 reforça que o registro empresarial dá publicidade, autenticidade, segurança e eficácia aos atos sujeitos a registro, além de manter informações de empresas atualizadas. [29] A área do contador e controladoria deve enxergar empresa/SPE, atos, poderes, faturamento, carteira, documento, distribuição, diferença e lote de exportação no escopo autorizado, sem poder editar a proposta, o contrato ou o retorno bancário original. Fechamento é um ritual de evidência: corte de competência, conciliação, revisão de documento/regra, lote imutável de exportação, retorno e arquivo de auditoria.
 
+## 8.4 Revisão competitiva: o piso do mercado e nossa tese de diferenciação
+
+O benchmark público de dez referências — Kenlo, Vista/Loft, Imobzi, Jetimob, Imoview/Universal, ImobTotal, CV CRM, Facilita, Sienge e Anapro — confirma que captura de lead, atendimento, funil, portais, estoque, reserva, proposta, documento e mobilidade não são diferenciais isolados; são expectativas já estabelecidas para diferentes segmentos do mercado. [30] A nossa estratégia passa a tratá-las como piso de entrega e não como a narrativa central de diferenciação.
+
+| Sinal competitivo | Leitura de estratégia | Decisão de produto |
+| --- | --- | --- |
+| CRMs de imobiliária unem site, portais, atendimento, locação e repasse | A jornada comercial conectada é requisito de entrada. | Entregar origem, consentimento, responsável, próxima ação e contexto de ativo/parte em um núcleo único. |
+| CRMs de lançamento expõem reserva, tabela, proposta, rede e documentos | Estoque e condição comercial precisam sobreviver ao ritmo do plantão e do corretor de campo. | Criar estoque por empreendimento/fase/lote/unidade, reserva com expiração/fila, tabela versionada e alçada. |
+| ERPs de construção dominam obra, fiscal, contábil e suprimentos | Não é estratégico duplicar a escrituração ou a gestão física da obra. | Operar como camada de relações, direitos, eventos e evidências com integração e reconciliação de ida/volta. |
+| Comissões são recorrentes em marketing de produto | A operação de loteadora ultrapassa uma simples comissão. | Diferenciar com cascatas contratuais de direitos, recebedores, gatilhos, limites, reversões e competência. |
+| IA é promessa crescente na aquisição | Automação sem fonte e política degrada confiança em fluxos sensíveis. | Toda IA relevante deve apontar dados, regra, versão, permissão e responsável pela aprovação. |
+
+O espaço mais consistente não é prometer “mais funcionalidades” que os concorrentes. É criar a infraestrutura que liga **empreendimento, lote, contrato, parte, recebível, direito econômico, documento, regra e fechamento**, mantendo a experiência comercial simples para quem está em campo e a trilha de evidências íntegra para gestão, contador e auditoria.
+
+> **Posicionamento revisado:** o sistema operacional de relações, direitos econômicos e evidências para imobiliárias e loteadoras que precisam vender, receber, distribuir e fechar com contexto.
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -258,3 +274,5 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [28] [Banco Central do Brasil — O que é instituição de pagamento?](https://www.bcb.gov.br/pre/composicao/instpagamento.asp?frame=1)
 
 [29] [Planalto — Lei nº 8.934/1994, Registro Público de Empresas Mercantis](https://www.planalto.gov.br/ccivil_03/leis/L8934compilado.htm)
+
+[30] [Benchmark competitivo de CRM imobiliário — dez referências públicas, agosto de 2026](benchmark_crm_analise.md)

@@ -73,3 +73,13 @@
 - [x] Comparar alternativas de cobrança e split com instituições habilitadas, sem construir movimentação financeira própria.
 - [x] Consolidar a estratégia, atualizar o observatório e validar a compilação e a experiência revisada.
 - [ ] Salvar o checkpoint e entregar a revisão financeira estratégica.
+
+## Benchmark competitivo: CRM imobiliário
+
+- [x] Definir os dez concorrentes e os critérios públicos de seleção por imobiliária, loteadora, construtora e operação comercial.
+- [x] Capturar sites, páginas de produto, conteúdos, demonstrações públicas, integrações e mensagens comerciais de cada concorrente.
+- [x] Comparar posicionamento, público, módulos, automação, carteira, financeiro, estoque, atendimento, relatórios e suporte a loteadora.
+- [x] Identificar lacunas, alegações sem evidência pública e padrões que não devem ser copiados.
+- [x] Converter os achados em diferenciais, requisitos e sequência de desenvolvimento para o CRM próprio.
+- [x] Atualizar o centro de evidências, a estratégia consolidada e o observatório; validar a compilação e a experiência das rotas principais.
+- [x] Salvar o checkpoint e entregar a revisão competitiva.
