@@ -93,3 +93,13 @@
 - [x] Atualizar a estratégia e o backlog com requisitos de experiência, observabilidade e consistência visual.
 - [x] Evoluir o observatório com demonstrações interativas e testar em desktop e mobile.
 - [x] Salvar checkpoint e entregar a revisão visual estratégica.
+
+## Revisão contínua: base técnica Netlify + Supabase
+
+- [x] Definir princípios, escopo e critérios de decisão para Netlify e Supabase como plataformas-base do CRM.
+- [x] Pesquisar entrega, deploy, funções, ambiente, observabilidade e segurança no Netlify.
+- [x] Pesquisar modelagem Postgres, Auth, RLS, Storage, Edge Functions, Realtime e migrações no Supabase.
+- [x] Desenhar a arquitetura integrada de frontend, dados, permissões, arquivos, integrações, jobs e auditoria.
+- [x] Atualizar a estratégia consolidada, o modelo técnico e o backlog de implementação por ondas.
+- [x] Atualizar o observatório com a base Netlify + Supabase e validar desktop/mobile.
+- [x] Salvar checkpoint e entregar a revisão técnica.

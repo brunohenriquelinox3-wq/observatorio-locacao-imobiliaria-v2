@@ -34,6 +34,20 @@ O produto futuro deve ser construído como um **CRM de relações imobiliárias*
 
 > **Tese central:** a vantagem competitiva não vem de coletar mais dados. Ela vem de conservar o contexto correto, pedir a evidência na etapa certa e converter estudo de mercado em decisão rastreável.
 
+### 3.1 Base técnica obrigatória: Netlify + Supabase
+
+A estratégia passa a ter uma base de plataforma explícita. **Netlify** será a camada de entrega web, domínio, CDN, previews protegidos e funções de borda; **Supabase** será a plataforma de identidade, Postgres, autorização por linha, documentos privados, funções de domínio, migrações e eventos duráveis. Essa divisão protege a fluidez visual do produto sem deslocar a verdade operacional para o frontend ou para uma automação de deploy. [32] [33]
+
+| Decisão de plataforma | Aplicação no CRM | Regra de segurança e operação |
+| --- | --- | --- |
+| Entrega Netlify | App web responsivo, previews por mudança, configuração por ambiente e endpoints de borda quando justificável. | Preview usa dados sintéticos/anonimizados e projeto de homologação separado; nenhum segredo crítico é empacotado no navegador. |
+| Postgres Supabase | Relações, ativos, estoque, proposta, contrato, evento, direito, lote, evidência, auditoria e casos de exceção. | Toda tabela exposta recebe RLS, grants mínimos, índice de policy e teste de permitir/negar. |
+| Supabase Auth + MFA | Sessão, usuário, membership e alçada de autenticação. | Papel não libera acesso sozinho; alçada, escopo e MFA reforçado protegem ações sensíveis. |
+| Storage privado | Dossiê, evidência, versão, hash e acesso temporário a binário. | Documento não recebe URL pública persistente; download é controlado e auditável. |
+| Functions, outbox e inbox | Integração com cobrança, ERP, assinatura, portais e serviços habilitados. | Saída nasce em transação com idempotência; callback é autenticado, deduplicado, correlacionado e reconciliado. |
+
+> **Princípio de implementação:** uma tela pode ser rápida no Netlify, mas uma ação que altera disponibilidade, proposta, contrato, direito econômico, caixa, acesso ou evidência crítica só é concluída por comando transacional e auditável no Supabase.
+
 ## 2. O que os estudos revelam
 
 O mercado de locação tem escala e crescimento: os domicílios alugados passaram de 12,2 milhões em 2016 para 18,9 milhões em 2025, e o preço pedido de locação na amostra FipeZAP avançou 9,28% em 12 meses até julho de 2026. [1] [2] Nas vendas urbanas, o índice de preço pedido acumulou alta de 5,63% em 12 meses até abril de 2026, com forte variação territorial. [3] Lotes exigem tratamento próprio: no recorte de Minas Gerais, foram 2.958 lotes vendidos no primeiro trimestre de 2026, alta de 40,9% sobre o mesmo trimestre anterior. [4]
@@ -227,6 +241,23 @@ O CRM oferecerá vistas salvas por função, densidade confortável/compacta e e
 
 > **Nova regra de qualidade:** uma interface é aprovada quando o usuário consegue identificar a exceção, explicar o recorte, abrir a evidência e executar a próxima ação autorizada sem depender de planilha paralela ou memória individual.
 
+## 8.6 Arquitetura Netlify + Supabase: produto fluido, dado governado
+
+O CRM futuro não será uma SPA com dados e permissão decididos apenas no cliente. Leituras de trabalho poderão chegar diretamente do Supabase sob RLS; rascunhos de baixo risco terão política explícita; e comandos críticos, como reserva concorrente, aprovação de proposta, fechamento de cascata, aplicação de liquidação e geração de lote, serão funções/RPC transacionais que validam estado, alçada, versão, idempotência e auditoria. [32]
+
+| Fluxo | Implementação base | Resultado que deve ser demonstrado |
+| --- | --- | --- |
+| Lead, carteira e fila | App Netlify → Supabase com sessão e RLS | Cada usuário lê apenas a organização/SPE/carteira autorizada, com filtro e detalhe rápidos. |
+| Reserva e proposta | RPC/endpoint seguro → transação Postgres | Conflito de estoque tem resposta determinística; condição e aprovação preservam versão. |
+| Documento e dossiê | Storage privado + metadado de evidência | Upload, versão, leitura e expiração obedecem finalidade, escopo e trilha de acesso. |
+| Cobrança, split e ERP | Outbox/inbox + função segura + parceiro habilitado | Nenhuma chamada duplica fato econômico; retorno pode ser reprocessado sem perder origem. |
+| Contador e fechamento | Snapshot, lote imutável, exportação e retorno no Supabase | Diferença abre até contrato, evento, política, documento e referência externa. |
+| Dashboard e IA | Visões/materializações autorizadas, realtime apenas como sinal de interface | Dado exibido recupera o estado canônico e toda recomendação informa fonte, recorte e responsável. |
+
+O deploy também passa a fazer parte da governança. Alteração de schema, RLS, bucket, policy, função, integração ou visualização crítica entra em migration e revisão de código; chega primeiro a preview protegido e homologação isolada; só segue para produção com teste de regressão, plano de reversão e observabilidade. Agendamentos curtos podem abrir jobs rastreáveis, mas não substituem uma fila persistida nem assumem sozinhos conciliação, fechamento ou processamento pesado. [33]
+
+Essa arquitetura cria a superfície necessária para **explorar dados de forma mais intuitiva**, **entender melhor tendências** e **salvar ou compartilhar facilmente** recortes de gestão, preservando permissões e evidências. As regras de pagamento, fiscalidade, privacidade, retenção, KYC, assinatura e escrituração continuam configuráveis e sujeitas à validação por jurídico, DPO, contador/fiscal e parceiro financeiro habilitado.
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -298,3 +329,7 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [30] [Benchmark competitivo de CRM imobiliário — dez referências públicas, agosto de 2026](benchmark_crm_analise.md)
 
 [31] [Sistema visual do CRM imobiliário — gráficos, layout, cores, tipografia e interação](crm_sistema_visual.md)
+
+[32] [Arquitetura de referência — CRM imobiliário sobre Netlify + Supabase](arquitetura_crm_netlify_supabase.md)
+
+[33] [Caderno de evidências — Netlify + Supabase](crm_netlify_supabase_evidencias.md)

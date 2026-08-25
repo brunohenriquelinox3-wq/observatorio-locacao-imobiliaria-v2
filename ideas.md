@@ -98,3 +98,6 @@ O símbolo será uma **bússola de lote**: dois arcos incompletos que sugerem um
 - A assinatura de bússola, wordmark e coordenada CRM.01 deve abrir o primeiro enquadramento como marca de observatório, não apenas aparecer como logotipo de navegação.
 - O marcador territorial `⌖` acompanha as aberturas de capítulo como artefato cartográfico mínimo; planos, recortes e trilhas devem reforçar investigação urbana sem competir com a leitura.
 - Fundos minerais e oliva sustentam análise; argila permanece estritamente reservada a foco, risco, recomendação prioritária e próximo passo.
+- O primeiro enquadramento trata bússola, wordmark e coordenada como artefato editorial protagonista, com hierarquia acima da navegação convencional.
+- A cada dois ou três capítulos, uma lâmina de respiro cartográfico interrompe os painéis operacionais: grade territorial, coordenada, nota de campo ou conclusão ampla.
+- Todo painel simulado funciona como placa de evidência: recorte, método, leitura interpretativa e consequência prática precisam aparecer antes da ação.

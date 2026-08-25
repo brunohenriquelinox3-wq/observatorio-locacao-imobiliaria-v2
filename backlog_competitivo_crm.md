@@ -32,6 +32,23 @@ Este backlog é uma **fila de hipótese de produto**, não um compromisso comerc
 | UX-09 | Tornar IA auditável | Cartões/painéis de IA com fonte, escopo, limitação, feedback, revisão e confirmação antes de ação. | Diferencial | Todo insight de alto impacto registra fonte, usuário aprovador e resultado da ação. |
 | UX-10 | Aprender com operação | Instrumentação de tarefa, compreensão de gráfico, taxa de aceite/edição de IA e uso de densidade. | Evolução | Cada piloto produz evidência comparável para promover, ajustar ou remover um padrão visual. |
 
+## Plataforma Netlify + Supabase
+
+| ID | Resultado | Requisito | Prioridade | Critério de aceitação |
+| --- | --- | --- | --- | --- |
+| PLAT-01 | Separar ambientes sem improviso | Repositório, configuração Netlify, previews protegidos, projeto Supabase por ambiente e inventário de segredos. | Fundação | Nenhum preview consulta produção e toda variável tem owner, escopo e ambiente declarado. |
+| PLAT-02 | Versionar a infraestrutura de dados | Migrations para schema, grants, RLS, buckets, funções SQL, triggers e índices. | Fundação | Um ambiente limpo é reconstruído por migrations e testes sem intervenção manual não registrada. |
+| PLAT-03 | Isolar organizações e carteiras | `organizations`, entidades legais/SPE, memberships, escopos, RLS e testes de permitir/negar. | Fundação | Um usuário de uma organização não lê nem altera linha/arquivo de outra, inclusive por URL ou API direta. |
+| PLAT-04 | Proteger alçadas sensíveis | Auth, MFA por risco, recertificação de acesso e auditoria de permissão. | Fundação | Alterar acesso, dado bancário, regra de split, exportação e aprovação sensível exige o nível de autenticação e alçada definidos. |
+| PLAT-05 | Controlar evidências privadas | Buckets privados, metadado de evidência, URL temporária, retenção, versão, hash e política de Storage. | Fundação | Documento sensível não é público, não é enumerável e toda leitura/alteração relevante tem trilha. |
+| PLAT-06 | Fechar comandos de negócio em transação | RPC/serviço de domínio para reserva, proposta, contrato, entitlement, fechamento e compensação. | Fundação | Concorrência, retry e estado inválido não criam dupla reserva, direito duplicado ou alteração silenciosa. |
+| PLAT-07 | Integrar sem duplicar efeito | `outbox_message`, `inbox_event`, idempotency key, correlação externa, tentativa, erro e reprocessamento. | Diferencial | Um callback repetido não reaplica liquidação; uma saída pode ser auditada até a intenção aprovada. |
+| PLAT-08 | Processar jobs de forma operável | Fila durável, estado de job, lease, backoff, limite de tentativa e alertas. | Diferencial | Importação, conciliação e relatório lento sobrevivem a falha parcial sem depender do browser aberto. |
+| PLAT-09 | Fechar com evidência | Eventos imutáveis, lote de exportação, snapshot, retorno de ERP e caso de divergência. | Diferencial | Controladoria rastreia diferença até origem e não edita o passado para “fechar” saldo. |
+| PLAT-10 | Tornar recuperação verificável | Política de backup de banco e Storage, RPO/RTO, restore em ambiente isolado e runbook. | Fundação | Um teste de recuperação comprova banco, documentos críticos, acesso e reconciliação pós-restore. |
+| PLAT-11 | Observar risco antes da perda | Logs estruturados, métricas de RLS, integração, job, latência, erro, custo e alerta. | Fundação | Erro crítico tem correlação, owner, alerta e procedimento de resposta definidos. |
+| PLAT-12 | Entregar mudanças com segurança | Pipeline de preview → homologação → produção, checklist de schema, feature flag, rollback de app e migration compensatória. | Fundação | Nenhuma mudança de dados/policy crítica alcança produção sem teste, revisão e plano de reversão. |
+
 ## Revisão de priorização
 
 O backlog deve ser revisado após cada piloto mensal. Uma prioridade só sobe quando houver problema repetido, impacto mensurável, viabilidade de integração e dono operacional. Uma hipótese pode ser rebaixada ou removida sem apagar o registro da decisão anterior.
