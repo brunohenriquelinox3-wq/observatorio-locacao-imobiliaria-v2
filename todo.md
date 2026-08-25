@@ -157,4 +157,4 @@
 - [x] Projetar fluxos de Super Admin, Admin de organização, Admin de área e operador, com jornadas de entrada, mudança, suspensão e emergência.
 - [x] Traduzir o modelo para schema, RLS, funções transacionais, sessão reforçada, audit event e testes permitir/negar.
 - [x] Atualizar estratégia, arquitetura, backlog e observatório; validar desktop/mobile.
-- [ ] Salvar checkpoint e entregar a revisão da camada administrativa.
+- [x] Salvar checkpoint e entregar a revisão da camada administrativa.
