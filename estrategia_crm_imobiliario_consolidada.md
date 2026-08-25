@@ -312,6 +312,20 @@ O CRM não pode prometer execução perfeita ou ausência de bugs. A estratégia
 
 As fontes de solução seguem hierarquia: documentação, especificação, changelog, advisory e issue tracker oficial definem comportamento/versionamento; OWASP, SRE e ferramentas de teste orientam controles; telemetria e teste do produto comprovam o caso real; fontes comunitárias, inclusive Stack Overflow, ajudam a montar uma hipótese ou reprodução mínima, mas nunca viram padrão de produção sem validação de versão, segurança e regressão. [39] [40] [41] [42]
 
+### 8.9A Contrato de falha: repetir o seguro, reconciliar o ambíguo
+
+O código do CRM separa leitura, decisão transacional e efeito externo. Uma leitura idempotente pode usar retry limitado; uma transação interna curta pode ser reexecutada integralmente após conflito, se não tiver produzido efeito externo; já uma chamada a parceiro, assinatura, instrução financeira, exportação restrita ou alteração de acesso entra em estado **em reconciliação** quando a confirmação é ambígua. O produto nunca pede que alguém clique novamente para “ver se foi”.
+
+| Limite de engenharia | Decisão de produto | Prova de saída |
+| --- | --- | --- |
+| Concorrência | Reserva, aprovação, entitlement e fechamento usam estado esperado, versão/constraint e transação curta. | Duas sessões concorrentes produzem conflito explícito ou um único fato canônico, nunca duas confirmações. |
+| Retry | Retry de banco não atravessa a fronteira de rede; outbox, inbox, idempotência e reconciliação governam parceiro externo. | Timeout após aceite, callback repetido e evento fora de ordem não duplicam efeito, saldo, comunicação ou documento. |
+| Autorização | Grant, RLS, função, view, URL temporal e exportação são testados como superfícies distintas; JWT/claim não é fonte exclusiva de escopo. | Permitir/negar prova identidade, organização, SPE, finalidade, AAL e preservação da linha/objeto negado. |
+| Erro e telemetria | Resposta pública é acionável; logs, métricas e traces preservam correlação com allowlist de atributos; audit event mantém decisão de domínio. | Usuário entende a próxima ação sem receber stack trace, segredo ou PII; operação consegue investigar por correlação. |
+| Mudança | Schema, policy, função, UI e dependência evoluem por mudança pequena, compatível e reversível. | Preview, migration, rollback/compensação, dependency diff e owner existem antes da promoção. |
+
+O catálogo aprofundado registra as contramedidas por jornada e torna explícito o limite entre retry, compensação e reconciliação. [Matriz de jornadas](crm_engenharia_antierro_02_matriz_jornadas.md) · [Evidências atualizadas](crm_engenharia_antierro_evidencias.md)
+
 ## 8.10 Rotina permanente: profundidade sem dispersão
 
 A estratégia passa a operar uma rotina permanente de pesquisa que não confunde volume de leitura com maturidade de produto. Cada ciclo precisa registrar **pergunta, fonte primária, contraponto, cenário de exceção, impacto de domínio, teste de validação, decisão, owner, data de revisão e limite de responsabilidade**. A fila prioriza a possibilidade de erro econômico, vazamento entre organizações, perda de evidência, duplicidade de evento, risco regulatório e impacto ao cliente; novidades de concorrência e comunidade entram como hipótese, nunca como requisito automático. [43] [44]

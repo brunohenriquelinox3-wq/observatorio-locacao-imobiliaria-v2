@@ -62,3 +62,39 @@
 [11] [Sentry Docs — Issue Grouping](https://docs.sentry.io/concepts/data-management/event-grouping/)
 
 [12] [Stack Overflow Help — Minimal, Reproducible Example](https://stackoverflow.com/help/minimal-reproducible-example)
+
+## Captura 03 — concorrência, política, telemetria e efeito externo
+
+| Fonte primária | Achado verificável | Aplicação ao CRM | Limite ou conflito relevante |
+| --- | --- | --- | --- |
+| NIST SP 800-218 SSDF | O SSDF propõe práticas de desenvolvimento seguro para reduzir vulnerabilidades, mitigar o impacto das que permanecerem e enfrentar causas-raiz para evitar recorrência. [13] | Todo controle anti-erro passa a ter requisito, implementação, evidência de revisão, teste, monitoramento e ação corretiva; segurança não fica restrita ao fim do ciclo. | O SSDF é deliberadamente alto nível; não substitui invariantes de reserva, subledger, split, LGPD ou validação profissional de tema fiscal/jurídico. |
+| CISA Secure by Design | Segurança deve ser requisito central do fabricante; MFA, logging e SSO devem ser disponibilizados de forma segura por padrão. [14] | O produto assume responsabilidade por acesso mínimo, MFA em operação sensível, logging protegido e padrões seguros de saída, em vez de transferir a proteção para a imobiliária/loteadora. | “Seguro por padrão” não elimina configuração contextual: escopo, finalidade, vigência, RLS, retenção e alçada continuam específicos da organização e da operação. |
+| Google SRE — Monitoring Distributed Systems | Monitoramento combina sinais de caixa-preta e caixa-branca; alertas humanos precisam ser acionáveis e de baixo ruído; latência, tráfego, erros e saturação são sinais centrais. [15] | Painéis e alertas distinguem sintoma de causa, separam latência de êxito e de erro, e medem backlog/idade de fila como saturação de jornada. | Não se deve paginar por “algo estranho” nem usar telemetria como histórico de domínio; audit event e evidência econômica permanecem separados. |
+| OpenTelemetry — Observability Primer | Traces, métricas e logs permitem investigar comportamentos novos quando a aplicação é instrumentada com contexto suficiente; tracing reconstrói o caminho de uma requisição distribuída. [16] | `correlation_id`/`trace_id`, release, ambiente, jornada, estado e referência externa conectam UI, RPC, outbox, callback e inbox sem transportar payload sensível. | Instrumentar mais não autoriza capturar segredo, PII, documento, CPF/CNPJ ou dado bancário; atributos têm classificação, allowlist e retenção. |
+| PostgreSQL 18 — Transaction Isolation | Read Committed não impede todas as anomalias em comandos complexos; transações Repeatable Read/Serializable podem exigir retry integral após falha de serialização. [17] | Reserva concorrente, uso de tabela, atualização de entitlement e fechamento usam invariante, unicidade/versão e transação curta. Se houver `40001`, o CRM reexecuta somente a decisão ainda segura e sem efeito externo. | Retry de transação não pode repetir chamada de parceiro, e-mail, assinatura ou pagamento. Primeiro persiste intenção/outbox; efeito externo fica fora da transação e é idempotente. |
+| Supabase RLS | Grants e policies são camadas distintas; cada operação deve ter policy e teste de permitir/negar. `service_role` ignora RLS e deve permanecer no servidor. [18] | Migration de tabela exposta inclui RLS, revogação/grant mínimo, policy por operação, teste pgTAP e índices dos filtros de escopo; views e funções recebem revisão explícita. | JWT pode ficar defasado e metadata de usuário é mutável; autorização crítica não depende de dado editável pelo usuário ou de claim sem estratégia de renovação/revalidação. |
+| Stripe — Idempotent Requests | A mesma chave de idempotência retorna o resultado inicial, inclusive erro 500, mas a retenção de chave pode expirar após pelo menos 24 horas e conflitos de parâmetros exigem tratamento. [19] | Cada parceiro recebe um perfil de capacidade. O CRM mantém seu próprio `intent_id`, digest de parâmetros, outbox/inbox e reconciliação para tornar repetição, timeout e callback tardio explicáveis. | Esta semântica é específica da Stripe e não prova comportamento de boleto, Pix ou split de outro parceiro; contrato, sandbox e retorno homologado precedem produção. |
+
+## Decisões reforçadas
+
+1. **Teste negativo é produto, não exceção.** Toda capacidade crítica passa a provar o que pode, o que não pode e o que acontece quando há conflito, queda, repetição, atraso ou escopo inválido.
+2. **O retry tem fronteira.** O banco pode reexecutar uma transação curta e pura após conflito; o CRM nunca reenvia efeito externo por tentativa genérica. Persistência, outbox, idempotência do parceiro e reconciliação decidem a repetição.
+3. **Observabilidade é a trilha técnica; audit é a trilha de decisão.** Logs, métricas e traces compartilham correlação com audit event, mas não viram cópia de documento, saldo, payload, segredo ou justificativa jurídica.
+4. **RLS só é considerada pronta com grant, policy, teste e desempenho.** “A policy existe” não é critério: a mudança deve provar allow/deny, integridade do alvo negado, índice do filtro e ausência de uso de privilégio de serviço no cliente.
+5. **Sites de diagnóstico têm papéis diferentes.** Documentação, RFC, advisory e changelog definem comportamento; issue tracker e ferramenta de monitoramento ajudam a reproduzir; comunidade formula hipótese; nenhuma resposta é copiada para produção sem versão, teste e revisão.
+
+## Referências atuais
+
+[13] [NIST — SP 800-218 Secure Software Development Framework](https://csrc.nist.gov/pubs/sp/800/218/final)
+
+[14] [CISA — Secure by Design](https://www.cisa.gov/securebydesign)
+
+[15] [Google SRE — Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/)
+
+[16] [OpenTelemetry — Observability Primer](https://opentelemetry.io/docs/concepts/observability-primer/)
+
+[17] [PostgreSQL 18 — Transaction Isolation](https://www.postgresql.org/docs/current/transaction-iso.html)
+
+[18] [Supabase — Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
+
+[19] [Stripe — Idempotent Requests](https://docs.stripe.com/api/idempotent_requests)

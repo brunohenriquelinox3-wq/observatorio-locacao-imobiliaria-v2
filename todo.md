@@ -158,3 +158,12 @@
 - [x] Traduzir o modelo para schema, RLS, funções transacionais, sessão reforçada, audit event e testes permitir/negar.
 - [x] Atualizar estratégia, arquitetura, backlog e observatório; validar desktop/mobile.
 - [x] Salvar checkpoint e entregar a revisão da camada administrativa.
+
+## Aprofundamento anti-erro: código, bugs e soluções de CRM
+
+- [x] Delimitar classes de falha e critérios de priorização por jornada crítica do CRM.
+- [x] Pesquisar fontes atuais de engenharia de software, segurança, confiabilidade, observabilidade e depuração.
+- [x] Mapear prevenção, detecção, contenção, recuperação e teste para dados, acesso, integrações, documentos e financeiro/split.
+- [x] Atualizar evidências, estratégia, arquitetura e backlog com controles e referências rastreáveis.
+- [x] Evoluir o observatório com a revisão anti-erro e validar em desktop/mobile.
+- [ ] Salvar checkpoint e entregar o aprofundamento de engenharia anti-erro.

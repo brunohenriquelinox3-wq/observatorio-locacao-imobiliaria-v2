@@ -205,6 +205,18 @@ Cada mudança de software é uma mudança de produto, dados e operação. Por is
 
 O frontend usa error boundary como contenção de renderização por rota/painel e estado explícito para falha de comando; handlers e trabalho assíncrono continuam exigindo tratamento próprio. A telemetria agrupa sintomas por fingerprint/release, mas não substitui audit trail de domínio. Resposta de UI deve dizer o que ocorreu, qual ação é segura e como informar a correlação; ela não afirma sucesso enquanto a transação ou a reconciliação não confirmar o estado canônico.
 
+### 12.1 Fronteira de retry e recuperação
+
+| Camada | O que pode repetir | O que é proibido repetir cegamente | Mecanismo de recuperação |
+| --- | --- | --- | --- |
+| Browser/leitura | Leitura idempotente, com limite, backoff, cancelamento e estado visível. | Comando de reserva, alçada, documento, exportação ou dinheiro após rede instável. | Recarregar estado canônico e preservar rascunho somente quando não altera fato. |
+| RPC/transação | Decisão interna curta e pura após conflito/serialização, reexecutando a transação inteira. | Qualquer chamada a parceiro, e-mail, assinatura, arquivo externo ou notificação que possa ter escapado da transação. | Versão/constraint, conflito explícito, nova tentativa transacional ou retificação por fato. |
+| Outbox/worker | Mensagem elegível não concluída, sob lease, limite e chave estável. | Nova intenção econômica criada para “destravar” a tentativa anterior. | Tentativa ligada à intenção, backoff, suspensão, dead-letter/arquivamento e caso de exceção. |
+| Inbox/callback | Processamento que a unicidade/hash prova ainda não ter produzido efeito. | Aplicação de settlement, distribuição ou cancelamento só porque o payload chegou outra vez. | Deduplicação, ordenação/versão, reconciliação por referência externa e compensação aprovada. |
+| Restore | Recuperação de serviço/objeto ensaiada em escopo isolado. | Restore usado para corrigir contrato, parcela, direito ou decisão individual. | Evento compensatório, lote corretivo e reconciliação preservando o passado. |
+
+O modelo detalhado, incluindo cenário de timeout ambíguo, conflito de transação, RLS por operação, callback tardio e carga de jornada, é vinculante à arquitetura. [Matriz aprofundada anti-erro](crm_engenharia_antierro_02_matriz_jornadas.md) · [Evidências](crm_engenharia_antierro_evidencias.md)
+
 ## Referências de plataforma
 
 [1]–[12] [Caderno de evidências Netlify + Supabase](crm_netlify_supabase_evidencias.md)
@@ -218,3 +230,5 @@ O frontend usa error boundary como contenção de renderização por rota/painel
 [16] [Disciplina anti-erro — metodologia, catálogo, controles e relatórios](crm_engenharia_antierro_metodologia.md)
 
 [17] [Administração de plataforma — método, evidências, alçadas e implementação](crm_administracao_plataforma_metodologia.md) · [evidências](crm_administracao_plataforma_evidencias.md) · [modelo](crm_administracao_plataforma_modelo.md) · [blueprint](crm_administracao_plataforma_implementacao.md)
+
+[18] [Aprofundamento anti-erro — matriz de jornadas, contramedidas e fontes](crm_engenharia_antierro_02_matriz_jornadas.md) · [evidências atualizadas](crm_engenharia_antierro_evidencias.md)
