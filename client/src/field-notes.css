@@ -1,0 +1,99 @@
+/* Caderno de Campo Urbano: marcas de evidência, coordenadas e pressão de decisão. */
+
+.eyebrow::after {
+  content: "⌾  01.27";
+  color: rgba(23, 59, 77, .45);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+  letter-spacing: .11em;
+}
+
+.launch-section .eyebrow::after,
+.decision .eyebrow::after { color: rgba(247, 242, 233, .58); }
+
+.market-grid .chart-card {
+  background-image:
+    linear-gradient(90deg, rgba(23,59,77,.035) 1px, transparent 1px),
+    linear-gradient(rgba(23,59,77,.035) 1px, transparent 1px);
+  background-size: 25px 25px;
+}
+
+.market-grid .chart-card .source-note::before {
+  display: block;
+  margin-bottom: 7px;
+  color: #C65A35;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+.market-grid .chart-card:nth-child(1) .source-note::before { content: "⌾ RECORTE · PREÇOS PEDIDOS PARA NOVOS ALUGUÉIS"; }
+.market-grid .chart-card:nth-child(2) .source-note::before { content: "⌾ ACHADO · +6,7 MI DE DOMICÍLIOS EM NOVE ANOS"; }
+.market-grid .chart-card:nth-child(3) .source-note::before { content: "⌾ LEITURA · CRESCIMENTO NÃO É SINÔNIMO DE MAIOR PREÇO"; }
+
+.city-read::after {
+  content: "⌾ TERRITÓRIO ATIVO";
+  position: absolute;
+  right: 27px;
+  bottom: 23px;
+  color: #E0B18D;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .13em;
+}
+
+.action-section > div:first-child {
+  position: relative;
+  border-left: 4px solid #C65A35;
+  padding: 28px 30px 29px 33px;
+  background: linear-gradient(115deg, rgba(244,226,213,.67), rgba(247,242,233,.1));
+}
+
+.action-section > div:first-child::after {
+  content: "DECISÃO DE PRODUTO · NÃO PEDIR UM DADO QUE NÃO MUDA O PRÓXIMO PASSO.";
+  display: block;
+  max-width: 520px;
+  margin-top: 25px;
+  color: #9B3B1C;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .13em;
+  line-height: 1.55;
+}
+
+.decision { overflow: hidden; position: relative; }
+.decision::before {
+  content: "N  ·  E  ·  S  ·  W";
+  position: absolute;
+  right: 9%;
+  top: 50%;
+  transform: translateY(-50%) rotate(-18deg);
+  color: rgba(247,242,233,.23);
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(38px, 7vw, 92px);
+  letter-spacing: .18em;
+  white-space: nowrap;
+}
+.decision > * { position: relative; z-index: 1; }
+
+.site-header .brand img { width: 49px; height: 49px; }
+.site-header .brand b { font-size: 24px; }
+footer .brand { position: relative; }
+footer .brand::after {
+  content: "⌾ OBS. 01";
+  margin-left: 7px;
+  color: #E0B18D;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+@media (max-width: 760px) {
+  .action-section > div:first-child { padding: 24px 20px 24px 23px; }
+  .decision::before { right: -7%; font-size: 45px; }
+  .site-header .brand img { width: 43px; height: 43px; }
+  .site-header .brand b { font-size: 20px; }
+}
