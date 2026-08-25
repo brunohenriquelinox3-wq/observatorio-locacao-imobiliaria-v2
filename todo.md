@@ -51,3 +51,13 @@
 - [x] Estruturar a visão de carteira por ciclo de vida, valor potencial, saúde documental e próxima ação sem score opaco.
 - [x] Atualizar o relatório e o observatório e testar em desktop e mobile.
 - [ ] Salvar novo checkpoint e entregar a revisão do núcleo cadastral.
+
+## Revisão contínua: sócios, parceiros e colaboradores
+
+- [x] Classificar no estudo recebido as naturezas societária, civil, trabalhista e de associação/autônomo.
+- [x] Validar os pontos sensíveis sobre representação societária, corretor associado, eSocial, dados sensíveis e contratos com operadores.
+- [x] Modelar participações societárias, parceiros, colaboradores, relações de prestação e vínculo com entidades jurídicas.
+- [x] Definir poderes, responsabilidades, acessos mínimos, procurações, vigência e trilhas de auditoria.
+- [x] Atualizar o catálogo de requisitos e a estratégia de revisão para regras internas de pessoas e terceiros.
+- [x] Atualizar o relatório e o observatório e testar em desktop e mobile.
+- [ ] Salvar novo checkpoint e entregar a revisão organizacional.

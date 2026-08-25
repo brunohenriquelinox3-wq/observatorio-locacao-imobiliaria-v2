@@ -146,6 +146,24 @@ Na PLD/FT, a Lei nº 9.613/1998 inclui a promoção imobiliária e a compra e ve
 
 Na proteção de dados, finalidade, adequação, necessidade, transparência, segurança e prestação de contas exigem que a plataforma registre a hipótese e a finalidade de cada coleta. A LGPD prevê várias bases legais, incluindo execução de contrato/procedimentos preliminares, obrigação legal/regulatória, legítimo interesse e proteção do crédito; consentimento é uma delas, não a etiqueta universal do cadastro. [15] A necessidade de assinatura ou participação de cônjuge também deve ser registrada como avaliação com evidência e responsável, não inferida automaticamente apenas por estado civil ou por uma regra de tela. [16]
 
+## 8.2 Revisão organizacional: sócios, parceiros e colaboradores
+
+O CRM passa a incorporar o lado interno da operação como uma camada de **relações organizacionais**, sem assumir o papel de RH, folha, saúde ocupacional, contabilidade societária ou jurídico. A entidade `Party` permanece única, mas cada pessoa ou empresa se liga a uma `Organization` por um `Engagement`: participação societária, prestação de serviço, colaboração, associação de corretagem ou terceirização. Poderes e acessos surgem como relações próprias, com escopo, instrumento, vigência, aprovação e recertificação.
+
+| Relação | O CRM coordena | O sistema não deve armazenar/calcular |
+| --- | --- | --- |
+| Sócio ou holding | Participação por empresa/SPE, poder operacional, instrumento de referência e alçada | Pró-labore, lucros, impostos, escrituração e decisão jurídica societária. |
+| Parceiro profissional | Escopo, contrato, acesso mínimo, procuração, responsável interno e avaliação de dados | Parecer confidencial, faturamento fiscal detalhado ou enquadramento automático de controlador/operador. |
+| Colaborador | Função, unidade, estado mínimo de elegibilidade de acesso e recertificação | Folha, prontuário, ASO, biometria, dependentes e informação clínica. |
+| Corretor associado | Registro declarado, instrumento, vigência, praça/produto, acesso e participação no negócio | Folha, ponto ou qualquer suposição de vínculo de emprego. |
+| Terceirizada | Empresa prestadora, escopo, local, contrato, gestor e evidências acordadas | Dados individuais da equipe, salvo necessidade/obrigação específica. |
+
+A Lei nº 6.530/1978 permite a associação do corretor a uma ou mais imobiliárias por contrato específico registrado, preservando sua autonomia profissional no contexto previsto e condicionando o arranjo à ausência dos elementos caracterizadores do vínculo de emprego. [17] O CRM deve, portanto, tratar esse papel fora do fluxo de empregado, guardar evidência e vigência, e deixar a análise trabalhista para os responsáveis habilitados.
+
+Para empregados, o eSocial informa que o registro deve ocorrer até a véspera do início das atividades; a NR-7 determina que o exame admissional seja realizado antes do início e que dados de exame componham prontuário médico individual. [18] [19] O produto deve integrar apenas um estado operacional mínimo para acesso/atividade, preservando o conteúdo médico e de RH em seus domínios restritos. A mesma separação vale para PGR/SST: o CRM pode coordenar uma pendência operacional autorizada, mas não se converte em prontuário, laudo ou sistema de medicina ocupacional. [20]
+
+> **Nova regra de arquitetura:** nenhuma relação interna é, por si, uma credencial. Ser sócio, parceiro ou colaborador não concede acesso automático a carteira, dossiê, alçada, tabela ou recebível. Toda permissão precisa registrar finalidade, escopo, aprovador, vigência, política aplicada e revisão.
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -187,3 +205,11 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [15] [Planalto — Lei nº 13.709/2018 (LGPD)](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm)
 
 [16] [Planalto — Código Civil, Lei nº 10.406/2002](https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm)
+
+[17] [Planalto — Lei nº 6.530/1978, art. 6º e parágrafos](https://www.planalto.gov.br/ccivil_03/leis/l6530.htm)
+
+[18] [eSocial — Histórico de Perguntas Frequentes](https://www.gov.br/esocial/pt-br/empresas/perguntas-frequentes/historico-de-perguntas-frequentes)
+
+[19] [Ministério do Trabalho e Emprego — NR-7 / PCMSO](https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-07-atualizada-2022-1.pdf)
+
+[20] [Ministério do Trabalho e Emprego — Programa de Gerenciamento de Riscos](https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/pgr)
