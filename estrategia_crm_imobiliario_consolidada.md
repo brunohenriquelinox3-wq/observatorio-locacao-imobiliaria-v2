@@ -4,6 +4,29 @@
 
 **Elaborado por Manus AI · Agosto de 2026**
 
+> **Atualização estratégica — revisão viva de agosto de 2026:** loteadoras e desenvolvimento de loteamentos deixam de ser vertical adjacente e passam a ser um domínio de primeira classe, no mesmo nível de locação, venda urbana e venda de construtora. Os estudos fornecidos pela BHL foram incorporados como referências de domínio e confrontados com fontes externas oficiais e setoriais; toda afirmação sensível mantém fonte, escopo, limitação e estado de revisão.
+
+## Mudança de tese: loteadora é desenvolvimento urbano, não corretagem de lote
+
+O CRM deve atender quatro linhas de negócio conectadas: locação, venda urbana, construtora/incorporação e loteadora/desenvolvimento urbano. A última possui um ciclo próprio — gleba, diligência, viabilidade, projeto, aprovação, registro, infraestrutura, estoque, venda, recebíveis, quitação e pós-entrega — e não pode ser reduzida ao funil de proposta de um imóvel usado.
+
+| Domínio | Unidade de valor | Módulos especializados agora previstos |
+| --- | --- | --- |
+| Locação | Contrato e relacionamento de ciclo longo | Garantia, apólice, vistoria, cobrança, repasse e renovação. |
+| Venda urbana | Transação até o registro | Diligência, proposta, financiamento, escritura e registro. |
+| Construtora | Unidade/reserva e plano durante a obra | Estoque de unidade, tabela, fluxo de pagamento, repasse e distrato. |
+| Loteadora | Empreendimento, lote e carteira própria | Gleba, regra municipal, aprovação, obra, garantia, lote, permutante, recebível e pós-entrega. |
+
+O recorte mineiro divulgado para o primeiro trimestre de 2026 ilustra por que o CRM precisa separar unidades, VGV, tipo de empreendimento, ticket, praça e período: a pesquisa reportou 2.958 lotes vendidos, alta de 40,9% ante o primeiro trimestre de 2025, ao mesmo tempo que o VGV divulgado diminuiu. A pesquisa cobre municípios responsáveis por 41% da população e 57% do potencial de consumo de Minas Gerais; não é um retrato de todo o estado. [9]
+
+## Arquitetura revisada de loteadora
+
+O domínio de loteadora passa a usar estados ortogonais. Um empreendimento pode estar simultaneamente registrado, em obras e em vendas; um lote pode estar matriculado, caucionado e não disponível. Portanto, disponibilidade comercial, alocação, registro e carteira devem ser dimensões separadas. Gates documentais impedem venda sem registro revisado, reserva incompatível, liberação de lote caucionado ou retorno automático de lote distratado ao estoque. O contrato e seu quadro-resumo devem versionar condições de índice, juros, distrato e restituição; percentuais nunca devem ficar fixos como regra universal de software. [10] [11]
+
+## Estratégia de revisão aberta
+
+Toda nova fonte passa a registrar a afirmação, escopo, período, método, limitação, confiança, responsável, data de revisão e impacto potencial. A fonte pode ser oficial, setorial, fornecida por parceiro ou observação de piloto. Em caso de conflito, o sistema preserva as versões e abre proposta de mudança; não “corrige” a história substituindo um dado silenciosamente. Essa governança permite melhorar a estratégia continuamente sem transformar hipótese em regra de produto.
+
 ## 1. Decisão de produto
 
 O produto futuro deve ser construído como um **CRM de relações imobiliárias**, e não como uma agenda de leads ou um portal de anúncios. O núcleo precisa representar, no tempo, as relações entre pessoas e empresas, ativos, território, intenção de negócio, proposta, documento e evidência. A mesma estrutura deve suportar locação residencial, vendas urbanas, lotes urbanos e loteadoras; o que muda em cada caso são os campos, checklists, regras de passagem e responsáveis.
@@ -129,3 +152,9 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [7] [Planalto — Lei nº 13.709/2018 (LGPD)](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm)
 
 [8] [ANPD — Guia orientativo sobre segurança da informação para agentes de pequeno porte](https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia-orientativo-sobre-seguranca-da-informacao-para-agentes-de-tratamento-de-pequeno-porte)
+
+[9] [Sinduscon-MG — Alta nas vendas marca o 1º trimestre de 2026 do mercado de loteamentos em Minas Gerais](https://sinduscon-mg.org.br/alta-nas-vendas-marca-o-1o-trimestre-de-2026do-mercado-de-loteamentos-em-minas-gerais/)
+
+[10] [Planalto — Lei nº 6.766/1979 (Parcelamento do Solo Urbano)](https://www.planalto.gov.br/ccivil_03/leis/l6766.htm)
+
+[11] [Planalto — Lei nº 13.786/2018 (Distrato)](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13786.htm)

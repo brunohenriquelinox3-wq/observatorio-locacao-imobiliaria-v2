@@ -31,3 +31,13 @@
 - [x] Atualizar o observatório e o relatório consolidado.
 - [x] Testar a nova rota de CRM em desktop e mobile.
 - [ ] Salvar o novo checkpoint e entregar a estratégia final.
+
+## Revisão contínua: loteadoras como eixo central
+
+- [x] Extrair e classificar as afirmações, regras e lacunas dos estudos fornecidos para locação, vendas, construtora e loteamentos.
+- [x] Validar com fontes externas os dados sensíveis de mercado, legislação, produto, financiamento e risco de loteadoras.
+- [x] Modelar o ciclo integral de loteamento: gleba, viabilidade, aprovação, obra, lançamento, vendas, recebíveis, entrega e pós-venda.
+- [x] Adicionar ao CRM entidades, estados, alertas e permissões próprios de loteadora sem misturar o fluxo com venda urbana simples.
+- [x] Ampliar o centro de evidências para marcar alegações recebidas, fontes externas, nível de confiança, revisão e impacto de produto.
+- [x] Atualizar a estratégia consolidada e o observatório com as melhorias e testar em desktop e mobile.
+- [ ] Salvar novo checkpoint e entregar a versão revisável da estratégia.
