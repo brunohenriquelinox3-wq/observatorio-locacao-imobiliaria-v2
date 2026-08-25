@@ -118,3 +118,5 @@ O símbolo será uma **bússola de lote**: dois arcos incompletos que sugerem um
 - Argila marca exclusivamente conflito, risco, decisão e próximo passo. Coordenadas, sombra, textura e análise neutra usam papel mineral, azul cadastral ou oliva contido.
 - Em módulos financeiros, uma placa cartográfica de conciliação interrompe os consoles: ela torna visível a ordem **fato → regra → retorno → caso**, para que o painel seja interpretado como evidência e não como saldo.
 - A camada de tese deve anteceder controles de estado ou cálculo; uma frase editorial, uma coordenada de recorte e a consequência prática explicam o painel antes da interação.
+- A abertura deve operar como **capa institucional de campo**: bússola, palavra-marca e coordenada CRM.01 são um selo em escala editorial, com grade, anéis e carimbo antes de qualquer linguagem de produto.
+- A fila de divergências abre uma virada cartográfica autônoma: o recorte F.06B, a rota de investigação e a tese de conciliação aparecem antes da lista; argila assinala exclusivamente criticidade, conflito e etapa de decisão.

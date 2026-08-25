@@ -196,3 +196,11 @@
 - [x] Implementar as superfícies interativas de domínio modular e linha do tempo de fatos no observatório CRM.
 - [x] Validar build e experiência desktop/mobile; registrar as decisões de design aplicadas.
 - [x] Salvar checkpoint e entregar o painel CUR-01/CUR-02.
+
+## Fila de divergências de conciliação
+
+- [x] Definir cenários de divergência, severidade, evidência mínima, responsável, alçada e critério de encerramento.
+- [x] Projetar a jornada de triagem, seleção de caso, leitura de evidências e decisão rastreável.
+- [x] Implementar a fila e o detalhe interativos no painel financeiro CUR-01/CUR-02.
+- [x] Validar build e experiência desktop/mobile; registrar as decisões de design aplicadas.
+- [ ] Salvar checkpoint e entregar o protótipo de divergências.
