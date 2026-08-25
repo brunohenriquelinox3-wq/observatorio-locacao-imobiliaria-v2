@@ -83,3 +83,13 @@
 - [x] Converter os achados em diferenciais, requisitos e sequência de desenvolvimento para o CRM próprio.
 - [x] Atualizar o centro de evidências, a estratégia consolidada e o observatório; validar a compilação e a experiência das rotas principais.
 - [x] Salvar o checkpoint e entregar a revisão competitiva.
+
+## Revisão contínua: experiência visual, gráficos e interface de CRM
+
+- [x] Definir critérios de qualidade visual, acessibilidade, performance e decisão para painéis e fluxos de CRM.
+- [x] Pesquisar fontes especializadas em visualização de dados, design de produtos e padrões de CRM.
+- [x] Analisar referências de layout, tipografia, cores, componentes, motion e microinterações de produtos digitais maduros.
+- [x] Formular um sistema visual de CRM imobiliário com paleta semântica, hierarquia, gráficos e padrões de estados.
+- [x] Atualizar a estratégia e o backlog com requisitos de experiência, observabilidade e consistência visual.
+- [x] Evoluir o observatório com demonstrações interativas e testar em desktop e mobile.
+- [x] Salvar checkpoint e entregar a revisão visual estratégica.

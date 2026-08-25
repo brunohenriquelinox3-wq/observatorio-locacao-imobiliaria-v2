@@ -207,6 +207,26 @@ O espaço mais consistente não é prometer “mais funcionalidades” que os co
 
 > **Posicionamento revisado:** o sistema operacional de relações, direitos econômicos e evidências para imobiliárias e loteadoras que precisam vender, receber, distribuir e fechar com contexto.
 
+## 8.5 Sistema visual, gráficos e experiência de CRM
+
+A camada visual passa a ser uma competência estratégica do produto, e não uma etapa de acabamento. A primeira impressão precisa comunicar segurança e sofisticação; o uso diário precisa reduzir a carga cognitiva de corretor, gestor, loteadora, financeiro e contador. A decisão visual central é separar duas superfícies coerentes: **o observatório editorial-cartográfico**, que ensina e explica estratégia, e **o workspace operacional**, mais neutro, denso, responsivo e orientado à próxima ação. [31]
+
+| Regra visual | Decisão de produto | Proteção contra erro |
+| --- | --- | --- |
+| Pergunta antes do gráfico | Todo painel declara pergunta, período, recorte, unidade, fonte e ação possível. | Número sem contexto não vira sinal de gestão. |
+| Gráfico abre o dado | Barra, linha, dispersão, mapa/planta e funil conectam à tabela/lista de casos. | Tooltip não é a única fonte de informação e nenhuma visualização fica sem drill-down. |
+| Layout por trabalho | Lista compara, detalhe decide, timeline explica; painéis laterais preservam o contexto. | Filtros, empresa/SPE, período e permissões persistem na investigação. |
+| Cor com significado redundante | Azul cadastral, argila de decisão, verde de governança e severidades funcionam por token. | Cor vem acompanhada de rótulo, ícone, forma, contraste e estado textual. |
+| Tipografia de operação | DM Sans e números tabulares guiam campos, tabelas e valores; Fraunces fica em marcos editoriais. | Corpo e dado crítico não usam fonte decorativa nem rótulo microscópico. |
+| Movimento com propósito | Hover, filtro, aba, painel e feedback usam transições curtas e reduzíveis. | Redução de movimento, teclado e foco não dependem de animação. |
+| IA verificável | Insight apresenta fontes, recorte, limitação, ação proposta e aprovação humana. | IA não altera contrato, financeiro, reserva, cadastro crítico ou integração sem consentimento e alçada. |
+
+Gráficos padrão serão barras para comparação/prioridade, linhas para tendência, dispersão para relação entre variáveis e mapas/plantas para dimensão territorial. Pizza, donut, gauge, radar e 3D deixam de ser padrão de comparação porque área e ângulo comunicam magnitude com menos precisão; quando forem úteis para contexto secundário, devem vir com total, rótulo e tabela acessível. [31] Os gráficos deverão sempre expor estado de carregamento, vazio, permissão, parcialidade, desatualização, divergência e erro recuperável, pois um “zero” sem estado pode ocultar tanto ausência de negócio quanto falha de integração.
+
+O CRM oferecerá vistas salvas por função, densidade confortável/compacta e exportação/compartilhamento controlados. Em tela estreita, tabela passa a lista/tile orientada pela próxima tarefa; em tela larga, uma tabela pode coexistir com gráfico e painel contextual. Para cada função, a prova visual de valor será diferente: o corretor encontra a próxima ação; a loteadora investiga lote, disponibilidade e carteira; a controladoria abre a diferença até a origem; e o contador reconcilia competência, documento, evento e retorno sem transformar o CRM em ERP.
+
+> **Nova regra de qualidade:** uma interface é aprovada quando o usuário consegue identificar a exceção, explicar o recorte, abrir a evidência e executar a próxima ação autorizada sem depender de planilha paralela ou memória individual.
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -276,3 +296,5 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [29] [Planalto — Lei nº 8.934/1994, Registro Público de Empresas Mercantis](https://www.planalto.gov.br/ccivil_03/leis/L8934compilado.htm)
 
 [30] [Benchmark competitivo de CRM imobiliário — dez referências públicas, agosto de 2026](benchmark_crm_analise.md)
+
+[31] [Sistema visual do CRM imobiliário — gráficos, layout, cores, tipografia e interação](crm_sistema_visual.md)

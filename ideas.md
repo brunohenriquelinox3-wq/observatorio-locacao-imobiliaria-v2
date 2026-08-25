@@ -95,3 +95,6 @@ O símbolo será uma **bússola de lote**: dois arcos incompletos que sugerem um
 - O wordmark e a bússola de lote devem aparecer como assinatura forte já no primeiro enquadramento, com coordenada e marcação própria, nunca como navegação genérica.
 - Cada capítulo principal precisa manter uma margem de investigação com código de seção, recorte, método ou marcador de decisão que acompanhe a leitura.
 - Sequências de painéis repetidos devem ser interrompidas por ao menos uma lâmina editorial: nota de fechamento, spread cartográfico, pullout de decisão ou artefato de evidência.
+- A assinatura de bússola, wordmark e coordenada CRM.01 deve abrir o primeiro enquadramento como marca de observatório, não apenas aparecer como logotipo de navegação.
+- O marcador territorial `⌖` acompanha as aberturas de capítulo como artefato cartográfico mínimo; planos, recortes e trilhas devem reforçar investigação urbana sem competir com a leitura.
+- Fundos minerais e oliva sustentam análise; argila permanece estritamente reservada a foco, risco, recomendação prioritária e próximo passo.
