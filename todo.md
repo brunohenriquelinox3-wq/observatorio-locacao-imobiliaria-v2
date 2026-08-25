@@ -166,4 +166,4 @@
 - [x] Mapear prevenção, detecção, contenção, recuperação e teste para dados, acesso, integrações, documentos e financeiro/split.
 - [x] Atualizar evidências, estratégia, arquitetura e backlog com controles e referências rastreáveis.
 - [x] Evoluir o observatório com a revisão anti-erro e validar em desktop/mobile.
-- [ ] Salvar checkpoint e entregar o aprofundamento de engenharia anti-erro.
+- [x] Salvar checkpoint e entregar o aprofundamento de engenharia anti-erro.
