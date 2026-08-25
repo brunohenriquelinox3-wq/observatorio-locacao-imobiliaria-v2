@@ -8,8 +8,8 @@ import Home from "./pages/Home";
 import VendasUrbanas from "./pages/VendasUrbanas";
 import CrmStrategy from "./pages/CrmStrategy";
 
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
