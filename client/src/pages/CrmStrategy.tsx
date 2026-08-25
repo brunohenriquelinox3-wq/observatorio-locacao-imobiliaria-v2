@@ -9,6 +9,7 @@ import "../admin.css";
 import "../identity.css";
 import "../observatory-refinement.css";
 import "../course-audit.css";
+import "../cur-finance.css";
 import {
   ArrowDownRight, ArrowUpRight, BookOpenCheck, Check, ChevronRight, Compass,
   Banknote, Calculator, Database, FileCheck2, GitBranch, History, Landmark,
@@ -249,6 +250,110 @@ function CourseAuditSection() {
   );
 }
 
+function CurFinancePanel() {
+  const paymentStates = [
+    { key: "proof", code: "01", label: "proof submitted", title: "Comprovante recebido", text: "A pessoa anexou uma evidência. O CRM preserva origem, horário, objeto e correlação, mas ainda não chama isso de entrada de caixa.", fields: ["arquivo e hash", "origem declarada", "correlação externa"], gate: "Comprovante não cria settlement, direito pago nem saldo conciliado." },
+    { key: "recorded", code: "02", label: "recorded", title: "Fato registrado", text: "O evento foi aceito na trilha do CRM com ator, contrato, parcela e versão. O registro não substitui retorno bancário ou confirmação do parceiro.", fields: ["ator e comando", "contrato e parcela", "versão esperada"], gate: "Gravação interna continua distinta de confirmação externa." },
+    { key: "matched", code: "03", label: "matched", title: "Retorno compatível", text: "A referência externa foi comparada com a intenção e o evento registrado. Divergência de valor, data, favorecido ou chave abre exceção, não um encaixe forçado.", fields: ["id externo", "valor e moeda", "diferença explicada"], gate: "Match exige identidade e base compatíveis; sem isso, permanece pendência." },
+    { key: "settled", code: "04", label: "settled", title: "Liquidação conciliada", text: "O retorno elegível e a regra ativa sustentam o estado de settlement. Este é o ponto que pode atualizar a leitura de carteira — com trilha, alçada e reconciliação.", fields: ["retorno elegível", "regra datada", "reconciliação"], gate: "A interface só indica liquidação quando a prova externa e a aplicação interna concordam." },
+    { key: "reversed", code: "05", label: "reversed", title: "Reversão compensada", text: "Estorno ou devolução não apaga o passado. Abre um novo fato com referência ao anterior, motivo, fonte, responsável e impacto nos direitos derivados.", fields: ["fato de origem", "motivo e fonte", "compensação"], gate: "Reversão preserva a memória; editar o settlement anterior é recusado." },
+    { key: "disputed", code: "06", label: "disputed", title: "Divergência em caso", text: "Quando o evento não pode ser fechado automaticamente, o CRM mantém o estado de disputa, a próxima ação e os responsáveis sem declarar sucesso ou fracasso antecipado.", fields: ["razão da divergência", "dono do caso", "próxima revisão"], gate: "Estado incerto nunca aparece como caixa disponível, pagamento confirmado ou pendência resolvida." },
+  ];
+  const rules = [
+    { key: "v12", version: "R-2026.01", date: "vigente desde 01/04/2026", term: "Termo C-2026.02", base: "R$ 18.000,00", factor: "1,010000", adjustment: "R$ 180,00", total: "R$ 18.180,00", note: "Índice parametrizado de cenário; cálculo ilustrativo para expor a cadeia de memória, não valor real ou cobrança." },
+    { key: "v13", version: "R-2026.02", date: "retificação em 02/05/2026", term: "Termo aditivo C-2026.03", base: "R$ 18.000,00", factor: "1,012500", adjustment: "R$ 225,00", total: "R$ 18.225,00", note: "A alteração aponta termo e vigência novos. A versão anterior segue consultável; a retificação vira evento datado, não edição do passado." },
+  ];
+  const [activeState, setActiveState] = useState(0);
+  const [activeRule, setActiveRule] = useState(0);
+  const state = paymentStates[activeState];
+  const rule = rules[activeRule];
+
+  return (
+    <section id="cur-finance" className="cur-finance-section">
+      <div className="cur-finance-kicker"><span>⌖ CUR-01 + CUR-02</span><i /><b>FATO, REGRA &amp; PROVA</b></div>
+      <div className="content-section">
+        <div className="section-head cur-finance-head">
+          <aside><Eyebrow>06A · FUNDAÇÃO FINANCEIRA</Eyebrow><p>Um comprovante não é caixa. Uma regra nova não edita o contrato que já existia.</p></aside>
+          <div><h2>O painel financeiro precisa mostrar <em>o que aconteceu, por qual regra e com qual prova.</em></h2><p>Este protótipo interativo traduz CUR-01 e CUR-02 em duas superfícies de inspeção. Os valores são cenários de estudo; não há instrução de pagamento, parceiro ou liquidação real nesta tela.</p></div>
+        </div>
+
+        <div className="cur-finance-statement"><Compass className="h-6 w-6" /><div><span>EVIDÊNCIA → LEITURA → CONSEQUÊNCIA</span><b>Comprovante é evidência. Conciliação declara um estado. Regra datada explica o valor sem apagar a decisão anterior.</b></div><small>⌖ RECORTE F.06A · ANTES DE QUALQUER INSTRUÇÃO EXTERNA</small></div>
+
+        <div className="cur-finance-atlas">
+          <aside className="cur-finance-compass">
+            <ReceiptText className="h-7 w-7" />
+            <span>⌖ SUBLEDGER NÃO É SALDO</span>
+            <b>FATO<br />ANTES<br />DO NÚMERO</b>
+            <small>evento · estado · correlação · versão</small>
+            <div className="cur-finance-ruler"><i /><i /><i /><i /></div>
+            <p>Selecione uma etapa para inspecionar por que cada estado continua distinto.</p>
+          </aside>
+
+          <div className="cur-payment-console">
+            <div className="cur-console-top"><span>CUR-01 · ESTADO DE EVIDÊNCIA &amp; CONCILIAÇÃO</span><small>cenário ilustrativo · sem efeito externo</small></div>
+            <div className="cur-payment-steps" role="tablist" aria-label="Estados de evidência de pagamento e conciliação">
+              {paymentStates.map((item, index) => (
+                <button key={item.key} type="button" onClick={() => setActiveState(index)} className={activeState === index ? "active" : ""} aria-pressed={activeState === index}>
+                  <code>{item.code}</code><span>{item.label}</span>
+                </button>
+              ))}
+            </div>
+            <article className="cur-payment-detail" aria-live="polite">
+              <div className="cur-state-meta"><span>{state.label}</span><small>ETAPA {state.code} / 06</small></div>
+              <h3>{state.title}</h3><p>{state.text}</p>
+              <div className="cur-state-fields">{state.fields.map((field, index) => <div key={field}><code>0{index + 1}</code><span>{field}</span></div>)}</div>
+              <div className="cur-proof-gate"><ShieldCheck className="h-5 w-5" /><div><b>LEITURA DE CONTROLE</b><p>{state.gate}</p></div></div>
+            </article>
+          </div>
+        </div>
+
+        <div className="cur-finance-ledger">
+          <article><span>CUR-01</span><b>Seis estados legíveis.</b><p>`proof_submitted`, `recorded`, `matched`, `settled`, `reversed` e `disputed` conservam fonte, ator e correlação próprios.</p></article>
+          <article><span>CONSEQUÊNCIA</span><b>Incerteza continua visível.</b><p>Timeout, diferença ou estorno viram uma exceção com próximo passo; não recebem confirmação otimista no navegador.</p></article>
+          <article><span>FRONTEIRA</span><b>Parceiro liquida; CRM reconcilia.</b><p>O painel organiza fatos e decisões. A execução financeira depende de parceiro habilitado e dos controles aplicáveis.</p></article>
+        </div>
+
+        <div className="cur-finance-spread" aria-label="Placa cartográfica de conciliação financeira"><div className="cur-spread-stamp"><Compass className="h-7 w-7" /><span>⌖ CARTA DE CONCILIAÇÃO</span><b>F.06A</b><small>fato → regra → retorno</small></div><div className="cur-spread-copy"><span>PLACA DE MÉTODO · CUR-01 / CUR-02</span><h3>O dinheiro só muda de leitura quando <em>a evidência externa, a regra vigente e a aplicação interna</em> apontam para a mesma conclusão.</h3><p>Se uma delas diverge, o CRM não preenche o vazio com saldo manual: abre caso, preserva correlação e mantém a próxima ação visível.</p></div><div className="cur-spread-route"><div><b>FATO</b><span>evento datado</span></div><i>⌁</i><div><b>REGRA</b><span>versão + termo</span></div><i>⌁</i><div><b>RETORNO</b><span>prova externa</span></div><i>⌁</i><div><b>CASO</b><span>concilia ou diverge</span></div></div></div>
+
+        <div className="cur-rule-board">
+          <div className="cur-rule-side">
+            <Calculator className="h-7 w-7" />
+            <span>⌖ CUR-02 · REGRA DATADA</span>
+            <b>MEMÓRIA<br />DE CÁLCULO</b>
+            <p>Uma versão calcula. Outra retifica. Nenhuma apaga a anterior.</p>
+            <div className="cur-rule-switch" role="tablist" aria-label="Versões da regra de cálculo">
+              {rules.map((item, index) => <button key={item.key} type="button" onClick={() => setActiveRule(index)} className={activeRule === index ? "active" : ""} aria-pressed={activeRule === index}><code>{index === 0 ? "01" : "02"}</code><span>{item.version}</span></button>)}
+            </div>
+          </div>
+          <article className="cur-rule-paper" aria-live="polite">
+            <div className="cur-rule-meta"><span>{rule.version}</span><small>{rule.date}</small></div>
+            <h3>Memória reproduzível, não resultado opaco.</h3>
+            <p>O cenário revela a cadeia de entradas que uma regra financeira ou contratual precisa manter para ser conferida, recalculada e retificada com contexto.</p>
+            <dl className="cur-calculation">
+              <div><dt>BASE ELEGÍVEL</dt><dd>{rule.base}</dd></div>
+              <i>×</i>
+              <div><dt>FATOR</dt><dd>{rule.factor}</dd></div>
+              <i>=</i>
+              <div className="result"><dt>SAÍDA</dt><dd>{rule.total}</dd><small>acréscimo {rule.adjustment}</small></div>
+            </dl>
+            <div className="cur-rule-evidence"><div><span>TERMO</span><b>{rule.term}</b></div><div><span>PARÂMETRO</span><b>índice + arredondamento</b></div><div><span>CAUSA</span><b>vigência e evento datados</b></div></div>
+            <div className="cur-rule-note"><History className="h-5 w-5" /><p>{rule.note}</p></div>
+          </article>
+          <aside className="cur-rule-lineage">
+            <span>LINHAGEM DA REGRA</span>
+            <div className={activeRule === 0 ? "active" : ""}><code>01</code><b>R-2026.01</b><small>regra original congelada</small></div>
+            <i>⌁</i>
+            <div className={activeRule === 1 ? "active" : ""}><code>02</code><b>R-2026.02</b><small>retificação como fato novo</small></div>
+            <p>Versão, termo, base, índice, arredondamento e causa deixam o cálculo auditável sem prometer decisão fiscal, contábil ou jurídica automática.</p>
+          </aside>
+        </div>
+
+        <div className="cur-finance-note"><Banknote className="h-6 w-6" /><div><span>REGRA DE FUNDAÇÃO</span><b>Antes de instruir qualquer parceiro, a equipe precisa conseguir reproduzir o direito e explicar o estado do dinheiro.</b><p>CUR-01 e CUR-02 entram como superfícies de leitura e conferência. A futura execução dependerá de alçada, recebedor habilitado, contrato de parceiro, idempotência, retorno e conciliação.</p></div><a href="#roteiro">Ver fase de subledger <ArrowDownRight className="h-4 w-4" /></a></div>
+      </div>
+    </section>
+  );
+}
+
 export default function CrmStrategy() {
   const [phase, setPhase] = useState(0);
   const [mode, setMode] = useState(0);
@@ -274,7 +379,7 @@ export default function CrmStrategy() {
     <div className="paper-noise" />
     <header className="site-header crm-header">
       <a href="/" className="brand"><img src={logo} alt="Símbolo Bússola de Lote"/><span><b>Observatório</b><small>ESTRATÉGIA CRM</small></span></a>
-      <nav><a href="/">Locação</a><a href="/vendas">Vendas & lotes</a><a href="#nucleo">Núcleo</a><a href="#cadastro">Cadastro</a><a href="#operacao">Pessoas & acesso</a><a href="#loteadora">Loteadoras</a><a href="#financeiro">Financeiro</a><a href="#benchmark">Benchmark</a><a href="#experiencia">Experiência</a><a href="#arquitetura">Arquitetura</a><a href="#auditoria">Auditoria</a><a href="#antierro">Anti-erro</a><a href="#identidade">Identidade & login</a><a href="#dez-ciclos">10 ciclos</a><a href="#pesquisa">Pesquisa contínua</a></nav>
+      <nav><a href="/">Locação</a><a href="/vendas">Vendas & lotes</a><a href="#nucleo">Núcleo</a><a href="#cadastro">Cadastro</a><a href="#operacao">Pessoas & acesso</a><a href="#loteadora">Loteadoras</a><a href="#financeiro">Financeiro</a><a href="#cur-finance">CUR-01/02</a><a href="#benchmark">Benchmark</a><a href="#experiencia">Experiência</a><a href="#arquitetura">Arquitetura</a><a href="#auditoria">Auditoria</a><a href="#antierro">Anti-erro</a><a href="#identidade">Identidade & login</a><a href="#dez-ciclos">10 ciclos</a><a href="#pesquisa">Pesquisa contínua</a></nav>
       <a href="#roteiro" className="nav-cta">Ver roteiro <ArrowDownRight className="h-4 w-4"/></a>
     </header>
 
@@ -295,6 +400,8 @@ export default function CrmStrategy() {
       <section id="loteadora" className="crm-lotadora"><div className="content-section"><div className="section-head"><aside><Eyebrow>05 · DOMÍNIO DE LOTEADORA</Eyebrow><p>Loteadora não é venda com lote. É desenvolvimento urbano, estoque com restrições e carteira de recebíveis.</p></aside><div><h2>Da gleba ao pós-entrega, a operação continua quando a venda termina.</h2><p>O produto deve preservar o ciclo de decisão de terra, projeto, registro, infraestrutura, comercialização, carteira e quitação. Cada trilha possui responsável e gate próprios.</p></div></div><div className="lot-market-note"><div><span>RECORTE MG · 1T/2026</span><strong>2.958</strong><small>lotes comercializados na pesquisa setorial</small></div><div><span>VARIAÇÃO DE UNIDADES</span><strong>+40,9%</strong><small>vs. 1T/2025 no mesmo recorte</small></div><div><span>COBERTURA DO ESTUDO</span><strong>57%</strong><small>do potencial de consumo de MG</small></div><p>Unidades e VGV podem se mover em direções diferentes. O painel do CRM deve mostrar cobertura, ticket, tipo de empreendimento e período — não uma única “temperatura” de mercado. <a href="https://sinduscon-mg.org.br/alta-nas-vendas-marca-o-1o-trimestre-de-2026do-mercado-de-loteamentos-em-minas-gerais/" target="_blank" rel="noreferrer">Ver fonte <ArrowUpRight className="h-3 w-3"/></a></p></div><div className="lot-lens"><div className="lot-lens-tabs">{lotLenses.map((item, index) => <button key={item.key} onClick={() => setLotLens(index)} className={lotLens === index ? "active" : ""} aria-pressed={lotLens === index}><code>0{index + 1}</code>{item.title}</button>)}</div><article className="lot-lens-detail"><div><span>{lot.tag}</span><h3>{lot.title}</h3><p>{lot.text}</p></div><ol>{lot.steps.map((step, index) => <li key={step}><code>0{index + 1}</code><span>{step}</span></li>)}</ol><aside><ShieldCheck className="h-5 w-5"/><b>GATE OPERACIONAL</b><p>{lot.gate}</p></aside></article></div><div className="lot-state-strip"><div><b>EMPREENDIMENTO</b><span>viabilidade → aprovação → registrado → obras → vendas → entregue</span></div><div><b>LOTE</b><span>alocação + disponibilidade + registro + carteira em estados paralelos</span></div><div><b>CARTEIRA</b><span>plano → parcela → comprovante → cobrança → distrato/quitação</span></div></div></div></section>
 
       <section id="financeiro" className="crm-finance"><div className="content-section"><div className="section-head"><aside><Eyebrow>06 · NÚCLEO FINANCEIRO</Eyebrow><p>Contas a receber, repasse, carteira, contabilidade e cobrança precisam contar a mesma história — por empresa, SPE e competência.</p></aside><div><h2>O caixa nasce no contrato. A confiança nasce na conciliação.</h2><p>O CRM registra a origem econômica e os direitos que cada evento cria. Banco, instituição de pagamento, ERP fiscal e contabilidade ficam conectados por lotes, retornos e evidências; nenhum deles é substituído por uma planilha ou por um campo de saldo.</p></div></div><div className="finance-map"><div className="finance-spine"><Banknote className="h-6 w-6"/><span>FINANCIAL EVENT</span><b>origem econômica</b><small>contrato, parcela, ajuste e política</small><i/><WalletCards className="h-6 w-6"/><span>SETTLEMENT</span><b>caixa conciliado</b><small>retorno, aplicação e diferença</small><i/><Calculator className="h-6 w-6"/><span>ENTITLEMENT</span><b>direito configurado</b><small>base, regra, condição e alçada</small></div><div className="finance-console"><div className="finance-tabs">{financialLenses.map((item, index) => <button key={item.key} onClick={() => setFinancialLens(index)} className={financialLens === index ? "active" : ""} aria-pressed={financialLens === index}><code>0{index + 1}</code>{item.title}</button>)}</div><article><span>{financial.tag}</span><h3>{financial.title}</h3><p>{financial.text}</p><ul>{financial.fields.map((field, index) => <li key={field}><code>0{index + 1}</code>{field}</li>)}</ul><div><ShieldCheck className="h-5 w-5"/><b>GATE FINANCEIRO</b><p>{financial.gate}</p></div></article></div><aside className="finance-rule"><Landmark className="h-6 w-6"/><span>FRONTEIRA DE RESPONSABILIDADE</span><strong>O CRM organiza a decisão. O parceiro habilitado movimenta o recurso.</strong><p>Uma instrução de pagamento só existe após base elegível, regra versionada, recebedor habilitado, alçada e conciliação. A área contábil revisa por competência e devolve exceções sem reescrever o fato de origem.</p><a href="https://www.bcb.gov.br/pre/composicao/instpagamento.asp?frame=1" target="_blank" rel="noreferrer">Referência BC <ArrowUpRight className="h-3 w-3"/></a></aside></div><div className="finance-lanes"><div><b>IMOBILIÁRIA</b><span>cobrança, liquidação, administração, comissão e repasse sem confundir valor de terceiro com receita própria</span></div><div><b>LOTEADORA</b><span>entrada, parcela, índice, permuta, distrato, recebível e estoque em estados que não se misturam</span></div><div><b>CONTADOR</b><span>faturamento, documento, carteira, distribuição, divergência e lote de exportação no escopo autorizado</span></div><div><b>SPLIT</b><span>fixos, percentuais, faixas e gatilhos podem chegar a muitos recebedores, sempre com versão e retorno</span></div></div><div className="finance-closure"><div><ReceiptText className="h-5 w-5"/><b>FECHAMENTO POR EVIDÊNCIA</b><span>evento → cobrança → retorno → aplicação → direito → exportação → divergência</span></div><p>ECD, ECF, EFD-Reinf, EFD-Contribuições, DCTFWeb/MIT e NFS-e possuem escopos e leiautes próprios. O CRM preserva origem, competência, contraparte, documento, política e retorno para que o fiscal e a contabilidade trabalhem com contexto — não com promessas de cálculo universal.</p><a href="https://www.gov.br/sped/pt-br/assuntos/escrituracoes-digitais/ecd" target="_blank" rel="noreferrer">Ver fonte SPED <ArrowUpRight className="h-3 w-3"/></a></div></div></section>
+
+      <CurFinancePanel />
 
       <section id="benchmark" className="crm-benchmark"><div className="content-section"><div className="section-head"><aside><Eyebrow>07 · BENCHMARK COMPETITIVO</Eyebrow><p>Dez referências públicas mostram o que o mercado já espera — e onde a nossa estratégia precisa ser mais profunda.</p></aside><div><h2>Não copiar dez CRMs. Entender onde o contexto ainda se desfaz.</h2><p>O estudo analisa mensagem comercial, conteúdo, módulos e lacunas de evidência em Kenlo, Vista/Loft, Imobzi, Jetimob, Imoview, ImobTotal, CV CRM, Facilita, Sienge e Anapro. A ausência em páginas públicas não é ausência de produto.</p></div></div><div className="benchmark-map"><div className="benchmark-spine"><Radar className="h-6 w-6"/><span>10 REFERÊNCIAS</span><b>o piso do mercado</b><small>comercial, lançamento e ERP</small><i/><Compass className="h-6 w-6"/><span>1 TESE PRÓPRIA</span><b>contexto até o fechamento</b><small>direitos, carteira e evidência</small></div><div className="benchmark-console"><div className="benchmark-tabs">{benchmarkLenses.map((item, index) => <button key={item.key} onClick={() => setBenchmarkLens(index)} className={benchmarkLens === index ? "active" : ""} aria-pressed={benchmarkLens === index}><code>0{index + 1}</code>{item.title}</button>)}</div><article><span>{benchmark.tag}</span><h3>{benchmark.title}</h3><p>{benchmark.text}</p><div className="benchmark-companies">{benchmark.companies.map(company => <small key={company}>{company}</small>)}</div><ul>{benchmark.fields.map((field, index) => <li key={field}><code>0{index + 1}</code>{field}</li>)}</ul><div><ShieldCheck className="h-5 w-5"/><b>CRITÉRIO DE PRODUTO</b><p>{benchmark.gate}</p></div></article></div><aside className="benchmark-rule"><BookOpenCheck className="h-6 w-6"/><span>REGRA DE LEITURA</span><strong>Declaração pública não é prova de cobertura integral.</strong><p>Cada achado guarda fonte, data, escopo e limitação. O benchmark vira requisito apenas quando o problema aparece também em parceiro-piloto e tem critério de sucesso verificável.</p><div><small>FONTE</small><small>LIMITAÇÃO</small><small>PILOTO</small></div></aside></div><div className="benchmark-lanes"><div><b>PISO COMERCIAL</b><span>lead, canal, agenda, proposta, estoque, reserva e mobilidade são expectativas básicas</span></div><div><b>DOMÍNIO LOTEADORA</b><span>gleba, fase, lote, contrato, carteira, permuta e pós-entrega são uma linha de produto própria</span></div><div><b>DIFERENCIAL</b><span>direitos econômicos, subledger, contador e evidência levam o campo até o fechamento</span></div></div><div className="benchmark-note"><span>POSICIONAMENTO REVISADO</span><b>O sistema operacional de relações, direitos econômicos e evidências para imobiliárias e loteadoras que precisam vender, receber, distribuir e fechar com contexto.</b><a href="#roteiro">Ver roteiro priorizado <ArrowDownRight className="h-4 w-4"/></a></div></div></section>
 

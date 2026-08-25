@@ -116,3 +116,5 @@ O símbolo será uma **bússola de lote**: dois arcos incompletos que sugerem um
 - Após no máximo dois módulos operacionais, uma virada de página usa artefato dominante de investigação — rota, grade, índice de ciclos, placa de fonte ou conclusão de campo — para devolver respiro à narrativa.
 - Toda frente de auditoria deve apresentar primeiro a fonte/evidência, depois a leitura estratégica e por fim a consequência testável; a interface interativa apenas torna essa prova explorável.
 - Argila marca exclusivamente conflito, risco, decisão e próximo passo. Coordenadas, sombra, textura e análise neutra usam papel mineral, azul cadastral ou oliva contido.
+- Em módulos financeiros, uma placa cartográfica de conciliação interrompe os consoles: ela torna visível a ordem **fato → regra → retorno → caso**, para que o painel seja interpretado como evidência e não como saldo.
+- A camada de tese deve anteceder controles de estado ou cálculo; uma frase editorial, uma coordenada de recorte e a consequência prática explicam o painel antes da interação.

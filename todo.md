@@ -188,3 +188,11 @@
 - [x] Consolidar fontes, contrapontos, conflitos, decisões, limites e backlog da auditoria.
 - [x] Evoluir o observatório com o caderno dos dez ciclos e validar desktop/mobile.
 - [x] Salvar checkpoint e entregar a auditoria aprofundada do curso.
+
+## Painel interativo CUR-01 e CUR-02
+
+- [x] Interpretar CUR-01 e CUR-02 e definir os fluxos demonstráveis de domínio, integridade, temporalidade, concorrência e evolução segura.
+- [x] Projetar a experiência do painel com evidência, leitura, consequência e estados de interação acessíveis.
+- [x] Implementar as superfícies interativas de domínio modular e linha do tempo de fatos no observatório CRM.
+- [x] Validar build e experiência desktop/mobile; registrar as decisões de design aplicadas.
+- [ ] Salvar checkpoint e entregar o painel CUR-01/CUR-02.
