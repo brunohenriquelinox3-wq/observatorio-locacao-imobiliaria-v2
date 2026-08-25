@@ -75,7 +75,7 @@ export default function VendasUrbanas() {
     <div className="paper-noise" />
     <header className="site-header sales-header">
       <a href="/" className="brand"><img src={logo} alt="Símbolo Bússola de Lote"/><span><b>Observatório</b><small>VENDAS & LOTES</small></span></a>
-      <nav><a href="/">Locação</a><a href="#mercado">Mercado</a><a href="#formularios">Formulários</a><a href="#produto">Produto</a></nav>
+      <nav><a href="/">Locação</a><a href="#mercado">Mercado</a><a href="#formularios">Formulários</a><a href="#produto">Produto</a><a href="/crm">Estratégia CRM</a></nav>
       <a href="#formularios" className="nav-cta">Ver cadastros <ArrowDownRight className="h-4 w-4"/></a>
     </header>
 

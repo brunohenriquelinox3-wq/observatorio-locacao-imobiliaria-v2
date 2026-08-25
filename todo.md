@@ -19,3 +19,15 @@
 - [x] Consolidar controles de LGPD, segurança, trilha documental e requisitos registrais a validar.
 - [x] Atualizar o relatório e a página com a nova frente de vendas e testar a experiência em desktop e mobile.
 - [ ] Salvar novo checkpoint e entregar os materiais finais.
+
+## Consolidação: estratégia de CRM imobiliário evolutivo
+
+- [x] Unificar os aprendizados de locação, vendas urbanas, lotes, proprietários e compradores em uma taxonomia única.
+- [x] Definir a visão, os princípios de produto e o modelo de dados canônico do CRM.
+- [x] Projetar jornadas comerciais, cadastros progressivos, propostas e dossiês como operações conectadas.
+- [x] Definir a governança de evidências, dados, LGPD, permissões e atualização contínua de pesquisas.
+- [x] Comparar caminhos para receber novas atualizações de estudo e estruturar uma evolução por fases.
+- [x] Elaborar o roteiro de desenvolvimento, validação e expansão do CRM de ponta.
+- [x] Atualizar o observatório e o relatório consolidado.
+- [x] Testar a nova rota de CRM em desktop e mobile.
+- [ ] Salvar o novo checkpoint e entregar a estratégia final.

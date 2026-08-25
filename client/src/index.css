@@ -3,6 +3,7 @@
 @import "./field-notes.css";
 @import "./vendas.css";
 @import "./vendas-review.css";
+@import "./crm.css";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
