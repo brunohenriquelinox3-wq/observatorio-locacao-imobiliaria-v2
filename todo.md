@@ -176,4 +176,4 @@
 - [x] Definir o registro protegido do principal inicial designado, com verificação de posse, MFA e sem e-mail hardcoded em frontend, migration ou documentação pública.
 - [x] Atualizar evidências, estratégia, arquitetura e backlog com controles de identidade e acesso.
 - [x] Evoluir o observatório com a matriz de login e validar em desktop/mobile.
-- [ ] Salvar checkpoint e entregar a revisão de identidade e login.
+- [x] Salvar checkpoint e entregar a revisão de identidade e login.
