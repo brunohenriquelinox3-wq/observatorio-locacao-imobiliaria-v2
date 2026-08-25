@@ -368,6 +368,20 @@ O modelo combina RBAC para funções previsíveis e ABAC para contexto. O papel 
 
 > **Regra de início:** não existe Super Admin escondido em variável de ambiente, `user_metadata`, botão de frontend ou claim não verificada. O primeiro incremento produz bootstrap controlado, MFA, organização, membership, RLS, `AdminAuditEvent`, convite/revogação e testes de permitir/negar; catálogo amplo de configurações só entra após essa fronteira sobreviver a abuso, expiração e recuperação.
 
+## 8.12 Identidade e login: acesso confiável sem tratar e-mail como autorização
+
+O CRM terá três caminhos de entrada que convergem em uma única decisão de dados: **comprador/owner** ativa uma organização por convite e confirmação; **funcionário/corretor/parceiro** entra por convite individual ou SSO corporativo quando a empresa contratar IdP; e **principal de plataforma** completa bootstrap externo e governado. A conta autenticada não recebe acesso por e-mail, domínio ou cargo exibido. O UUID de identidade aponta para memberships, escopo, vigência, alçada, finalidade e policy que RLS/RPC reavaliam no dado vivo. [49]
+
+| Jornada | Escolha de experiência | Proteção que não pode faltar |
+| --- | --- | --- |
+| Ativação do comprador/owner | Convite de curta duração, e-mail confirmado, criação de credencial e MFA antes da primeira administração. | Não ativa membership parcialmente; não revela se a organização/e-mail existe; registra quem provisionou e aceitou. |
+| Login de funcionário | Descoberta de SSO por organização quando configurado; caso contrário, convite e credencial local confirmada. | SSO usa PKCE/redirects fechados; e-mail de mesmo texto não vincula conta SSO/local nem cria papel. |
+| Login por passkey | Opção de alta segurança para usuário local após confirmação e homologação do domínio WebAuthn. | Por estar experimental no provedor atual, não é caminho único de P0, não muda RP ID depois de cadastro e não é oferecida a usuário SSO sem regra suportada. |
+| Recuperação | Sessão restrita, token de uso único, limitação de automação, nova autenticação e revisão de sessões. | Reset não restaura MFA, AAL2, privilege, suporte, escopo ou autorização financeira. |
+| Comando sensível | Step-up, AAL2, recência de autenticação, alçada e policy no banco. | Mensagem acessível sem enumeração; UI não confirma efeito antes da validação transacional. |
+
+O endereço designado para o primeiro principal de plataforma será inserido **somente no cofre de segredo de produção** sob `INITIAL_PLATFORM_PRINCIPAL_EMAIL`. O procedimento cria convite e estado `pending_activation`; a ativação exige posse do e-mail, MFA/AAL2, canal de recuperação, aceite de política e evento administrativo no mesmo comando. Não haverá endereço hardcoded em código, migration, configuração pública, JWT, metadata editável ou interface. Mesmo após ativação, o principal não é um “deus do CRM”: governa a plataforma, mas não atravessa a fronteira de dados de clientes, financeiro ou split fora de suporte JIT/caso autorizado. [49]
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -473,3 +487,5 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [47] [Administração de plataforma — carta de princípios e método](crm_administracao_plataforma_metodologia.md)
 
 [48] [Administração de plataforma — evidências, modelo e blueprint de implementação](crm_administracao_plataforma_evidencias.md) · [modelo de alçadas](crm_administracao_plataforma_modelo.md) · [implementação Netlify + Supabase](crm_administracao_plataforma_implementacao.md)
+
+[49] [Identidade, login, recuperação e bootstrap governado](crm_login_identidade_modelo.md) · [caderno de evidências](crm_login_identidade_evidencias.md)

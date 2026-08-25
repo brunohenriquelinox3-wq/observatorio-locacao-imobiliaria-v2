@@ -40,7 +40,7 @@ flowchart TB
 
 | Fase | Janela indicativa | Objetivo | Entrega verificável | Decisão de passagem |
 | --- | ---: | --- | --- | --- |
-| 0. Fundação administrativa e descoberta | 3–4 semanas | Preparar ambientes, bootstrap controlado, Auth/MFA, organizações, memberships, grants, RLS, audit event, dados sintéticos e mapa de rotina de 3–5 parceiros. | Painel mínimo de plataforma, modelo de dados v0, revogação, convite, linha de base e suíte inicial de isolamento. | Principal sem grant não atravessa organização/arquivo/função; ambiente reproduz policy e schema sem ajuste manual. |
+| 0. Fundação administrativa, identidade e descoberta | 3–4 semanas | Preparar ambientes, bootstrap controlado, Auth/MFA, jornadas de ativação de comprador/owner, convite de funcionário, SSO opcional, recuperação restrita, organizações, memberships, grants, RLS, audit event, dados sintéticos e mapa de rotina de 3–5 parceiros. | Painel mínimo de plataforma, modelo de identidade v0, convite/revogação, step-up, linha de base e suíte inicial de isolamento. | Principal sem grant não atravessa organização/arquivo/função; reset não eleva privilégio; ambiente reproduz policy e schema sem ajuste manual. |
 | 1. Núcleo operacional confiável | 6–8 semanas | Criar espaço de trabalho, partes, ativos, tarefas e perfis de busca sob escopo autorizado. | Fila de trabalho, timeline, captura curta, qualificação e audit event. | Usuários recuperam contexto sem planilha; usuário fora do escopo não lê ou altera dado/arquivo. |
 | 2. Proposta e dossiê | 6–8 semanas | Conectar ativo, partes, condição, versão, checklist, alçada e evidência privada. | Pré-proposta, dossiê por finalidade, cofre, retenção e estados de evidência. | Dossiê reduz reabertura; proposta preserva histórico e documento tem finalidade/acesso/versionamento. |
 | 3. Loteadora e carteira | 8–10 semanas | Adaptar o núcleo para lote, empreendimento, reserva, contrato, parcela e exceção. | Captação de venda, lote/empreendimento, estados paralelos, condição e carteira. | Lote não sofre venda concorrente e carteira aponta contrato, versão e responsável. |
@@ -52,7 +52,8 @@ flowchart TB
 
 | Entra no MVP | Espera por evidência de uso |
 | --- | --- |
-| Painel mínimo de Super Admin governado, multi-organização, usuários, memberships, papéis e revogação | Marketplace, rede pública de corretores ou portal próprio. |
+| Painel mínimo de Super Admin governado, multi-organização, usuários, memberships, papéis, revogação e bootstrap secreto do primeiro principal | Marketplace, rede pública de corretores ou portal próprio. |
+| Ativação de comprador/owner, convite individual de funcionário, MFA por risco, recuperação restrita e preparação de SSO | Passkey como único login, SSO obrigatório para todo cliente ou reset informal de MFA. |
 | Partes PF/PJ, contatos, grupos e papéis temporais | Enriquecimento automático massivo de dados pessoais. |
 | Ativo residencial e lote com território estruturado | Avaliação automática de imóvel ou motor preditivo de preço. |
 | Perfil de busca, fila, tarefa, atividade e visita | Campanhas multicanal avançadas. |
@@ -70,7 +71,7 @@ flowchart TB
 | Proposta | Versão, condições, ativo, partes, validade e estado são visíveis sem procurar em conversa externa. |
 | Dossiê | Cada arquivo possui finalidade, acesso limitado, origem, data e status de revisão. |
 | Gestão | Gestor visualiza tempo por etapa, pendências e motivos de perda sem exportar planilhas. |
-| Segurança | Acesso/documento e mudança de estado críticos geram log. |
+| Segurança | Convite, login, step-up, recuperação, revogação, acesso/documento e mudança de estado críticos geram log; e-mail/domínio não concede organização, papel ou alçada. |
 
 ## Métricas de aprendizado por fase
 

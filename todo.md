@@ -167,3 +167,13 @@
 - [x] Atualizar evidências, estratégia, arquitetura e backlog com controles e referências rastreáveis.
 - [x] Evoluir o observatório com a revisão anti-erro e validar em desktop/mobile.
 - [x] Salvar checkpoint e entregar o aprofundamento de engenharia anti-erro.
+
+## Identidade, login e bootstrap governado
+
+- [x] Delimitar compradores, funcionários, administradores, recuperação e riscos de acesso inicial.
+- [x] Pesquisar referências atuais de Auth, MFA, recuperação, sessões, SSO e administração privilegiada.
+- [x] Modelar jornadas de login, convite, recuperação, step-up, revogação e bootstrap do primeiro principal governado.
+- [x] Definir o registro protegido do principal inicial designado, com verificação de posse, MFA e sem e-mail hardcoded em frontend, migration ou documentação pública.
+- [x] Atualizar evidências, estratégia, arquitetura e backlog com controles de identidade e acesso.
+- [x] Evoluir o observatório com a matriz de login e validar em desktop/mobile.
+- [ ] Salvar checkpoint e entregar a revisão de identidade e login.

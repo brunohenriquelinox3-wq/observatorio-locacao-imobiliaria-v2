@@ -69,6 +69,20 @@ Este backlog é uma **fila de hipótese de produto**, não um compromisso comerc
 | ADM-08 | Separar administração do produto e infraestrutura | Matriz CRM ↔ Supabase ↔ Netlify para pessoas, segredos, projetos, deploys e auditorias. | Fundação | Owner/Developer de hospedagem não ganha papel CRM; papel CRM não recebe segredo, deploy ou acesso de infraestrutura por padrão. |
 | ADM-09 | Fazer autorização regressiva | pgTAP, RPC, Function e E2E para permitir/negar por organização, SPE, papel, AAL, vigência e suporte. | Fundação bloqueadora | CI bloqueia migration/release se isolamento, expiração, revogação, SoD ou audit atômico não estiverem provados. |
 
+## Identidade, login e recuperação de acesso
+
+| ID | Resultado | Requisito | Prioridade | Critério de aceitação |
+| --- | --- | --- | --- | --- |
+| IAM-01 | Distinguir conta de acesso organizacional | `identity_subjects`, UUID de Auth, memberships explícitas, escopo/vigência e RLS. | Fundação bloqueadora | E-mail, domínio, cargo exibido e `user_metadata` não concedem leitura/escrita; conta SSO/local de mesmo e-mail não é confundida. |
+| IAM-02 | Ativar comprador/owner sem membership residual | `provisioning`, convite de uso único, e-mail confirmado, MFA antes da primeira administração e comando transacional. | Fundação bloqueadora | Convite expirado/repetido/encaminhado não ativa uma segunda membership nem enumera conta/organização. |
+| IAM-03 | Convidar funcionário por trilha explícita | Convite individual local ou SSO por organização/IdP, papel/escopo/vigência e audit event. | Fundação | Autocadastro e domínio de e-mail não criam tenant ou papel; SSO não faz fallback silencioso para conta local coincidente. |
+| IAM-04 | Exigir sessão proporcional ao risco | AAL/AMR, MFA, reautenticação recente, rotação/revogação e policy restritiva no banco/RPC. | Fundação bloqueadora | `aal1` falha em mudanças de identidade, grants, exportação, integração, policy, dado bancário, split e plataforma. |
+| IAM-05 | Recuperar sem elevar poder | Token seguro de uso único, sessão restrita, limitação de automação, aviso, revisão de sessão e fluxo separado para MFA. | Fundação bloqueadora | Reset/perda de fator não preserva sessão privilegiada, AAL2, papel, alçada, support grant ou autorização financeira. |
+| IAM-06 | Oferecer SSO sem confundir tenants | SAML/OIDC por organização, PKCE, `state`/`nonce`, allowlist de redirect, UUID/IdP e runbook de remoção. | Alta | IdP ausente/indisponível não associa outro usuário; remoção de conexão encerra acesso segundo policy e deixa evento investigável. |
+| IAM-07 | Pilotar passkeys de modo reversível | Domínio/RP ID estável, origem allowlist, feature flag, cadastro/remoção auditados e fallback local aprovado. | Alta | API experimental não é a única credencial de P0; mudança de RP ID, cancelamento de cerimônia e credencial ausente têm tratamento seguro. |
+| IAM-08 | Bootstrap do principal inicial sem backdoor | `INITIAL_PLATFORM_PRINCIPAL_EMAIL` apenas em cofre de produção, função interna idempotente, convite, `pending_activation`, MFA/AAL2, recovery e audit. | Fundação bloqueadora | Nenhum e-mail é hardcoded em frontend/migration/JWT/metadata; browser não invoca bootstrap; principal inicial não lê dado de cliente sem suporte JIT. |
+| IAM-09 | Impedir dependência de pessoa única | Segundo custodiante, recertificação, recuperação independente, revogação/teste de sessões e exercício de perda de fator. | Fundação bloqueadora | Antes de dados reais de cliente, há pelo menos dois caminhos auditáveis de recuperação sem revelar ou compartilhar segredo de produção. |
+
 ## Auditoria, confiabilidade e engenharia segura
 
 | ID | Resultado | Requisito | Prioridade | Critério de aceitação |

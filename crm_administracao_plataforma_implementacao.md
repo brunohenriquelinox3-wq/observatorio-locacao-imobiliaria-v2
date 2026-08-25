@@ -29,8 +29,12 @@ O browser só recebe chave publicável, sessão do próprio usuário e dados lib
 | `public.roles` / `public.permissions` | Catálogo estável de papéis e ações. | Leitura controlada; mutação por migration/release, não por tela inicial. |
 | `public.admin_audit_events` | Evento administrativo append-only, redigido e correlacionado. | Leitura filtrada por scope; inserção exclusiva de função. |
 | `public.support_case_access` | Caso, resource selector, redaction e expiração de suporte. | Sem API genérica de escrita. |
+| `public.identity_subjects` | Referência canônica ao UUID de `auth.users`, estado e dados mínimos de ciclo de identidade. | E-mail e metadata não são chave de autorização; acesso por RLS e RPC. |
+| `public.access_invitations` | Destinatário, organização, papel, escopo, expiração, uso e correlação do convite. | Token de uso único protegido; aceite é pré-condição de membership ativa. |
+| `public.platform_principals` | Papel de plataforma, estado de bootstrap, MFA/recovery verificados e recertificação. | Alteração exclusiva por comando confiável e evento append-only. |
 | `private.authorization` | Funções de decisão e auxiliares de policy. | Não exposto à API. |
 | `private.admin_commands` | Operações transacionais de alto risco. | Invocado por wrappers mínimos, sem `SELECT *` exposto. |
+| `private.bootstrap_requests` | Intenção, correlação, idempotência e estado de bootstrap. | Não armazena/expõe endereço no browser; o destinatário vem de segredo de runtime confiável. |
 | `private.outbox_events` | Evento durável para notificação e integração. | Não exposto ao browser. |
 
 As migrations criam grants, RLS, índice, função e teste como a mesma unidade de mudança. Tabela em schema exposto começa em deny-by-default: RLS habilitada, grants revogados de `anon`/`authenticated`, permissões reabertas apenas para a operação necessária. Views recebem `security_invoker` ou permanecem em schema não exposto. [1]
@@ -51,7 +55,7 @@ O token é uma fotografia de sessão. Grant, revogação, support case e risco d
 
 | Comando | Entrada mínima | Pré-condições | Efeito atômico | Saída segura |
 | --- | --- | --- | --- | --- |
-| `bootstrap_platform_principal` | principal, procedimento, correlação | Apenas migração/procedimento controlado; nenhum bootstrap prévio. | Cria principal, política e audit event inicial. | ID e estado; sem dados sensíveis. |
+| `bootstrap_platform_principal` | procedimento, correlação, idempotency key | Apenas função interna; nenhum bootstrap prévio; destinatário vem de `INITIAL_PLATFORM_PRINCIPAL_EMAIL` no cofre de produção, não do browser. | Cria intenção `pending_activation`, convite e audit event redigido. | ID/correlação/estado; sem endereço, token ou segredo. |
 | `provision_organization` | nome, domínio, owner, correlation ID | `platform_super_admin`, AAL2, idempotency key. | Cria organização `provisioning`, membership inicial, convite, audit/outbox. | IDs, estado, próxima ação. |
 | `grant_membership` | pessoa, papel, scope, vigência, motivo | Autoridade superior, SoD, organização ativa. | Cria grant, invalida cache/sessão quando necessário, audit/outbox. | Grant redigido e expiração. |
 | `revoke_membership` | grant, motivo, correlation ID | Autoridade de revogação, não remove último owner sem sucessor. | Fecha grant, sessões elegíveis, audit/outbox. | Estado revogado e itens de follow-up. |
@@ -59,6 +63,18 @@ O token é uma fotografia de sessão. Grant, revogação, support case e risco d
 | `break_glass` | incidente, motivo codificado, duração | AAL2, verificação de indisponibilidade/risco, elegibilidade. | Cria elevação curta, alerta, incidente e audit event. | Token/sessão contextual; nunca segredo persistente. |
 
 Toda função deve usar `security definer` somente quando necessário, com `search_path` explícito e vazio, validação de `auth.uid()`, validação de escopo, lista fechada de campos e escrita de audit event na mesma transação. Wrapper exposto não pode aceitar nome de tabela, SQL, papel arbitrário, ID de outra locatária ou payload livre.
+
+### 4.1 Ativação, sessão e recuperação de identidade
+
+`bootstrap_platform_principal` não cria uma sessão privilegiada nem converte um e-mail em papel. A função interna lê a configuração secreta uma única vez, gera convite de curta duração e mantém `platform_principals.state = 'pending_activation'`. A RPC de ativação exige UUID do sujeito convidado, e-mail confirmado pelo Auth, MFA/AAL2, registro de canal de recuperação, aceite da política e audit event no mesmo commit. Somente então cria o grant `platform_super_admin` governado; ele continua sujeito a RLS, suporte JIT e política de domínio.
+
+| Jornada | Superfície permitida | Bloqueio obrigatório |
+| --- | --- | --- |
+| Convite de comprador/owner | Função cria organização `provisioning`, convite, grant pendente e correlação. | Aceite repetido/expirado não ativa membership; conta existente não é enumerada. |
+| Funcionário local | Convite aceito + e-mail confirmado + membership explícita. | Domínio/e-mail não infere tenant, cargo ou escopo. |
+| Funcionário com SSO | Fluxo de código com PKCE, redirect allowlist e vínculo ao UUID/IdP da organização. | Sem fallback silencioso para identidade local de mesmo e-mail; SSO não cria papel sem membership. |
+| Recuperação | Sessão restrita e evento de recuperação; troca de credencial/fator sob política. | Não preserva sessão privilegiada, AAL2, papel, escopo, alçada ou suporte temporário. |
+| Ação de risco | `aal2`, recência de autenticação e policy de comando. | UI não pode simular autorização; RLS/RPC nega no servidor/banco. |
 
 ## 5. Padrão Netlify
 

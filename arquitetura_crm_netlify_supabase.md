@@ -90,7 +90,21 @@ flowchart TD
 4. **Chaves são segregadas.** A chave publicável pode estar no app; `service_role`, credenciais de ERP/pagamento e segredos de webhook só existem em runtime seguro. Não há chave privilegiada em `VITE_*`, log, preview compartilhado ou browser.
 5. **Admin não é superusuário cego.** Administrador continua sujeito a `organization_id`, escopo, auditoria e, em ações de risco, MFA/dupla aprovação.
 
-### 4.1 Administração privilegiada e separação de infraestrutura
+### 4.1 Entrada, federação e recuperação
+
+O produto separa três jornadas que convergem para a mesma policy de dados: **comprador/owner** ativa uma organização por convite; **funcionário** aceita convite individual ou usa SSO corporativo contratado; e **principal de plataforma** completa bootstrap protegido fora da interface comum. A identidade é o UUID de Auth, não e-mail, nome, domínio ou `user_metadata`. O e-mail é canal verificado; membership, organização, SPE, escopo, vigência e alçada permanecem dados vivos consultados pelo banco.
+
+SSO usa fluxo de código com PKCE, `state`, `nonce` e allowlist de redirects; o vínculo com locatária usa o IdP/UUID configurado, não a suposição de que um domínio representa uma empresa. Credenciais locais usam convite/e-mail confirmado e MFA por risco. Passkeys são um piloto opt-in depois da estabilidade do domínio WebAuthn/RP ID, pois a API atual do Supabase é experimental; não são a única credencial de P0 nem se combinam automaticamente com usuários SSO. [19]
+
+Recuperação gera uma sessão restrita, de uso/tempo limitado e auditada. Ela não restaura automaticamente MFA, AAL2, papel, escopo, alçada, suporte JIT ou sessão privilegiada. Mudança de senha, e-mail, fator, dispositivo, IdP, grant ou risco material exige rotação/revogação de sessão conforme política e nova prova antes de comando sensível. [20]
+
+### 4.2 Bootstrap do primeiro principal de plataforma
+
+O endereço designado para o primeiro principal é uma **configuração privada de implantação**, fornecida somente como `INITIAL_PLATFORM_PRINCIPAL_EMAIL` no cofre de produção. Ele não aparece em migration, frontend, `VITE_*`, JWT, `raw_user_meta_data`, log, documentação publicada ou payload de browser. Uma função interna de bootstrap lê o segredo, cria intenção/correlação idempotente e convite de curta duração; somente após confirmação do e-mail, MFA/AAL2, canal de recuperação, aceite de política e audit event transacional o estado muda de `pending_activation` para `active`.
+
+O primeiro `platform_super_admin` é governado: ele pode estruturar organizações, segurança e incidentes, mas não recebe leitura automática de dossiê, documento, carteira, dados bancários, saldo ou split de qualquer locatária. Essa leitura só existe por `support_case_access` mínimo, temporal, finalístico, mascarado e auditado. Antes de dados reais de cliente, P0 exige pelo menos um segundo custodiante de segurança e um procedimento independente de recuperação; uma única caixa de e-mail ou dispositivo não pode ser a raiz irrecuperável da plataforma.
+
+### 4.3 Administração privilegiada e separação de infraestrutura
 
 `platform_super_admin` responde por segurança e ciclo de vida da plataforma; ele não recebe leitura diária dos dados de uma locatária. `organization_admin`, `area_admin` e `operator` recebem somente o escopo delegado. Qualquer suporte a dado de cliente ocorre por `support_case_access` temporário, mascarado, finalístico e expirável. Break-glass usa incidente, MFA recente, duração curta, alerta, auditoria e revisão posterior; não cria uma permissão persistente.
 
@@ -232,3 +246,7 @@ O modelo detalhado, incluindo cenário de timeout ambíguo, conflito de transaç
 [17] [Administração de plataforma — método, evidências, alçadas e implementação](crm_administracao_plataforma_metodologia.md) · [evidências](crm_administracao_plataforma_evidencias.md) · [modelo](crm_administracao_plataforma_modelo.md) · [blueprint](crm_administracao_plataforma_implementacao.md)
 
 [18] [Aprofundamento anti-erro — matriz de jornadas, contramedidas e fontes](crm_engenharia_antierro_02_matriz_jornadas.md) · [evidências atualizadas](crm_engenharia_antierro_evidencias.md)
+
+[19] [Supabase — Passkey Authentication](https://supabase.com/docs/guides/auth/passkeys)
+
+[20] [OWASP — Forgot Password Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html)

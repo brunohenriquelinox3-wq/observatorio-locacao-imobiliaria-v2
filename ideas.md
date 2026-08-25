@@ -110,3 +110,5 @@ O símbolo será uma **bússola de lote**: dois arcos incompletos que sugerem um
 - A cada três módulos operacionais, uma lâmina cartográfica dominante interrompe a repetição: mapa abstrato, rota pontilhada, carimbo de campo ou conclusão editorial em grande escala.
 - Em cada capítulo, o achado e a consequência prática recebem hierarquia acima do mockup operacional; a interface funciona como evidência subordinada à tese.
 - Wordmark, bússola e coordenada CRM.01 reaparecem nos momentos de abertura, virada e fechamento como assinatura de autoria editorial do Observatório.
+- Módulos operacionais de mesmo arranjo não se repetem mais de duas vezes sem uma placa de fonte, coordenada de método, spread territorial ou conclusão de campo que interrompa o ritmo.
+- Em capítulos de acesso, a interface é precedida por uma placa metodológica que explicita **identidade → vínculo → consequência**, para que o painel seja lido como evidência e não como fim em si.
