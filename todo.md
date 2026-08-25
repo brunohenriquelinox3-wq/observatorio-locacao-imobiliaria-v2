@@ -61,3 +61,15 @@
 - [x] Atualizar o catálogo de requisitos e a estratégia de revisão para regras internas de pessoas e terceiros.
 - [x] Atualizar o relatório e o observatório e testar em desktop e mobile.
 - [ ] Salvar novo checkpoint e entregar a revisão organizacional.
+
+## Núcleo financeiro, fiscal e contábil
+
+- [x] Mapear as fontes primárias, obrigações, prazos, escopos e limites por imobiliária, loteadora, SPE e regime tributário a confirmar.
+- [x] Validar obrigações de escrituração, declarações, notas fiscais, retenções, contas e atos societários com órgãos oficiais e Junta Comercial.
+- [x] Modelar o subledger de contas a receber, contas a pagar, cobrança, conciliação, comissão e repasse para imobiliárias.
+- [x] Modelar loteadora por empreendimento, lote, contrato, parcela, índice, permuta, distrato, recebível, caixa e reconhecimento configurável.
+- [x] Desenhar cascatas de distribuição fixas e percentuais com recebedores, gatilhos, limites, reversão, retenção e auditoria.
+- [x] Definir a área da contabilidade, conciliação, fechamento, exportações, trilhas e integrações com sistemas especializados.
+- [x] Comparar alternativas de cobrança e split com instituições habilitadas, sem construir movimentação financeira própria.
+- [x] Consolidar a estratégia, atualizar o observatório e validar a compilação e a experiência revisada.
+- [ ] Salvar o checkpoint e entregar a revisão financeira estratégica.

@@ -16,6 +16,7 @@ O CRM deve atender quatro linhas de negócio conectadas: locação, venda urbana
 | Venda urbana | Transação até o registro | Diligência, proposta, financiamento, escritura e registro. |
 | Construtora | Unidade/reserva e plano durante a obra | Estoque de unidade, tabela, fluxo de pagamento, repasse e distrato. |
 | Loteadora | Empreendimento, lote e carteira própria | Gleba, regra municipal, aprovação, obra, garantia, lote, permutante, recebível e pós-entrega. |
+| Financeiro transversal | Evento econômico, obrigação, caixa e competência | Subledger, cobrança, conciliação, distribuição, contabilidade e integração. |
 
 O recorte mineiro divulgado para o primeiro trimestre de 2026 ilustra por que o CRM precisa separar unidades, VGV, tipo de empreendimento, ticket, praça e período: a pesquisa reportou 2.958 lotes vendidos, alta de 40,9% ante o primeiro trimestre de 2025, ao mesmo tempo que o VGV divulgado diminuiu. A pesquisa cobre municípios responsáveis por 41% da população e 57% do potencial de consumo de Minas Gerais; não é um retrato de todo o estado. [9]
 
@@ -73,6 +74,11 @@ Esses sinais não devem ser usados como promessa de retorno, avaliação definit
 | Dossier / Evidence | Checklist e arquivos/declarações por finalidade | Armazena origem, validade, acesso, revisão e pendências. |
 | Activity / Task | Linha do tempo operacional | Registra comunicação, visita, próximo passo, responsável e prazo. |
 | Market evidence | Dado ou estudo externo estruturado | Relaciona fonte, recorte, confiança, impacto e versão de regra/painel. |
+| Financial event | Fato econômico imutável originado no negócio | Empresa/SPE, contrato, competência, valor, fonte, regra e evidência. |
+| Receivable / Payable | Direito de receber ou obrigação de pagar/repassar | Parte, vencimento, estado, contrato, gatilho, documento e aplicação de caixa. |
+| Settlement / Cash application | Liquidação externa e sua aplicação a obrigações | Identificador do provedor/banco, valor, data, diferença, conciliação e revisor. |
+| Distribution plan / Entitlement | Cascata de direitos econômicos configurados | Base, versão, ordem, fórmula, beneficiário, bloqueio, alçada e reversão. |
+| Accounting export batch | Lote de eventos preparado para sistema fiscal/contábil | Empresa, competência, esquema, mapeamento, itens, retorno e divergências. |
 
 ## 5. Jornadas que devem entrar em ordem
 
@@ -124,6 +130,7 @@ Essas abordagens são complementares. A escolha deve ser feita depois de três c
 | Núcleo operacional | 6–8 semanas | Party, asset, perfil de busca, tarefa, timeline e fila | A equipe recupera contexto sem planilha paralela. |
 | Proposta e dossiê | 6–8 semanas | Versões de proposta, checklist, evidência, cofre e permissões | Menos reabertura documental e histórico preservado. |
 | Vendas e lotes | 6–8 semanas | Proprietário PF/PJ, comprador PF/PJ, lote/empreendimento, tabela e alçada | Operação de lote deixa de depender de tabela paralela. |
+| Núcleo financeiro e contábil | 8–10 semanas | Subledger, cobrança, carteira, distribuição, conciliação, workspace do contador e exportação | Uma competência-piloto fecha com origem, saldo, evidência e retorno explicáveis. |
 | Inteligência e pesquisa | 4–6 semanas | Biblioteca de evidências, painel territorial, calendário de fontes e notas de mudança | Gestão usa pesquisa em revisão de carteira. |
 | Integrações e escala | Contínua | Adaptadores, sincronização monitorada e configuração controlada | Integração reduz retrabalho sem perder origem/versão. |
 
@@ -163,6 +170,26 @@ A Lei nº 6.530/1978 permite a associação do corretor a uma ou mais imobiliár
 Para empregados, o eSocial informa que o registro deve ocorrer até a véspera do início das atividades; a NR-7 determina que o exame admissional seja realizado antes do início e que dados de exame componham prontuário médico individual. [18] [19] O produto deve integrar apenas um estado operacional mínimo para acesso/atividade, preservando o conteúdo médico e de RH em seus domínios restritos. A mesma separação vale para PGR/SST: o CRM pode coordenar uma pendência operacional autorizada, mas não se converte em prontuário, laudo ou sistema de medicina ocupacional. [20]
 
 > **Nova regra de arquitetura:** nenhuma relação interna é, por si, uma credencial. Ser sócio, parceiro ou colaborador não concede acesso automático a carteira, dossiê, alçada, tabela ou recebível. Toda permissão precisa registrar finalidade, escopo, aprovador, vigência, política aplicada e revisão.
+
+## 8.3 Núcleo financeiro, fiscal, contábil e de distribuição
+
+> **Limite de responsabilidade:** o CRM é fonte operacional rastreável e workspace de reconciliação; ele não substitui contador, ERP, banco, instituição de pagamento, profissional fiscal ou validação jurídica. Regime, documento, retenção, reconhecimento, obrigação e pagamento precisam ser aprovados no contexto de cada empresa, SPE, contrato, município e competência.
+
+O novo núcleo financeiro posiciona o CRM como um **subledger orientado por evento**, e não como um campo de saldo ou razão contábil paralelo. A ECD abrange livros como Diário, Razão, balancetes, balanços e fichas de lançamento; a ECF reúne operações voltadas à apuração de IRPJ e CSLL; EFD-Reinf, EFD-Contribuições, DCTFWeb/MIT e NFS-e possuem escopos, retornos e leiautes próprios. [21] [22] [23] [24] [25] [26] O produto deve preservar a origem de cada evento, competência, contraparte, documento, política e referência de integração, para que o fiscal e a contabilidade trabalhem com contexto verificável.
+
+| Camada | O CRM registra | O responsável especializado valida/executa |
+| --- | --- | --- |
+| Contrato e subledger | Evento, receivable, payable, competência, parcela, saldo derivado e evidência | Enquadramento, reconhecimento, lançamento e escrituração. |
+| Cobrança e caixa | Instrução, retorno, liquidação, aplicação, tarifa e divergência | Serviço de cobrança/liquidação contratado, extrato e conciliação bancária final. |
+| Loteadora | Empreendimento, lote, contrato, entrada, parcela, índice, distrato, permuta e carteira | Tratamento contábil/fiscal e efeitos jurídicos de cada instrumento. |
+| Distribuição | Base, versão de plano, percentual/fixo, faixa, recebedor, gatilho, bloqueio e alçada | Documento, pagamento, retenção, obrigação e análise da natureza econômica. |
+| Fechamento | Snapshot, pendência, exportação, retorno e log por empresa/SPE e competência | ECD, ECF, declarações e demais entregas aplicáveis. |
+
+Na loteadora, uma cascata de distribuição pode ter muitos recebedores — corretor, imobiliária, captador, permutante, proprietário da terra, parceiro, sócio ou fornecedor — em valores fixos ou percentuais. O plano precisa congelar a base, ordem, fórmula, gatilho, teto/piso, regra de arredondamento, recebedor e versão para cada evento elegível. A Solução de Consulta SRRF06/Disit nº 6.018/2018 ilustra que, em cenários concretos de loteamento em terreno de terceiro e participação em vendas, a natureza contratual e a parcela economicamente cabível importam; o documento também ressalva interpretações supervenientes. [27] Portanto, percentuais não podem ser tratados como regra fiscal universal do software.
+
+O Banco Central define instituição de pagamento como pessoa jurídica que viabiliza movimentação de recursos no âmbito de arranjo de pagamento. [28] Por isso, o CRM deve calcular direitos, controlar alçadas e conciliar retornos, enquanto boleto, Pix e eventual split são executados por banco, instituição financeira ou instituição de pagamento contratada/habilitada. Três caminhos seguem abertos à validação: cobrança externa com repasse pós-conciliação; split nativo por um parceiro com capacidades comprovadas; ou orquestração multi-parceiro quando a escala justificar sua complexidade. Não há escolha automática antes de validar limites de recebedores, KYC, liquidação, estorno, tarifas, callbacks, contrato e governança.
+
+Por fim, a Lei nº 8.934/1994 reforça que o registro empresarial dá publicidade, autenticidade, segurança e eficácia aos atos sujeitos a registro, além de manter informações de empresas atualizadas. [29] A área do contador e controladoria deve enxergar empresa/SPE, atos, poderes, faturamento, carteira, documento, distribuição, diferença e lote de exportação no escopo autorizado, sem poder editar a proposta, o contrato ou o retorno bancário original. Fechamento é um ritual de evidência: corte de competência, conciliação, revisão de documento/regra, lote imutável de exportação, retorno e arquivo de auditoria.
 
 ## 9. Validação com parceiros-piloto
 
@@ -213,3 +240,21 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [19] [Ministério do Trabalho e Emprego — NR-7 / PCMSO](https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-07-atualizada-2022-1.pdf)
 
 [20] [Ministério do Trabalho e Emprego — Programa de Gerenciamento de Riscos](https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/pgr)
+
+[21] [Portal SPED / Receita Federal — Escrituração Contábil Digital (ECD)](https://www.gov.br/sped/pt-br/assuntos/escrituracoes-digitais/ecd)
+
+[22] [Gov.br / Receita Federal — Entregar Escrituração Contábil Fiscal](https://www.gov.br/pt-br/servicos/entregar-escrituracao-contabil-fiscal)
+
+[23] [Portal SPED / Receita Federal — EFD-Reinf](https://www.gov.br/sped/pt-br/assuntos/escrituracoes-digitais/efd-reinf)
+
+[24] [Portal SPED / Receita Federal — EFD-Contribuições](https://www.gov.br/sped/pt-br/assuntos/escrituracoes-digitais/efd-contribuicoes)
+
+[25] [Receita Federal — DCTFWeb e MIT](https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/declaracoes-e-demonstrativos/DCTFWeb)
+
+[26] [Portal Gov.br — Nota Fiscal de Serviço eletrônica](https://www.gov.br/nfse/pt-br)
+
+[27] [Receita Federal — Solução de Consulta SRRF06/Disit nº 6.018/2018](http://normas.receita.fazenda.gov.br/sijut2consulta/anexoOutros.action?idArquivoBinario=64075)
+
+[28] [Banco Central do Brasil — O que é instituição de pagamento?](https://www.bcb.gov.br/pre/composicao/instpagamento.asp?frame=1)
+
+[29] [Planalto — Lei nº 8.934/1994, Registro Público de Empresas Mercantis](https://www.planalto.gov.br/ccivil_03/leis/L8934compilado.htm)

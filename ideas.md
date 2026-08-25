@@ -92,3 +92,6 @@ O símbolo será uma **bússola de lote**: dois arcos incompletos que sugerem um
 - O laranja-argila fica reservado para pressão de decisão — prioridades, riscos e chamadas de ação — enquanto o azul cadastral mantém a estrutura, a navegação e a confiança dos dados.
 - Dados neutros permanecem em azul cadastral e papel; o verde-oliva pode sinalizar oportunidade ou crescimento, mas não atua como cor decorativa adicional.
 - Todo painel de dados novo deve conter uma coordenada de recorte, anotação metodológica ou achado interpretativo visível.
+- O wordmark e a bússola de lote devem aparecer como assinatura forte já no primeiro enquadramento, com coordenada e marcação própria, nunca como navegação genérica.
+- Cada capítulo principal precisa manter uma margem de investigação com código de seção, recorte, método ou marcador de decisão que acompanhe a leitura.
+- Sequências de painéis repetidos devem ser interrompidas por ao menos uma lâmina editorial: nota de fechamento, spread cartográfico, pullout de decisão ou artefato de evidência.
