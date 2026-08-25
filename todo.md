@@ -187,4 +187,4 @@
 - [x] Executar os ciclos 9–10: fiscal/contábil, integrações, qualidade, operação, escala e projeto integrador.
 - [x] Consolidar fontes, contrapontos, conflitos, decisões, limites e backlog da auditoria.
 - [x] Evoluir o observatório com o caderno dos dez ciclos e validar desktop/mobile.
-- [ ] Salvar checkpoint e entregar a auditoria aprofundada do curso.
+- [x] Salvar checkpoint e entregar a auditoria aprofundada do curso.
