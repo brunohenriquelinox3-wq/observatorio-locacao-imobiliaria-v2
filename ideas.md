@@ -112,3 +112,7 @@ O símbolo será uma **bússola de lote**: dois arcos incompletos que sugerem um
 - Wordmark, bússola e coordenada CRM.01 reaparecem nos momentos de abertura, virada e fechamento como assinatura de autoria editorial do Observatório.
 - Módulos operacionais de mesmo arranjo não se repetem mais de duas vezes sem uma placa de fonte, coordenada de método, spread territorial ou conclusão de campo que interrompa o ritmo.
 - Em capítulos de acesso, a interface é precedida por uma placa metodológica que explicita **identidade → vínculo → consequência**, para que o painel seja lido como evidência e não como fim em si.
+- A capa do Observatório dá precedência visual à bússola de lote, ao wordmark e à coordenada CRM.01; a navegação permanece funcional, mas não compete com a autoria editorial.
+- Após no máximo dois módulos operacionais, uma virada de página usa artefato dominante de investigação — rota, grade, índice de ciclos, placa de fonte ou conclusão de campo — para devolver respiro à narrativa.
+- Toda frente de auditoria deve apresentar primeiro a fonte/evidência, depois a leitura estratégica e por fim a consequência testável; a interface interativa apenas torna essa prova explorável.
+- Argila marca exclusivamente conflito, risco, decisão e próximo passo. Coordenadas, sombra, textura e análise neutra usam papel mineral, azul cadastral ou oliva contido.

@@ -8,6 +8,7 @@ import "../finance.css";
 import "../admin.css";
 import "../identity.css";
 import "../observatory-refinement.css";
+import "../course-audit.css";
 import {
   ArrowDownRight, ArrowUpRight, BookOpenCheck, Check, ChevronRight, Compass,
   Banknote, Calculator, Database, FileCheck2, GitBranch, History, Landmark,
@@ -172,6 +173,82 @@ function AdministrationFieldPlate() {
   return <section className="admin-field-plate" aria-label="Nota de campo sobre administração governada"><div className="content-section"><div className="admin-field-stamp"><Compass className="h-7 w-7"/><span>⌖ COORDENADA DE CONTROLE</span><b>PLATAFORMA<br/>NÃO É CARTEIRA</b><small>campo ADM.01 · antes da primeira operação</small></div><div className="admin-field-copy"><span>NOTA DE CAMPO · FUNDAMENTO DE ACESSO</span><h2>O dado de uma imobiliária ou SPE só muda de mãos quando a <em>finalidade, o escopo e o tempo</em> podem ser provados.</h2><p>Administração é uma cadeia de limites: principal, membership, policy, sessão, comando e audit event. Não é um atalho que torna a organização do cliente transparente para quem mantém a plataforma.</p></div><div className="admin-field-route" aria-label="Rota de uma decisão administrativa"><div><b>PERGUNTA</b><span>qual recurso é indispensável?</span></div><i>⌁</i><div><b>PROVA</b><span>quem aprovou, até quando e por quê?</span></div><i>⌁</i><div><b>EFEITO</b><span>grant mínimo, expiração e revisão</span></div></div></div></section>;
 }
 
+function CourseAuditSection() {
+  const lenses = [
+    { key: "foundation", cycles: ["01", "02"], tag: "ARQUITETURA & TEMPO", title: "A regra precisa sobreviver à próxima versão.", text: "DDD, constraints e histórico saem da explicação didática e viram fronteiras operacionais: agregado pequeno, estado esperado, transação curta, fatos versionados e migração que expande, reconcilia e só então contrai.", route: ["CONTEXTO", "INVARIANTE", "FATO", "MIGRAÇÃO"], fields: ["Ownership antes de microserviço", "Versão, origem e vigência em cada decisão", "Compensar é diferente de apagar"], gate: "Conflito concorrente, backfill e reprodução histórica não alteram a verdade silenciosamente." },
+    { key: "access", cycles: ["03", "07"], tag: "MULTITENANCY & IDENTIDADE", title: "Acesso não nasce do e-mail, do cargo ou da tela.", text: "Identidade, membership, escopo, MFA, sessão e policy continuam separados. O convite abre uma jornada; RLS/RPC decide o acesso no dado vivo, e recuperação nunca devolve privilégio sem nova prova.", route: ["IDENTIDADE", "VÍNCULO", "SESSÃO", "POLICY"], fields: ["RLS, grant, RPC, Storage e exportação testados", "Step-up acompanha consequência e alçada", "Administração não atravessa cliente sem caso JIT"], gate: "A mesma tentativa falha por UI, URL, API e objeto quando o escopo ou a prova não existem." },
+    { key: "domain", cycles: ["04"], tag: "LOTEADORA & CONTRATO", title: "Um lote não é só estoque. Um contrato não é só status.", text: "A auditoria preserva gleba, empreendimento, lote, reserva e carteira, mas impede simplificação: estados urbanístico, registral, obra, comercial, alocação e recebível são paralelos; termo assinado é fonte datada de cálculo.", route: ["EVIDÊNCIA", "ALOCAR", "CONTRATAR", "COMPENSAR"], fields: ["Reserva temporal tem versão, razão e expiração", "Quadro-resumo não é JSON regravável", "Distrato abre caso, memória e revisão"], gate: "Duas reservas não vendem o mesmo lote e regra posterior não reescreve contrato já formado." },
+    { key: "finance", cycles: ["05", "06"], tag: "FINANCEIRO & FISCAL", title: "Provar o dinheiro é separar os fatos antes de somá-los.", text: "Evento econômico, direito, instrução, retorno, settlement e conciliação não se confundem. Fiscal e contábil recebem classificação, período, memória e lote de exportação; parceiro habilitado liquida, profissional habilitado valida.", route: ["EVENTO", "DIREITO", "INSTRUÇÃO", "CONCILIAÇÃO"], fields: ["Comprovante não equivale a liquidação", "Regra, índice e arredondamento são versionados", "DIMOB/exportação preserva contratação e pagamento"], gate: "Parcialidade, estorno, recebedor bloqueado e divergência não viram saldo manual nem sucesso fictício." },
+    { key: "operate", cycles: ["08", "09", "10"], tag: "INTEGRAÇÃO & ESCALA", title: "O request termina; a responsabilidade continua.", text: "API contratada, outbox, inbox, job, correlação, sinal e capacidade formam uma só trilha. O navegador não confirma efeito ambíguo; o worker reprocessa com estado e a equipe mede a jornada real antes de prometer escala.", route: ["OUTBOX", "WORKER", "INBOX", "SINAL", "DECISÃO"], fields: ["Contrato de parceiro por versão e capacidade", "Job tem owner, lease, prazo e exceção", "Índice e runtime só entram após medição"], gate: "Timeout, replay, callback tardio, fila atrasada e carga não duplicam efeito nem escondem a exceção." },
+  ];
+  const [active, setActive] = useState(0);
+  const audit = lenses[active];
+  const allCycles = [
+    ["01", "arquitetura"], ["02", "dados & tempo"], ["03", "isolamento"], ["04", "loteadora"], ["05", "direitos"],
+    ["06", "fiscal"], ["07", "identidade"], ["08", "integração"], ["09", "confiabilidade"], ["10", "escala"],
+  ];
+
+  return (
+    <section id="dez-ciclos" className="course-audit-section">
+      <div className="course-audit-ledge" aria-hidden="true"><span>⌖</span><i /><span>CAMPO DE AUDITORIA · 10 CICLOS</span></div>
+      <div className="content-section">
+        <div className="section-head course-audit-head">
+          <aside><Eyebrow>10C · CADERNO DE DEZ CICLOS</Eyebrow><p>O material de formação virou hipótese; fonte, exceção e teste decidiram o que permanece na estratégia.</p></aside>
+          <div><h2>Estudar muito é <em>deixar uma prova melhor</em> a cada volta.</h2><p>Esta lâmina concentra cinco frentes que atravessam dez ciclos de auditoria. Alterne as coordenadas para ver como uma boa explicação de código vira limite de produto, teste e responsabilidade operacional.</p></div>
+        </div>
+
+        <div className="course-audit-atlas">
+          <aside className="course-audit-compass">
+            <BookOpenCheck className="h-7 w-7" />
+            <span>⌖ MATERIAL → PROVA</span>
+            <b>10<br />CICLOS</b>
+            <small>hipótese · contraponto · exceção · decisão</small>
+            <div className="course-audit-ruler"><i /><i /><i /><i /><i /></div>
+            <p>Não acumulamos tópicos. Conectamos cada assunto a um limite que o sistema consegue demonstrar.</p>
+          </aside>
+
+          <div className="course-audit-workbench">
+            <div className="course-audit-tabs" role="tablist" aria-label="Frentes da auditoria em dez ciclos">
+              {lenses.map((item, index) => (
+                <button key={item.key} onClick={() => setActive(index)} className={active === index ? "active" : ""} aria-pressed={active === index}>
+                  <code>{item.cycles.join("·")}</code><span>{item.tag}</span>
+                </button>
+              ))}
+            </div>
+            <article className="course-audit-paper">
+              <div className="course-audit-paper-meta"><span>{audit.tag}</span><small>ciclos {audit.cycles.join(" + ")}</small></div>
+              <h3>{audit.title}</h3><p>{audit.text}</p>
+              <div className="course-audit-route" aria-label="Rota de controle da frente selecionada">
+                {audit.route.map((node, index) => <div key={node}><b>{node}</b>{index < audit.route.length - 1 && <i>⌁</i>}</div>)}
+              </div>
+              <ul>{audit.fields.map((field, index) => <li key={field}><code>0{index + 1}</code><span>{field}</span></li>)}</ul>
+              <div className="course-audit-gate"><ShieldCheck className="h-5 w-5" /><div><b>PROVA PARA ENTRAR NO ROTEIRO</b><p>{audit.gate}</p></div></div>
+            </article>
+          </div>
+
+          <aside className="course-audit-conflicts">
+            <span>CONFLITOS QUE NÃO VIRAM CONSTANTE</span>
+            <b>Contrato, período, parceiro e contexto continuam visíveis.</b>
+            <p>Distrato, índice, tributo, split, KYC, SSO e escala não têm resposta universal. O produto conserva versão, caso e dono; os responsáveis habilitados validam a aplicação concreta.</p>
+            <div><small>JURÍDICO</small><small>CONTÁBIL</small><small>COMPLIANCE</small><small>PARCEIRO</small></div>
+          </aside>
+        </div>
+
+        <div className="course-audit-index" aria-label="Índice completo dos dez ciclos">
+          {allCycles.map(([number, label]) => <div key={number} className={audit.cycles.includes(number) ? "active" : ""}><code>{number}</code><span>{label}</span></div>)}
+        </div>
+
+        <div className="course-audit-note">
+          <div><History className="h-6 w-6" /><span>DECISÃO CONSOLIDADA</span></div>
+          <b>O CRM avança como monólito modular: dado autoritativo, regra versionada, comando transacional, integração reconciliável e escala medida.</b>
+          <p>Isso preserva profundidade sem transformar DDD em microserviço precoce, comprovante em liquidação, callback em certeza fiscal ou administração em acesso irrestrito ao cliente.</p>
+          <a href="#roteiro">Ver o que entra primeiro <ArrowDownRight className="h-4 w-4" /></a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function CrmStrategy() {
   const [phase, setPhase] = useState(0);
   const [mode, setMode] = useState(0);
@@ -197,7 +274,7 @@ export default function CrmStrategy() {
     <div className="paper-noise" />
     <header className="site-header crm-header">
       <a href="/" className="brand"><img src={logo} alt="Símbolo Bússola de Lote"/><span><b>Observatório</b><small>ESTRATÉGIA CRM</small></span></a>
-      <nav><a href="/">Locação</a><a href="/vendas">Vendas & lotes</a><a href="#nucleo">Núcleo</a><a href="#cadastro">Cadastro</a><a href="#operacao">Pessoas & acesso</a><a href="#loteadora">Loteadoras</a><a href="#financeiro">Financeiro</a><a href="#benchmark">Benchmark</a><a href="#experiencia">Experiência</a><a href="#arquitetura">Arquitetura</a><a href="#auditoria">Auditoria</a><a href="#antierro">Anti-erro</a><a href="#identidade">Identidade & login</a><a href="#pesquisa">Pesquisa contínua</a></nav>
+      <nav><a href="/">Locação</a><a href="/vendas">Vendas & lotes</a><a href="#nucleo">Núcleo</a><a href="#cadastro">Cadastro</a><a href="#operacao">Pessoas & acesso</a><a href="#loteadora">Loteadoras</a><a href="#financeiro">Financeiro</a><a href="#benchmark">Benchmark</a><a href="#experiencia">Experiência</a><a href="#arquitetura">Arquitetura</a><a href="#auditoria">Auditoria</a><a href="#antierro">Anti-erro</a><a href="#identidade">Identidade & login</a><a href="#dez-ciclos">10 ciclos</a><a href="#pesquisa">Pesquisa contínua</a></nav>
       <a href="#roteiro" className="nav-cta">Ver roteiro <ArrowDownRight className="h-4 w-4"/></a>
     </header>
 
@@ -240,6 +317,8 @@ export default function CrmStrategy() {
       <ContinuousStudySection />
 
       <ContinuousStudySpread />
+
+      <CourseAuditSection />
 
       <section id="roteiro" className="crm-roadmap-section"><div className="content-section"><div className="section-head"><aside><Eyebrow>11 · ROTEIRO DE CONSTRUÇÃO</Eyebrow><p>Desenvolver em ordem de risco: fundação, rotina, evidência, loteadora, integração, inteligência e escala.</p></aside><div><h2>O produto precisa provar uso diário antes de prometer escala.</h2><p>Cada etapa deixa uma entrega observável e um critério de passagem. O desenvolvimento não avança por volume de telas, mas por evidência de que a operação mudou.</p></div></div><div className="crm-roadmap"><div className="crm-phase-list">{phases.map((item, index) => <button key={item.n} onClick={() => setPhase(index)} className={phase === index ? "active" : ""} aria-pressed={phase === index}><code>0{item.n}</code><span><b>{item.title}</b><small>{item.period}</small></span><ChevronRight className="h-4 w-4"/></button>)}</div><article className="crm-phase-detail"><div><span className="kicker">FASE {current.n} · {current.period.toUpperCase()}</span><h3>{current.title}</h3><p>{current.purpose}</p></div><div className="deliverables"><b>ENTREGAS VERIFICÁVEIS</b><ul>{current.deliver.map(item => <li key={item}><Check className="h-4 w-4"/>{item}</li>)}</ul></div><div className="phase-gate"><ShieldCheck className="h-5 w-5"/><span>CRITÉRIO DE PASSAGEM</span><strong>{current.gate}</strong></div></article></div></div></section>
 

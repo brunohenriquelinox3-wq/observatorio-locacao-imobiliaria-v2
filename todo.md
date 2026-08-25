@@ -177,3 +177,14 @@
 - [x] Atualizar evidências, estratégia, arquitetura e backlog com controles de identidade e acesso.
 - [x] Evoluir o observatório com a matriz de login e validar em desktop/mobile.
 - [x] Salvar checkpoint e entregar a revisão de identidade e login.
+
+## Auditoria aprofundada do curso: dez ciclos de estudo
+
+- [x] Inventariar os módulos, alegações e prioridades críticas do curso enviado.
+- [x] Executar os ciclos 1–3: arquitetura, DDD, dados, PostgreSQL e temporalidade.
+- [x] Executar os ciclos 4–6: multi-tenancy, autorização, LGPD, autenticação e segurança de aplicação.
+- [x] Executar os ciclos 7–8: regras imobiliárias, loteadora, contratos, carteira e domínio financeiro.
+- [x] Executar os ciclos 9–10: fiscal/contábil, integrações, qualidade, operação, escala e projeto integrador.
+- [x] Consolidar fontes, contrapontos, conflitos, decisões, limites e backlog da auditoria.
+- [x] Evoluir o observatório com o caderno dos dez ciclos e validar desktop/mobile.
+- [ ] Salvar checkpoint e entregar a auditoria aprofundada do curso.

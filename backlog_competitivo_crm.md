@@ -134,6 +134,18 @@ Este backlog é uma **fila de hipótese de produto**, não um compromisso comerc
 | UX-11 | Explicar incerteza financeira de forma acessível | Estados textuais de rascunho, solicitado, parcial, exceção e confirmado; erro navegável, não cromático e acionável. | Fundação | Teste de fluxo crítico comprova revisão, correção, foco, leitor de tela e não confunde simulação com liquidação. |
 | OPS-01 | Manter pesquisa contínua sem dispersão | Carta, fila, ciclo de evidência/contraponto/exceção/teste/decisão, owner e revisão periódica. | Fundação | Toda mudança estratégica de alto risco referencia fonte, impacto, decisão, backlog e critério de reabertura. |
 
+## Auditoria do curso em dez ciclos: requisitos adicionais
+
+| ID | Resultado | Requisito | Prioridade | Critério de aceitação |
+| --- | --- | --- | --- | --- |
+| CUR-01 | Distinguir evidência de pagamento de liquidação | Máquina de estado para `proof_submitted`, `recorded`, `matched`, `settled`, `reversed` e `disputed`, com fonte, ator e correlação. | Fundação financeira | Comprovante, extrato, callback e ajuste não alteram estado econômico sem transição permitida e caso de exceção rastreável. |
+| CUR-02 | Reproduzir cálculo contratual/financeiro | Motor de regra datada com base, índice, arredondamento, termo, memória, versão e fato compensatório. | Fundação financeira | Mesmo contrato/versão/dados reproduz o resultado; mudança legal/contratual cria nova versão sem reescrever passado. |
+| CUR-03 | Exportar sem virar transmissor fiscal autônomo | Lote fiscal classificatório imutável para DIMOB/contábil, com contratação, competência, vencimento, liquidação, checksum, retorno e divergência. | Alta | A amostra conciliada mostra origem e período; transmissão e validação permanecem sob responsável habilitado. |
+| CUR-04 | Homologar parceiro por contrato e capacidade | `ProviderCapabilityProfile` por versão de API, autenticação, limite, recebedor, KYC, split, webhook, idempotência, retenção, erro e saída. | Fundação bloqueadora | API/documentação descontinuada, capacidade não contratada ou callback sem teste bloqueiam go-live financeiro. |
+| CUR-05 | Processar trabalho lento com responsabilidade | `JobRun` com entrada redigida/versionada, owner, prioridade, lease, prazo, tentativa, cancelamento, resultado e artefato protegido. | Fundação | Exportação, conciliação, recalculo e carga sobrevivem a queda/retry sem sucesso fictício no browser. |
+| CUR-06 | Escalar pela jornada autorizada | Catálogo de consulta quente, cursor, filtro/policy, plano de execução, índice, métrica e revisão de capacidade. | Alta | Índice só é promovido com hipótese e `EXPLAIN` representativo; RLS, exportação e reconciliação entram no teste de carga. |
+| CUR-07 | Fechar release crítico por cenário de falha | Gate único de duplicata, atraso, negação, concorrência, reversão, recuperação e regressão para acesso, financeiro, migration, callback, arquivo e exportação. | Fundação bloqueadora | Falha material não é encerrada sem fixture sintética, teste que falhava antes, evidência atual e owner do risco residual. |
+
 ## Revisão de priorização
 
 O backlog deve ser revisado após cada piloto mensal. Uma prioridade só sobe quando houver problema repetido, impacto mensurável, viabilidade de integração e dono operacional. Itens `AUD-*` bloqueiam mudança sensível quando seu critério não estiver comprovado; uma hipótese pode ser rebaixada ou removida sem apagar o registro da decisão anterior.

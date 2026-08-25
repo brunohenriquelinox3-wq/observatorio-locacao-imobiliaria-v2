@@ -1,0 +1,132 @@
+/**
+ * Caderno de Campo Urbano — lâmina dos dez ciclos.
+ * Estilo: artefato metodológico assimétrico; papel mineral, azul cadastral e verde de prova.
+ * Argila aparece somente em conflito/decisão; contraste e movimento reduzível são obrigatórios.
+ */
+.course-audit-section {
+  position: relative;
+  margin-top: 1px;
+  padding: clamp(4.5rem, 8vw, 8rem) 0 clamp(4rem, 7vw, 7rem);
+  color: #173b4d;
+  background:
+    linear-gradient(90deg, rgba(23, 59, 77, 0.05) 1px, transparent 1px) 0 0 / 5.5rem 5.5rem,
+    linear-gradient(180deg, #e9ece0 0%, #f5f3ed 48%, #e8eee2 100%);
+  overflow: hidden;
+}
+
+.course-audit-section > .content-section { position: relative; z-index: 1; }
+
+.course-audit-section::before {
+  position: absolute;
+  inset: 0 auto 0 4.5%;
+  width: 1px;
+  content: "";
+  background: rgba(23, 59, 77, 0.18);
+}
+
+.course-audit-section::after {
+  position: absolute;
+  right: -2.8rem;
+  bottom: 5.3rem;
+  z-index: 0;
+  color: rgba(23, 59, 77, 0.055);
+  content: "01—10";
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(10rem, 24vw, 24rem);
+  font-weight: 500;
+  letter-spacing: -0.12em;
+  line-height: 0.7;
+  pointer-events: none;
+}
+
+.course-audit-ledge {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: min(90%, 1160px);
+  margin: 0 auto clamp(2rem, 4vw, 3.4rem);
+  color: #5e704f;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.course-audit-ledge > span:first-child { font-size: 1.2rem; }
+.course-audit-ledge i { width: clamp(2rem, 9vw, 9rem); height: 1px; background: currentColor; opacity: 0.55; }
+
+.course-audit-head { position: relative; margin-bottom: clamp(2.1rem, 4vw, 4rem); }
+.course-audit-head::after { position: absolute; right: 2%; bottom: -1.5rem; width: clamp(5rem, 15vw, 12rem); height: clamp(5rem, 15vw, 12rem); border: 1px solid rgba(23, 59, 77, 0.22); border-radius: 50%; box-shadow: 0 0 0 clamp(0.5rem, 1.5vw, 1rem) rgba(94, 112, 79, 0.09), 0 0 0 clamp(1.05rem, 3vw, 2.1rem) rgba(23, 59, 77, 0.05); content: ""; pointer-events: none; }
+.course-audit-head h2 em { color: #a14f32; font-style: italic; }
+
+.course-audit-atlas {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.52fr) minmax(0, 1.7fr) minmax(12rem, 0.66fr);
+  gap: clamp(1rem, 2vw, 2rem);
+  align-items: stretch;
+}
+
+.course-audit-compass {
+  position: relative;
+  display: flex;
+  min-height: 31rem;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.4rem;
+  overflow: hidden;
+  color: #f5f3ed;
+  background: #173b4d;
+}
+
+.course-audit-compass > svg { color: #bfcba7; }
+.course-audit-compass > span,
+.course-audit-conflicts > span,
+.course-audit-paper-meta,
+.course-audit-note span {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.61rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.course-audit-compass > span { margin-top: 1rem; color: #d4debf; }
+.course-audit-compass > b { margin: 2.3rem 0 0.8rem; font-family: "Fraunces", Georgia, serif; font-size: clamp(2.6rem, 5vw, 4.5rem); line-height: 0.83; letter-spacing: -0.09em; }
+.course-audit-compass > small { max-width: 10rem; color: rgba(245, 243, 237, 0.7); font-family: "DM Sans", sans-serif; font-size: 0.72rem; line-height: 1.45; }
+.course-audit-compass > p { position: relative; z-index: 1; margin-top: auto; color: rgba(245, 243, 237, 0.82); font-size: 0.82rem; line-height: 1.55; }
+
+.course-audit-ruler { position: absolute; right: 1.25rem; bottom: 7.2rem; display: grid; gap: 0.55rem; width: 65%; }
+.course-audit-ruler i { display: block; height: 1px; background: #bfcba7; opacity: 0.5; }
+.course-audit-ruler i:nth-child(2) { width: 75%; }.course-audit-ruler i:nth-child(3) { width: 48%; }.course-audit-ruler i:nth-child(4) { width: 84%; }.course-audit-ruler i:nth-child(5) { width: 28%; }
+
+.course-audit-workbench { min-width: 0; padding: clamp(0.8rem, 1.6vw, 1.3rem); border: 1px solid rgba(23, 59, 77, 0.25); background: rgba(245, 243, 237, 0.84); box-shadow: 14px 14px 0 rgba(23, 59, 77, 0.1); }
+.course-audit-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-bottom: 1px solid rgba(23, 59, 77, 0.2); }
+.course-audit-tabs button { min-height: 4.1rem; padding: 0.65rem 0.55rem 0.75rem; border: 0; border-right: 1px solid rgba(23, 59, 77, 0.15); color: #173b4d; background: transparent; font-family: "DM Sans", sans-serif; text-align: left; transition: background 180ms var(--ease-out, ease-out), color 180ms var(--ease-out, ease-out), transform 160ms var(--ease-out, ease-out); }
+.course-audit-tabs button:last-child { border-right: 0; }.course-audit-tabs button:hover, .course-audit-tabs button.active { color: #f5f3ed; background: #173b4d; }.course-audit-tabs button:active { transform: scale(0.97); }
+.course-audit-tabs code { display: block; margin-bottom: 0.25rem; color: #a14f32; font-size: 0.63rem; font-weight: 800; }.course-audit-tabs button.active code { color: #d4debf; }.course-audit-tabs span { display: block; font-size: 0.59rem; font-weight: 800; line-height: 1.15; letter-spacing: 0.08em; }
+
+.course-audit-paper { position: relative; min-height: 25.8rem; padding: clamp(1.4rem, 3vw, 3rem); background: #fbfaf5; box-shadow: inset 0 0 0 1px rgba(23, 59, 77, 0.06); }
+.course-audit-paper::after { position: absolute; top: 1.35rem; right: 1.35rem; width: 2.3rem; height: 2.3rem; border: 1px solid #a14f32; border-radius: 50%; content: ""; opacity: 0.55; }
+.course-audit-paper-meta { display: flex; justify-content: space-between; gap: 1rem; color: #5e704f; }.course-audit-paper-meta small { color: #a14f32; font-size: 0.64rem; }
+.course-audit-paper h3 { max-width: 38rem; margin: 1.1rem 0 0.8rem; font-family: "Fraunces", Georgia, serif; font-size: clamp(1.85rem, 3.2vw, 3.05rem); font-weight: 500; line-height: 1.02; letter-spacing: -0.055em; }.course-audit-paper > p { max-width: 43rem; margin: 0; color: #44535a; font-size: 0.92rem; line-height: 1.7; }
+
+.course-audit-route { display: flex; align-items: center; gap: 0.5rem; margin: 1.85rem 0 1.25rem; padding: 0.75rem 0; border-top: 1px solid rgba(23, 59, 77, 0.17); border-bottom: 1px solid rgba(23, 59, 77, 0.17); overflow-x: auto; }.course-audit-route div { display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; }.course-audit-route b { color: #173b4d; font-family: "DM Sans", sans-serif; font-size: 0.64rem; letter-spacing: 0.08em; }.course-audit-route i { color: #a14f32; font-style: normal; }
+.course-audit-paper ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.65rem; padding: 0; margin: 0; list-style: none; }.course-audit-paper li { display: flex; gap: 0.5rem; align-items: flex-start; color: #42575f; font-size: 0.75rem; line-height: 1.35; }.course-audit-paper li code { flex: 0 0 auto; color: #a14f32; font-size: 0.62rem; font-weight: 800; }
+.course-audit-gate { display: flex; gap: 0.7rem; align-items: flex-start; margin-top: 1.5rem; padding: 0.8rem; border-left: 3px solid #5e704f; color: #173b4d; background: #e8eee2; }.course-audit-gate svg { flex: 0 0 auto; color: #5e704f; }.course-audit-gate b { display: block; margin-bottom: 0.2rem; font-family: "DM Sans", sans-serif; font-size: 0.61rem; letter-spacing: 0.12em; }.course-audit-gate p { margin: 0; font-size: 0.78rem; line-height: 1.4; }
+
+.course-audit-conflicts { display: flex; flex-direction: column; align-items: flex-start; padding: 1.4rem; border-top: 5px solid #a14f32; color: #173b4d; background: #ded9cc; }.course-audit-conflicts > span { color: #a14f32; }.course-audit-conflicts > b { margin-top: 1.35rem; font-family: "Fraunces", Georgia, serif; font-size: 1.55rem; font-weight: 500; line-height: 1.07; letter-spacing: -0.045em; }.course-audit-conflicts > p { margin: 1rem 0 auto; color: #45545a; font-size: 0.82rem; line-height: 1.6; }.course-audit-conflicts > div { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 1.5rem; }.course-audit-conflicts small { padding: 0.28rem 0.38rem; border: 1px solid rgba(161, 79, 50, 0.45); color: #78402f; font-family: "DM Sans", sans-serif; font-size: 0.55rem; font-weight: 800; letter-spacing: 0.08em; }
+
+.course-audit-index { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); margin: 1.3rem 0 0 clamp(0rem, 12vw, 11.7rem); border: 1px solid rgba(23, 59, 77, 0.25); background: rgba(245, 243, 237, 0.55); }.course-audit-index div { display: grid; gap: 0.35rem; min-height: 4.5rem; padding: 0.62rem; border-right: 1px solid rgba(23, 59, 77, 0.16); }.course-audit-index div:last-child { border: 0; }.course-audit-index div.active { background: #173b4d; color: #f5f3ed; }.course-audit-index code { color: #a14f32; font-size: 0.7rem; font-weight: 800; }.course-audit-index div.active code { color: #d4debf; }.course-audit-index span { font-family: "DM Sans", sans-serif; font-size: 0.62rem; font-weight: 700; line-height: 1.15; }
+
+.course-audit-note { display: grid; grid-template-columns: minmax(7rem, 0.45fr) minmax(15rem, 1fr) minmax(14rem, 0.9fr) auto; gap: 1.3rem; align-items: center; margin-top: 1.3rem; padding: 1.25rem 1.4rem; color: #f5f3ed; background: #173b4d; }.course-audit-note > div { display: grid; gap: 0.45rem; color: #d4debf; }.course-audit-note > div svg { color: #d4debf; }.course-audit-note > b { font-family: "Fraunces", Georgia, serif; font-size: 1.22rem; font-weight: 500; line-height: 1.1; }.course-audit-note p { margin: 0; color: rgba(245, 243, 237, 0.74); font-size: 0.77rem; line-height: 1.5; }.course-audit-note a { display: inline-flex; align-items: center; gap: 0.35rem; padding-bottom: 0.25rem; border-bottom: 1px solid #d4debf; color: #f5f3ed; font-family: "DM Sans", sans-serif; font-size: 0.68rem; font-weight: 800; white-space: nowrap; }
+
+@media (max-width: 980px) {
+  .course-audit-atlas { grid-template-columns: 0.5fr minmax(0, 1.4fr); }.course-audit-conflicts { grid-column: 1 / -1; min-height: 12rem; }.course-audit-conflicts > p { margin-bottom: 1rem; }.course-audit-index { margin-left: 0; }.course-audit-note { grid-template-columns: 0.45fr 1fr; }.course-audit-note p { grid-column: 1 / -1; }.course-audit-note a { justify-self: start; }
+}
+
+@media (max-width: 680px) {
+  .course-audit-section { padding-top: 3.5rem; }.course-audit-section::before { left: 1.2rem; }.course-audit-section::after { right: -2rem; bottom: 2.2rem; font-size: 9rem; }.course-audit-head::after { right: 0; bottom: -0.7rem; }.course-audit-ledge { width: calc(100% - 2.2rem); }.course-audit-ledge i { flex: 1; }.course-audit-atlas { display: block; }.course-audit-compass { min-height: 16rem; margin-bottom: 0.8rem; }.course-audit-compass > b { margin-top: 1rem; }.course-audit-ruler { bottom: 2.2rem; right: 1.2rem; width: 45%; }.course-audit-workbench { padding: 0.55rem; }.course-audit-tabs { display: flex; overflow-x: auto; }.course-audit-tabs button { flex: 0 0 8rem; min-height: 4.4rem; }.course-audit-paper { min-height: auto; padding: 1.2rem; }.course-audit-paper h3 { font-size: 2rem; }.course-audit-paper ul { grid-template-columns: 1fr; }.course-audit-conflicts { min-height: 0; margin-top: 0.8rem; }.course-audit-index { grid-template-columns: repeat(5, minmax(0, 1fr)); }.course-audit-index div:nth-child(5) { border-right: 0; }.course-audit-index div:nth-child(-n + 5) { border-bottom: 1px solid rgba(23, 59, 77, 0.16); }.course-audit-note { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; }.course-audit-note > b { font-size: 1.15rem; }
+}
+
+@media (prefers-reduced-motion: reduce) { .course-audit-tabs button { transition: none; } }

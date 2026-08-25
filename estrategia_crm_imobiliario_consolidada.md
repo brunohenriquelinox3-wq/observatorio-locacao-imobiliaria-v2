@@ -382,6 +382,20 @@ O CRM terá três caminhos de entrada que convergem em uma única decisão de da
 
 O endereço designado para o primeiro principal de plataforma será inserido **somente no cofre de segredo de produção** sob `INITIAL_PLATFORM_PRINCIPAL_EMAIL`. O procedimento cria convite e estado `pending_activation`; a ativação exige posse do e-mail, MFA/AAL2, canal de recuperação, aceite de política e evento administrativo no mesmo comando. Não haverá endereço hardcoded em código, migration, configuração pública, JWT, metadata editável ou interface. Mesmo após ativação, o principal não é um “deus do CRM”: governa a plataforma, mas não atravessa a fronteira de dados de clientes, financeiro ou split fora de suporte JIT/caso autorizado. [49]
 
+## 8.13 Auditoria em dez ciclos: da formação à regra verificável
+
+O curso de desenvolvimento recebido foi submetido a dez ciclos de confronto técnico, regulatório, operacional e de exceção. A auditoria confirma que a formação é uma boa linha de partida, mas não uma especificação executável: DDD não determina microserviços, comprovante não equivale a liquidação, cadastro de recebedor não equivale a direito econômico, e regra fiscal/contratual não pode viver como constante de código. A regra ativa passa a ser um monólito modular com Postgres autoritativo, contexto/ownership explícitos, comando transacional, fatos e políticas versionados, inbox/outbox, jobs com estado, telemetria minimizada e gates de prova por jornada. [50]
+
+| Decisão consolidada | Efeito na estratégia | Prova obrigatória |
+| --- | --- | --- |
+| Tempo, estado e evidência são dimensões próprias | Contrato, reserva, direito, regra, pagamento, settlement e exportação preservam versão, origem, vigência e correção. | Concorrência, reprodução histórica, retificação/compensação e reconciliação sem reescrever fato. |
+| Dinheiro e parceiro têm fronteiras | `EconomicEvent`, `Entitlement`, `PaymentInstruction` e `Settlement` continuam distintos; o parceiro executa somente instrução elegível/homologada. | Duplicata, timeout, recebedor bloqueado, parcialidade, estorno e callback fora de ordem sem efeito repetido. |
+| Fiscal e contábil são projeções governadas | Contratação, competência, vencimento e liquidação não colapsam numa data de receita; a exportação nasce em lote imutável. | Memória com regra datada, amostra conciliada, checksum/retorno e responsabilidade do contador/fiscal. |
+| API, job e escala nascem com operação | Contrato OpenAPI, outbox/inbox, idempotência, correlação, owner, lease, prazo e exceção são parte do recurso. | Reprocessamento, cancelamento, recuperação e carga representativa não dependem do browser aberto. |
+| Índice, cache e runtime são decisões medidas | Performance por jornada autorizada, plano de execução e orçamento de capacidade substituem otimização intuitiva. | `EXPLAIN` representativo, RLS, carga, fila, Storage e plano de capacidade antes de prometer escala. |
+
+Os conflitos não foram escondidos: distrato, índice, correção, tributo, split, KYC, SSO e capacidade variam por contrato, período, empresa/SPE, parceiro e ambiente. O produto modela regra datada, evidência, exceção, alçada e reabertura; jurídico, contador/fiscal, DPO/compliance e parceiro habilitado validam o caso concreto. O mapa completo de decisões, fontes, limitações e backlog está na [consolidação dos dez ciclos](crm_auditoria_curso_10_ciclos_consolidacao.md) e no [caderno de evidências](crm_auditoria_curso_10_ciclos_evidencias.md). [50]
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -489,3 +503,5 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [48] [Administração de plataforma — evidências, modelo e blueprint de implementação](crm_administracao_plataforma_evidencias.md) · [modelo de alçadas](crm_administracao_plataforma_modelo.md) · [implementação Netlify + Supabase](crm_administracao_plataforma_implementacao.md)
 
 [49] [Identidade, login, recuperação e bootstrap governado](crm_login_identidade_modelo.md) · [caderno de evidências](crm_login_identidade_evidencias.md)
+
+[50] [Auditoria aprofundada do curso — consolidação, conflitos e backlog](crm_auditoria_curso_10_ciclos_consolidacao.md) · [caderno de evidências e fontes primárias](crm_auditoria_curso_10_ciclos_evidencias.md)
