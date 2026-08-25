@@ -107,3 +107,6 @@ O símbolo será uma **bússola de lote**: dois arcos incompletos que sugerem um
 - Toda abertura e fechamento de capítulo prioritário deve carregar uma assinatura de autoria do Observatório — coordenada, código de campo ou carimbo de pesquisa — como marca recorrente, não apenas cabeçalho.
 - A ordem visual dominante de qualquer capítulo é **evidência → leitura → consequência prática**; cards, notas e controles secundários só entram depois dessa sequência.
 - Argila não pode funcionar como clima de fundo: aparece somente no risco, na prioridade, na recomendação, no gate ou na próxima ação.
+- A cada três módulos operacionais, uma lâmina cartográfica dominante interrompe a repetição: mapa abstrato, rota pontilhada, carimbo de campo ou conclusão editorial em grande escala.
+- Em cada capítulo, o achado e a consequência prática recebem hierarquia acima do mockup operacional; a interface funciona como evidência subordinada à tese.
+- Wordmark, bússola e coordenada CRM.01 reaparecem nos momentos de abertura, virada e fechamento como assinatura de autoria editorial do Observatório.

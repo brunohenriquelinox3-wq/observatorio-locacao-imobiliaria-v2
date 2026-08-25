@@ -34,6 +34,33 @@ O CRM deve sempre calcular e versionar a cascata econômica; a decisão é **ond
 6. O parceiro retorna o estado individual de cada recebedor; falha de um item abre exceção, sem apagar os demais estados.
 7. Estorno, distrato ou ajuste criam eventos compensatórios ligados aos itens originais; não editam o recebimento original.
 
+## Regra canônica e capacidade do parceiro
+
+O CRM não converte o contrato diretamente em um payload de split. Ele calcula direitos econômicos e os transforma em uma ou mais `PaymentInstruction` somente após validar alçada, versão de regra, elegibilidade, perfil do parceiro e estado da conciliação. O parceiro recebe uma instrução; o retorno dele gera um `Settlement` por item, parcialidade ou exceção. Esses quatro conceitos não podem ser colapsados em um único campo “pago”.
+
+| Fato canônico | Pergunta que responde | Nunca deve fazer |
+| --- | --- | --- |
+| `EconomicEvent` | Qual evento de negócio criou a base econômica? | Declarar pagamento externo. |
+| `DistributionEntitlement` | Quem tem direito, por qual regra, base e condição? | Ser substituído por alteração retroativa de contrato. |
+| `PaymentInstruction` | O que foi solicitado ao parceiro, quando e com que idempotência? | Provar liquidação apenas por ter sido enviada. |
+| `Settlement` | O que o parceiro confirmou por item, tarifa, data e referência? | Apagar o fato ou direito que gerou compensação posterior. |
+
+## Perfil obrigatório antes de ativar split nativo
+
+| Campo de capacidade | Pergunta que precisa de contrato, documentação e sandbox |
+| --- | --- |
+| Limite de recebedores | O produto contratado suporta o máximo por cobrança, parcela e execução? |
+| Rede de recebedores | Os beneficiários precisam usar conta/carteira do próprio parceiro? |
+| Base e tarifa | O percentual incide sobre bruto ou líquido? Quem absorve taxa, MDR, disputa ou chargeback? |
+| Timing e parcela | O split é na liquidação, em instrução posterior ou ambos? Como parcelas, arredondamento e atrasos são tratados? |
+| Estorno e distrato | A reversão debita quem, gera recuperação contra quem e como fica o direito original? |
+| Evento e suporte | Qual assinatura/mTLS, timeout, reentrega, consulta, replay, SLA e histórico existem? |
+| KYC e conciliação | Qual estado habilita recebedor e qual extrato/ID/tarifa permite fechar cada item? |
+
+## Revisão humana antes de instrução sensível
+
+Para uma instrução de valor relevante, o CRM exibe contrato/parcela, base e tarifa, versão de regra, recebedores/valores, bloqueios, parceiro/ambiente, alçada, consequência e próximo estado. A confirmação cria uma instrução auditável; não rotula o resultado como liquidação. Pagamento parcial, KYC bloqueado, callback duplicado, falha individual, estorno ou distrato abrem exceção e fato compensatório — não edição do passado.
+
 ## Checklist de homologação de um parceiro
 
 | Dimensão | Pergunta de validação |
@@ -53,3 +80,7 @@ O Banco Central define a instituição de pagamento como pessoa jurídica que vi
 ## Referência
 
 [1] [Banco Central do Brasil — O que é instituição de pagamento?](https://www.bcb.gov.br/pre/composicao/instpagamento.asp?frame=1)
+
+[2] [FIN-SPLIT-01 — cobrança, liquidação e distribuição configurável](crm_fin_split_01_evidencias.md)
+
+[3] [UX-FIN-01 — experiência anti-erro para ações financeiras e críticas](crm_ux_financeiro_antierro_01.md)

@@ -311,6 +311,32 @@ O CRM não pode prometer execução perfeita ou ausência de bugs. A estratégia
 
 As fontes de solução seguem hierarquia: documentação, especificação, changelog, advisory e issue tracker oficial definem comportamento/versionamento; OWASP, SRE e ferramentas de teste orientam controles; telemetria e teste do produto comprovam o caso real; fontes comunitárias, inclusive Stack Overflow, ajudam a montar uma hipótese ou reprodução mínima, mas nunca viram padrão de produção sem validação de versão, segurança e regressão. [39] [40] [41] [42]
 
+## 8.10 Rotina permanente: profundidade sem dispersão
+
+A estratégia passa a operar uma rotina permanente de pesquisa que não confunde volume de leitura com maturidade de produto. Cada ciclo precisa registrar **pergunta, fonte primária, contraponto, cenário de exceção, impacto de domínio, teste de validação, decisão, owner, data de revisão e limite de responsabilidade**. A fila prioriza a possibilidade de erro econômico, vazamento entre organizações, perda de evidência, duplicidade de evento, risco regulatório e impacto ao cliente; novidades de concorrência e comunidade entram como hipótese, nunca como requisito automático. [43] [44]
+
+| Frente do ciclo | Decisão consolidada | Prova antes de promoção |
+| --- | --- | --- |
+| Financeiro e split | `EconomicEvent`, `Entitlement`, `PaymentInstruction` e `Settlement` permanecem fatos distintos; regra contratual não é serializada diretamente em payload de provedor. | Base, tarifa, arredondamento, elegibilidade, KYC, callback, estorno, distrato e item individual passam por matriz de homologação. [43] |
+| Parceiro de pagamento | Cada integração declara perfil de capacidade: recebedores, rede, base, tarifa, timing, parcela, reversão, evento, KYC e conciliação. | Contrato vigente, sandbox e testes reais por empresa/SPE; capacidade pública não vale como garantia. [43] |
+| Setor, alçada e acesso | Papel-base orienta o workspace; política contextual avalia organização, SPE, objeto, ação, vigência, finalidade, alçada e condição de risco. | Testes permitir/negar, separação de deveres, recertificação e exceção expirada. [44] |
+| Demanda e concorrência | Lead, estoque, reserva, site/portal e pós-venda seguem piso competitivo; relatos públicos são classificados por independência e recorrência. | Piloto mede owner/next step, divergência de publicação, reserva concorrente, retrabalho e continuidade de carteira. [45] |
+| UX crítica | Ações financeiras mostram revisão, base, regra, recebedores, parceiro, alçada, estado e próxima consequência. | Validação de domínio no servidor, mensagem acessível, confirmação proporcional e fato compensatório/reversível quando o domínio permitir. [46] |
+
+### Financeiro e split: regra de execução reforçada
+
+O CRM pode receber um contrato com cerca de 100 recebedores, mas não pode assumir que um único parceiro aceita esse número, calcula sobre a mesma base ou devolve valores com a mesma semântica. A documentação pública consultada mostra limites e modelos diferentes entre provedores; por isso, a aplicação calcula o direito versionado e gera uma ou mais instruções somente depois de alçada, elegibilidade, perfil de capacidade e conciliação definidos. Um recebedor bloqueado abre exceção própria; uma devolução ou distrato cria fato compensatório e reconciliação, sem apagar pagamento ou direito anterior. [43]
+
+> **Regra de decisão financeira:** a interface pode dizer “rascunho”, “solicitado”, “em exceção”, “parcialmente confirmado” ou “liquidado”; ela não pode chamar uma simulação de pagamento, nem transformar retorno de parceiro em certeza contábil, fiscal ou jurídica.
+
+### Setores e espaços de trabalho
+
+O produto deve expor superfícies distintas para comercial, lançamento/loteadora, carteira/cobrança, tesouraria/controladoria, contador/jurídico e governança/IAM. Cada superfície abre o mínimo de dado e ação para responder à pergunta de trabalho; nenhuma delas ganha acesso irrestrito por cargo, sociedade ou login. Preparar uma mudança de distribuição, instruir pagamento, reprocessar callback, exportar dado restrito e aprovar distrato são atividades de separação de deveres, poder vigente e evidência — não botões genéricos de administrador. [44]
+
+### Mensagens, revisão e correção
+
+Em ações que criam compromisso financeiro, legal ou alteração irreversível, a experiência deve permitir revisão, correção ou reversão compatível com o domínio. O erro informa em texto o item, a razão, a forma de correção e a consequência; cor, ícone e animação complementam, mas não substituem a descrição. A validação de cliente ajuda a operação, porém a validação de servidor é a autoridade. [46]
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -404,3 +430,11 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [41] [Controles anti-erro — prevenção, detecção, contenção e recuperação](crm_engenharia_antierro_controles.md)
 
 [42] [Relatórios de risco, bugs, incidentes e melhoria contínua](crm_engenharia_antierro_relatorios.md)
+
+[43] [FIN-SPLIT-01 — cobrança, liquidação e distribuição configurável](crm_fin_split_01_evidencias.md)
+
+[44] [SET-ACC-01 — setores, alçadas e acesso contextual](crm_setores_acessos_01_evidencias.md)
+
+[45] [DEM-CRM-01 — concorrência, comunidades e dores operacionais](crm_demanda_mercado_comunidades_01.md)
+
+[46] [UX-FIN-01 — experiência anti-erro para ações financeiras e críticas](crm_ux_financeiro_antierro_01.md)

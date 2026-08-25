@@ -85,6 +85,21 @@ Este backlog é uma **fila de hipótese de produto**, não um compromisso comerc
 | ENG-09 | Ensaiar o inesperado | Simulações de network drop, timeout ambíguo, migration falha, policy deny, upload incompleto, fila atrasada, restore e parceiro indisponível. | Diferencial | Cada jornada crítica tem cenário de falha parcial e resultado seguro validado antes de escalar piloto. |
 | ENG-10 | Aprender sem copiar solução frágil | Registro de fonte, versão, repro mínima, hipótese, teste local, revisão de segurança e decisão. | Fundação | Resposta comunitária, issue ou IA não entra em produção sem fonte primária/compatibilidade e teste de regressão. |
 
+## Ciclos permanentes: financeiro, acesso, demanda e UX crítica
+
+| ID | Resultado | Requisito | Prioridade | Critério de aceitação |
+| --- | --- | --- | --- | --- |
+| FIN-01 | Separar direito de execução e liquidação | `EconomicEvent`, entitlement, instrução e settlement individual, com versão, correlação e fato compensatório. | Fundação | Alteração de regra, callback ou estorno não reescreve fato, direito, instrução ou settlement já registrado. |
+| FIN-02 | Escolher parceiro por capacidade comprovada | `ProviderCapabilityProfile` com recebedores, rede, base, tarifa, timing, parcelas, reversão, evento, KYC e conciliação. | Fundação | Split nativo não é ativado sem contrato, sandbox e matriz de homologação por empresa/SPE/caso de uso. |
+| FIN-03 | Tratar parcialidade como estado, não erro genérico | Exceção individual por entitlement/instrução/settlement, com bloqueio, dono, próxima ação e reconciliação. | Diferencial | Recebedor bloqueado, callback tardio e devolução não declaram distribuição total nem reduzem direito de terceiros silenciosamente. |
+| FIN-04 | Evitar erro humano em comando financeiro | Cartão de revisão com base, tarifa, regra, destinatários, parceiro, alçada, efeito e próximo estado. | Fundação | Usuário autorizado revisa/corrige antes da instrução; o servidor valida novamente e o log conserva a decisão. |
+| ORG-01 | Permitir trabalho por contexto, não por rótulo | Papel-base + atributos de organização, SPE, objeto, ação, vigência, finalidade, alçada e risco. | Fundação | Suíte permitir/negar prova escopo e mudança de papel/poder/offboarding sem ajuste manual disseminado. |
+| ORG-02 | Separar deveres materiais | Política para preparar, aprovar, instruir, reprocessar, exportar e compensar ações sensíveis. | Fundação | A mesma pessoa não contorna alçada definida; exceção exige motivo, aprovador, expiração e auditoria. |
+| DEM-01 | Transformar dor pública em hipótese testável | Registro de origem, independência, contexto, recorrência, métrica e risco de cópia. | Evolução | Sinal comunitário/concorrente só sobe após convergência e piloto com métrica de operação. |
+| DEM-02 | Reduzir fragmentação sem ampliar raio de falha | Fonte de verdade por objeto, outbox, tempo de propagação, conflito e fallback manual. | Diferencial | CRM, site e portal exibem versão/estado; divergência abre caso rastreável, não edição ad hoc. |
+| UX-11 | Explicar incerteza financeira de forma acessível | Estados textuais de rascunho, solicitado, parcial, exceção e confirmado; erro navegável, não cromático e acionável. | Fundação | Teste de fluxo crítico comprova revisão, correção, foco, leitor de tela e não confunde simulação com liquidação. |
+| OPS-01 | Manter pesquisa contínua sem dispersão | Carta, fila, ciclo de evidência/contraponto/exceção/teste/decisão, owner e revisão periódica. | Fundação | Toda mudança estratégica de alto risco referencia fonte, impacto, decisão, backlog e critério de reabertura. |
+
 ## Revisão de priorização
 
 O backlog deve ser revisado após cada piloto mensal. Uma prioridade só sobe quando houver problema repetido, impacto mensurável, viabilidade de integração e dono operacional. Itens `AUD-*` bloqueiam mudança sensível quando seu critério não estiver comprovado; uma hipótese pode ser rebaixada ou removida sem apagar o registro da decisão anterior.

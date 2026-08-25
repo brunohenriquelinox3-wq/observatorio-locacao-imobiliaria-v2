@@ -133,3 +133,18 @@
 - [x] Criar relatórios de risco, modelo de incidente, catálogo de antipadrões e protocolo de melhoria contínua.
 - [x] Atualizar estratégia, arquitetura, backlog e observatório com a disciplina anti-erro.
 - [x] Salvar checkpoint e entregar a revisão de engenharia anti-erro.
+
+## Frente autônoma: aprofundamento contínuo e auditoria transversal
+
+- [x] Implantar a rotina permanente de pesquisa com registro de ciclos, fila priorizada, critérios de entrada/saída e relatório consolidado.
+- [x] Definir carta de estudo, limites, fontes, evidências, cadência, responsáveis e gates de mudança.
+- [x] Estruturar cada ciclo com pergunta, fonte primária, contraponto, cenário de exceção, impacto, teste e decisão rastreável.
+- [x] Inventariar decisões abertas e priorizar riscos por financeiro/split, segurança, plataforma, setores, concorrência, UX e governança.
+- [x] Aprofundar financeiro, cobrança, liquidação, split, reconciliação, exceções e fronteiras de parceiro habilitado.
+- [x] Aprofundar proteção de sistema, segurança, continuidade, privacidade, recuperação e engenharia anti-erro.
+- [x] Aprofundar setores, organizações, papéis, permissões, handoffs e workspaces para imobiliárias e loteadoras.
+- [x] Pesquisar concorrentes, fontes comunitárias e demandas operacionais com filtro de evidência, versão, recorrência e relevância de piloto.
+- [x] Revisar gráficos, experiência e medidas de proteção contra erro por jornada crítica.
+- [x] Consolidar o estudo em auditoria, estratégia canônica, fontes, decisões e backlog priorizado.
+- [x] Atualizar o observatório e validar desktop/mobile.
+- [x] Registrar a cadência possível, salvar checkpoint e entregar a revisão autônoma.
