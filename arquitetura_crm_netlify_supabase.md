@@ -231,6 +231,19 @@ O frontend usa error boundary como contenção de renderização por rota/painel
 
 O modelo detalhado, incluindo cenário de timeout ambíguo, conflito de transação, RLS por operação, callback tardio e carga de jornada, é vinculante à arquitetura. [Matriz aprofundada anti-erro](crm_engenharia_antierro_02_matriz_jornadas.md) · [Evidências](crm_engenharia_antierro_evidencias.md)
 
+### 12.2 Pente fino contínuo na cadeia de mudança
+
+O pipeline deve classificar a mudança antes de executá-la e conservar seu resultado. Editor e commit verificam tipo, lint, segredo e diff; PR executa revisão humana, análise estática e dependência; preview/homologação exercitam comportamento, policy, migration e fixture; produção correlaciona release, sinal e rollback; incidente exige reprodução sintética e regressão. Ferramentas de scan cobrem padrões repetíveis; a revisão humana responde pela fronteira de domínio, acesso, dinheiro e recuperação.
+
+| Classe de alteração | Gate de arquitetura adicional | Registro exigido |
+|---|---|---|
+| C0/C1 — apresentação/lógica local | E2E acessível, visual responsivo e preview | Requisito, teste e resultado de preview |
+| C2 — schema/RLS/Storage/RPC | Banco efêmero, allow/deny, migração compatível e rollback/compensação | Escopo, policy, alvo negado preservado e owner |
+| C3 — parceiro/financeiro/privilégio | Fixture/sandbox, idempotência, outbox/inbox, alçada e reconciliação | Intent, correlação, regra/versão, retorno e caso de exceção |
+| C4 — recovery/incidente | Runbook, dupla validação, freeze proporcional, restore ensaiado e postmortem | Timeline, impacto, repro, regressão e ação com data |
+
+Uma exceção de gate não é configuração silenciosa. Ela é um objeto de governança com motivo, risco, compensação, aprovador, expiração e reabertura. Os detalhes vinculantes estão em [Pente fino contínuo — modelo](crm_pente_fino_continuo_modelo.md) e [evidências](crm_pente_fino_continuo_evidencias.md).
+
 ## Referências de plataforma
 
 [1]–[12] [Caderno de evidências Netlify + Supabase](crm_netlify_supabase_evidencias.md)
@@ -250,3 +263,5 @@ O modelo detalhado, incluindo cenário de timeout ambíguo, conflito de transaç
 [19] [Supabase — Passkey Authentication](https://supabase.com/docs/guides/auth/passkeys)
 
 [20] [OWASP — Forgot Password Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html)
+
+[21] [Pente fino contínuo — modelo de gates](crm_pente_fino_continuo_modelo.md) · [evidências](crm_pente_fino_continuo_evidencias.md)

@@ -89,6 +89,19 @@ Um defeito só pode ser marcado como “resolvido” depois de possuir reproduç
 
 O monitoramento deve combinar sintomas externos e contexto interno; a literatura de SRE alerta que alertas humanos precisam ser simples, urgentes e acionáveis, não uma coleção de anomalias vagas. [4] Já a instrumentação baseada em traces, métricas e logs deve permitir explicar o comportamento novo sem adicionar captura improvisada durante o incidente. [5]
 
+### 7.1 Pente fino contínuo — o que cada mudança deve provar
+
+A mudança é a unidade de auditoria: código, schema, policy, dependência, configuração, teste, preview e decisão de promoção são examinados juntos. C0/C1 exigem controles locais e de experiência; C2 exige testes de dado/policy; C3 acrescenta invariantes, idempotência, fixture e reconciliação; C4 restringe a execução a runbook, dupla validação e recuperação ensaiada. Uma exceção é registrada com motivo, compensação, owner e expiração; não remove o gate.
+
+| Gate | Pergunta objetiva | Prova que permanece |
+|---|---|---|
+| G-1/G0 | O diff e o código local respeitam contrato e escopo? | Typecheck, lint, segredo, teste focado e revisão do diff |
+| G1 | A mudança e a cadeia de software são aceitáveis? | PR, revisão humana, SAST, dependency review e risco classificado |
+| G2/G3 | A jornada, policy, migration e parceiro suportam o cenário? | E2E isolado, allow/deny, fixture, rollback/compensação e preview/homologação |
+| G4/G5 | A promoção permaneceu saudável e a falha virou aprendizado? | Release/correlação, SLO, runbook, reprodução sintética, regressão e postmortem |
+
+O detalhamento de fonte, condição de bloqueio e responsabilidade está no [modelo de pente fino](crm_pente_fino_continuo_modelo.md) e no [caderno de evidências](crm_pente_fino_continuo_evidencias.md).
+
 ## Referências
 
 [1] [Supabase — Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)

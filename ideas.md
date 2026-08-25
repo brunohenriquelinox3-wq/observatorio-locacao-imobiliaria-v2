@@ -120,3 +120,6 @@ O símbolo será uma **bússola de lote**: dois arcos incompletos que sugerem um
 - A camada de tese deve anteceder controles de estado ou cálculo; uma frase editorial, uma coordenada de recorte e a consequência prática explicam o painel antes da interação.
 - A abertura deve operar como **capa institucional de campo**: bússola, palavra-marca e coordenada CRM.01 são um selo em escala editorial, com grade, anéis e carimbo antes de qualquer linguagem de produto.
 - A fila de divergências abre uma virada cartográfica autônoma: o recorte F.06B, a rota de investigação e a tese de conciliação aparecem antes da lista; argila assinala exclusivamente criticidade, conflito e etapa de decisão.
+- A capa deve operar como selo cerimonial do Observatório: bússola, wordmark e CRM.01 têm escala de capa e precedem visualmente a navegação convencional.
+- A cada no máximo dois módulos operacionais, uma placa de fonte, rota de evidência, spread cartográfico ou conclusão editorial interrompe a sequência; a interface entra depois da tese.
+- O pente fino contínuo abre com a placa **diff → invariante → teste → release → repro**, fazendo evidência, leitura e consequência dominarem antes do controle interativo.

@@ -204,3 +204,12 @@
 - [x] Implementar a fila e o detalhe interativos no painel financeiro CUR-01/CUR-02.
 - [x] Validar build e experiência desktop/mobile; registrar as decisões de design aplicadas.
 - [x] Salvar checkpoint e entregar o protótipo de divergências.
+
+## Pente fino contínuo de código e auditoria por mudança
+
+- [x] Delimitar classes de falha, superfícies críticas e critérios de varredura proporcional ao risco.
+- [x] Pesquisar fontes atuais de desenvolvimento seguro, análise estática, dependências, testes, observabilidade e revisão de mudança.
+- [x] Modelar gates por alteração: editor, commit, pull request, preview, homologação, produção e incidente.
+- [x] Atualizar guia, evidências, estratégia, arquitetura e backlog com controles e critérios verificáveis.
+- [x] Evoluir o observatório com a matriz de pente fino contínuo e validar desktop/mobile.
+- [ ] Salvar checkpoint e entregar a disciplina de auditoria contínua.

@@ -59,6 +59,19 @@ O estudo usará fontes em ordem de força. A documentação oficial, padrão ou 
 
 Uma capacidade sensível não é “concluída” por ter código. Ela avança em cinco portas: **modelar a invariante → prevenir no desenho → provar em teste → observar em uso → aprender após desvio**. A ausência de uma porta mantém o item em risco conhecido e impede promoção conforme sua severidade.
 
+### 5.1 Pente fino contínuo por alteração
+
+O pente fino não exige inspeção manual literal de toda linha. Ele exige que **todo diff** atravesse análise automatizada aplicável e que toda alteração crítica carregue decisão humana sobre invariante, escopo, efeito, reversibilidade e prova. O ciclo é `editor → commit → pull request → preview → homologação → produção → incidente`; os controles aumentam de C0 a C4 conforme dado governado, integração, dinheiro, privilégio ou recuperação entram na mudança.
+
+| Momento | Prova mínima | Bloqueio obrigatório |
+|---|---|---|
+| Editor/commit | Tipo, lint, formato, segredo potencial, teste focado e diff coerente | Diagnóstico bloqueante, arquivo inesperado ou teste vermelho |
+| PR | Revisão humana, SAST, dependência/lockfile, licença, requisito e teste vinculados | Vulnerabilidade sem tratamento, exceção sem expiração ou risco crítico sem owner |
+| Preview/homologação | E2E isolado, responsividade, allow/deny, fixture de integração, migration/compensação | Policy sem teste negativo, efeito duplicável ou recuperação não ensaiada |
+| Produção/incidente | Release, correlação, SLO, alerta acionável, runbook, repro e regressão | Budget consumido, sinal material novo ou caso encerrado sem prova |
+
+Exceção tem motivo, owner, aprovador, compensação, data de expiração e regra de reabertura. Ela nunca equivale a `skip` permanente. O modelo completo de gates e evidências é parte vinculante deste guia: [modelo operacional](crm_pente_fino_continuo_modelo.md) · [caderno de evidências](crm_pente_fino_continuo_evidencias.md).
+
 ## 6. Limites explícitos
 
 Nenhum catálogo torna um CRM perfeito ou elimina validação humana de tema jurídico, registral, fiscal, contábil, privacidade, KYC, pagamento ou segurança. A disciplina evita que a aplicação transforme uma regra incerta em automação opaca, preserva o caso de exceção e exige os responsáveis habilitados quando o efeito ultrapassa o software.

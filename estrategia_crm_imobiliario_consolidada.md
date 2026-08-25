@@ -326,6 +326,21 @@ O código do CRM separa leitura, decisão transacional e efeito externo. Uma lei
 
 O catálogo aprofundado registra as contramedidas por jornada e torna explícito o limite entre retry, compensação e reconciliação. [Matriz de jornadas](crm_engenharia_antierro_02_matriz_jornadas.md) · [Evidências atualizadas](crm_engenharia_antierro_evidencias.md)
 
+### 8.9B Pente fino contínuo: cada mudança deixa prova antes de seguir
+
+O CRM adota **varredura contínua por alteração e risco**, não a promessa irreal de revisão manual perfeita de cada linha. Todo diff passa por tipo, lint, segredo e análise aplicável; toda mudança de dependência passa por revisão do lockfile e vulnerabilidade; e alterações em dado, acesso, dinheiro, documento, integração ou recuperação acrescentam teste negativo, fixture, invariável, owner, alçada e plano de compensação. O controle acompanha `editor → commit → PR → preview → homologação → produção → incidente`.
+
+| Superfície | Prova contínua antes de promoção | Regra de interrupção |
+|---|---|---|
+| Interface e fluxo | Teste de comportamento observável, acessibilidade, responsividade e preview | Regressão de foco, estado enganoso, erro de runtime ou contraste insuficiente |
+| Dado e acesso | Migration efêmera, RLS/RPC/Storage permitir-negar e compatibilidade | Qualquer bypass, estado inválido ou schema/policy em drift |
+| Financeiro e externo | Idempotência, outbox/inbox, retorno duplicado, estado incerto, reconciliação e compensação | Uma tentativa pode duplicar direito, saldo, instrução, documento ou settlement |
+| Cadeia e produção | SAST, dependência, provenance, release/correlação, SLO e runbook | Alerta material novo, exceção vencida ou orçamento de erro degradado |
+
+> **Regra de promoção contínua:** não há “pular o pente fino”. Existe somente exceção datada, aprovada, compensada, rastreável e reavaliada. O item não é encerrado porque a tela parece certa: encerra quando teste, sinal e recovery sustentam a hipótese de que o risco foi reduzido.
+
+O guia executável e as fontes rastreáveis ficam em [Modelo operacional de pente fino](crm_pente_fino_continuo_modelo.md) · [Evidências](crm_pente_fino_continuo_evidencias.md).
+
 ## 8.10 Rotina permanente: profundidade sem dispersão
 
 A estratégia passa a operar uma rotina permanente de pesquisa que não confunde volume de leitura com maturidade de produto. Cada ciclo precisa registrar **pergunta, fonte primária, contraponto, cenário de exceção, impacto de domínio, teste de validação, decisão, owner, data de revisão e limite de responsabilidade**. A fila prioriza a possibilidade de erro econômico, vazamento entre organizações, perda de evidência, duplicidade de evento, risco regulatório e impacto ao cliente; novidades de concorrência e comunidade entram como hipótese, nunca como requisito automático. [43] [44]
