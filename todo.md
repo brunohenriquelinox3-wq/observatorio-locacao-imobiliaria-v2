@@ -195,4 +195,4 @@
 - [x] Projetar a experiência do painel com evidência, leitura, consequência e estados de interação acessíveis.
 - [x] Implementar as superfícies interativas de domínio modular e linha do tempo de fatos no observatório CRM.
 - [x] Validar build e experiência desktop/mobile; registrar as decisões de design aplicadas.
-- [ ] Salvar checkpoint e entregar o painel CUR-01/CUR-02.
+- [x] Salvar checkpoint e entregar o painel CUR-01/CUR-02.
