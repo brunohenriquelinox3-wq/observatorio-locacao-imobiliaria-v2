@@ -168,6 +168,27 @@ O plano de recuperação tem quatro trilhas independentes: rollback de app no Ne
 3. Privacidade, retenção, base legal, acesso do contador, exportação, fiscalidade e escrituração requerem validação contextual com jurídico, DPO, contador/fiscal e parceiro habilitado.
 4. Alta disponibilidade, residência de dados, SSO corporativo, backup de objetos, RPO/RTO e arquitetura de analytics exigem critérios comerciais e técnicos próprios antes de produção.
 
+## 11. Prontidão operacional: a arquitetura só existe quando pode ser provada
+
+A escolha por Netlify e Supabase não é uma garantia automática contra erro. A plataforma fica pronta por capacidade: ambiente separado, mudança reproduzível, acesso negado corretamente, documento privado, integração idempotente, telemetria suficiente, recuperação ensaiada e carga conhecida. Por isso, cada fluxo de CRM deverá obedecer a gates antes de ser promovido do preview ao ambiente produtivo.
+
+| Capacidade | Decisão operacional | Prova que bloqueia promoção sem base |
+| --- | --- | --- |
+| Conexão e runtime | Browser usa Data API/RLS; processo efêmero usa pooler compatível; migration e backup usam conexão direta controlada. | URL/segredo de banco não aparece em cliente, e o teste confirma configuração de pooler/driver por ambiente. |
+| Comando de domínio | Reserva, proposta, direito, distribuição, fechamento e compensação entram por RPC/serviço transacional. | Concorrência, repetição, versão defasada e alçada insuficiente falham sem alterar o fato. |
+| Arquivo e dossiê | Upload vai direto ao Storage privado com intenção, versão, hash e metadado; Function não transporta binário pesado. | Upload interrompido, URL expirada, acesso revogado e caminho repetido foram simulados. |
+| Evento e parceiro | Outbox/inbox, Queue, job e correlação separam intenção, transporte, callback e confirmação. | Callback duplicado/fora de ordem, timeout e falha do parceiro preservam histórico e abrem exceção rastreável. |
+| Agenda e trabalho lento | Cron apenas cria trabalho elegível; worker/fila persistem lease, tentativa, resultado e replay. | Nenhum fechamento, conciliação ou lote depende de runtime em memória ou de agenda não observada. |
+| Release e recuperação | Migration, RLS, segredo, Function e policy chegam juntos, com rollback de app, migration compensatória e restore ensaiado. | RPO/RTO, backup de banco e de objetos, owner e runbook estão aprovados antes de dado real. |
+
+Os detalhes de escolha de runtime, envelope de integração, testes de permitir/negar, runbooks e baselines de capacidade ficam documentados nos artefatos de prontidão. Eles formam uma extensão vinculante desta arquitetura, e não um manual opcional a ser escrito depois da primeira falha.
+
 ## Referências de plataforma
 
 [1]–[12] [Caderno de evidências Netlify + Supabase](crm_netlify_supabase_evidencias.md)
+
+[13] [Matriz operacional de prontidão](crm_netlify_supabase_prontidao_operacional.md)
+
+[14] [Fluxos operacionais Netlify, Supabase e parceiros](crm_netlify_supabase_fluxos_operacionais.md)
+
+[15] [Gates e runbooks operacionais](crm_netlify_supabase_gates_runbooks.md)

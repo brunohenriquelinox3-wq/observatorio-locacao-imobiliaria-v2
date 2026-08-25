@@ -113,3 +113,13 @@
 - [x] Reorganizar a estratégia canônica, o protocolo de revisão e o backlog por ondas e gates verificáveis.
 - [x] Atualizar o observatório com a trilha de auditoria e validar em desktop e mobile.
 - [x] Salvar checkpoint e entregar a auditoria estratégica.
+
+## Profundidade operacional: Netlify + Supabase
+
+- [x] Definir a matriz de domínios técnicos, limites, decisões e critérios de prontidão por plataforma.
+- [x] Estudar em profundidade entrega, ambiente, deploy, funções, edge, webhooks, jobs, logs, segurança e limites do Netlify.
+- [x] Estudar em profundidade Postgres, schema, migrations, RLS, Auth, MFA, Storage, Edge Functions, Realtime, backups e observabilidade do Supabase.
+- [x] Validar os padrões de integração Netlify ↔ Supabase ↔ parceiros com eventos, segredos, contratos, idempotência e recuperação.
+- [x] Converter os achados em checklists de implementação, testes, runbooks, capacidade e gates de produção.
+- [x] Atualizar arquitetura, estratégia, backlog e observatório com a matriz operacional verificável.
+- [x] Salvar checkpoint e entregar a revisão operacional profunda.

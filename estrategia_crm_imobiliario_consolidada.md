@@ -275,6 +275,25 @@ A auditoria integral confirmou a coerência da tese, dos domínios e da arquitet
 
 As referências atuais de segurança de aplicação/API, confiança zero, telemetria, confiabilidade, incidente, IA e cadeia de software não criam uma checklist universal; elas reforçam que acesso, mudança, evento, dependência e recomendação devem ser medidos e revisados de modo proporcional ao risco. [35]
 
+## 8.8 Revisão operacional de plataforma: segurança é uma sequência de provas
+
+O estudo aprofundado confirma a decisão de Netlify + Supabase, mas torna a estratégia mais precisa: **Netlify entrega a aplicação e o contexto de deploy; Supabase conserva identidade, dado, policy, evento e evidência; nenhum runtime efêmero substitui a transação, a fila ou a reconciliação**. A plataforma não deverá receber dado real ou integração sensível enquanto a capacidade não passar por ambiente, schema, acesso, evidência, integração, operação, recuperação e carga.
+
+| Eixo operacional | Decisão incorporada | Critério de prontidão |
+| --- | --- | --- |
+| Ambiente e segredo | Preview, homologação e produção têm projeto, credencial, callback e Storage próprios; segredo tem owner, escopo e revisão. | Nenhum preview consulta produção e nenhuma chave privilegiada chega ao browser. |
+| Banco e permissão | Migration reúne schema, grant, RLS, índice, função e teste; conexão é escolhida pelo ciclo de vida do cliente. | Uma tabela, view, RPC ou Storage policy só é liberada após provas de permitir/negar e medição de impacto. |
+| Documento | Dossiê usa Storage privado, upload retomável, versão, hash, finalidade e URL temporal. | Arquivo interrompido, token expirado e revogação de acesso não expõem nem tornam evidência utilizável indevidamente. |
+| Evento e integração | A transação cria fato, auditoria e outbox; fila move trabalho; callback entra por inbox; reconciliação confirma estado. | Duplicata, replay, timeout, 429/5xx e fora de ordem não criam recebimento, direito ou exportação duplicados. |
+| Operação | Logs de plataforma apoiam investigação; audit event de domínio conserva decisão; alertas têm owner e runbook. | Uma falha de RLS, fila, documento, migration ou parceiro tem correlação, ação inicial segura e escalonamento. |
+| Recuperação e escala | Backup de banco e de objeto são trilhas distintas; RPO/RTO, capacidade, custo e carga são aprovados por jornada. | Restore e crescimento sintético são ensaiados antes de prometer SLA ou disponibilidade ao cliente. |
+
+O padrão resolve uma ambiguidade importante: **Edge, Background Function, cron e webhook aceleram a jornada, mas não garantem a verdade do negócio**. A fila durável, o estado de job, a chave de idempotência, o lease, a tentativa, o caso de exceção e a reconciliação permanecem no modelo de dados. O CRM não confirma liquidação, cumprimento fiscal, validade jurídica ou fechamento contábil apenas por receber uma requisição.
+
+> **Regra de implementação revisada:** toda capacidade crítica chega com contrato, teste, observabilidade, recuperação e owner. Quando qualquer um faltar, o item volta para desenho e não é promovido por urgência comercial.
+
+Os mapas de decisão, envelopes e simulações passam a ser mantidos nos documentos de prontidão, fluxos operacionais e gates/runbooks. [36] [37] [38]
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -354,3 +373,9 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [34] [Auditoria integral — coerência e continuidade da estratégia](auditoria_estrategia_crm_relatorio.md)
 
 [35] [Caderno de evidências — auditoria integral do CRM](auditoria_estrategia_crm_evidencias.md)
+
+[36] [Matriz operacional de prontidão — Netlify + Supabase](crm_netlify_supabase_prontidao_operacional.md)
+
+[37] [Fluxos operacionais — Netlify, Supabase e parceiros](crm_netlify_supabase_fluxos_operacionais.md)
+
+[38] [Gates e runbooks operacionais — Netlify + Supabase](crm_netlify_supabase_gates_runbooks.md)

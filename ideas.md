@@ -104,3 +104,6 @@ O símbolo será uma **bússola de lote**: dois arcos incompletos que sugerem um
 - Motivos cartográficos ganham escala de abertura em capítulos de arquitetura, auditoria e métricas: anéis de coordenada, grades cadastrais, rotas pontilhadas e carimbos de campo devem aparecer como artefatos editoriais, não apenas como ícones.
 - Argila não preenche painéis neutros por conveniência. Ela marca decisão, risco, prioridade, recomendação e CTA; análise descritiva permanece em papel mineral, azul cadastral ou oliva contido.
 - A narrativa longa deve alternar entre painéis de trabalho e artefatos de campo assimétricos — spread territorial, placa de fonte, conclusão de caderno ou rota de evidência — para evitar o ritmo de relatório templated.
+- Toda abertura e fechamento de capítulo prioritário deve carregar uma assinatura de autoria do Observatório — coordenada, código de campo ou carimbo de pesquisa — como marca recorrente, não apenas cabeçalho.
+- A ordem visual dominante de qualquer capítulo é **evidência → leitura → consequência prática**; cards, notas e controles secundários só entram depois dessa sequência.
+- Argila não pode funcionar como clima de fundo: aparece somente no risco, na prioridade, na recomendação, no gate ou na próxima ação.
