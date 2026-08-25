@@ -183,6 +183,22 @@ A escolha por Netlify e Supabase não é uma garantia automática contra erro. A
 
 Os detalhes de escolha de runtime, envelope de integração, testes de permitir/negar, runbooks e baselines de capacidade ficam documentados nos artefatos de prontidão. Eles formam uma extensão vinculante desta arquitetura, e não um manual opcional a ser escrito depois da primeira falha.
 
+## 12. Qualidade de mudança e tratamento de falha
+
+Cada mudança de software é uma mudança de produto, dados e operação. Por isso, a arquitetura adota uma sequência de prova: **invariante → validação de fronteira → teste da decisão → observabilidade → contenção → recuperação → aprendizagem**. A ausência de qualquer elo não é detalhe de implementação; é risco conhecido que impede promoção conforme a severidade.
+
+| Ponto de controle | Aplicação técnica | Erro que deve bloquear |
+| --- | --- | --- |
+| Contrato e tipo | Schema validado em formulário, webhook, importação e Function; tipos de estado sem fallback ambíguo. | Payload não confiável, `null`/lista vazia significando “todos”, valor ou tempo inferidos. |
+| Teste de domínio | Unitários e transacionais para estado, versão, alçada, concorrência, cálculo e compensação. | Reserva, proposta, direito, split ou fechamento duplicado/incompatível. |
+| Teste de policy | Casos permitir/negar em RLS, grant, RPC, URL temporal, exportação e Storage. | Acesso transversal por interface, URL ou API direta. |
+| Contrato e caos controlado | Sandbox, fixture e simulação de duplicata, timeout, 429/5xx, atraso, ordem invertida e parceiro indisponível. | Callback/worker que confirma, liquida ou repassa sem reconciliação. |
+| Erro e correlação | Código público seguro, `correlation_id`, trace/release/ambiente protegidos, log minimizado e audit event separado. | Stack trace, segredo, token ou PII em resposta/telemetria; falha sem investigação possível. |
+| Release e dependência | Scan, dependency review, preview, flag/canário, migration compatível, rollback e compensação. | Change sem revisão, pacote vulnerável, schema/policy em drift ou rollback impossível. |
+| Incidente | Runbook, severidade, owner, timeline, comunicação, postmortem e teste de regressão. | Recuperação improvisada, correção manual do passado ou ação corretiva sem responsável. |
+
+O frontend usa error boundary como contenção de renderização por rota/painel e estado explícito para falha de comando; handlers e trabalho assíncrono continuam exigindo tratamento próprio. A telemetria agrupa sintomas por fingerprint/release, mas não substitui audit trail de domínio. Resposta de UI deve dizer o que ocorreu, qual ação é segura e como informar a correlação; ela não afirma sucesso enquanto a transação ou a reconciliação não confirmar o estado canônico.
+
 ## Referências de plataforma
 
 [1]–[12] [Caderno de evidências Netlify + Supabase](crm_netlify_supabase_evidencias.md)
@@ -192,3 +208,5 @@ Os detalhes de escolha de runtime, envelope de integração, testes de permitir/
 [14] [Fluxos operacionais Netlify, Supabase e parceiros](crm_netlify_supabase_fluxos_operacionais.md)
 
 [15] [Gates e runbooks operacionais](crm_netlify_supabase_gates_runbooks.md)
+
+[16] [Disciplina anti-erro — metodologia, catálogo, controles e relatórios](crm_engenharia_antierro_metodologia.md)

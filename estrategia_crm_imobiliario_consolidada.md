@@ -294,6 +294,23 @@ O padrão resolve uma ambiguidade importante: **Edge, Background Function, cron 
 
 Os mapas de decisão, envelopes e simulações passam a ser mantidos nos documentos de prontidão, fluxos operacionais e gates/runbooks. [36] [37] [38]
 
+## 8.9 Engenharia anti-erro: software confiável não é software que “nunca falha”
+
+O CRM não pode prometer execução perfeita ou ausência de bugs. A estratégia correta é mais exigente: tornar erros previsíveis difíceis de introduzir, detectar desvios cedo, limitar o raio de impacto, recuperar sem apagar fatos e converter cada incidente em controle testado. Isso é especialmente crítico onde uma falha de software pode afetar acesso entre empresas, disponibilidade de lote, documento privado, proposta, direito econômico, callback, reconciliação ou percepção de saldo.
+
+| Disciplina | Decisão incorporada | Critério de saída |
+| --- | --- | --- |
+| Invariantes de domínio | Organização, estoque, fato econômico, documento, política e evento externo têm estados que não podem ser representados de forma ambígua. | Cenários de concorrência, duplicidade, estado defasado, vazio/nulo e fora de ordem são testados antes do piloto. |
+| Código e mudança | Fronteiras validam payload; regra crítica vive em comando transacional; schema, policy, função e release evoluem juntos. | PR/migration apresenta tipo, teste, revisão, dependency diff, compatibilidade, rollback/compensação e owner. |
+| Autorização e dado | Permitir e negar são comportamentos verificados no banco, Storage, exportação e endpoint. | UI, URL, API e arquivo não permitem bypass de organização, SPE, carteira, relação, finalidade ou alçada. |
+| Diagnóstico seguro | Erro público é acionável e correlacionado; detalhe técnico fica protegido e minimizado. | Stack trace, segredo, query, token e PII indevida não chegam ao usuário nem ao log comum. |
+| Teste por pergunta | Tipagem, unitário, integração, policy, contrato, E2E, carga e segurança respondem a perguntas distintas. | Nenhuma capacidade sensível é promovida por uma única tela ou teste verde isolado. |
+| Incidente e melhoria | Risco, bug, incidente e postmortem possuem cenário, impacto, owner, contenção, recuperação, ação e prova de regressão. | Ação vaga ou sem responsável não encerra o caso; recorrência atualiza catálogo, arquitetura e backlog. |
+
+> **Regra anti-erro:** uma falha não é “corrigida” porque desapareceu da tela. Ela só é encerrada quando o cenário é reprodutível de forma segura, a causa/condição é classificada, a correção ou o risco residual tem owner e um teste, alerta ou gate demonstra que a repetição foi reduzida.
+
+As fontes de solução seguem hierarquia: documentação, especificação, changelog, advisory e issue tracker oficial definem comportamento/versionamento; OWASP, SRE e ferramentas de teste orientam controles; telemetria e teste do produto comprovam o caso real; fontes comunitárias, inclusive Stack Overflow, ajudam a montar uma hipótese ou reprodução mínima, mas nunca viram padrão de produção sem validação de versão, segurança e regressão. [39] [40] [41] [42]
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -379,3 +396,11 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [37] [Fluxos operacionais — Netlify, Supabase e parceiros](crm_netlify_supabase_fluxos_operacionais.md)
 
 [38] [Gates e runbooks operacionais — Netlify + Supabase](crm_netlify_supabase_gates_runbooks.md)
+
+[39] [Disciplina anti-erro — metodologia e evidências](crm_engenharia_antierro_metodologia.md)
+
+[40] [Catálogo de falhas previsíveis e inesperadas do CRM](crm_engenharia_antierro_catalogo_falhas.md)
+
+[41] [Controles anti-erro — prevenção, detecção, contenção e recuperação](crm_engenharia_antierro_controles.md)
+
+[42] [Relatórios de risco, bugs, incidentes e melhoria contínua](crm_engenharia_antierro_relatorios.md)

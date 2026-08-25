@@ -70,6 +70,21 @@ Este backlog é uma **fila de hipótese de produto**, não um compromisso comerc
 | AUD-09 | Confiar nas métricas de gestão | Catálogo de métrica com pergunta, unidade, fórmula, recorte, fonte, atualização, lineage, limitação e owner. | Diferencial | Todo painel crítico abre definição e origem, e número não é usado como promessa sem contexto. |
 | AUD-10 | Escalar com resposta medida | Orçamento de desempenho e custo, teste de carga por jornada, revisão de capacidade e recertificação periódica. | Evolução | Crescimento de organização, carteira e documento mantém as metas acordadas ou abre plano de capacidade. |
 
+## Engenharia anti-erro, qualidade de código e aprendizado de falha
+
+| ID | Resultado | Requisito | Prioridade | Critério de aceitação |
+| --- | --- | --- | --- | --- |
+| ENG-01 | Tornar erro de domínio impossível ou explícito | Catálogo de invariantes, estados discriminados, versões, tempo/valor explícitos e bloqueio de fallback ambíguo. | Fundação | Reserva, contrato, direito, evento e documento rejeitam transição inválida, concorrente ou sem regra vigente. |
+| ENG-02 | Validar toda fronteira | Schemas versionados para UI, RPC, importação, webhook, arquivo e parceiro; erro público seguro. | Fundação | Payload inválido não persiste, não vaza internals e gera correlação investigável. |
+| ENG-03 | Provar segurança além da interface | Suíte de permitir/negar para RLS, grants, endpoint, exportação e Storage em todo recurso sensível. | Fundação | A mesma tentativa é bloqueada por UI, URL, API e objeto fora do escopo autorizado. |
+| ENG-04 | Evitar efeito repetido | Comandos/evenos com versão, idempotency key, inbox/outbox e testes de duplicata, atraso e ordem invertida. | Fundação | Clique duplo, retry, callback repetido ou reprocessamento não duplica reserva, saldo, direito, documento ou comunicação. |
+| ENG-05 | Fazer mudança ser verificável | Tipagem/lint, análise estática, scan, dependency review, lockfile, review, preview, migration e rollback por PR. | Fundação | Alteração de código/dependência não é promovida sem checks, versão, risco, owner e plano de reversão. |
+| ENG-06 | Cobrir a jornada sem testes frágeis | Pirâmide de teste com unitário, integração, policy, contrato, E2E isolado, carga e segurança. | Fundação | Fluxos críticos executam com dado controlado; falha de CI preserva trace/repro e não depende de serviço externo sem fixture. |
+| ENG-07 | Diagnosticar sem expor dados | Contrato de erro, correlation ID, fingerprint/release, source map protegido, logs minimizados e audit trail separado. | Fundação | Usuário recebe ação segura; equipe autorizada encontra o caso sem token, segredo, PII ou stack trace expostos. |
+| ENG-08 | Responder a falha sem improviso | Registro de risco/bug/incidente, severidade, runbook, owner, contenção, reconciliação e postmortem sem culpa. | Fundação | Incidente material gera linha do tempo e ação preventiva com prioridade, tracking e prova de eficácia. |
+| ENG-09 | Ensaiar o inesperado | Simulações de network drop, timeout ambíguo, migration falha, policy deny, upload incompleto, fila atrasada, restore e parceiro indisponível. | Diferencial | Cada jornada crítica tem cenário de falha parcial e resultado seguro validado antes de escalar piloto. |
+| ENG-10 | Aprender sem copiar solução frágil | Registro de fonte, versão, repro mínima, hipótese, teste local, revisão de segurança e decisão. | Fundação | Resposta comunitária, issue ou IA não entra em produção sem fonte primária/compatibilidade e teste de regressão. |
+
 ## Revisão de priorização
 
 O backlog deve ser revisado após cada piloto mensal. Uma prioridade só sobe quando houver problema repetido, impacto mensurável, viabilidade de integração e dono operacional. Itens `AUD-*` bloqueiam mudança sensível quando seu critério não estiver comprovado; uma hipótese pode ser rebaixada ou removida sem apagar o registro da decisão anterior.

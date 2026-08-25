@@ -123,3 +123,13 @@
 - [x] Converter os achados em checklists de implementação, testes, runbooks, capacidade e gates de produção.
 - [x] Atualizar arquitetura, estratégia, backlog e observatório com a matriz operacional verificável.
 - [x] Salvar checkpoint e entregar a revisão operacional profunda.
+
+## Engenharia anti-erro: código, bugs, incidentes e recuperação
+
+- [x] Definir matriz de qualidade, risco, falha, evidência, owner, teste e critério de encerramento.
+- [x] Pesquisar fontes modernas e verificáveis sobre código, bugs, segurança, testes, incidentes e soluções de desenvolvimento.
+- [x] Mapear classes de falha previsíveis e inesperadas nas jornadas, dados, integrações e experiência do CRM.
+- [x] Projetar prevenção, detecção, contenção, recuperação e aprendizado por classe de falha.
+- [x] Criar relatórios de risco, modelo de incidente, catálogo de antipadrões e protocolo de melhoria contínua.
+- [x] Atualizar estratégia, arquitetura, backlog e observatório com a disciplina anti-erro.
+- [x] Salvar checkpoint e entregar a revisão de engenharia anti-erro.
