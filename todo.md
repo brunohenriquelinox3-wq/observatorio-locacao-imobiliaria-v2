@@ -212,4 +212,4 @@
 - [x] Modelar gates por alteração: editor, commit, pull request, preview, homologação, produção e incidente.
 - [x] Atualizar guia, evidências, estratégia, arquitetura e backlog com controles e critérios verificáveis.
 - [x] Evoluir o observatório com a matriz de pente fino contínuo e validar desktop/mobile.
-- [ ] Salvar checkpoint e entregar a disciplina de auditoria contínua.
+- [x] Salvar checkpoint e entregar a disciplina de auditoria contínua.
