@@ -518,6 +518,22 @@ Filtros, drill-down, cross-filter e exportação são comandos de dados. Eles pr
 
 Cor não é o único sinal de tendência, severidade, seleção ou estado. A diferença de série usa rótulo, forma, padrão, posição ou texto além de matiz; objetos gráficos e componentes necessários à compreensão preservam contraste aplicável. [59] [60] O CRM privilegia gráfico + tabela + dossiê de métrica: assim cada pessoa pode **explorar os dados de forma mais intuitiva**, **entender melhor as tendências** e **salvar ou compartilhar facilmente** sem transformar visualização em promessa opaca.
 
+## 9.17 Arquitetura canônica de colunas: plataforma, administração e operações
+
+A navegação canônica substitui o modelo anterior de colunas genéricas por cinco jornadas principais: **SUPER ADM**, **ADM**, **LOTEADORA**, **VENDAS URBANAS** e **LOCAÇÃO**. A coluna organiza o trabalho; ela não é uma concessão de acesso. Módulo contratado habilita a capacidade da organização, enquanto membership, grant, organização, entidade legal/SPE, objeto, finalidade, vigência, alçada, MFA/step-up e policy continuam decidindo o que cada pessoa pode ler, alterar, exportar ou instruir. [62]
+
+| Coluna | Jornada e setores canônicos | Limite de arquitetura |
+| --- | --- | --- |
+| **SUPER ADM** | Dashboard geral da plataforma; organizações contratantes; financeiro SaaS; colaboradores internos; módulos/contratos. | Não acessa por padrão carteira, documentos, clientes finais ou financeiro operacional de tenant; suporte é JIT, justificado, temporário e auditado. |
+| **ADM** | Painel da própria organização; setores/módulos contratados; financeiro ADM autorizado; colaboradores, alçadas e configurações permitidas. | Não cruza organizações, não se autoeleva e não trata visão administrativa como saldo global editável. |
+| **LOTEADORA** | Cadastro/estoque de loteamentos; sócios/parceiros/fazendeiros; clientes; vendas/contratos; financeiro, boletos, carteira e busca protegida. | Registro, restrição, alocação, reserva, contrato, tabela e alçada definem elegibilidade; boleto é instrução, não caixa confirmado. |
+| **VENDAS URBANAS** | Clientes; proprietários e imóveis; construtoras/empreendimentos; vendas/contratos; comissões e calendários. | Propriedade, poder de venda, comissão e settlement dependem de evidência, regra datada e conciliação, não de rótulo ou percentual. |
+| **LOCAÇÃO** | Clientes/locatários; imóveis/proprietários; administração e contratos de locação; financeiro, cobrança, inadimplência, renovação e portais mínimos. | Administração e locação são contratos relacionados com prazos/obrigações próprios; portal e repasse respeitam finalidade, escopo e prova de liquidez. |
+
+Parte, Ativo, Contrato, Subledger e Evidência são objetos compartilhados. A mesma pessoa ou empresa pode ser proponente, coadquirente, proprietário, locatário, sócio, fazendeiro/parceiro, corretor, construtora ou representante por papéis datados e documentados. Financeiro da plataforma SaaS, financeiro administrativo do tenant e subledgers operacionais são projeções separadas por entidade legal, natureza econômica, escopo e alçada. **Nenhum evento financeiro é apagado ou confirmado apenas por boleto, comprovante, callback ou tela:** instrução, retorno, settlement, cash application, conciliação e compensação preservam fatos distintos. [62]
+
+Esta estrutura será implementada somente depois de uma subetapa aprovada de árvore declarativa e `ModuleEntitlement`, com dados sintéticos, policy de leitura, estados de módulo desligado/habilitado e testes permitir/negar. Não autoriza agora criar portais, boletos, contratos, dados reais, grants, integrações bancárias ou comandos financeiros.
+
 ## 10. Conclusão
 
 O caminho de ponta não é começar por inteligência artificial, integrações ou automação de documentos. É criar uma espinha dorsal confiável de partes, ativos, relações, propostas, carteira e evidências; fazer a equipe usá-la todos os dias; e permitir que pesquisa, dados territoriais e automações cresçam sobre essa base, com versão, governança e limites explícitos.
@@ -645,3 +661,5 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [60] [W3C WCAG 2.2 — Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
 
 [61] [Auditoria de visualização de dados e dashboards](crm_dashboard_visualizacao_consolidacao.md)
+
+[62] [Arquitetura canônica de colunas, setores e critérios de aceite](crm_arquitetura_colunas_setores_consolidacao.md)

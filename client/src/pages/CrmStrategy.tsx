@@ -20,6 +20,7 @@ import { executionDisciplineLenses } from "@/lib/executionDiscipline";
 import { integralAuditLenses } from "@/lib/integralAudit";
 import { sidebarReviewLenses } from "@/lib/sidebarReview";
 import { dashboardReviewLenses } from "@/lib/dashboardReview";
+import { columnArchitectureLenses } from "@/lib/columnArchitectureReview";
 import {
   ArrowDownRight, ArrowUpRight, BookOpenCheck, Check, ChevronRight, Compass,
   Banknote, Calculator, Database, FileCheck2, GitBranch, History, Landmark,
@@ -657,6 +658,50 @@ function DashboardReviewSection() {
   );
 }
 
+function ColumnArchitectureSection() {
+  const [active, setActive] = useState(0);
+  const lens = columnArchitectureLenses[active];
+
+  return (
+    <section id="colunas-canonicas" className="study-integration column-architecture-review">
+      <div className="content-section">
+        <div className="section-head">
+          <aside><Eyebrow>06I · COLUNAS CANÔNICAS</Eyebrow><p>A navegação agora começa pelas cinco jornadas definidas para a plataforma, o administrador e cada operação imobiliária.</p></aside>
+          <div><h2>Coluna organiza o trabalho. <em>Contrato, policy e evidência decidem o que pode acontecer.</em></h2><p>SUPER ADM, ADM, LOTEADORA, VENDAS URBANAS e LOCAÇÃO substituem o modelo genérico anterior. A lente preserva as ligações entre módulos, partes, ativos, contratos e financeiro sem ativar rotas ou dados reais.</p></div>
+        </div>
+
+        <div className="study-integration-shell">
+          <aside className="study-integration-index">
+            <Landmark className="h-7 w-7" />
+            <span>⌖ ÁRVORE DE OPERAÇÃO</span>
+            <b>CONTRATAR<br />→ OPERAR<br />→ PROVAR</b>
+            <div className="study-integration-tabs" aria-label="Colunas canônicas do CRM">
+              {columnArchitectureLenses.map((item, index) => <button key={item.key} type="button" onClick={() => setActive(index)} className={active === index ? "active" : ""} aria-pressed={active === index}><code>{item.code}</code><b>{item.tab}</b></button>)}
+            </div>
+            <p>Módulo contratado habilita capacidade; grant, contexto, alçada e política continuam definindo quem lê, altera, exporta ou instrui.</p>
+          </aside>
+
+          <article className="study-integration-panel" aria-live="polite">
+            <span>{lens.code} · COLUNA DE TRABALHO</span>
+            <h3>{lens.title}</h3>
+            <p>{lens.text}</p>
+            <div className="study-integration-promoted">
+              {lens.promoted.map((item, index) => <div key={item}><code>0{index + 1}</code><span>{item}</span></div>)}
+            </div>
+            <div className="study-integration-block"><ShieldCheck className="h-5 w-5" /><div><b>ATALHO DE ARQUITETURA BLOQUEADO</b><p>{lens.blocked}</p></div></div>
+          </article>
+
+          <aside className="study-integration-proof">
+            <span>MÓDULO, ESCOPO & EVIDÊNCIA</span>
+            <div className="study-integration-proof-row"><p>As cinco colunas compartilham Parte, Ativo, Contrato, Subledger e Evidência, mas não misturam financeiro da plataforma, financeiro do tenant, instrução de cobrança, confirmação de caixa, disponibilidade de estoque ou autorização de acesso.</p><div className="study-integration-sources">{lens.sources.map((source) => <a key={source.href} href={source.href} target="_blank" rel="noreferrer">{source.label} <ArrowUpRight className="inline h-3 w-3" /></a>)}</div></div>
+            <div className="study-integration-benefits">{integrationBenefits.map((benefit) => <span key={benefit}>{benefit}</span>)}</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function IntegralAuditSection() {
   const [active, setActive] = useState(0);
   const lens = integralAuditLenses[active];
@@ -757,6 +802,8 @@ export default function CrmStrategy() {
       <CompetitiveReviewSection />
 
       <ExecutionDisciplineSection />
+
+      <ColumnArchitectureSection />
 
       <SidebarReviewSection />
 

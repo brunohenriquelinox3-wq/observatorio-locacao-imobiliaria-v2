@@ -294,3 +294,11 @@
 - [x] Consolidar decisões, owners, limites de métrica, evidência e critérios de aceite para dashboards do CRM.
 - [x] Atualizar estratégia, backlog e observatório; validar desktop/mobile.
 - [x] Salvar checkpoint e entregar a auditoria de dashboards.
+
+## Arquitetura canônica de colunas e setores
+
+- [x] Formalizar a árvore definida pelo usuário para SUPER ADM, ADM, LOTEADORA, VENDAS URBANAS e LOCAÇÃO, com rótulos, setores e relações explícitas.
+- [x] Confrontar a nova árvore com contratos por módulo, papéis, estoque, clientes e financeiro governado.
+- [x] Consolidar limites, owners, módulos contratados e critérios de aceite por setor.
+- [x] Atualizar estratégia, backlog e observatório substituindo o modelo de colunas anterior; validar desktop/mobile.
+- [x] Salvar checkpoint e entregar a atualização de arquitetura.
