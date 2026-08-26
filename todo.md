@@ -302,3 +302,9 @@
 - [x] Consolidar limites, owners, módulos contratados e critérios de aceite por setor.
 - [x] Atualizar estratégia, backlog e observatório substituindo o modelo de colunas anterior; validar desktop/mobile.
 - [x] Salvar checkpoint e entregar a atualização de arquitetura.
+
+## Apresentação para auditoria final dos setores
+
+- [x] Consolidar a árvore canônica, os vínculos, os limites e os itens que exigem revisão do usuário.
+- [x] Preparar o documento simples e auditável da estratégia atualizada por coluna e setor.
+- [x] Revisar coerência e entregar a apresentação para a auditoria final do usuário.
