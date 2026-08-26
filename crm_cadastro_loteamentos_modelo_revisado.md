@@ -20,6 +20,7 @@
 | --- | --- | --- | --- |
 | `LandParcel` | ID interno + geometria/referência + município | área, referência registral, titularidade declarada, evidências, análise de restrição e caso de aquisição | Uma gleba pode alimentar vários empreendimentos/fases somente por relação explicitada. |
 | `Development` | ID + modalidade declarada + município | glebas, fase, `MunicipalityRuleSet`, trilhas de estado, responsáveis e evidências | Modalidade não é cosmética: loteamento, acesso controlado e condomínio de lotes exigem leitura específica. |
+| `DevelopmentLegalRegime` | empreendimento + modalidade + fonte | loteamento/desmembramento/condomínio de lotes/acesso controlado, base documental, ato municipal, partes comuns, infraestrutura e revisão | O regime declarado não substitui aprovação, registro, evidência nem análise jurídica. |
 | `DevelopmentPartyRole` | empreendimento + parte + papel + vigência | empreendedor, proprietário, compromissário, parceiro, SPE/SCP, representante, base de atuação, anuência/instrumento | Papel de implantar não prova titularidade nem direito econômico. |
 | `RegistryEvidence` | ID + tipo + emissor + data + ativo/projeto | matrícula/certidão, ato/averbação, registro, cartório, arquivo/hash, revisão, escopo, validade operacional | A evidência é imutável; revisão e substituição são novos fatos. |
 | `Block` / `Lot` | empreendimento/fase + quadra + número | área, atributos, referência registral, alocação, restrição, disponibilidade, compromisso e carteira | A identidade comercial permanece, mas cada dimensão guarda sua própria história. |
@@ -36,6 +37,7 @@
 | --- | --- | --- | --- |
 | Aquisição/viabilidade | prospecção, diligência, estudo, decisão pendente, aprovado para avançar, pausado, descartado | Novos negócios | Bloqueia compromisso de capital/configuração comercial quando existir risco crítico sem decisão. |
 | Urbanístico/aprovação | diretriz solicitada, diretriz vigente, projeto em elaboração, submetido, aprovado, pendência, caducado | Urbanismo/engenharia | Bloqueia o ato que depender daquela aprovação, sem inferir registro. |
+| Modalidade/regime | declarado, documentado, em revisão, divergência | Jurídico/urbanismo | Bloqueia o ato cuja configuração dependa da modalidade, de ato municipal ou de partes comuns confirmadas. |
 | Registro | preparação documental, protocolado, exigência, registro evidenciado, em revisão, divergência, cancelado | Jurídico/registro | Sem `registro evidenciado e revisado`, não há elegibilidade de oferta nos casos em que a lei/contrato o exigem. |
 | Infraestrutura | planejada, em execução, em aceite, recebida, pendência, encerrada | Engenharia | Afeta marcos, garantias e contrato; não substitui situação registral. |
 | Comercial | desenho interno, pré-lançamento permitido, vendas ativas, vendas limitadas, esgotado, encerrado | Gestão comercial | É sempre derivada dos gates acima, tabela e política vigente. |

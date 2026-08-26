@@ -37,6 +37,15 @@ Para contratos de compra, cessão ou promessa de cessão de loteamento, a Lei n�
 | Distrato/reentrada possui pré-condições e efeitos próprios. | `RescissionCase` mantém contrato, versão, posse, prova, cálculo reproduzível, restituição/compensação, owner e autorização de reentrada. | Não editar `vendido` para `disponível`; não fixar percentuais, prazos ou deduções globais. | Jurídico + financeiro + comercial. |
 | Novo registro/venda pode depender de fatos de restituição ou do documento específico. | A reentrada comercial exige evidence checklist contextual; o gate bloqueia nova reserva/contrato até a aprovação da condição aplicável. | Bloqueio não substitui o procedimento registral ou contractual de cada caso. | Jurídico/registro + financeiro. |
 
+## 3.1 Modalidade e partes comuns
+
+O Código Civil prevê que, no condomínio de lotes, podem coexistir partes de propriedade exclusiva e partes comuns, e determina a aplicação cabível das regras de condomínio edilício, com respeito à legislação urbanística, bem como do regime de incorporações nos aspectos civis e registrais. A Lei nº 6.766/1979 também prevê que lote pode ser imóvel autônomo ou unidade integrante de condomínio de lotes e distingue loteamento de acesso controlado como modalidade cuja regulação de acesso depende de ato municipal. [1] [4]
+
+| Decisão de produto promovida | Limite preservado | Owner |
+| --- | --- | --- |
+| `DevelopmentLegalRegime` registra modalidade declarada, base normativa/documental, ato municipal quando aplicável, partes comuns, infraestrutura e estado de revisão. | O CRM não requalifica o empreendimento por layout, nome comercial ou configuração de portaria. | Jurídico imobiliário + urbanismo/engenharia. |
+| Lotes, áreas comuns e restrições de acesso/servidão são objetos/evidências ligados ao empreendimento, não atributos textuais do lote. | Restrições administrativas, direitos reais e regras locais exigem evidência e alcance específicos. | Jurídico/registro + gestão do empreendimento. |
+
 ## 4. Titularidade, autorização e empreendimento
 
 O Código Civil prevê no art. 1.647 que, salvo a exceção do regime de separação absoluta e o disposto no art. 1.648, um cônjuge não pode, sem autorização do outro, alienar ou gravar de ônus real bens imóveis. Já o art. 978 prevê exceção para empresário casado quanto a imóveis integrantes do patrimônio da empresa. [4]

@@ -2,9 +2,10 @@ export const lotRegistrationReview = {
   key: "registration",
   tag: "05 · CADASTRO REVISADO",
   title: "Evidência antes de disponibilidade.",
-  text: "O cadastro de loteamento conserva o que cada prova afirma e quem a revisou. Matrícula, registro, alocação de parceiro, garantia, reserva, quadro-resumo e carteira não são um estado único: juntos, determinam o que pode acontecer com cada lote agora.",
+  text: "O cadastro conserva a modalidade documentada — loteamento, desmembramento, condomínio de lotes ou acesso controlado — e o que cada prova afirma. Matrícula, registro, alocação de parceiro, garantia, reserva, quadro-resumo e carteira não são um estado único: juntos, determinam o que pode acontecer com cada lote agora.",
   steps: [
     "Dossiê registral: tipo, emissor, data, escopo e revisão",
+    "Modalidade: ato local, partes comuns e regime em revisão",
     "Alocação e restrição: motivo, vigência, precedente e baixa",
     "Elegibilidade comercial: gate versionado por finalidade, tabela e alçada",
   ],

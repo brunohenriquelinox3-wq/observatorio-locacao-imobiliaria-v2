@@ -432,6 +432,7 @@ A auditoria aprofundada do cadastro de loteamentos confirma a hierarquia `gleba 
 | Decisão de cadastro | Regra estratégica | Proteção de produto |
 | --- | --- | --- |
 | Dossiê registral | `RegistryEvidence` identifica tipo, emissor, data, objeto, escopo, arquivo/hash, revisor e política de revalidação. | Matrícula digitada não significa certidão atual, ausência de ônus ou aptidão comercial. |
+| Modalidade e partes comuns | `DevelopmentLegalRegime` registra loteamento, desmembramento, condomínio de lotes ou acesso controlado como declaração documentada, com ato local, partes comuns e revisão quando aplicável. | Nome comercial, portaria ou geometria da tela não requalificam juridicamente o empreendimento. |
 | Elegibilidade comercial | A disponibilidade resulta de política versionada: registro aplicável, alocação permitida, ausência de restrição impeditiva, compromisso compatível, tabela e alçada. | Ninguém libera lote permutado, garantido, reservado ou pendente por editar um status. |
 | Origem e papéis | `DevelopmentPartyRole` e `AssetOriginInterest` separam proprietário, empreendedor, representante, parte da aquisição, permutante, sócio e beneficiário econômico. | Relação de terra não cria automaticamente poder de venda, participação societária ou entitlement. |
 | Contrato e reentrada | Quadro-resumo e condições versionadas ficam ligados ao contrato; distrato gera caso, restituição/compensação, revisão e autorização de reentrada. | O lote não volta ao estoque pela troca de `vendido` para `disponível`. |

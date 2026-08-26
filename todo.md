@@ -251,3 +251,5 @@
 - [x] Consolidar decisões, conflitos, owners, limites e critérios de aceite do cadastro de loteamentos.
 - [x] Atualizar estratégia, backlog e lâmina do observatório; validar desktop/mobile.
 - [x] Salvar checkpoint e entregar a revisão do cadastro de loteamentos.
+- [x] Distinguir loteamento, desmembramento, condomínio de lotes e acesso controlado como modalidades documentadas, com ato local e partes comuns quando aplicáveis.
+- [x] Salvar checkpoint complementar da revisão de modalidades e entregar a atualização.
