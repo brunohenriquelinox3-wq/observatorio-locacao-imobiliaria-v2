@@ -385,3 +385,13 @@
 - [x] Definir leituras, métricas e contratos de dados contextuais para Estoque, Vendas, Financeiro, Repasses e Painel Loteadora.
 - [x] Definir filtros, consolidação executiva, exportação controlada, estados de atualização e limites de acesso.
 - [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.
+
+## Correção aprovada: hierarquia global de colunas
+
+- [x] Corrigir a decisão de Painel Loteadora para preservar SUPER ADM → ADM → LOTEADORA → VENDAS URBANAS → LOCAÇÃO como ordem global.
+- [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.
+
+## Decisão aprovada: Painel Loteadora como primeira tela interna
+
+- [x] Formalizar o Painel Loteadora como primeira tela dentro da coluna Loteadora, sem alterar a ordem global de colunas.
+- [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.

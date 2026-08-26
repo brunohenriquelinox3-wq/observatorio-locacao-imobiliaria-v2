@@ -7,6 +7,7 @@
 
 | Ordem | Setor atual | Classificação | O que controla | Decisão que precisa da sua auditoria |
 | --- | --- | --- | --- | --- |
+| 0 | **Painel Loteadora** | Primeira tela interna. | Alertas e indicadores executivos que apontam para estoque, vendas/contratos, carteira, direitos, repasses e restrições. | **Decisão aprovada:** abre a coluna Loteadora após a hierarquia global SUPER ADM → ADM → LOTEADORA → VENDAS URBANAS → LOCAÇÃO; não é coluna global nem substitui setores. |
 | 1 | **Cadastro de Loteamentos** | Fundamental. | Glebas, empreendimentos, fases, quadras, lotes, unidades, documentos, evidências, registros e tabelas-base. | **Decisão aprovada:** setor separado para criação e estrutura. |
 | 2 | **Estoque/Mapa de Lotes** | Fundamental. | Mapa/espelho, tabela vigente, disponibilidade, alocação, restrição, hold, reserva, proposta e contrato dos lotes já cadastrados. | **Decisão aprovada:** setor separado para operação diária do estoque. |
 | 3 | **Sócios e Parceiros** | Fundamental. | Sócios, parceiros, fazendeiros/proprietários da terra, permutantes, investidores, captadores, corretores, imobiliárias, credores/garantidores e beneficiários; direitos por evento de parcela, grupos, painéis e aportes de capital. | **Decisão aprovada:** o setor deve ser completo e minucioso; cada contrato/negociação mantém vínculo próprio, e grupo/painel só compartilha escopo expressamente contratado. |

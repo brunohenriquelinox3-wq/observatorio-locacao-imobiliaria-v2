@@ -9,7 +9,7 @@
 
 | Ordem | Setor recomendado | Decisão recomendada | Por que existe | O que contém |
 | --- | --- | --- | --- | --- |
-| 0 | **Painel Loteadora** | **ADICIONAR/MANTER** como tela inicial da coluna. | Dá visão rápida da operação sem substituir o financeiro ou estoque. | Alertas de lote bloqueado, reservas a vencer, contratos pendentes, parcelas em atraso, carteira, recebíveis, repasses bloqueados e obra/marco pendente quando aplicável. |
+| 0 | **Painel Loteadora** | **MANTER** como primeira tela **interna** da coluna Loteadora. | **Decisão aprovada:** dá visão rápida após a seleção global de Loteadora, sem substituir Financeiro, Estoque ou a hierarquia SUPER ADM → ADM → LOTEADORA → VENDAS URBANAS → LOCAÇÃO. | Alertas de lote bloqueado, reservas a vencer, contratos pendentes, parcelas em atraso, carteira, recebíveis, repasses bloqueados e obra/marco pendente quando aplicável; cada item abre o setor/caso fonte. |
 | 1 | **Cadastro de Loteamentos** | **SEPARAR** do estoque operacional. | Cadastro é a estrutura do empreendimento; estoque é a operação diária dos lotes. | Glebas, empreendimentos, fases, quadras, parâmetros, evidências, registros, documentos, tabelas base e configuração de cada loteamento. |
 | 2 | **Estoque e Mapa de Lotes** | **SEPARAR** do cadastro. | A equipe comercial precisa operar visualmente disponibilidade, mapa, reserva e situação de lote sem editar a estrutura do empreendimento. | Mapa/espelho, lotes, unidades, tabela vigente, disponibilidade, bloqueios, alocações, restrições, holds, reservas e situação comercial. |
 | 3 | **Sócios e Parceiros** | **MANTER** como nomenclatura aprovada, com cadastro completo de modalidades. | Fazendeiro/proprietário da terra, permutante, sócio, captador, corretor, imobiliária, investidor, credor e beneficiário podem participar da mesma operação com vínculos distintos. | Parte, modalidade, instrumento, objeto, origem, base econômica, condição, vigência, documentos, alocação física, direito por entrada/parcela/intermediária, grupo de participação, aporte de capital, aprovação e histórico. |
@@ -77,11 +77,11 @@ Dois ou mais participantes podem integrar um **Grupo de Participação** quando 
 | LOT-A05 | Repasses ficam dentro de Financeiro ou setor próprio? | **Setor próprio: Repasses e Distribuição.** | **APROVADO: setor próprio conectado ao Financeiro e Carteira, sem misturar direito, cobrança, caixa e conciliação.** |
 | LOT-A06 | Obras e Infraestrutura entra já ou depois? | **Depois, como módulo posterior**, salvo se for prioridade imediata. | **APROVADO: módulo posterior; fundação mantém somente marcos, evidências, restrições e alertas essenciais.** |
 | LOT-A07 | Relatórios ficam como setor próprio? | **Não; usar atalhos nos setores e visão no Painel/ADM.** | **APROVADO: relatórios contextuais, com consolidação executiva no Painel Loteadora/ADM.** |
-| LOT-A08 | Painel Loteadora entra como primeira tela? | **Sim.** |  |
+| LOT-A08 | Painel Loteadora entra como primeira tela? | **Sim, como primeira tela interna de Loteadora.** | **APROVADO: mantém-se a ordem global SUPER ADM → ADM → LOTEADORA → VENDAS URBANAS → LOCAÇÃO; ao abrir Loteadora, inicia no Painel Loteadora.** |
 
-## 6. Estrutura final sugerida, se você aprovar todas as recomendações
+## 6. Estrutura interna da coluna Loteadora, após a seleção global
 
-1. Painel Loteadora  
+1. Painel Loteadora *(primeira tela interna)*  
 2. Cadastro de Loteamentos  
 3. Estoque e Mapa de Lotes  
 4. Sócios e Parceiros  
@@ -91,7 +91,7 @@ Dois ou mais participantes podem integrar um **Grupo de Participação** quando 
 8. Repasses e Distribuição  
 9. Obras e Infraestrutura *(módulo posterior, se aprovado)*  
 
-Essa estrutura permite **explorar os dados de forma mais intuitiva**, **entender melhor as tendências** e **salvar ou compartilhar facilmente**, mantendo estoque, contratos, financeiro e direitos econômicos com limites claros.
+Essa estrutura interna da Loteadora vem depois da ordem global **SUPER ADM → ADM → LOTEADORA → VENDAS URBANAS → LOCAÇÃO** e permite **explorar os dados de forma mais intuitiva**, **entender melhor as tendências** e **salvar ou compartilhar facilmente**, mantendo estoque, contratos, financeiro e direitos econômicos com limites claros.
 
 ## Referências internas
 
