@@ -520,12 +520,12 @@ Cor não é o único sinal de tendência, severidade, seleção ou estado. A dif
 
 ## 9.17 Arquitetura canônica de colunas: plataforma, administração e operações
 
-A navegação canônica substitui o modelo anterior de colunas genéricas por cinco jornadas principais: **SUPER ADM**, **ADM**, **LOTEADORA**, **VENDAS URBANAS** e **LOCAÇÃO**. A coluna organiza o trabalho; ela não é uma concessão de acesso. Módulo contratado habilita a capacidade da organização, enquanto membership, grant, organização, entidade legal/SPE, objeto, finalidade, vigência, alçada, MFA/step-up e policy continuam decidindo o que cada pessoa pode ler, alterar, exportar ou instruir. [62]
+A navegação canônica substitui o modelo anterior de colunas genéricas por cinco jornadas principais: **SUPER ADM**, **ADM**, **LOTEADORA**, **VENDAS URBANAS** e **LOCAÇÃO**. A hierarquia é explícita: **SUPER ADM é a autoridade máxima da plataforma inteira; ADM é a autoridade máxima somente da própria organização cliente e está abaixo do SUPER ADM**. A coluna organiza o trabalho; ela não é uma concessão de acesso. Módulo contratado habilita a capacidade da organização, enquanto membership, grant, organização, entidade legal/SPE, objeto, finalidade, vigência, alçada, MFA/step-up e policy continuam decidindo o que cada pessoa pode ler, alterar, exportar ou instruir. [62] [63]
 
 | Coluna | Jornada e setores canônicos | Limite de arquitetura |
 | --- | --- | --- |
-| **SUPER ADM** | Dashboard geral da plataforma; organizações contratantes; financeiro SaaS; colaboradores internos; módulos/contratos. | Não acessa por padrão carteira, documentos, clientes finais ou financeiro operacional de tenant; suporte é JIT, justificado, temporário e auditado. |
-| **ADM** | Painel da própria organização; setores/módulos contratados; financeiro ADM autorizado; colaboradores, alçadas e configurações permitidas. | Não cruza organizações, não se autoeleva e não trata visão administrativa como saldo global editável. |
+| **SUPER ADM** | Autoridade máxima da plataforma: dashboard geral, organizações contratantes, financeiro SaaS, colaboradores internos, módulos/contratos e segurança da plataforma. | Não acessa por padrão carteira, documentos, clientes finais ou financeiro operacional de tenant; suporte é JIT, justificado, temporário e auditado. |
+| **ADM** | Autoridade máxima apenas da própria organização, subordinada ao SUPER ADM: painel da organização, setores/módulos contratados, financeiro ADM autorizado, colaboradores, alçadas e configurações permitidas. | Não cruza organizações, não se autoeleva, não muda contratos SaaS/plataforma e não trata visão administrativa como saldo global editável. |
 | **LOTEADORA** | Cadastro/estoque de loteamentos; sócios/parceiros/fazendeiros; clientes; vendas/contratos; financeiro, boletos, carteira e busca protegida. | Registro, restrição, alocação, reserva, contrato, tabela e alçada definem elegibilidade; boleto é instrução, não caixa confirmado. |
 | **VENDAS URBANAS** | Clientes; proprietários e imóveis; construtoras/empreendimentos; vendas/contratos; comissões e calendários. | Propriedade, poder de venda, comissão e settlement dependem de evidência, regra datada e conciliação, não de rótulo ou percentual. |
 | **LOCAÇÃO** | Clientes/locatários; imóveis/proprietários; administração e contratos de locação; financeiro, cobrança, inadimplência, renovação e portais mínimos. | Administração e locação são contratos relacionados com prazos/obrigações próprios; portal e repasse respeitam finalidade, escopo e prova de liquidez. |
@@ -663,3 +663,5 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [61] [Auditoria de visualização de dados e dashboards](crm_dashboard_visualizacao_consolidacao.md)
 
 [62] [Arquitetura canônica de colunas, setores e critérios de aceite](crm_arquitetura_colunas_setores_consolidacao.md)
+
+[63] [Hierarquia canônica de autoridade: SUPER ADM acima de ADM](crm_hierarquia_autoridade_canonica.md)

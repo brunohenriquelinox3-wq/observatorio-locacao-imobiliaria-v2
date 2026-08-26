@@ -5,12 +5,14 @@
 
 > **A estrutura principal do CRM passa a ser:** **SUPER ADM**, **ADM**, **LOTEADORA**, **VENDAS URBANAS** e **LOCAÇÃO**. As antigas ideias de colunas genéricas deixam de ser o modelo principal. Relatórios, documentos, marketing, configurações e automações aparecem dentro da coluna e do módulo a que pertencem.
 
+> **Hierarquia obrigatória:** o **SUPER ADM** é a autoridade máxima de toda a plataforma CRM. O **ADM** vem abaixo dele e é a autoridade máxima somente dentro da empresa cliente que contratou o sistema. Abaixo do ADM ficam os responsáveis por módulo e colaboradores; abaixo deles, os portais mínimos de cliente e proprietário.
+
 ## 1. Mapa geral da estratégia
 
 | Coluna | Quem usa | O que controla | O que não controla automaticamente |
 | --- | --- | --- | --- |
-| **SUPER ADM** | Equipe da empresa dona da plataforma. | Organizações clientes, módulos contratados, financeiro da plataforma e colaboradores internos. | Dados internos, clientes finais, contratos, carteiras ou saldos de cada imobiliária/loteadora. |
-| **ADM** | Dono ou administrador da empresa cliente. | Sua empresa, módulos contratados, colaboradores, permissões internas, parâmetros e visão administrativa autorizada. | Outra empresa cliente, plataforma, módulo não contratado ou acesso financeiro sem alçada. |
+| **SUPER ADM** | Equipe da empresa dona da plataforma; autoridade máxima do CRM. | Organizações clientes, módulos contratados, financeiro da plataforma, colaboradores internos e segurança de plataforma. | Dados internos, clientes finais, contratos, carteiras ou saldos de cada imobiliária/loteadora sem suporte controlado, escopo e auditoria. |
+| **ADM** | Dono ou administrador da empresa cliente; subordinado ao SUPER ADM na cadeia da plataforma. | Sua empresa, módulos contratados, colaboradores, permissões internas, parâmetros e visão administrativa autorizada. | Outra empresa cliente, plataforma, contrato SaaS, módulo não contratado ou acesso financeiro sem alçada. |
 | **LOTEADORA** | Empresa que vende empreendimentos, lotes e unidades de loteamento. | Estoque, loteamentos, parceiros, clientes, vendas, contratos, carteira e financeiro de loteadora. | Venda de lote bloqueado, baixa financeira manual ou repasse sem regra/evidência. |
 | **VENDAS URBANAS** | Imobiliária que vende imóveis urbanos. | Clientes, proprietários, imóveis, construtoras, vendas, contratos e comissões. | Venda sem autorização do proprietário, comissão sem regra ou recebimento presumido. |
 | **LOCAÇÃO** | Imobiliária que administra e loca imóveis. | Clientes/locatários, proprietários, imóveis, administração, locação, cobrança, carteira, repasse e renovação. | Misturar contrato de administração com contrato de locação ou considerar boleto como pagamento confirmado. |

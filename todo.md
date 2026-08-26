@@ -308,3 +308,9 @@
 - [x] Consolidar a árvore canônica, os vínculos, os limites e os itens que exigem revisão do usuário.
 - [x] Preparar o documento simples e auditável da estratégia atualizada por coluna e setor.
 - [x] Revisar coerência e entregar a apresentação para a auditoria final do usuário.
+
+## Hierarquia canônica: SUPER ADM acima de ADM
+
+- [x] Formalizar a cadeia de autoridade SUPER ADM → ADM → módulos e colaboradores, com limites de escopo e auditoria.
+- [x] Atualizar estratégia e apresentação de auditoria com a hierarquia explícita.
+- [x] Revisar coerência e entregar a atualização hierárquica.
