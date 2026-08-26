@@ -354,3 +354,10 @@
 - [x] Modelar login, grant de portal, resolução de contexto e direcionamento seguro à visão individual ou do grupo contratado.
 - [x] Definir isolamento, erros seguros e testes permitir/negar contra vazamento entre parceiros, grupos, contratos, clientes e lotes.
 - [x] Atualizar estratégia, matriz, apresentação e backlog; revisar, validar e salvar checkpoint.
+
+## Decisão aprovada: Clientes Loteadora e dossiê reutilizável na venda
+
+- [x] Definir o cadastro completo, a ficha de Clientes Loteadora e o dossiê documental/fotográfico com estado, validade e revisão.
+- [x] Modelar a seleção de cliente por CPF/CNPJ na venda de lote, com reaproveitamento seguro de dados e documentos sem duplicação ou falsa aprovação.
+- [x] Definir o estoque de contratos realizados e seus alertas ligados a lote, venda, documento, carteira e situação contratual.
+- [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.

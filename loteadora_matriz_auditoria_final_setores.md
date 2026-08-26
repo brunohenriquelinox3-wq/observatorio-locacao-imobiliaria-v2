@@ -13,8 +13,8 @@
 | 1 | **Cadastro de Loteamentos** | **SEPARAR** do estoque operacional. | Cadastro é a estrutura do empreendimento; estoque é a operação diária dos lotes. | Glebas, empreendimentos, fases, quadras, parâmetros, evidências, registros, documentos, tabelas base e configuração de cada loteamento. |
 | 2 | **Estoque e Mapa de Lotes** | **SEPARAR** do cadastro. | A equipe comercial precisa operar visualmente disponibilidade, mapa, reserva e situação de lote sem editar a estrutura do empreendimento. | Mapa/espelho, lotes, unidades, tabela vigente, disponibilidade, bloqueios, alocações, restrições, holds, reservas e situação comercial. |
 | 3 | **Sócios e Parceiros** | **MANTER** como nomenclatura aprovada, com cadastro completo de modalidades. | Fazendeiro/proprietário da terra, permutante, sócio, captador, corretor, imobiliária, investidor, credor e beneficiário podem participar da mesma operação com vínculos distintos. | Parte, modalidade, instrumento, objeto, origem, base econômica, condição, vigência, documentos, alocação física, direito por entrada/parcela/intermediária, grupo de participação, aporte de capital, aprovação e histórico. |
-| 4 | **Clientes e Compradores** | **RENOMEAR** o atual “Clientes”. | Deixa claro que o setor serve tanto para interesse inicial quanto para compra contratada e coadquirentes. | Proponentes, compradores, coadquirentes, representantes, empresas compradoras, documentos e buscas autorizadas por CPF/CNPJ. |
-| 5 | **Propostas, Reservas e Contratos** | **UNIR** em um setor comercial. | Essas etapas são uma jornada única; separar no primeiro momento pode criar cliques sem ganho. | Propostas, escolha de lote, reserva com prazo, aprovação, documentação, condições comerciais, contratos, aditivos, cessões, distratos e pós-venda comercial. |
+| 4 | **Clientes Loteadora** | **MANTER** como nomenclatura aprovada. | Serve tanto ao interesse inicial quanto à compra contratada, com ficha completa e dossiê reutilizável. | Proponentes, compradores, coadquirentes, representantes, empresas compradoras, documentos/fotos, estados de revisão/validade e buscas autorizadas por CPF/CNPJ. |
+| 5 | **Propostas, Reservas e Contratos** | **UNIR** em um setor comercial. | Essas etapas são uma jornada única; separar no primeiro momento pode criar cliques sem ganho. | Propostas, escolha de lote, reserva com prazo, aprovação, documentação, condições comerciais, contratos, aditivos, cessões, distratos, pós-venda comercial e lente de contratos realizados por lote. |
 | 6 | **Financeiro e Carteira** | **MANTER** como setor central e principal. | É o coração financeiro da loteadora e concentra o ciclo de parcelas, cobrança, recebíveis, pagáveis e carteira. | Boletos/instruções, parcelas, vencimentos, recebíveis, pagáveis, pagamentos, retorno, conciliação, atrasos, acordos, comprovantes, alertas e filtros. |
 | 7 | **Repasses e Distribuição** | **SEPARAR** do Financeiro como setor próprio, porém conectado. | Loteadora pode ter muitos recebedores e regras por entrada, parcela, lote físico, VGV, fluxo ou resultado; isso merece leitura própria. | Comissões, corretor, imobiliária, captador, fazendeiro/proprietário da terra, permutante, parceiro, sócio, planos de distribuição, direitos, bloqueios e instruções. |
 | 8 | **Obras e Infraestrutura** | **DECIDIR** se entra já ou como módulo posterior. | É relevante para loteadora, mas obra não pode atrasar a fundação comercial/financeira se não for prioridade do seu modelo. | Cronograma, marcos, pendências, responsáveis, evidências, infraestrutura e alertas vinculados ao empreendimento/fase. |
@@ -57,7 +57,7 @@ Dois ou mais participantes podem integrar um **Grupo de Participação** quando 
 | --- | --- | --- |
 | Cadastro de Loteamentos | Estoque e Mapa de Lotes | Cria a estrutura de gleba, empreendimento, fase, quadra e lote para operação diária. |
 | Estoque e Mapa de Lotes | Propostas, Reservas e Contratos | Só libera um lote que esteja elegível, sem bloqueio, alocação incompatível ou reserva concorrente. |
-| Clientes e Compradores | Propostas, Reservas e Contratos | Permite cadastrar proponente principal, coadquirente ou empresa compradora no mesmo contrato. |
+| Clientes Loteadora | Propostas, Reservas e Contratos | Permite localizar/selecionar proponente principal, coadquirente ou empresa compradora no mesmo contrato, reutilizando ficha e dossiê elegíveis sem duplicar cadastro ou anexos. |
 | Propostas, Reservas e Contratos | Financeiro e Carteira | Contrato finalizado cria agenda de parcelas, cobranças e carteira. |
 | Financeiro e Carteira | Repasses e Distribuição | Evento conciliado e regra aprovada podem tornar direitos elegíveis; não há repasse por simples etiqueta percentual. |
 | Sócios e Parceiros | Estoque / Repasses e Distribuição | Relação com a terra pode bloquear/alocar lote e também criar direito econômico; grupos/painéis refletem somente o escopo contratado, e esses efeitos permanecem separados. |
@@ -72,7 +72,7 @@ Dois ou mais participantes podem integrar um **Grupo de Participação** quando 
 | --- | --- | --- | --- |
 | LOT-A01 | Cadastro de Loteamentos e Estoque ficam juntos ou separados? | **Separar.** | **APROVADO: separados.** |
 | LOT-A02 | Nome e cobertura do setor de parceiros. | **Sócios e Parceiros**, com cadastro completo e minucioso de todas as modalidades. | **APROVADO: Sócios e Parceiros.** |
-| LOT-A03 | Nome do setor de clientes. | **Clientes e Compradores.** |  |
+| LOT-A03 | Nome do setor de clientes. | **Clientes Loteadora.** | **APROVADO: Clientes Loteadora, com ficha completa, dossiê reutilizável e busca protegida por CPF/CNPJ na venda.** |
 | LOT-A04 | Reserva fica dentro de Vendas ou setor próprio? | **Dentro de Propostas, Reservas e Contratos.** |  |
 | LOT-A05 | Repasses ficam dentro de Financeiro ou setor próprio? | **Setor próprio: Repasses e Distribuição.** |  |
 | LOT-A06 | Obras e Infraestrutura entra já ou depois? | **Depois, como módulo posterior**, salvo se for prioridade imediata. |  |
@@ -85,7 +85,7 @@ Dois ou mais participantes podem integrar um **Grupo de Participação** quando 
 2. Cadastro de Loteamentos  
 3. Estoque e Mapa de Lotes  
 4. Sócios e Parceiros  
-5. Clientes e Compradores  
+5. Clientes Loteadora  
 6. Propostas, Reservas e Contratos  
 7. Financeiro e Carteira  
 8. Repasses e Distribuição  

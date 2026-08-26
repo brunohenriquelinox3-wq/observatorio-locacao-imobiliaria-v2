@@ -85,7 +85,7 @@ Esses sinais não devem ser usados como promessa de retorno, avaliação definit
 | Search profile | Intenção de locar, comprar, investir, vender ou construir | Relaciona parte/grupo a território, critérios, prazo e viabilização declarada. |
 | Listing | Objeto de divulgação ou comercialização | Vincula ativo a preço/tabela, canal, autorização, versão e estado. |
 | Proposal | Oferta versionada | Vincula ativo, partes, condições, valor, prazo, alçada e estados. |
-| Dossier / Evidence | Checklist e arquivos/declarações por finalidade | Armazena origem, validade, acesso, revisão e pendências. |
+| Dossier / Evidence | Checklist e arquivos/declarações por finalidade | Armazena origem, validade, acesso, revisão, pendências e referência reutilizável; uma venda registra snapshot da versão usada, sem duplicar binário. |
 | Activity / Task | Linha do tempo operacional | Registra comunicação, visita, próximo passo, responsável e prazo. |
 | Market evidence | Dado ou estudo externo estruturado | Relaciona fonte, recorte, confiança, impacto e versão de regra/painel. |
 | Financial event | Fato econômico imutável originado no negócio | Empresa/SPE, contrato, competência, valor, fonte, regra e evidência. |
@@ -112,6 +112,12 @@ O proprietário PF deve iniciar com contato, ativo, cidade, faixa, prazo e rela�
 ### Cadastro robusto de compradores
 
 O comprador PF deve começar por objetivo, tipo de ativo, região, faixa, prazo e canal de contato. A qualificação abre grupo comprador, critérios, recursos próprios/financiamento/FGTS declarados, entrada/parcela por faixa e dependências. Apenas em pré-proposta/dossiê entram identificação e documentos solicitados pela operação ou financiador. O checklist da CAIXA ilustra que identificação, renda, documentação de FGTS e matrícula pertencem à solicitação formal de crédito, não ao primeiro contato. [6]
+
+### Clientes Loteadora: ficha única, venda fluida e evidência reaproveitável
+
+O setor aprovado chama-se **Clientes Loteadora**. Ele concentra a ficha única de proponentes, compradores, coadquirentes, representantes e empresas compradoras, com dados cadastrais, papéis datados, dossiê documental/fotográfico, estado de revisão/validade, origem e auditoria. Na venda de lote, a seleção protegida por CPF/CNPJ recupera a parte existente e apresenta os dados e documentos **elegíveis** para aquela operação, além do que está ausente, expirado, restrito ou em análise. Isso evita redigitação, mas não converte arquivo anexado em validação automática.
+
+O contrato de venda registra um snapshot das evidências e dados usados no marco aplicável. Novo documento anexado na ficha ou na própria venda entra no mesmo dossiê canônico, com referência à checklist da venda; não cria cópia silenciosa nem altera retroativamente a versão já utilizada em contrato anterior. A jornada de Vendas e Contratos passa a oferecer uma lente de **Contratos Realizados por Lote**, ligada ao mesmo `Qn · Ln`, que alerta divergência entre lote e contrato, dossiê incompleto, assinatura/versão pendente, agenda ausente, carteira em atraso e distrato/cessão em análise. Estoque físico/comercial, estado contratual e carteira continuam dimensões distintas. [40] [41]
 
 ## 6. Segurança, LGPD e limites de automação
 
