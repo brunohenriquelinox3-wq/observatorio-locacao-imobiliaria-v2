@@ -14,6 +14,7 @@ import "../cur-divergence.css";
 import "../pente-fino.css";
 import "../payment-asset-integration.css";
 import { integrationBenefits, integrationLenses } from "@/lib/studyIntegration";
+import { lotRegistrationReview } from "@/lib/lotCadastroReview";
 import {
   ArrowDownRight, ArrowUpRight, BookOpenCheck, Check, ChevronRight, Compass,
   Banknote, Calculator, Database, FileCheck2, GitBranch, History, Landmark,
@@ -52,6 +53,7 @@ const lotLenses = [
   { key: "approval", tag: "02 · REGISTRO & OBRAS", title: "Venda não substitui registro. Obra não apaga restrição.", text: "Diretriz municipal, aprovação, licença, registro, cronograma, garantia e termo de recebimento caminham em trilhas próprias. Cada documento tem origem, validade e revisor.", steps: ["Regra municipal por vigência", "Registro e matrícula como evidência", "Obra, garantia e aceite"], gate: "O lote só fica comercialmente elegível quando a regra e a evidência aplicáveis estiverem revisadas." },
   { key: "inventory", tag: "03 · ESTOQUE & COMERCIAL", title: "Um lote não pode estar em dois lugares ao mesmo tempo.", text: "Alocação comercial, permutante, garantia municipal e indisponibilidade convivem com disponibilidade, hold, reserva, contrato e reentrada. São estados paralelos, não etiquetas soltas.", steps: ["Quadra, lote e matrícula", "Tabela e alçada versionadas", "Hold, reserva e contrato"], gate: "Reserva incompatível, caucionamento ou alocação de parceiro bloqueiam a venda até liberação explícita." },
   { key: "receivables", tag: "04 · CARTEIRA & PÓS-ENTREGA", title: "A venda gera uma carteira; a carteira mantém a relação viva.", text: "Plano de pagamento, índice contratual, parcela, comprovante, atraso, acordo, distrato, quitação e escritura devem preservar a origem de cada decisão e não virar cálculo opaco.", steps: ["Plano e parcela por versão", "Comprovante e conciliação", "Cobrança, distrato e retorno"], gate: "Nenhum pagamento, distrato ou retorno ao estoque é concluído sem evidência e revisão de caso." },
+  lotRegistrationReview,
 ];
 
 const cadastroLenses = [

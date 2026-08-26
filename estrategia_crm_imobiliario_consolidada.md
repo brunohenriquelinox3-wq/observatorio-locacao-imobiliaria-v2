@@ -425,6 +425,20 @@ Dois estudos de formação recentes foram confrontados com fontes primárias de 
 
 > **Regra de implementação:** esta consolidação é uma mudança de estratégia e critérios de aceite. Ela não autoriza criar migrations, RPCs, bootstrap, instruções de pagamento, integrações financeiras ou publicação. A execução continua dependente de etapa apresentada, aprovação explícita, RLS, MFA, alçada, idempotência, testes permitir/negar e validação dos responsáveis de negócio.
 
+## 8.15 Revisão de cadastro de loteamentos: evidência antes de disponibilidade
+
+A auditoria aprofundada do cadastro de loteamentos confirma a hierarquia `gleba → empreendimento/fase → quadra → lote`, mas corrige simplificações que podem gerar venda indevida, direito econômico equivocado ou falsa sensação de regularidade. Matrícula, certidão, registro, aprovação, garantia, outorga, tabela, reserva, contrato e distrato são **provas e casos datados**, não campos que possam ser resolvidos em uma coluna de status. A estratégia passa a exigir trilhas paralelas para aquisição/viabilidade, urbanismo/aprovação, registro, infraestrutura, comercialização, alocação, restrição, compromisso e carteira. [52]
+
+| Decisão de cadastro | Regra estratégica | Proteção de produto |
+| --- | --- | --- |
+| Dossiê registral | `RegistryEvidence` identifica tipo, emissor, data, objeto, escopo, arquivo/hash, revisor e política de revalidação. | Matrícula digitada não significa certidão atual, ausência de ônus ou aptidão comercial. |
+| Elegibilidade comercial | A disponibilidade resulta de política versionada: registro aplicável, alocação permitida, ausência de restrição impeditiva, compromisso compatível, tabela e alçada. | Ninguém libera lote permutado, garantido, reservado ou pendente por editar um status. |
+| Origem e papéis | `DevelopmentPartyRole` e `AssetOriginInterest` separam proprietário, empreendedor, representante, parte da aquisição, permutante, sócio e beneficiário econômico. | Relação de terra não cria automaticamente poder de venda, participação societária ou entitlement. |
+| Contrato e reentrada | Quadro-resumo e condições versionadas ficam ligados ao contrato; distrato gera caso, restituição/compensação, revisão e autorização de reentrada. | O lote não volta ao estoque pela troca de `vendido` para `disponível`. |
+| Regra local e autorização | `MunicipalityRuleSet` e `AuthorizationRequirement` preservam fonte, vigência, ato, regime/condição, evidência e owner. | Não há regra urbanística universal, nem bloqueio/outorga automática a partir de estado civil ou Município. |
+
+> **Limite obrigatório:** o CRM organiza prova, estado, responsável e próxima ação. Ele não certifica regularidade registral/ambiental/urbanística, não interpreta contrato, não calcula efeito tributário universal e não pratica ato registral. A decisão concreta permanece com jurídico imobiliário, registro, urbanismo/engenharia, contador/controladoria e os órgãos ou parceiros competentes.
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -536,3 +550,5 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [50] [Auditoria aprofundada do curso — consolidação, conflitos e backlog](crm_auditoria_curso_10_ciclos_consolidacao.md) · [caderno de evidências e fontes primárias](crm_auditoria_curso_10_ciclos_evidencias.md)
 
 [51] [Integração dos estudos de pagamentos e ativos — inventário, evidências, conflitos e decisões](crm_integracao_estudos_pagamentos_ativos_evidencias.md)
+
+[52] [Revisão aprofundada do cadastro de loteamentos — inventário, evidências, modelo e consolidação](crm_cadastro_loteamentos_revisao_consolidacao.md)

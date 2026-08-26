@@ -242,3 +242,12 @@
 - [x] Atualizar documentos canônicos e o observatório; validar desktop/mobile.
 - [x] Corrigir a precedência da rota `/crm` para que o observatório estratégico não seja interceptado pela rota inicial.
 - [x] Salvar checkpoint e entregar a atualização dos estudos integrados.
+
+## Revisão aprofundada: cadastro de loteamentos
+
+- [x] Inventariar entidades, campos, evidências, estados e lacunas do cadastro de gleba, empreendimento, fase, quadra, lote e unidade.
+- [x] Confrontar requisitos de registro, aprovação, comercialização, contrato e distrato com fontes prioritárias.
+- [x] Revisar restrições, reservas, origem/participação, titularidade, matrícula e regras de elegibilidade comercial.
+- [x] Consolidar decisões, conflitos, owners, limites e critérios de aceite do cadastro de loteamentos.
+- [x] Atualizar estratégia, backlog e lâmina do observatório; validar desktop/mobile.
+- [x] Salvar checkpoint e entregar a revisão do cadastro de loteamentos.

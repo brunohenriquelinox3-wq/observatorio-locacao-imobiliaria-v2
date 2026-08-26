@@ -23,18 +23,23 @@ Loteadora não deve ser implementada como uma variação de `Listing + Buyer + P
 | Entidade | Finalidade | Campos/relacionamentos indispensáveis |
 | --- | --- | --- |
 | `LandParcel` | Representa a gleba e seu contexto de aquisição | Geometria/referência, matrícula, município, proprietários declarados, origem, restrições e evidências. |
+| `DevelopmentPartyRole` | Separa proprietário, empreendedor, representante, parceiro e parte econômica no desenvolvimento | Parte, papel, instrumento, base de atuação, vigência, anuência/sub-rogação quando aplicável e revisão. |
 | `AcquisitionCase` | Organiza compra, permuta ou parceria da gleba | Tipo, partes, cronograma, condições, estado, responsáveis e documentos. |
 | `FeasibilityStudy` | Registra hipóteses antes de comprometer capital | Versão, cenário, área, produto, VGV estimado, custo, premissas, autor e parecer. |
 | `MunicipalityRuleSet` | Preserva regra local como configuração versionada | Município, fonte, vigência, parâmetro, responsável e alerta de revisão. |
 | `Development` | Raiz do empreendimento | Nome, cidade, modalidade declarada, gleba(s), fase, responsável, estado por trilha e evidências. |
 | `ApprovalCase` | Reúne diretriz, projeto, licença e protocolo | Órgão, protocolo, prazo, estado, dependência, documento e parecer. |
 | `RegistrationRecord` | Demonstra situação registral do parcelamento | Cartório, número, data, matrícula, arquivo, validador e estado de revisão. |
+| `RegistryEvidence` | Preserva certidão, matrícula, ato, averbação, memorial ou prova correlata com contexto temporal | Tipo, emissor/cartório, data, objeto, escopo, arquivo/hash, revisão, resultado e política de revalidação. |
 | `InfrastructurePlan` | Lista obrigações e marcos de obra | Item, prazo, responsável, evidência, progresso e aceite. |
 | `MunicipalGuarantee` | Controla garantia de infraestrutura e restrições | Tipo, instrumento, valor/referência, lotes vinculados, vigência, estado e baixa. |
+| `Restriction` | Explica por que um objeto está limitado ou bloqueado | Motivo, escopo, evidência, intervalo, severidade, owner, precedente e baixa autorizada. |
 | `Block` / `Lot` | Representa estoque físico e jurídico | Desenvolvimento, fase, quadra, lote, área, atributos, matrícula, alocação e estados ortogonais. |
 | `PriceTable` | Versiona preço e condição de comercialização | Vigência, lote/faixa, preço, desconto permitido, canal, alçada e aprovação. |
 | `InventoryHold` / `Reservation` | Impede conflito temporário de estoque | Lote, titular, canal, prazo, status, motivo e auditoria. |
+| `CommercialCommitment` | Unifica hold, reserva, proposta, contrato ou cessão pendente sem apagar seu tipo | Lote, tipo, titular, intervalo, tabela/condição, canal, expiração, alçada e audit event. |
 | `LotContract` | Contrato de compra, cessão ou promessa | Comprador/grupo, lote, versão do quadro-resumo, condições, assinatura, estado e evidências. |
+| `ContractSummaryVersion` | Guarda o quadro-resumo e as condições datadas que regem o contrato | Preço, parcelas, índice/período, corretagem/beneficiário, ônus, registro, obra, desfazimento e assinatura. |
 | `PaymentPlanVersion` | Registra a versão contratual de obrigação | Entrada, parcelas, reforços, indexação, juros, eventos, vigência e motivo da versão. |
 | `ReceivableInstallment` | Unidade de cobrança/recebimento | Vencimento, valor-base, correção, juros, estado, comprovante e conciliação. |
 | `CollectionsCase` | Organiza atraso, comunicação e negociação | Gatilho, etapas, notificações, proposta, responsável e resultado. |
@@ -93,6 +98,8 @@ stateDiagram-v2
 ```
 
 > O estado de alocação (`permutante`, `garantia municipal`, `comercial` ou outro) corre em paralelo ao fluxo acima. Um lote só chega a `Disponível` se sua alocação permitir comercialização.
+
+> **Regra revisada de elegibilidade:** o CRM só projeta um lote como comercialmente elegível quando a finalidade solicitada tem registro/evidência revisados, alocação permitida, ausência de restrição impeditiva, compromisso compatível e tabela/alçada vigentes. Cada componente aponta para fonte, data, owner e eventual decisão de liberação; nenhum deles pode ser substituído por um status editável. [5]
 
 ## Carteira própria: modelo de controle, não de banco
 
@@ -154,3 +161,5 @@ stateDiagram-v2
 [3] [STJ — Taxa de ocupação e lote não edificado sob a Lei do Distrato](https://www.stj.jus.br/sites/portalp/Paginas/Comunicacao/Noticias/2025/20102025-Sob-Lei-do-Distrato--e-possivel-aplicar-multa-por-desistencia-e-taxa-de-ocupacao-de-lote-nao-edificado.aspx)
 
 [4] [Planalto — Lei nº 14.430/2022](https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/l14430.htm)
+
+[5] [Revisão aprofundada do cadastro de loteamentos — consolidação](crm_cadastro_loteamentos_revisao_consolidacao.md)
