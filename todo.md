@@ -314,3 +314,9 @@
 - [x] Formalizar a cadeia de autoridade SUPER ADM → ADM → módulos e colaboradores, com limites de escopo e auditoria.
 - [x] Atualizar estratégia e apresentação de auditoria com a hierarquia explícita.
 - [x] Revisar coerência e entregar a atualização hierárquica.
+
+## Auditoria final: LOTEADORA
+
+- [x] Inventariar os setores atuais de Loteadora, as conexões e os pontos de decisão do usuário.
+- [x] Revisar estoque, parceiros, clientes, vendas/contratos, financeiro, repasses e obras sem misturar naturezas.
+- [x] Preparar e entregar a matriz de manter, separar, unir, renomear ou adicionar para a decisão do usuário.
