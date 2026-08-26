@@ -16,7 +16,10 @@ O módulo financeiro da imobiliária deve ser um **subledger operacional orienta
 | `Receivable` | Direito de receber de uma parte | Devedor, valor bruto, vencimento, contrato, estado, referência de cobrança e regra de atualização. |
 | `Payable` | Obrigação a pagar ou repassar | Beneficiário, valor, vencimento/gatilho, natureza, documento e aprovadores. |
 | `Allocation` | Divisão de um evento entre categorias econômicas | Base, fórmula, valor, categoria, recebedor e versão da regra. |
+| `Entitlement` | Direito econômico calculado que pode ou não ser exigível | Natureza, base elegível, plano/versão, beneficiário, condição, bloqueio, valor e reversão. |
 | `BillingInstruction` | Instrução de cobrança por boleto, Pix ou outro meio | Cobrança, provedor, referência externa, vencimento, estado e retorno. |
+| `PaymentInstruction` | Instrução externa para cumprir um payable/repasse elegível | Beneficiário habilitado, parceiro, chave de idempotência, alçada, referência e estado. |
+| `ProviderAttempt / ProviderEvent` | Tentativa de saída e retorno externo correlacionado | Chave externa, digest/assinatura, horário, resultado, idempotência e exceção. |
 | `Settlement` | Informação de liquidação oriunda de banco/provedor | Identificador externo, valor, data/hora, meio, estado e evidência. |
 | `CashApplication` | Aplicação de liquidação a uma ou mais obrigações | Valor aplicado, regra de prioridade, diferença, ajuste e reconciliador. |
 | `AccountingExportBatch` | Lote para ERP fiscal/contábil | Empresa, competência, esquema, itens, status, retorno e divergências. |
@@ -33,6 +36,8 @@ O módulo financeiro da imobiliária deve ser um **subledger operacional orienta
 | Fechamento de repasse | Payable ao proprietário/beneficiário e itens de composição | Confundir valor de terceiro com faturamento próprio. |
 | Comissão de venda/locação | Recebível ou payable conforme papel econômico e contrato | Classificar como comissão/serviço sem documento e política fiscal. |
 | Estorno/distrato | Evento compensatório, regra de devolução e ajuste de saldo | Editar a liquidação original ou apagar versão anterior. |
+
+Um comprovante, uma tela de parceiro ou uma mensagem de atendimento pode existir antes da confirmação externa. Por isso, `proof_submitted`, `recorded`, `matched`, `settled`, `reversed` e `disputed` são leituras distintas do ciclo de prova; a liquidação só é promovida quando a referência externa, a regra vigente e a aplicação interna são compatíveis. [1]
 
 ## Fluxo de locação administrada
 
@@ -81,6 +86,7 @@ Cada cobrança deve ter valores em camadas. Isso evita que um único `valor_pago
 3. Diferença de tarifa, desconto, ajuste, devolução ou pagamento parcial abre um caso de reconciliação com motivo, evidência e responsável.
 4. O saldo de carteira é sempre derivado das obrigações e aplicações em estado válido; não pode ser digitado sem evento de ajuste autorizado.
 5. Repasses a proprietários e corretagem precisam mostrar tanto a base econômica quanto o estado de caixa e aprovação que sustenta o pagamento.
+6. A natureza de cada saída é explícita: repasse de terceiro, comissão/remuneração, distribuição de resultado, reembolso, retenção/ajuste ou exposição de garantia/antecipação. Nenhuma delas é classificada por um campo genérico de “pagamento”.
 
 ## Controles por função
 
@@ -93,3 +99,7 @@ Cada cobrança deve ter valores em camadas. Isso evita que um único `valor_pago
 | Gestor | Aprovar exceções dentro da política | Conceder a si mesmo acesso ilimitado ou remover trilhas. |
 
 O subledger cria a base para a contabilidade enxergar tudo o que faturou, cobrou, recebeu, repartiu e exportou — por empresa, período, ativo e contrato — sem forçar o contador a trabalhar a partir de planilhas dispersas ou conceder a qualquer usuário o poder de reescrever a história financeira.
+
+## Referência
+
+[1] [Integração auditada — pagamentos, beneficiários e cadastro de ativos](crm_integracao_estudos_pagamentos_ativos_evidencias.md)

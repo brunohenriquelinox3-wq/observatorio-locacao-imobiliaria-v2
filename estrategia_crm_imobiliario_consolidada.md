@@ -411,6 +411,20 @@ O curso de desenvolvimento recebido foi submetido a dez ciclos de confronto téc
 
 Os conflitos não foram escondidos: distrato, índice, correção, tributo, split, KYC, SSO e capacidade variam por contrato, período, empresa/SPE, parceiro e ambiente. O produto modela regra datada, evidência, exceção, alçada e reabertura; jurídico, contador/fiscal, DPO/compliance e parceiro habilitado validam o caso concreto. O mapa completo de decisões, fontes, limitações e backlog está na [consolidação dos dez ciclos](crm_auditoria_curso_10_ciclos_consolidacao.md) e no [caderno de evidências](crm_auditoria_curso_10_ciclos_evidencias.md). [50]
 
+## 8.14 Integração auditada: beneficiários, cascatas e ativos como provas de domínio
+
+Dois estudos de formação recentes foram confrontados com fontes primárias de registros públicos, parcelamento do solo, incorporação, distrato, locação, DIMOB e documentação técnica de idempotência. A revisão não muda a fronteira de responsabilidade do CRM; ela a torna mais precisa. O produto deve representar **direito econômico**, **instrução externa**, **tentativa/retorno de parceiro**, **settlement** e **conciliação** como objetos distintos. Do mesmo modo, deve representar **ativo**, **restrição**, **origem/participação da terra**, **registro** e **elegibilidade comercial** como dimensões diferentes. [51]
+
+| Integração promovida | Regra estratégica | O que o produto não fará |
+| --- | --- | --- |
+| Natureza de saída | Repasse de terceiro, comissão/remuneração e distribuição de resultado têm tipo, base, contrato, competência e trilha próprios. | Transformar preço de imóvel de terceiro em receita própria ou tratar qualquer recebedor como “comissão”. |
+| Cascata datada | O plano declara base (`valor_contratado`, `caixa_recebido`, `alocação_de_estoque` ou `resultado_verificado`), ordem, gatilho, limite, arredondamento, versão e reversão. | Aplicar prioridade, retenção, estorno ou tributo universalmente sem instrumento, regime e responsável habilitado. |
+| Restrição de ativo | Disponibilidade comercial é bloqueada por razão evidenciada, como registro pendente, alocação, garantia/caução, ônus, reserva, disputa ou outra política contextual. | Tratar `permutante` ou `caucionado` como rótulo suficiente, que qualquer usuário pode remover num dropdown. |
+| Dossiê registral e contratual | Matrícula/referência registral, ônus, quadro-resumo, memorial, contrato e revisão são evidências versionadas, com emissor, data, escopo e responsável. | Declarar regularidade, liberar ato sensível ou substituir diligência jurídica com campos de cadastro. |
+| Distrato e garantia | Distrato, antecipação e garantia são casos com versão contratual, estados, cálculo reproduzível, saldo/exposição e alçada. | Reescrever pagamentos, direitos ou estoque já registrados, nem codificar percentuais legais/fiscais como constantes. |
+
+> **Regra de implementação:** esta consolidação é uma mudança de estratégia e critérios de aceite. Ela não autoriza criar migrations, RPCs, bootstrap, instruções de pagamento, integrações financeiras ou publicação. A execução continua dependente de etapa apresentada, aprovação explícita, RLS, MFA, alçada, idempotência, testes permitir/negar e validação dos responsáveis de negócio.
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -520,3 +534,5 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [49] [Identidade, login, recuperação e bootstrap governado](crm_login_identidade_modelo.md) · [caderno de evidências](crm_login_identidade_evidencias.md)
 
 [50] [Auditoria aprofundada do curso — consolidação, conflitos e backlog](crm_auditoria_curso_10_ciclos_consolidacao.md) · [caderno de evidências e fontes primárias](crm_auditoria_curso_10_ciclos_evidencias.md)
+
+[51] [Integração dos estudos de pagamentos e ativos — inventário, evidências, conflitos e decisões](crm_integracao_estudos_pagamentos_ativos_evidencias.md)

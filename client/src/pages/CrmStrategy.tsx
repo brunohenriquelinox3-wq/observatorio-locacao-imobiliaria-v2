@@ -12,6 +12,8 @@ import "../course-audit.css";
 import "../cur-finance.css";
 import "../cur-divergence.css";
 import "../pente-fino.css";
+import "../payment-asset-integration.css";
+import { integrationBenefits, integrationLenses } from "@/lib/studyIntegration";
 import {
   ArrowDownRight, ArrowUpRight, BookOpenCheck, Check, ChevronRight, Compass,
   Banknote, Calculator, Database, FileCheck2, GitBranch, History, Landmark,
@@ -428,6 +430,50 @@ function CurDivergenceQueue() {
   );
 }
 
+function StudyIntegrationSection() {
+  const [active, setActive] = useState(0);
+  const lens = integrationLenses[active];
+
+  return (
+    <section id="estudos-integrados" className="study-integration">
+      <div className="content-section">
+        <div className="section-head">
+          <aside><Eyebrow>06C · ESTUDOS INTEGRADOS</Eyebrow><p>Dois materiais novos entraram como hipótese e só foram promovidos depois do confronto com fonte primária, limite operacional e owner profissional.</p></aside>
+          <div><h2>O estudo não acrescenta campos. <em>Ele melhora a prova que o campo precisa deixar.</em></h2><p>Alterne as lentes para ver o que foi promovido no modelo de produto, o que segue bloqueado e quais fontes sustentam cada fronteira. Este é um painel de estratégia; não movimenta recursos, não libera estoque e não substitui revisão especializada.</p></div>
+        </div>
+
+        <div className="study-integration-shell">
+          <aside className="study-integration-index">
+            <BookOpenCheck className="h-7 w-7" />
+            <span>⌖ CADERNO DE PROMOÇÃO</span>
+            <b>FONTE<br />→ PROVA<br />→ LIMITE</b>
+            <div className="study-integration-tabs" aria-label="Lentes da integração de estudos">
+              {integrationLenses.map((item, index) => <button key={item.key} type="button" onClick={() => setActive(index)} className={active === index ? "active" : ""} aria-pressed={active === index}><code>{item.code}</code><b>{item.key === "payments" ? "PAGAMENTOS" : item.key === "assets" ? "ATIVOS" : "LIMITES"}</b></button>)}
+            </div>
+            <p>Nenhuma regra vira código, cálculo ou botão sensível sem contrato, evidência, alçada, teste e decisão rastreável.</p>
+          </aside>
+
+          <article className="study-integration-panel" aria-live="polite">
+            <span>{lens.code} · DECISÃO PROMOVIDA</span>
+            <h3>{lens.title}</h3>
+            <p>{lens.text}</p>
+            <div className="study-integration-promoted">
+              {lens.promoted.map((item, index) => <div key={item}><code>0{index + 1}</code><span>{item}</span></div>)}
+            </div>
+            <div className="study-integration-block"><ShieldCheck className="h-5 w-5" /><div><b>FRONTEIRA PRESERVADA</b><p>{lens.blocked}</p></div></div>
+          </article>
+
+          <aside className="study-integration-proof">
+            <span>FONTE & RASTREABILIDADE</span>
+            <div className="study-integration-proof-row"><p>O caderno de evidências preserva hipótese recebida, fonte, decisão, conflito, limitação, owner profissional e impacto de produto. Uma fonte externa explica a regra; ela não executa uma decisão sozinha.</p><div className="study-integration-sources">{lens.sources.map((source) => <a key={source.href} href={source.href} target="_blank" rel="noreferrer">{source.label} <ArrowUpRight className="inline h-3 w-3" /></a>)}</div></div>
+            <div className="study-integration-benefits">{integrationBenefits.map((benefit) => <span key={benefit}>{benefit}</span>)}</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function CrmStrategy() {
   const [phase, setPhase] = useState(0);
   const [mode, setMode] = useState(0);
@@ -453,7 +499,7 @@ export default function CrmStrategy() {
     <div className="paper-noise" />
     <header className="site-header crm-header">
       <a href="/" className="brand"><img src={logo} alt="Símbolo Bússola de Lote"/><span><b>Observatório</b><small>ESTRATÉGIA CRM</small></span></a>
-      <nav><a href="/">Locação</a><a href="/vendas">Vendas & lotes</a><a href="#nucleo">Núcleo</a><a href="#cadastro">Cadastro</a><a href="#operacao">Pessoas & acesso</a><a href="#loteadora">Loteadoras</a><a href="#financeiro">Financeiro</a><a href="#cur-finance">CUR-01/02</a><a href="#divergencias">Divergências</a><a href="#benchmark">Benchmark</a><a href="#experiencia">Experiência</a><a href="#arquitetura">Arquitetura</a><a href="#auditoria">Auditoria</a><a href="#antierro">Anti-erro</a><a href="#pente-fino">Pente fino</a><a href="#identidade">Identidade & login</a><a href="#dez-ciclos">10 ciclos</a><a href="#pesquisa">Pesquisa contínua</a></nav>
+      <nav><a href="/">Locação</a><a href="/vendas">Vendas & lotes</a><a href="#nucleo">Núcleo</a><a href="#cadastro">Cadastro</a><a href="#operacao">Pessoas & acesso</a><a href="#loteadora">Loteadoras</a><a href="#financeiro">Financeiro</a><a href="#cur-finance">CUR-01/02</a><a href="#divergencias">Divergências</a><a href="#estudos-integrados">Estudos integrados</a><a href="#benchmark">Benchmark</a><a href="#experiencia">Experiência</a><a href="#arquitetura">Arquitetura</a><a href="#auditoria">Auditoria</a><a href="#antierro">Anti-erro</a><a href="#pente-fino">Pente fino</a><a href="#identidade">Identidade & login</a><a href="#dez-ciclos">10 ciclos</a><a href="#pesquisa">Pesquisa contínua</a></nav>
       <a href="#roteiro" className="nav-cta">Ver roteiro <ArrowDownRight className="h-4 w-4"/></a>
     </header>
 
@@ -478,6 +524,8 @@ export default function CrmStrategy() {
       <CurFinancePanel />
 
       <CurDivergenceQueue />
+
+      <StudyIntegrationSection />
 
       <section id="benchmark" className="crm-benchmark"><div className="content-section"><div className="section-head"><aside><Eyebrow>07 · BENCHMARK COMPETITIVO</Eyebrow><p>Dez referências públicas mostram o que o mercado já espera — e onde a nossa estratégia precisa ser mais profunda.</p></aside><div><h2>Não copiar dez CRMs. Entender onde o contexto ainda se desfaz.</h2><p>O estudo analisa mensagem comercial, conteúdo, módulos e lacunas de evidência em Kenlo, Vista/Loft, Imobzi, Jetimob, Imoview, ImobTotal, CV CRM, Facilita, Sienge e Anapro. A ausência em páginas públicas não é ausência de produto.</p></div></div><div className="benchmark-map"><div className="benchmark-spine"><Radar className="h-6 w-6"/><span>10 REFERÊNCIAS</span><b>o piso do mercado</b><small>comercial, lançamento e ERP</small><i/><Compass className="h-6 w-6"/><span>1 TESE PRÓPRIA</span><b>contexto até o fechamento</b><small>direitos, carteira e evidência</small></div><div className="benchmark-console"><div className="benchmark-tabs">{benchmarkLenses.map((item, index) => <button key={item.key} onClick={() => setBenchmarkLens(index)} className={benchmarkLens === index ? "active" : ""} aria-pressed={benchmarkLens === index}><code>0{index + 1}</code>{item.title}</button>)}</div><article><span>{benchmark.tag}</span><h3>{benchmark.title}</h3><p>{benchmark.text}</p><div className="benchmark-companies">{benchmark.companies.map(company => <small key={company}>{company}</small>)}</div><ul>{benchmark.fields.map((field, index) => <li key={field}><code>0{index + 1}</code>{field}</li>)}</ul><div><ShieldCheck className="h-5 w-5"/><b>CRITÉRIO DE PRODUTO</b><p>{benchmark.gate}</p></div></article></div><aside className="benchmark-rule"><BookOpenCheck className="h-6 w-6"/><span>REGRA DE LEITURA</span><strong>Declaração pública não é prova de cobertura integral.</strong><p>Cada achado guarda fonte, data, escopo e limitação. O benchmark vira requisito apenas quando o problema aparece também em parceiro-piloto e tem critério de sucesso verificável.</p><div><small>FONTE</small><small>LIMITAÇÃO</small><small>PILOTO</small></div></aside></div><div className="benchmark-lanes"><div><b>PISO COMERCIAL</b><span>lead, canal, agenda, proposta, estoque, reserva e mobilidade são expectativas básicas</span></div><div><b>DOMÍNIO LOTEADORA</b><span>gleba, fase, lote, contrato, carteira, permuta e pós-entrega são uma linha de produto própria</span></div><div><b>DIFERENCIAL</b><span>direitos econômicos, subledger, contador e evidência levam o campo até o fechamento</span></div></div><div className="benchmark-note"><span>POSICIONAMENTO REVISADO</span><b>O sistema operacional de relações, direitos econômicos e evidências para imobiliárias e loteadoras que precisam vender, receber, distribuir e fechar com contexto.</b><a href="#roteiro">Ver roteiro priorizado <ArrowDownRight className="h-4 w-4"/></a></div></div></section>
 

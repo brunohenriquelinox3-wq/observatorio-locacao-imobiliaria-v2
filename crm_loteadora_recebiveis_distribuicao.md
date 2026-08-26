@@ -12,6 +12,8 @@ O caso de loteamento em terreno de terceiro, parceria e repartição de receitas
 | --- | --- | --- |
 | `DevelopmentProject` | Empreendimento/loteamento ou projeto de desenvolvimento | Empresa/SPE, gleba, município, fases, políticas, orçamento e responsáveis. |
 | `InventoryUnit` | Quadra/lote/unidade com estados físicos, registrais e comerciais | Projeto, matrícula/referência, estado de estoque, reserva, contrato, restrições e alocações. |
+| `RegistryEvidence` | Certidão, memorial, registro, aprovação ou outra evidência registral/documental versionada | Ativo/projeto, emissor, data, escopo, arquivo/hash, resultado de revisão, validade operacional e responsável. |
+| `AssetOriginInterest` | Origem da terra/unidade e participação econômica vinculada ao ativo | Natureza, parte, objeto/fração, instrumento, vigência, condição, base e entitlement relacionado. |
 | `ProjectCostCommitment` | Compromisso econômico de terra, obra, legalização, venda ou parceiro | Fornecedor/parte, categoria, contrato, orçamento, gatilho e centro de responsabilidade. |
 | `LotSaleContract` | Contrato de venda, cessão, permuta ou ajuste ligado a um lote | Comprador/grupo, lote, preço, plano, condições, assinatura, versões e situação. |
 | `ReceivableSchedule` | Agenda de entrada econômica do contrato | Entrada, parcelas, índice, vencimento, condição, valor base e versão. |
@@ -31,6 +33,8 @@ Um lote precisa ter ao menos quatro dimensões em paralelo. Uma única coluna �
 | Registral/documental | Referência criada, em diligência, registro evidenciado, pendência, em revisão | Jurídico/registro. |
 | Comercial | Disponível, hold, reservado, em proposta, contratado, devolvido ao estoque, bloqueado | Comercial com alçada. |
 | Econômico | Sem carteira, agenda ativa, parcialmente liquidado, inadimplente, distrato em análise, quitado, cedido | Financeiro/carteira. |
+
+Uma restrição não será armazenada apenas como rótulo de inventário. `caução/garantia`, alocação de permuta, ônus, reserva, disputa ou pendência registral devem registrar **motivo**, evidência, escopo, vigência e alçada de liberação. A disponibilidade resultante é uma projeção dessas dimensões: um lote não volta ao estoque porque alguém editou o estado comercial; volta somente quando a condição comercial, jurídica, financeira e documental compatível estiver comprovada. [2]
 
 ## Agenda de recebíveis
 
@@ -66,7 +70,7 @@ flowchart TD
 
 | Elemento | Exemplo | Regra de implementação |
 | --- | --- | --- |
-| Base | Valor bruto da entrada, líquido conciliado, receita elegível, caixa após categoria definida | A fórmula precisa apontar para campos e eventos, não texto descritivo. |
+| Base | Valor contratado, líquido conciliado, receita elegível, alocação de lote/unidade ou resultado verificado | A fórmula precisa apontar para campos e eventos, não texto descritivo; tipo de base não pode ser inferido pelo percentual. |
 | Sequência | Primeiro despesas aprovadas, depois corretagem, depois participação da terra | Ordem explícita e versionada; ordem muda o resultado. |
 | Tipo de parcela | Fixo, percentual, faixa progressiva, mínimo/máximo, percentual residual | Categoria econômica separada de fórmula matemática. |
 | Beneficiário | Corretor, imobiliária, captador, proprietário da terra, parceiro, sócio, fornecedor | Pessoa/empresa, conta externa autorizada e relação vigente. |
@@ -82,6 +86,7 @@ flowchart TD
 3. O sistema valida que percentuais concorrentes e valores mínimos/máximos não produzam valor negativo ou excedam a base, exceto se existir regra de reserva/adiantamento aprovada com conta específica.
 4. Recebedor com documentação, relação, poder, conta externa ou condição pendente fica em `blocked`; seu direito é preservado, mas não se cria instrução de pagamento.
 5. O resultado deve gerar uma tabela imutável de `DistributionEntitlement`, com fórmula, entradas, regra, valor, arredondamento, gatilho e aprovadores reproduzíveis por auditoria.
+6. O entitlement permanece distinto de instrução, tentativa do parceiro, retorno externo, settlement e conciliação. Comprovante anexado é evidência recebida, não liquidação confirmada por si só.
 
 ## Padrões de distribuição da loteadora
 
@@ -93,6 +98,8 @@ flowchart TD
 | Permuta física | Lotes/unidades elegíveis, não necessariamente caixa | Dono da terra, parceiro, SPE | O direito pode ser a unidade/lote ou um crédito; não forçar pagamento financeiro. |
 | Lucro de projeto | Resultado definido após política de custos, provisões, impostos e aprovações | Sócios, investidores, parceiros com participação | Exige definição contábil/contratual fora de um simples “percentual de venda”. |
 | Distrato | Valores devolvidos/retidos/compensados conforme instrumento e análise | Comprador, corretores, permutantes, carteira | Recalcula por caso e versão; não reverte pagamentos anteriores sem política/evidência. |
+
+As quatro bases de direito não devem colapsar numa única “porcentagem”: participação sobre valor contratado, participação sobre caixa recebido, alocação física de lote/unidade e distribuição de resultado verificado possuem eventos, condições e efeitos próprios. Cessão, distrato, garantia e correção abrem versões/casos compensatórios; não alteram silenciosamente o direito ou a liquidação histórica. [2]
 
 ## Permuta e proprietário da terra
 
@@ -122,3 +129,5 @@ Esse desenho sustenta o cenário de um boleto ou Pix que, após pagamento concil
 ## Referência
 
 [1] [Receita Federal — Solução de Consulta SRRF06/Disit nº 6.018/2018](http://normas.receita.fazenda.gov.br/sijut2consulta/anexoOutros.action?idArquivoBinario=64075)
+
+[2] [Integração auditada — pagamentos, beneficiários e cadastro de ativos](crm_integracao_estudos_pagamentos_ativos_evidencias.md)

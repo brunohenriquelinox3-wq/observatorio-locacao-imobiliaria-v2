@@ -232,3 +232,13 @@
 - [ ] Implementar jornadas de criação de organização, delegação, suspensão e revogação com alçada e evidência.
 - [ ] Validar autenticação, MFA, RLS, permitir/negar, auditoria e recuperação; revisar desktop/mobile.
 - [ ] Salvar checkpoint e entregar a fundação administrativa.
+
+## Integração de novos estudos: pagamentos e cadastro de ativos
+
+- [x] Inventariar módulos, alegações, modelos e lacunas dos estudos de pagamentos e cadastro de loteamentos/imóveis.
+- [x] Confrontar regras de repasse, cascata, rateio, estorno e beneficiários com fontes prioritárias e limites de parceiro habilitado.
+- [x] Confrontar cadastro de empreendimentos, glebas, unidades, origem, matrícula e restrições comerciais com fontes prioritárias.
+- [x] Consolidar conflitos, decisões, limites e requisitos novos na estratégia e no backlog.
+- [x] Atualizar documentos canônicos e o observatório; validar desktop/mobile.
+- [x] Corrigir a precedência da rota `/crm` para que o observatório estratégico não seja interceptado pela rota inicial.
+- [x] Salvar checkpoint e entregar a atualização dos estudos integrados.

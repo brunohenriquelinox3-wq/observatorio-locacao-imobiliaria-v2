@@ -13,11 +13,11 @@ function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
       <Route path={"/vendas"} component={VendasUrbanas} />
       <Route path={"/crm"} component={CrmStrategy} />
       <Route path={"/administracao"} component={PlatformAdmin} />
       <Route path={"/404"} component={NotFound} />
+      <Route path={"/"} component={Home} />
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
