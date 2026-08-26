@@ -63,6 +63,10 @@ Esta é a coluna central para empresas que trabalham com glebas, empreendimentos
 | **Obras e infraestrutura** | Cronograma, pendências, marcos, evidências e vínculo com empreendimento. | Empreendimento/fase + owner técnico + evidência. | Deve entrar desde o início da Loteadora ou ser módulo futuro? |
 | **Relatórios de loteadora** | Estoque, vendas, carteira, inadimplência, recebíveis, parceiros e desempenho por empreendimento. | Recorte por empresa, empreendimento, loteamento, fase e lote. | Quais relatórios são obrigatórios para a diretoria da loteadora? |
 
+### Convenção aprovada de Quadras e Lotes
+
+Cada **Quadra** é a matriz dos seus lotes. A estrutura será exibida como `Q12 · L1`, `Q12 · L2` e assim sucessivamente, até `Q12 · L100` quando a quadra possuir cem lotes. O Cadastro de Loteamentos cria essa estrutura; o Estoque/Mapa trabalha a situação comercial do mesmo lote, sem duplicar o registro.
+
 ### Financeiro da Loteadora: regra central
 
 O setor financeiro é o coração operacional da loteadora. Após a finalização do contrato, as parcelas e instruções de cobrança ficam ligadas à carteira. O sistema deve permitir localizar rapidamente uma compra por **CPF/CNPJ**, **proponente principal**, **coadquirente**, **empreendimento**, **loteamento**, **lote**, **contrato** ou **parcela**.

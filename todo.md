@@ -326,3 +326,9 @@
 - [x] Registrar a divisão aprovada entre Cadastro de Loteamentos e Estoque/Mapa de Lotes, sem duplicar dados de lote/quadra.
 - [x] Atualizar estratégia, matriz de auditoria e apresentação de setores com a separação aprovada.
 - [x] Revisar coerência, salvar checkpoint e entregar a decisão aplicada.
+
+## Convenção aprovada: Quadra como matriz de Lotes
+
+- [x] Formalizar a relação obrigatória QUADRA → LOTES e o padrão de identificação `Qn · Ln` com até 100 lotes por quadra.
+- [x] Atualizar estratégia, matriz de Loteadora e apresentação de auditoria com a convenção de nomenclatura.
+- [x] Revisar coerência, salvar checkpoint e entregar a convenção aplicada.

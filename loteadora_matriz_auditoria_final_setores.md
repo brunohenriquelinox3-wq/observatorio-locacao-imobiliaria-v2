@@ -20,6 +20,8 @@
 | 8 | **Obras e Infraestrutura** | **DECIDIR** se entra já ou como módulo posterior. | É relevante para loteadora, mas obra não pode atrasar a fundação comercial/financeira se não for prioridade do seu modelo. | Cronograma, marcos, pendências, responsáveis, evidências, infraestrutura e alertas vinculados ao empreendimento/fase. |
 | 9 | **Relatórios da Loteadora** | **NÃO criar como setor principal agora.** | Relatórios devem aparecer dentro de cada setor e no Painel Loteadora/ADM, evitando um menu de relatórios vazio ou duplicado. | Atalhos contextuais para estoque, vendas, carteira, inadimplência, recebíveis, parceiros, repasses e desempenho por empreendimento. |
 
+> **Convenção aprovada:** a **Quadra** é sempre a matriz de seus lotes. A identificação operacional usa `Qn · Ln`: por exemplo, `Q12 · L1` até `Q12 · L100`. Cadastro de Loteamentos cria a matriz; Estoque/Mapa de Lotes opera o mesmo lote sem duplicá-lo.
+
 ## 2. Financeiro e Carteira — estrutura interna recomendada
 
 O **Financeiro e Carteira** permanece o setor mais importante da Loteadora. Ele deve ter abas ou telas internas, e não misturar tudo em uma tabela única.

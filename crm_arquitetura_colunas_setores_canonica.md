@@ -40,8 +40,8 @@
 
 | Setor | Conteúdo definido pelo usuário | Relação principal |
 | --- | --- | --- |
-| **Cadastro de Loteamentos** | Glebas, empreendimentos, fases, quadras, lotes, unidades, parâmetros, evidências, registros, documentos e tabelas-base. | Cria e mantém a estrutura `gleba → empreendimento → fase → quadra → lote/unidade`, sem duplicar a operação diária do estoque. |
-| **Estoque/Mapa de Lotes** | Mapa/espelho, disponibilidade, alocação, restrição, tabela vigente, hold, reserva, proposta, contrato e situação comercial do lote já cadastrado. | Opera a disponibilidade como projeção de registro, alocação, restrição e compromisso; não recria gleba, fase, quadra ou lote. |
+| **Cadastro de Loteamentos** | Glebas, empreendimentos, fases, quadras, lotes, unidades, parâmetros, evidências, registros, documentos e tabelas-base. | Cria e mantém a estrutura `gleba → empreendimento → fase → quadra → lote/unidade`; a quadra é a matriz dos lotes, identificados como `Qn · Ln` até `Qn · L100`, sem duplicar a operação diária do estoque. |
+| **Estoque/Mapa de Lotes** | Mapa/espelho, disponibilidade, alocação, restrição, tabela vigente, hold, reserva, proposta, contrato e situação comercial do lote já cadastrado. | Opera os lotes estruturados por quadra (`Q12 · L1`, `Q12 · L2`); não recria gleba, fase, quadra ou lote e não altera sua identidade estrutural. |
 | **Sócios e parceiros** | Sócios, parceiros e fazendeiros/proprietários da terra quando participantes do negócio. | Uma parte pode ter papel de proprietário da terra, permutante, parceiro, sócio ou beneficiário; cada vínculo possui instrumento, objeto, vigência e condição. |
 | **Clientes** | Cadastro de proponentes, compradores, coadquirentes, representantes e empresas envolvidas na compra. | Uma mesma pessoa/empresa pode aparecer em vários contratos e papéis sem duplicar cadastro. |
 | **Vendas e contratos** | Ligação entre estoque de lote, cliente(s), proposta, reserva, venda e novo contrato. | Um lote só avança se estiver elegível; contrato preserva versão de tabela, partes, condição, evidência e alçada. |

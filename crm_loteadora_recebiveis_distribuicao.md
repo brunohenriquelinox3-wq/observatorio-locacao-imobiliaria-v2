@@ -11,7 +11,7 @@ O caso de loteamento em terreno de terceiro, parceria e repartição de receitas
 | Entidade | O que representa | Relações essenciais |
 | --- | --- | --- |
 | `DevelopmentProject` | Empreendimento/loteamento ou projeto de desenvolvimento | Empresa/SPE, gleba, município, fases, políticas, orçamento e responsáveis. |
-| `InventoryUnit` | Quadra/lote/unidade com estados físicos, registrais e comerciais | Projeto, matrícula/referência, estado de estoque, reserva, contrato, restrições e alocações. |
+| `InventoryUnit` | Lote/unidade com estados físicos, registrais e comerciais, obrigatoriamente ligado à sua quadra matriz | Projeto, fase, quadra, número local do lote, código exibido `Qn · Ln`, matrícula/referência, estado de estoque, reserva, contrato, restrições e alocações. |
 | `RegistryEvidence` | Certidão, memorial, registro, aprovação ou outra evidência registral/documental versionada | Ativo/projeto, emissor, data, escopo, arquivo/hash, resultado de revisão, validade operacional e responsável. |
 | `AssetOriginInterest` | Origem da terra/unidade e participação econômica vinculada ao ativo | Natureza, parte, objeto/fração, instrumento, vigência, condição, base e entitlement relacionado. |
 | `ProjectCostCommitment` | Compromisso econômico de terra, obra, legalização, venda ou parceiro | Fornecedor/parte, categoria, contrato, orçamento, gatilho e centro de responsabilidade. |
