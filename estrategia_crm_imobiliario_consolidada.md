@@ -469,6 +469,20 @@ Esta estratégia passa a operar por uma disciplina raiz: **nenhuma atividade é 
 
 > **Regra de eficácia:** o produto só é eficaz quando alcança o resultado observável no escopo e no risco declarados; só é eficiente quando o faz reduzindo retrabalho, duplicidade e raio de erro. Uma tela renderizada, uma fonte isolada, um teste feliz ou uma urgência de negócio não substituem essa prova.
 
+## 8.18 Sidebar moderna: navegação como orientação, não como permissão
+
+A barra lateral passa a ser tratada como infraestrutura de orientação do CRM. Sua árvore é declarativa e contextual: seção, item ou grupo carregam rota, prioridade, capability, escopo visual e feature flag. A interface pode reduzir ruído por divulgação progressiva, mas **não decide acesso**; URL, RPC, arquivo, exportação e comando continuam sujeitos à policy, RLS, alçada, MFA/step-up e vigência aplicáveis. [55]
+
+| Aspecto | Decisão de estratégia | Prova de aceite |
+| --- | --- | --- |
+| Estrutura | `nav > ul > li`; destino é link e grupo expansível é botão com `aria-expanded`, `aria-controls` quando aplicável e `aria-current` no destino atual. | Leitor de tela, Tab, Enter/Espaço, rota profunda e ancestral ativo preservam significado e operação. |
+| Hierarquia | Até dois níveis na barra; aprofundamento ocorre dentro da tela, por busca ou comando contextual. | Tarefa não exige árvore de terceiro nível; agrupamento é explicado por frequência/contexto, não organograma. |
+| Colapso | Expandida mantém rótulos; icon rail mantém nome acessível, tooltip/flyout acionável, Escape e estado de foco previsível. | Teclado, touch, zoom e leitor de tela completam a mesma navegação sem depender de hover. |
+| Mobile | Drawer só é modal quando fundo é inerte, foco entra/contem-se/retorna e fechamento é visível. | Tab/Shift+Tab, Escape, overlay, orientação e retorno ao gatilho passam em viewport móvel. |
+| Visual | Tokens, um acento funcional, foco visível, alvo proporcional, sinal não cromático e movimento reduzido. | Temas, contraste, foco, 200% zoom e preferência de movimento preservam leitura e ação. |
+
+> **Limite de segurança:** ocultar um item não é negar acesso. Preferência de sidebar não cria capability, persiste dado sensível ou determina contexto de organização/SPE. A navegação mostra apenas o que a identidade já pode descobrir e continua sendo testada contra deep link, API e comando.
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -586,3 +600,5 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [53] [Auditoria competitiva em cinco ciclos — entidades, evidências, confrontos e decisões](crm_auditoria_competitiva_consolidacao.md)
 
 [54] [Diretriz raiz — execução sem atalhos, prova antes de promoção](crm_diretriz_execucao_sem_atalhos.md)
+
+[55] [Auditoria de sidebar moderna — decisões, evidências e critérios](crm_sidebar_moderna_consolidacao.md)

@@ -269,3 +269,11 @@
 - [x] Consolidar a diretriz raiz de evidência, revisão, teste prático, validação proporcional ao risco, owner e aprendizado contínuo.
 - [x] Atualizar estratégia, backlog e observatório com os critérios permanentes; validar desktop/mobile.
 - [x] Salvar checkpoint e entregar a diretriz integrada.
+
+## Auditoria de sidebar moderna
+
+- [x] Inventariar padrões, estados, comportamento, acessibilidade e limites do curso e da referência de sidebar enviados.
+- [x] Confrontar estrutura de navegação, acordeão, recolhimento, drawer móvel e foco com fontes prioritárias.
+- [x] Consolidar decisões, conflitos, owners, limites e critérios de aceite da sidebar para CRM.
+- [x] Atualizar estratégia, backlog e observatório; validar desktop/mobile.
+- [x] Salvar checkpoint e entregar a auditoria de sidebar.
