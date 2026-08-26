@@ -60,7 +60,7 @@ Esta é a coluna central para empresas que trabalham com glebas, empreendimentos
 | **Propostas, Reservas e Contratos** | Proposta versionada, reserva com prazo, escolha de lote, tabela, venda, documentação, contrato, pós-venda e visão de contratos realizados por lote. | Estoque elegível + Cliente Loteadora + dossiê/checklist + condição + reserva transacional + contrato + carteira. | **Decisão aprovada:** Reserva permanece como etapa interna, com prazo, alçada, concorrência, evidência e transição auditável. |
 | **Financeiro Loteadora** | Boletos/instruções, parcelas, recebíveis, pagáveis, carteira, atrasos, alertas, comprovantes, acordos e filtros por empreendimento/loteamento. | Contrato → parcela/instrução → retorno → conciliação → carteira. | Quais telas financeiras precisam existir primeiro: carteira, cobrança, baixa, acordo, repasse ou relatórios? |
 | **Repasses e Distribuição** | Planos/regras, direitos de corretores, imobiliária, sócios, parceiros e permutantes, por entrada, parcela regular, intermediária ou outro evento contratual, em valor fixo, percentual ou regra híbrida; alçadas, instruções e conciliação própria. | Direito datado/versionado + evento + base + gatilho + prioridade + recebedor/grupo + evidência + instrução/settlement separados. | **Decisão aprovada:** setor próprio conectado ao Financeiro e Carteira; não mistura direito, cobrança, caixa e conciliação. |
-| **Obras e infraestrutura** | Cronograma, pendências, marcos, evidências e vínculo com empreendimento. | Empreendimento/fase + owner técnico + evidência. | Deve entrar desde o início da Loteadora ou ser módulo futuro? |
+| **Obras e Infraestrutura** *(módulo posterior)* | Na fundação: marcos, pendências, evidências, restrições, owners e vínculo com empreendimento/fase/lote. Futuramente: cronograma, medições, riscos, mudanças e compromissos de obra. | Empreendimento/fase + owner técnico + evidência + policy de impacto. | **Decisão aprovada:** módulo posterior; marco técnico não altera estoque, contrato, carteira ou repasse sozinho. |
 | **Relatórios de loteadora** | Estoque, vendas, carteira, inadimplência, recebíveis, parceiros e desempenho por empreendimento. | Recorte por empresa, empreendimento, loteamento, fase e lote. | Quais relatórios são obrigatórios para a diretoria da loteadora? |
 
 ### Convenção aprovada de Quadras e Lotes
@@ -86,6 +86,10 @@ A lente de **Contratos Realizados** fica dentro de Vendas e Contratos, ligada ao
 ### Reserva dentro da jornada comercial
 
 Reserva não abre um setor separado. Ela nasce de proposta e lote elegíveis, guarda prazo, condição, owner, alçada e evidência, e só se torna ativa por transação que bloqueie concorrência incompatível. Quando vence, entra em análise e revalida contrato, assinatura, bloqueio, disputa e situação do lote antes de qualquer liberação. Assim, o CRM evita dupla reserva/dupla venda e não devolve lote ao disponível apenas porque o relógio mudou.
+
+### Obras e Infraestrutura: decisão de faseamento
+
+O módulo operacional de Obras e Infraestrutura não entra agora. A Loteadora conserva, desde a fundação, marcos técnicos, evidências, restrições, owners e alertas ligados a empreendimento, fase, quadra ou lote; isso permite contextualizar a elegibilidade sem transformar um marco em liberação ou promessa. Cronograma detalhado, medições, riscos, mudanças, fornecedores, compromissos e análises entram somente depois dos gates de operação, segurança, integração financeira e rollout.
 
 ### Transparência contratual de Sócios e Parceiros
 

@@ -14,7 +14,7 @@
 | 5 | **Propostas, Reservas e Contratos** | Fundamental. | Proposta versionada, reserva com prazo/alçada, escolha de lote, venda, documentação, contrato, pós-venda e lente de contratos realizados por lote. | **Decisão aprovada:** Reserva é etapa interna da jornada, com estados/evidências próprios e sem setor separado. |
 | 6 | **Financeiro Loteadora** | Fundamental e coração financeiro. | Boletos/instruções, parcelas, recebíveis, pagáveis, atrasos, carteira, acordos, comprovantes e alertas. | Quais telas vêm primeiro: carteira, cobrança, baixa/conciliação, acordos, contas a pagar ou relatórios? |
 | 7 | **Repasses e Distribuição** | Fundamental e setor próprio conectado ao Financeiro. | Comissão, direito de parceiro, permutante, sócio, imobiliária, captador, planos, bloqueios, instruções, returns e distribuição datada. | **Decisão aprovada:** setor próprio; direito, instrução, settlement e conciliação não se confundem com cobrança/caixa. |
-| 8 | **Obras e Infraestrutura** | Opcional/faseável. | Cronograma, marcos, pendências e evidências de implantação. | Entra já na primeira versão ou vira módulo posterior? |
+| 8 | **Obras e Infraestrutura** | Módulo posterior. | Na fundação: marcos, evidências, restrições, owners e alertas de implantação. Futuramente: cronograma, medições, riscos, mudanças e compromissos próprios. | **Decisão aprovada:** módulo posterior; não atrasar comercial, contratos, carteira e repasses. |
 | 9 | **Relatórios de Loteadora** | Necessário, mas pode ser tela dentro de Financeiro/ADM. | Estoque, vendas, carteira, inadimplência, recebíveis, parceiros e desempenho por empreendimento. | Deve ser setor próprio ou atalhos dentro dos setores operacionais? |
 
 ## Conexões que nenhum ajuste de menu pode quebrar
@@ -29,7 +29,7 @@
 | Vendas e Contratos | Financeiro Loteadora | Contrato cria parcelas/cobranças e carteira; boleto não confirma pagamento. |
 | Financeiro Loteadora | Repasses e Distribuição | Caixa/conciliação e condições da regra determinam direito elegível; repasse não é criado por etiqueta percentual isolada. Recebível do comprador, entitlement, instrução e settlement permanecem fatos separados. |
 | Repasses e Distribuição | Painel de Sócio/Parceiro | O parceiro/grupo vê projeções, realizado, contratos, lotes e inadimplência apenas no escopo concedido; painel não é setor administrativo. |
-| Obras e Infraestrutura | Cadastro de Loteamentos / Estoque | Marco técnico pode gerar restrição ou alerta, mas não altera estoque nem libera venda sozinho. |
+| Obras e Infraestrutura | Cadastro de Loteamentos / Estoque | Na fundação, marco técnico pode gerar restrição ou alerta, mas não altera estoque, contrato, carteira ou repasse, nem libera venda sozinho. O módulo operacional exige gates próprios. |
 
 ## Pontos que precisam de decisão do usuário
 
@@ -39,7 +39,7 @@
 | Parceiros da terra | Dentro de Sócios e Parceiros. | Setor próprio de Origem da Terra/Permuta. | **Decisão aprovada:** manter dentro de Sócios e Parceiros, com modalidades completas e vínculos contratuais independentes. |
 | Reserva | Etapa de Vendas e Contratos. | Setor próprio de Reservas. | Etapa de Vendas inicialmente; virar setor próprio somente se houver central de reservas/canais concorrentes. |
 | Repasses | Aba dentro do Financeiro. | Setor próprio. | Setor próprio dentro da coluna quando houver muitos parceiros, permutantes e cascatas; caso contrário, aba de Financeiro. |
-| Obras | Já no menu inicial. | Módulo posterior. | Tratar como módulo posterior, mantendo só marcos/evidências essenciais no cadastro de empreendimento. |
+| Obras | Já no menu inicial. | Módulo posterior. | **Decisão aprovada:** módulo posterior, mantendo na fundação marcos, evidências, restrições, owners e alertas essenciais. |
 | Relatórios | Coluna/setor próprio. | Atalhos por setor e consolidação no ADM. | Relatórios operacionais dentro de cada setor e visão executiva no ADM. |
 
 ## Separações que devem continuar obrigatórias

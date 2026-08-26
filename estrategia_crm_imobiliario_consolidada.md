@@ -222,6 +222,12 @@ Ao vencer, a reserva entra em análise e reavalia contrato, assinatura, bloqueio
 
 O setor torna explícitas quatro linhas diferentes: **recebível do comprador**, **direito econômico**, **instrução externa** e **settlement do repasse**. Um evento conciliado na carteira pode tornar um direito elegível conforme a regra, mas documento, vínculo, limite, alçada ou rota habilitada ainda podem bloqueá-lo. Direito autorizado não é liquidação; retorno externo não é conciliação; distrato, glosa ou estorno geram compensação versionada e auditável, sem reescrever fatos passados. [43]
 
+### Obras e Infraestrutura: módulo posterior com sinais mínimos na fundação
+
+Obras e Infraestrutura será ativado como **módulo posterior**, após a fundação comercial, contratual, de carteira e de distribuição demonstrar estabilidade. Enquanto isso, Cadastro de Loteamentos e Estoque/Mapa preservam somente marcos técnicos, evidências, restrições, owners, vigência e alertas que possam contextualizar ou exigir revisão de elegibilidade. Um marco declarado, uma foto, um laudo ou um alerta técnico não confirma obra concluída, entrega, regularidade, disponibilidade, pagamento ou direito econômico.
+
+O módulo futuro terá domínio próprio para baseline, pacotes de trabalho, medições, riscos, mudanças, compromissos de obra, comunicações e análises. Sua ativação depende de owners técnicos, vocabulário/evidência, matriz de impactos transacionais, integração financeira controlada, policies e rollout testado. Ele não poderá mudar lote, proposta, contrato, carteira, repasse ou comunicação ao comprador por inferência de estado técnico. [44]
+
 ### Direitos por parcela, grupos de participação e aporte de capital
 
 Na Loteadora, o simples cadastro de uma pessoa como sócio, parceiro, proprietário da terra, permutante, investidor, captador, corretor, imobiliária, credor ou beneficiário **não cria recebimento**. O direito nasce de vínculo e instrumento próprios e deve indicar qual evento pode alimentá-lo: entrada, parcela regular, intermediária, reforço, amortização, acordo, resultado apurado ou outro evento contratado. A regra pode ser percentual, valor fixo ou híbrida, mas sempre declara base, escopo, vigência, ordem, teto, condição, versão e memória de cálculo. A plataforma diferencia projeção, direito aguardando condição, recebimento em análise, direito elegível, instrução autorizada, liquidação pendente de conciliação, conciliado, bloqueado e reversão. [36]

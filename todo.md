@@ -373,3 +373,9 @@
 - [x] Definir a fronteira, as áreas internas e os objetos do setor Repasses e Distribuição.
 - [x] Definir estados, integrações e controles entre direito, instrução, liquidação, conciliação, Financeiro e Carteira.
 - [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.
+
+## Decisão aprovada: Obras e Infraestrutura como módulo posterior
+
+- [x] Definir marcos, evidências, restrições e alertas de obra que permanecem na fundação da Loteadora.
+- [x] Definir fronteiras, objetos, integrações e gates para ativar futuramente o módulo de Obras e Infraestrutura.
+- [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.

@@ -17,7 +17,7 @@
 | 5 | **Propostas, Reservas e Contratos** | **UNIR** em um setor comercial. | **Decisão aprovada:** Reserva é uma etapa da jornada; separar no primeiro momento criaria cliques sem ganho. | Propostas versionadas, escolha de lote, reserva com prazo/alçada/owner, aprovação, documentação, condições comerciais, contratos, aditivos, cessões, distratos, pós-venda comercial e lente de contratos realizados por lote. |
 | 6 | **Financeiro e Carteira** | **MANTER** como setor central e principal. | É o coração financeiro da loteadora e concentra o ciclo de parcelas, cobrança, recebíveis, pagáveis e carteira. | Boletos/instruções, parcelas, vencimentos, recebíveis, pagáveis, pagamentos, retorno, conciliação, atrasos, acordos, comprovantes, alertas e filtros. |
 | 7 | **Repasses e Distribuição** | **SEPARAR** do Financeiro como setor próprio, porém conectado. | **Decisão aprovada:** muitos recebedores, regras e exceções exigem leitura própria sem colapsar no fluxo de cobrança. | Planos/versionamento, comissões, corretor, imobiliária, captador, fazendeiro/proprietário da terra, permutante, parceiro, sócio, direitos, bloqueios, alçadas, instruções, retornos, settlements, compensações e auditoria. |
-| 8 | **Obras e Infraestrutura** | **DECIDIR** se entra já ou como módulo posterior. | É relevante para loteadora, mas obra não pode atrasar a fundação comercial/financeira se não for prioridade do seu modelo. | Cronograma, marcos, pendências, responsáveis, evidências, infraestrutura e alertas vinculados ao empreendimento/fase. |
+| 8 | **Obras e Infraestrutura** | **MÓDULO POSTERIOR**. | **Decisão aprovada:** é relevante, mas não deve atrasar a fundação comercial/financeira/de repasses. | Na fundação: marcos, evidências, restrições, owners e alertas. Posteriormente: cronograma, pacotes, medições, riscos, mudanças, compromissos e análises próprios. |
 | 9 | **Relatórios da Loteadora** | **NÃO criar como setor principal agora.** | Relatórios devem aparecer dentro de cada setor e no Painel Loteadora/ADM, evitando um menu de relatórios vazio ou duplicado. | Atalhos contextuais para estoque, vendas, carteira, inadimplência, recebíveis, parceiros, repasses e desempenho por empreendimento. |
 
 > **Convenção aprovada:** a **Quadra** é sempre a matriz de seus lotes. A identificação operacional usa `Qn · Ln`: por exemplo, `Q12 · L1` até `Q12 · L100`. Cadastro de Loteamentos cria a matriz; Estoque/Mapa de Lotes opera o mesmo lote sem duplicá-lo.
@@ -64,7 +64,7 @@ Dois ou mais participantes podem integrar um **Grupo de Participação** quando 
 | Repasses e Distribuição | Painel de Sócio/Parceiro | Direito projetado, em análise, elegível, bloqueado ou conciliado pode ser exibido no recorte autorizado do beneficiário/grupo. |
 | Propostas, Reservas e Contratos / Financeiro e Carteira / Estoque | Painel de Sócio/Parceiro | Contratos, parcelas/boletos, cobrança/adimplência e lotes só abastecem o read model do painel quando o vínculo ou grupo e o Grant de Portal autorizam o objeto. |
 | Identidade e Grant de Portal | Painel de Sócio/Parceiro | Login resolve rota interna fixa para o único contexto válido ou seletor de contextos autorizados; expiração/revogação nega a leitura sem enumerar recursos. |
-| Obras e Infraestrutura | Cadastro / Estoque | Marco técnico pode gerar alerta/restrição; não libera venda ou altera carteira sozinho. |
+| Obras e Infraestrutura | Cadastro / Estoque | Na fundação, marco técnico pode gerar alerta/restrição; não libera venda, altera estoque, contrato, carteira ou repasse sozinho. O módulo operacional depende de gates próprios. |
 
 ## 5. Decisões que preciso de você agora
 
@@ -75,7 +75,7 @@ Dois ou mais participantes podem integrar um **Grupo de Participação** quando 
 | LOT-A03 | Nome do setor de clientes. | **Clientes Loteadora.** | **APROVADO: Clientes Loteadora, com ficha completa, dossiê reutilizável e busca protegida por CPF/CNPJ na venda.** |
 | LOT-A04 | Reserva fica dentro de Vendas ou setor próprio? | **Dentro de Propostas, Reservas e Contratos.** | **APROVADO: seguir a recomendação; reserva é etapa com prazo, alçada, concorrência e transição auditável.** |
 | LOT-A05 | Repasses ficam dentro de Financeiro ou setor próprio? | **Setor próprio: Repasses e Distribuição.** | **APROVADO: setor próprio conectado ao Financeiro e Carteira, sem misturar direito, cobrança, caixa e conciliação.** |
-| LOT-A06 | Obras e Infraestrutura entra já ou depois? | **Depois, como módulo posterior**, salvo se for prioridade imediata. |  |
+| LOT-A06 | Obras e Infraestrutura entra já ou depois? | **Depois, como módulo posterior**, salvo se for prioridade imediata. | **APROVADO: módulo posterior; fundação mantém somente marcos, evidências, restrições e alertas essenciais.** |
 | LOT-A07 | Relatórios ficam como setor próprio? | **Não; usar atalhos nos setores e visão no Painel/ADM.** |  |
 | LOT-A08 | Painel Loteadora entra como primeira tela? | **Sim.** |  |
 
