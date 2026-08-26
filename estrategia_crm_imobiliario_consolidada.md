@@ -440,6 +440,21 @@ A auditoria aprofundada do cadastro de loteamentos confirma a hierarquia `gleba 
 
 > **Limite obrigatório:** o CRM organiza prova, estado, responsável e próxima ação. Ele não certifica regularidade registral/ambiental/urbanística, não interpreta contrato, não calcula efeito tributário universal e não pratica ato registral. A decisão concreta permanece com jurídico imobiliário, registro, urbanismo/engenharia, contador/controladoria e os órgãos ou parceiros competentes.
 
+## 8.16 Auditoria competitiva em cinco ciclos: experiência comercial rápida, controle comprovável
+
+As nove referências adicionais enviadas — CV CRM, Jetimob, Sistemas GL/SUB100, Facilita, Imobibrasil, Supremo CRM, Lote Mobile, Airbnb Co-Host e Salesforce — foram confrontadas em cinco ciclos: trabalho a resolver, jornada de ativo/carteira, financeiro/contrato, integração/governança e red-team de cópia. A revisão confirma o piso de mercado já registrado, mas torna a resposta mais precisa: mapa, reserva, proposta, mobilidade, portal, integração, cobrança, repasse e IA são sinais competitivos relevantes; nenhum deles, isoladamente, demonstra autoridade de dado, elegibilidade jurídica, liquidação, idempotência, alçada ou segurança. [53]
+
+| Sinal competitivo confirmado | Decisão estratégica atualizada | Limite que impede cópia superficial |
+| --- | --- | --- |
+| Espelho de vendas e reserva em loteadora | Mapa/grade entra como expectativa de entrada; o lote expõe registro, modalidade, alocação, restrição, compromisso, tabela, carteira e owner da pendência. | “Tempo real” depende de comando transacional, concorrência, expiração, versão, idempotência e audit event — não apenas de atualização visual. |
+| Jornada comercial unificada | Lead, proposta, reserva, documento/assinatura, contrato e pós-venda preservam objetos e estados distintos, conectados por versões e políticas. | Proposta não vira contrato, reserva não vira venda e documento não vira aprovação por inferência de interface. |
+| Integração ampla | Cada conector terá contrato de dados, source of truth, direção, autenticação, correlação, idempotência, retry, replay, observabilidade, owner e saída. | Catálogo de logos, webhook ou API não prova SLA, escopo contratado, consistência, LGPD ou autoridade de dado. |
+| Cobrança, comissão e repasse | O CRM mantém subledger de direito, instrução, retorno, settlement e conciliação; o parceiro habilitado executa o efeito externo. | Não chamar callback/comprovante de liquidação, não tratar repasse de terceiro como receita própria e não automatizar retenções/tributos. |
+| IA e dados unificados | IA assiste cadastro, publicação e investigação com fonte, escopo, permissão, incerteza, revisão e kill switch; integração reduz silos por política. | IA não certifica ativo, crédito, contrato ou obrigação, não recebe dado fora da finalidade e não dispara comando crítico sozinha. |
+| Colaboração e delegação | Corretor, parceiro, coanfitrião ou operador atua por convite/grant, objeto, finalidade, vigência e alçada. | Perfil amplo não atravessa RLS, segregação de deveres, MFA/step-up, limite de aprovação ou isolamento entre organizações. |
+
+> **Tese competitiva refinada:** a venda deve parecer simples a quem atua em campo, enquanto a estrutura invisível conserva evidência, política, direito, exceção, integração e responsabilidade até o fechamento. O produto não promete ser banco, ERP completo ou autoridade jurídica/fiscal; promete fazer com que cada integração e cada decisão sejam explicáveis, verificáveis e reversíveis no escopo correto.
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -553,3 +568,5 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [51] [Integração dos estudos de pagamentos e ativos — inventário, evidências, conflitos e decisões](crm_integracao_estudos_pagamentos_ativos_evidencias.md)
 
 [52] [Revisão aprofundada do cadastro de loteamentos — inventário, evidências, modelo e consolidação](crm_cadastro_loteamentos_revisao_consolidacao.md)
+
+[53] [Auditoria competitiva em cinco ciclos — entidades, evidências, confrontos e decisões](crm_auditoria_competitiva_consolidacao.md)

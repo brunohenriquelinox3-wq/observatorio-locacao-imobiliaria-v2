@@ -253,3 +253,12 @@
 - [x] Salvar checkpoint e entregar a revisão do cadastro de loteamentos.
 - [x] Distinguir loteamento, desmembramento, condomínio de lotes e acesso controlado como modalidades documentadas, com ato local e partes comuns quando aplicáveis.
 - [x] Salvar checkpoint complementar da revisão de modalidades e entregar a atualização.
+
+## Auditoria competitiva: CRMs de referência
+
+- [x] Resolver entidades, escopo, segmento e tipo de referência de CV CRM, Jetimob, Sistemas GL, Facilita, Imobibrasil, Supremo CRM, Lote Mobile, Airbnb Co-Host e Salesforce.
+- [x] Coletar evidências primárias de módulos, integrações, fluxos, posicionamento e limites declarados por cada referência.
+- [x] Executar cinco ciclos de confronto competitivo, com matriz de capacidades, evidências, riscos de cópia e lacunas de produto.
+- [x] Consolidar diferenciais, decisões, owners, limites e critérios de aceite sem duplicar itens existentes no backlog.
+- [x] Atualizar guia estratégico, backlog e observatório; validar desktop/mobile.
+- [x] Salvar checkpoint e entregar a auditoria competitiva.
