@@ -12,7 +12,7 @@
 | 0 | **Painel Loteadora** | **ADICIONAR/MANTER** como tela inicial da coluna. | Dá visão rápida da operação sem substituir o financeiro ou estoque. | Alertas de lote bloqueado, reservas a vencer, contratos pendentes, parcelas em atraso, carteira, recebíveis, repasses bloqueados e obra/marco pendente quando aplicável. |
 | 1 | **Cadastro de Loteamentos** | **SEPARAR** do estoque operacional. | Cadastro é a estrutura do empreendimento; estoque é a operação diária dos lotes. | Glebas, empreendimentos, fases, quadras, parâmetros, evidências, registros, documentos, tabelas base e configuração de cada loteamento. |
 | 2 | **Estoque e Mapa de Lotes** | **SEPARAR** do cadastro. | A equipe comercial precisa operar visualmente disponibilidade, mapa, reserva e situação de lote sem editar a estrutura do empreendimento. | Mapa/espelho, lotes, unidades, tabela vigente, disponibilidade, bloqueios, alocações, restrições, holds, reservas e situação comercial. |
-| 3 | **Sócios e Parceiros** | **MANTER** como nomenclatura aprovada, com cadastro completo de modalidades. | Fazendeiro/proprietário da terra, permutante, sócio, captador, corretor, imobiliária, investidor, credor e beneficiário podem participar da mesma operação com vínculos distintos. | Parte, modalidade, instrumento, objeto, origem, base econômica, condição, vigência, documentos, alocação física, direito econômico, aprovação e histórico. |
+| 3 | **Sócios e Parceiros** | **MANTER** como nomenclatura aprovada, com cadastro completo de modalidades. | Fazendeiro/proprietário da terra, permutante, sócio, captador, corretor, imobiliária, investidor, credor e beneficiário podem participar da mesma operação com vínculos distintos. | Parte, modalidade, instrumento, objeto, origem, base econômica, condição, vigência, documentos, alocação física, direito por entrada/parcela/intermediária, grupo de participação, aporte de capital, aprovação e histórico. |
 | 4 | **Clientes e Compradores** | **RENOMEAR** o atual “Clientes”. | Deixa claro que o setor serve tanto para interesse inicial quanto para compra contratada e coadquirentes. | Proponentes, compradores, coadquirentes, representantes, empresas compradoras, documentos e buscas autorizadas por CPF/CNPJ. |
 | 5 | **Propostas, Reservas e Contratos** | **UNIR** em um setor comercial. | Essas etapas são uma jornada única; separar no primeiro momento pode criar cliques sem ganho. | Propostas, escolha de lote, reserva com prazo, aprovação, documentação, condições comerciais, contratos, aditivos, cessões, distratos e pós-venda comercial. |
 | 6 | **Financeiro e Carteira** | **MANTER** como setor central e principal. | É o coração financeiro da loteadora e concentra o ciclo de parcelas, cobrança, recebíveis, pagáveis e carteira. | Boletos/instruções, parcelas, vencimentos, recebíveis, pagáveis, pagamentos, retorno, conciliação, atrasos, acordos, comprovantes, alertas e filtros. |
@@ -41,13 +41,15 @@ O **Financeiro e Carteira** permanece o setor mais importante da Loteadora. Ele 
 
 | Tipo de recebedor | Exemplo de direito | O que precisa aparecer antes de qualquer instrução |
 | --- | --- | --- |
-| Corretor ou imobiliária | Comissão sobre entrada, contrato, parcela ou condição específica. | Base, percentual/fixo, gatilho, versão, calendário, limite e reversão. |
+| Corretor ou imobiliária | Comissão sobre entrada, contrato, parcela ou condição específica. | Base, percentual/fixo, tipo de evento, gatilho, versão, calendário, limite e reversão. |
 | Captador | Valor fixo ou percentual pela captação da terra/venda. | Instrumento, objeto, condição, alçada e prazo. |
 | Fazendeiro/proprietário da terra | Permuta física, participação no fluxo, entrada, parcela ou resultado. | Origem da terra, lote/receita elegível, instrumento, vigência e natureza do direito. |
 | Permutante | Lote físico, crédito ou participação econômica. | Alocação, condição de entrega, bloqueio e relação com estoque/carteira. |
-| Sócio/investidor | Resultado ou regra societária aprovada. | Acordo, resultado verificado, prioridade, provisões e aprovação. |
+| Sócio/investidor | Entrada, parcela, intermediária, resultado ou regra societária/contratual aprovada. | Acordo, base, tipo de evento, condição, cronograma de aporte quando houver, resultado verificado, prioridade, provisões e aprovação. |
 
 > **Regra:** um percentual cadastrado não é pagamento. Primeiro existe o direito econômico; depois vem aprovação, instrução, retorno externo e conciliação.
+
+Dois ou mais participantes podem integrar um **Grupo de Participação** quando o instrumento unir glebas, lotes, contratos, recebimentos ou visualização. O grupo precisa declarar membros, escopo, regra econômica e vigência. Cada membro vê a mesma visão compartilhada **somente** para o pool contratado; vínculos individuais e direitos de terceiros continuam isolados. O painel do parceiro é de leitura e solicitação: apresenta ganhos realizados/projeções, contratos, lotes e clientes adimplentes/inadimplentes dentro do escopo, sem permitir baixa, alteração de lote, contrato, regra ou acesso administrativo.
 
 ## 4. Conexões obrigatórias entre os setores
 
@@ -58,7 +60,8 @@ O **Financeiro e Carteira** permanece o setor mais importante da Loteadora. Ele 
 | Clientes e Compradores | Propostas, Reservas e Contratos | Permite cadastrar proponente principal, coadquirente ou empresa compradora no mesmo contrato. |
 | Propostas, Reservas e Contratos | Financeiro e Carteira | Contrato finalizado cria agenda de parcelas, cobranças e carteira. |
 | Financeiro e Carteira | Repasses e Distribuição | Evento conciliado e regra aprovada podem tornar direitos elegíveis; não há repasse por simples etiqueta percentual. |
-| Parceiros e Origem da Terra | Estoque / Repasses | Relação com a terra pode bloquear/alocar lote e também criar direito econômico, mas esses efeitos permanecem separados. |
+| Sócios e Parceiros | Estoque / Repasses e Distribuição | Relação com a terra pode bloquear/alocar lote e também criar direito econômico; grupos/painéis refletem somente o escopo contratado, e esses efeitos permanecem separados. |
+| Repasses e Distribuição | Painel de Sócio/Parceiro | Direito projetado, em análise, elegível, bloqueado ou conciliado pode ser exibido no recorte autorizado do beneficiário/grupo. |
 | Obras e Infraestrutura | Cadastro / Estoque | Marco técnico pode gerar alerta/restrição; não libera venda ou altera carteira sozinho. |
 
 ## 5. Decisões que preciso de você agora
@@ -79,7 +82,7 @@ O **Financeiro e Carteira** permanece o setor mais importante da Loteadora. Ele 
 1. Painel Loteadora  
 2. Cadastro de Loteamentos  
 3. Estoque e Mapa de Lotes  
-4. Parceiros e Origem da Terra  
+4. Sócios e Parceiros  
 5. Clientes e Compradores  
 6. Propostas, Reservas e Contratos  
 7. Financeiro e Carteira  

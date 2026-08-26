@@ -55,11 +55,11 @@ Esta é a coluna central para empresas que trabalham com glebas, empreendimentos
 | --- | --- | --- | --- |
 | **Cadastro de Loteamentos** | Glebas, empreendimentos, fases, quadras, lotes, unidades, parâmetros, documentos, evidências, registros e tabelas-base. | Gleba → empreendimento → fase → quadra → lote/unidade. | **Decisão aprovada:** este é o setor de criação e estrutura do loteamento. |
 | **Estoque/Mapa de Lotes** | Mapa/espelho, lote já cadastrado, tabela vigente, disponibilidade, reserva, proposta, contrato, bloqueio, alocação e restrições. | Lote cadastrado → situação operacional diária. | **Decisão aprovada:** este é o setor de operação diária do estoque, sem recriar o cadastro. |
-| **Sócios e Parceiros** | Cadastro completo de sócios, parceiros, fazendeiros/proprietários da terra, permutantes, investidores, captadores, corretores, imobiliárias, credores/garantidores e beneficiários. | Cada contrato/negociação cria vínculo próprio: pessoa/PJ + modalidade + instrumento + objeto + base + condição + vigência + documentos + histórico. | **Decisão aprovada:** manter o nome `Sócios e Parceiros` e cadastrar todas as modalidades de participação de forma minuciosa. |
+| **Sócios e Parceiros** | Cadastro completo de sócios, parceiros, fazendeiros/proprietários da terra, permutantes, investidores, captadores, corretores, imobiliárias, credores/garantidores e beneficiários; direitos por entrada/parcela/intermediária, grupos de participação, painéis e aportes de capital. | Cada contrato/negociação cria vínculo próprio: pessoa/PJ + modalidade + instrumento + objeto + base + condição + vigência + documentos + histórico. | **Decisão aprovada:** manter o nome `Sócios e Parceiros`; direitos são datados/versionados, grupos só compartilham escopo contratado e painel de parceiro é mínimo por finalidade. |
 | **Clientes** | Proponentes, compradores, coadquirentes, representantes e empresas compradoras. | Uma parte pode estar em vários contratos e ter mais de um papel. | Quais campos de cliente são obrigatórios antes de iniciar uma proposta? |
 | **Vendas e contratos** | Proposta, reserva, escolha de lote, tabela, venda, documentação, contrato e pós-venda comercial. | Estoque elegível + cliente(s) + condição + contrato. | Reserva deve ser um setor separado ou uma etapa dentro de Vendas? |
 | **Financeiro Loteadora** | Boletos/instruções, parcelas, recebíveis, pagáveis, carteira, atrasos, alertas, comprovantes, acordos e filtros por empreendimento/loteamento. | Contrato → parcela/instrução → retorno → conciliação → carteira. | Quais telas financeiras precisam existir primeiro: carteira, cobrança, baixa, acordo, repasse ou relatórios? |
-| **Comissões, direitos e repasses** | Direitos de corretores, imobiliária, sócios, parceiros e permutantes, com valores fixos ou percentuais. | Direito datado + base + gatilho + prioridade + recebedor + evidência. | Deve aparecer dentro de Financeiro ou como setor próprio chamado “Repasses e Distribuição”? |
+| **Comissões, direitos e repasses** | Direitos de corretores, imobiliária, sócios, parceiros e permutantes, por entrada, parcela regular, intermediária ou outro evento contratual, em valor fixo, percentual ou regra híbrida. | Direito datado/versionado + evento + base + gatilho + prioridade + recebedor/grupo + evidência. | Deve aparecer dentro de Financeiro ou como setor próprio chamado “Repasses e Distribuição”? |
 | **Obras e infraestrutura** | Cronograma, pendências, marcos, evidências e vínculo com empreendimento. | Empreendimento/fase + owner técnico + evidência. | Deve entrar desde o início da Loteadora ou ser módulo futuro? |
 | **Relatórios de loteadora** | Estoque, vendas, carteira, inadimplência, recebíveis, parceiros e desempenho por empreendimento. | Recorte por empresa, empreendimento, loteamento, fase e lote. | Quais relatórios são obrigatórios para a diretoria da loteadora? |
 
@@ -74,6 +74,12 @@ O setor financeiro é o coração operacional da loteadora. Após a finalizaçã
 No entanto, o CRM não pode afirmar que boleto emitido é boleto pago. A sequência correta é:
 
 > **Contrato → parcela/cobrança → instrução/boleto → retorno ou comprovante → aplicação de caixa → conciliação → estado da carteira.**
+
+### Transparência contratual de Sócios e Parceiros
+
+O parceiro acompanha no painel somente o seu vínculo individual ou o grupo contratual do qual participa. A visão autorizada mostra ganhos realizados e projeções futuras, contratos, lotes, lotes ainda disponíveis/vendidos e clientes adimplentes/inadimplentes vinculados ao direito econômico. O painel não permite baixar cobrança, editar lote, alterar contrato, mudar regra, aprovar repasse ou administrar usuários. Um grupo de participação só existe por instrumento: se dois parceiros unificam glebas e recebimentos, ambos veem o mesmo pool contratado; os demais permanecem isolados.
+
+Quando um investidor realiza aporte inicial e aportes futuros, o CRM registra compromisso, cronograma, condições, comprovantes, conciliação e eventual evento de titularidade como objetos separados. Aporte conciliado não cria sozinho direito sobre entradas, parcelas, intermediárias ou resultado do loteamento.
 
 ## 5. Coluna VENDAS URBANAS
 
@@ -127,13 +133,13 @@ Esta coluna atende tanto a gestão do imóvel para o proprietário quanto a loca
 
 | Regra | Motivo |
 | --- | --- |
-| Super Adm não é “nível deus”. | A plataforma deve ser segura para os clientes que contratam o CRM. |
+| Super Adm é a autoridade máxima da plataforma, mas não possui acesso irrestrito/invisível. | Administração privilegiada exige MFA, menor privilégio, escopo, vigência, justificativa, JIT/break-glass e auditoria; os dados do cliente permanecem protegidos. |
 | Módulo contratado não é permissão de usuário. | A empresa pode contratar Loteadora, mas cada colaborador ainda recebe somente o acesso necessário. |
 | Cliente, proprietário, parceiro e corretor usam cadastro único com papéis diferentes. | Evita duplicidade e conserva a história de cada relação. |
 | Estoque não é apenas status manual. | Lote ou imóvel pode estar restrito, reservado, contratado, alocado ou indisponível por motivo documentado. |
 | Boleto não é pagamento. | A operação precisa de retorno, aplicação e conciliação para confirmar o caixa. |
 | Comissão, repasse e sociedade não são a mesma coisa. | Cada direito econômico tem base, condição, prioridade, vigência e tratamento próprio. |
-| Portais são mínimos por finalidade. | Cliente e proprietário veem somente o que lhes é autorizado. |
+| Portais são mínimos por finalidade. | Cliente, proprietário e parceiro veem somente o que lhes é autorizado; painel externo não concede poder operacional interno. |
 
 ## 9. Checklist para sua auditoria final
 

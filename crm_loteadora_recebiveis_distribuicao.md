@@ -19,8 +19,8 @@ O caso de loteamento em terreno de terceiro, parceria e repartição de receitas
 | `ReceivableSchedule` | Agenda de entrada econômica do contrato | Entrada, parcelas, índice, vencimento, condição, valor base e versão. |
 | `ReceivableInstallment` | Parcela individual cobrável/conciliável | Devedor, vencimento, valores em camadas, cobrança, aplicação e saldo. |
 | `LandownerParticipation` | Direito econômico de proprietário/permutante da terra | Base contratual, percentual/fixo, lote/receita elegível, prazo, gatilho e instrumento. |
-| `DistributionPlan` | Versão aprovada de regras para partilhar um evento/recebimento | Base, ordem, recebedores, fórmulas, limites, arredondamento, aprovadores e vigência. |
-| `DistributionEntitlement` | Direito calculado de uma parte a partir do plano | Beneficiário, natureza, valor, condição, estado, evidência e pagamento externo. |
+| `DistributionPlan` | Versão aprovada de regras para partilhar um evento/recebimento | Base, tipo de evento/parcela, ordem, recebedores individuais ou grupo contratado, fórmulas, limites, arredondamento, aprovadores e vigência. |
+| `DistributionEntitlement` | Direito calculado de uma parte ou grupo a partir do plano | Beneficiário, natureza, valor, condição, estado, evidência, escopo de visualização e pagamento externo. |
 | `ContractAdjustment` | Aditivo, cessão, renegociação, desconto, perdão, distrato ou quitação | Contrato, origem, aprovação, efeito em saldo/distribuição e evidência. |
 
 ## Estados paralelos do lote
@@ -75,6 +75,7 @@ flowchart TD
 | Tipo de parcela | Fixo, percentual, faixa progressiva, mínimo/máximo, percentual residual | Categoria econômica separada de fórmula matemática. |
 | Beneficiário | Corretor, imobiliária, captador, proprietário da terra, parceiro, sócio, fornecedor | Pessoa/empresa, conta externa autorizada e relação vigente. |
 | Gatilho | Contrato, pagamento conciliado, marco de obra, mês, quitação, lucro definido | Nenhum direito é exigível antes do gatilho e da evidência definidos. |
+| Tipo de evento/parcela | Entrada, parcela regular, intermediária, reforço, acordo, amortização, juros/multa ou outro definido | A regra declara a quais eventos se aplica; “percentual do contrato” não substitui a classificação de cada evento. |
 | Condição/bloqueio | Documento pendente, alçada, inadimplência, lote em restrição, limite de saldo | Gera estado bloqueado/presente, nunca exclusão do direito. |
 | Arredondamento | Precisão de moeda, regra de resíduos e destinatário aprovado do ajuste | A soma precisa reconciliar à base; resíduo é item de auditoria. |
 | Reversão | Estorno, distrato, glosa, devolução ou ajuste | Reversão gera evento compensatório ligado ao plano/entitlement original. |
@@ -97,6 +98,8 @@ flowchart TD
 | Venda por parceiro | Receita/resultado definido em contrato | Parceiro comercial, captador, imobiliária, consultor | Separar serviço, comissão, participação e reembolso para revisão fiscal/contábil. |
 | Permuta física | Lotes/unidades elegíveis, não necessariamente caixa | Dono da terra, parceiro, SPE | O direito pode ser a unidade/lote ou um crédito; não forçar pagamento financeiro. |
 | Lucro de projeto | Resultado definido após política de custos, provisões, impostos e aprovações | Sócios, investidores, parceiros com participação | Exige definição contábil/contratual fora de um simples “percentual de venda”. |
+| Grupo de participação | Eventos/lotes/contratos explicitamente unificados no instrumento | Dois ou mais parceiros que compartilham objeto e visão | O pool é contratual e datado; não expõe direitos individuais ou de terceiros fora do grupo. |
+| Aporte parcelado | Compromisso de capital e marcos de pagamento, separados da carteira de venda | Investidor, cedente, subscritor ou parte definida no instrumento | Aporte, caixa conciliado, titularidade e distribuição posterior são objetos distintos. |
 | Distrato | Valores devolvidos/retidos/compensados conforme instrumento e análise | Comprador, corretores, permutantes, carteira | Recalcula por caso e versão; não reverte pagamentos anteriores sem política/evidência. |
 
 As quatro bases de direito não devem colapsar numa única “porcentagem”: participação sobre valor contratado, participação sobre caixa recebido, alocação física de lote/unidade e distribuição de resultado verificado possuem eventos, condições e efeitos próprios. Cessão, distrato, garantia e correção abrem versões/casos compensatórios; não alteram silenciosamente o direito ou a liquidação histórica. [2]
@@ -125,6 +128,8 @@ O CRM precisa suportar mais de uma modalidade sem reduzi-la a “comissão”.
 | Distribuição instruída | Entitlements aprovados enviados a provedor/financeiro | Distribuição liquidada ou contabilizada. |
 
 Esse desenho sustenta o cenário de um boleto ou Pix que, após pagamento conciliado, origina múltiplos direitos econômicos configuráveis. O CRM controla o contrato, a regra e a evidência; a liquidação em favor de dezenas de recebedores deve ocorrer somente por rota de pagamento e governança habilitadas, com retorno externo e conciliação de cada item.
+
+Quando a regra contratual usar agenda prevista, emissão ou outra condição anterior à conciliação como base de projeção, o CRM pode exibir o direito como **projetado** ou **aguardando condição**. A instrução externa continua dependente do gatilho, alçada e evidência definidos. O painel de cada parceiro mostra somente o direito individual ou de grupo contratado, seus contratos/lotes e a carteira que alimenta aquele direito; não se torna uma visão administrativa da Loteadora.
 
 ## Referência
 

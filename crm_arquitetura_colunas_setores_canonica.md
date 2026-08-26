@@ -42,7 +42,7 @@
 | --- | --- | --- |
 | **Cadastro de Loteamentos** | Glebas, empreendimentos, fases, quadras, lotes, unidades, parâmetros, evidências, registros, documentos e tabelas-base. | Cria e mantém a estrutura `gleba → empreendimento → fase → quadra → lote/unidade`; a quadra é a matriz dos lotes, identificados como `Qn · Ln` até `Qn · L100`, sem duplicar a operação diária do estoque. |
 | **Estoque/Mapa de Lotes** | Mapa/espelho, disponibilidade, alocação, restrição, tabela vigente, hold, reserva, proposta, contrato e situação comercial do lote já cadastrado. | Opera os lotes estruturados por quadra (`Q12 · L1`, `Q12 · L2`); não recria gleba, fase, quadra ou lote e não altera sua identidade estrutural. |
-| **Sócios e Parceiros** | Cadastro completo de sócios, parceiros, fazendeiros/proprietários da terra, permutantes, investidores, captadores, corretores, imobiliárias, credores/garantidores e beneficiários quando participantes do negócio. | Uma mesma parte pode ter vários vínculos independentes; cada negociação possui instrumento, objeto, modalidade, base econômica, vigência, condição, aprovação, documento e histórico próprios. |
+| **Sócios e Parceiros** | Cadastro completo de sócios, parceiros, fazendeiros/proprietários da terra, permutantes, investidores, captadores, corretores, imobiliárias, credores/garantidores e beneficiários quando participantes do negócio; direitos por entrada/parcela/intermediária, grupos de participação e aportes de capital. | Uma mesma parte pode ter vários vínculos independentes; cada negociação possui instrumento, objeto, modalidade, base econômica, vigência, condição, aprovação, documento e histórico próprios. Direito percentual/fixo é datado e versionado; grupo e painel só compartilham o escopo expressamente contratado. |
 | **Clientes** | Cadastro de proponentes, compradores, coadquirentes, representantes e empresas envolvidas na compra. | Uma mesma pessoa/empresa pode aparecer em vários contratos e papéis sem duplicar cadastro. |
 | **Vendas e contratos** | Ligação entre estoque de lote, cliente(s), proposta, reserva, venda e novo contrato. | Um lote só avança se estiver elegível; contrato preserva versão de tabela, partes, condição, evidência e alçada. |
 | **Financeiro Loteadora** | Boletos/instruções após contrato, recebíveis, pagáveis, parcelas pagas/em atraso, alertas, comprovantes, carteira e filtros por empreendimento/loteamento. | Boleto é instrução/cobrança, não confirmação de caixa; pagamento, retorno, settlement e conciliação permanecem distintos. |
@@ -78,6 +78,14 @@
 | **Financeiro/subledger** | Financeiro ADM e os três módulos operacionais. | Receivable, Payable, entitlement, instrução, retorno, settlement, cash application e conciliação não se misturam; cada coluna projeta somente seu recorte permitido. |
 | **Evidência** | Todas as colunas. | Documento, certidão, contrato, comprovante, regra ou revisão possuem fonte, versão, finalidade, acesso e owner; anexar não significa aprovar. |
 
+### 7.1 Transparência de parceiros e grupos contratados
+
+| Superfície | Pode apresentar | Não concede |
+| --- | --- | --- |
+| **Painel do parceiro** | Ganhos realizados/projetados, direitos em análise/bloqueados, contratos, lotes, carteira e adimplência/inadimplência vinculados ao seu contrato ou grupo autorizado. | Baixa de cobrança, alteração de lote, contrato, regra de direito, cadastro de terceiro, alçada ou configuração administrativa. |
+| **Grupo de Participação** | Visão compartilhada de glebas, lotes, contratos, clientes e recebimentos **somente** quando esses objetos foram unidos no instrumento do grupo. | Acesso aos vínculos individuais de membros ou de terceiros que não integram o escopo comum. |
+| **Painel de investidor** | Compromisso de capital, cronograma, condição, comprovantes permitidos, estado de conciliação e eventual direito econômico expressamente conectado. | Inferência de participação eficaz, distribuição de receitas ou acesso a cap table/carteira fora do contrato. |
+
 ## 8. Separações que a arquitetura não pode perder
 
 | Separação | Regra |
@@ -87,6 +95,8 @@
 | **Loteadora × Vendas Urbanas** | Ambas vendem, mas loteadora opera empreendimento/estoque/origem/parceiro; vendas urbanas opera imóvel/proprietário/construtora/unidade urbana. |
 | **Administração de imóvel × Locação** | Prazo e obrigações do contrato com proprietário podem divergir do prazo e obrigações do contrato com locatário. |
 | **Boleto/instrução × pagamento confirmado** | Emitir/espelhar boleto não confirma recebimento; confirmação exige retorno, evidência, conciliação e tratamento de exceção. |
+| **Direito econômico × acesso de portal** | Direito contratual e grant de portal são relações independentes; ambos exigem escopo, vigência e auditoria. |
+| **Aporte × titularidade × distribuição** | Compromisso de capital, caixa conciliado, efeito societário e direito econômico posterior possuem estados, evidências e owners distintos. |
 
 ## 9. Próximo passo
 

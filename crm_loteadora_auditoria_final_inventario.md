@@ -9,7 +9,7 @@
 | --- | --- | --- | --- | --- |
 | 1 | **Cadastro de Loteamentos** | Fundamental. | Glebas, empreendimentos, fases, quadras, lotes, unidades, documentos, evidências, registros e tabelas-base. | **Decisão aprovada:** setor separado para criação e estrutura. |
 | 2 | **Estoque/Mapa de Lotes** | Fundamental. | Mapa/espelho, tabela vigente, disponibilidade, alocação, restrição, hold, reserva, proposta e contrato dos lotes já cadastrados. | **Decisão aprovada:** setor separado para operação diária do estoque. |
-| 3 | **Sócios e Parceiros** | Fundamental. | Sócios, parceiros, fazendeiros/proprietários da terra, permutantes, investidores, captadores, corretores, imobiliárias, credores/garantidores e beneficiários. | **Decisão aprovada:** o setor deve ser completo e minucioso; cada contrato/negociação mantém vínculo próprio. |
+| 3 | **Sócios e Parceiros** | Fundamental. | Sócios, parceiros, fazendeiros/proprietários da terra, permutantes, investidores, captadores, corretores, imobiliárias, credores/garantidores e beneficiários; direitos por evento de parcela, grupos, painéis e aportes de capital. | **Decisão aprovada:** o setor deve ser completo e minucioso; cada contrato/negociação mantém vínculo próprio, e grupo/painel só compartilha escopo expressamente contratado. |
 | 4 | **Clientes** | Fundamental. | Proponentes, compradores, coadquirentes, representantes e empresas compradoras. | Manter com este nome ou usar `Clientes e Compradores`? |
 | 5 | **Vendas e Contratos** | Fundamental. | Proposta, reserva, escolha de lote, venda, documentação, contrato e pós-venda comercial. | Reserva deve ser apenas etapa interna ou virar setor próprio? |
 | 6 | **Financeiro Loteadora** | Fundamental e coração financeiro. | Boletos/instruções, parcelas, recebíveis, pagáveis, atrasos, carteira, acordos, comprovantes e alertas. | Quais telas vêm primeiro: carteira, cobrança, baixa/conciliação, acordos, contas a pagar ou relatórios? |
@@ -23,10 +23,11 @@
 | --- | --- | --- |
 | Cadastro de Loteamentos | Estoque/Mapa de Lotes | Cria a estrutura de loteamento e lote; não duplica a operação diária da disponibilidade. |
 | Estoque/Mapa de Lotes | Vendas e Contratos | Um lote somente pode entrar em proposta/venda quando sua elegibilidade estiver comprovada por disponibilidade, restrição, alocação, tabela e alçada. |
-| Sócios e Parceiros | Repasses e Distribuição | Sócio, parceiro, fazendeiro/proprietário da terra, permutante, investidor ou captador não recebe só por estar cadastrado; direito depende de instrumento, objeto, base, condição e vigência. |
+| Sócios e Parceiros | Repasses e Distribuição | Sócio, parceiro, fazendeiro/proprietário da terra, permutante, investidor ou captador não recebe só por estar cadastrado; direito depende de instrumento, objeto, base, tipo de evento/parcela, condição, vigência e versão. |
 | Clientes | Vendas e Contratos | Proponente principal, coadquirente e representante podem participar de um mesmo contrato sem duplicar pessoa/empresa. |
 | Vendas e Contratos | Financeiro Loteadora | Contrato cria parcelas/cobranças e carteira; boleto não confirma pagamento. |
 | Financeiro Loteadora | Repasses e Distribuição | Caixa/conciliação e condições da regra determinam direito elegível; repasse não é criado por etiqueta percentual isolada. |
+| Repasses e Distribuição | Painel de Sócio/Parceiro | O parceiro/grupo vê projeções, realizado, contratos, lotes e inadimplência apenas no escopo concedido; painel não é setor administrativo. |
 | Obras e Infraestrutura | Cadastro de Loteamentos / Estoque | Marco técnico pode gerar restrição ou alerta, mas não altera estoque nem libera venda sozinho. |
 
 ## Pontos que precisam de decisão do usuário
@@ -48,4 +49,5 @@
 | Proprietário/fazendeiro da terra com sócio genérico. | A origem da terra, a permuta, a participação societária e o direito financeiro podem ter instrumentos e bases diferentes. |
 | Boleto emitido com parcela paga. | Emissão, retorno, aplicação de caixa e conciliação são fases distintas. |
 | Receita, recebível, repasse e distribuição de lucro. | Cada natureza econômica tem contabilidade, base e owner próprios. |
+| Aporte, titularidade e distribuição. | Compromisso de capital, caixa conciliado, eficácia societária e direito econômico posterior são fatos independentes e documentados. |
 | Distrato com simples retorno manual do lote a disponível. | Distrato precisa de caso, contrato, cálculo, condição e autorização de reentrada. |

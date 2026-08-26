@@ -10,7 +10,7 @@ Cada cadastro de Sócio ou Parceiro pode possuir um ou mais **Vínculos de Parti
 | Bloco | O que deve ser registrado |
 | --- | --- |
 | **Identificação do vínculo** | Código interno, título da negociação, modalidade, status, data de início, data de término/condição e responsável interno. |
-| **Partes envolvidas** | Parte principal, representantes, coproprietários, cedentes, cessionários, intervenientes, beneficiários e respectivos papéis. |
+| **Partes envolvidas** | Parte principal, representantes, coproprietários, cedentes, cessionários, intervenientes, beneficiários, grupo de participação quando houver e respectivos papéis. |
 | **Objeto da negociação** | Empresa/SPE, gleba, empreendimento, fase, quadra, lote, unidade, contrato de venda, recebível, obra, serviço, canal ou evento econômico aplicável. |
 | **Origem e justificativa** | Como nasceu a relação: aquisição, aporte, permuta, captação, venda, obra, desenvolvimento, corretagem, cessão, garantia, sociedade ou outro motivo documentado. |
 | **Instrumento/contrato** | Tipo, número/referência, versão, data de assinatura/eficácia, anexos, assinaturas, revisão, owner jurídico e condição suspensiva quando houver. |
@@ -71,7 +71,16 @@ Cada cadastro de Sócio ou Parceiro pode possuir um ou mais **Vínculos de Parti
 | Estado de elegibilidade | Está pendente, provisionado, autorizado, instruído, suspenso, pago, conciliado ou em divergência? |
 | Regra de exceção | Como tratar distrato, inadimplência, reversão, cessão, morte/sucessão, substituição de lote ou mudança de contrato? |
 
-## 6. Critérios de aceite futuros
+## 6. Extensões obrigatórias do dossiê
+
+| Extensão | Registro necessário | Limite obrigatório |
+| --- | --- | --- |
+| Direito por parcela | Tipo de evento — entrada, regular, intermediária ou outro —, percentual/fixo/híbrido, base, fórmula, vigência, teto, condição e memória. | Projeção, elegibilidade, instrução, retorno e conciliação não se confundem. |
+| Grupo de Participação | Membros, objetos unificados, regra econômica, regra de visualização, instrumento e vigência. | Parentesco ou vínculo societário não cria grupo nem compartilha dados por padrão. |
+| Painel de parceiro | Finalidade, campos liberados, contratos/lotes/clientes elegíveis, estado do grant e trilha de acesso. | Painel é leitura/solicitação; não confere poderes de carteira, contrato, lote, regra ou administração. |
+| Operação de Capital | Natureza declarada com owner especializado, compromisso total, marcos, condições, evidências, eventos de caixa e eventual evento de titularidade. | Aporte parcelado não cria direito de distribuição ou participação eficaz sem instrumento e evento próprios. |
+
+## 7. Critérios de aceite futuros
 
 | Cenário | Deve permitir | Deve negar |
 | --- | --- | --- |
@@ -80,6 +89,8 @@ Cada cadastro de Sócio ou Parceiro pode possuir um ou mais **Vínculos de Parti
 | Registrar permuta física em `Q12 · L1`. | Criar alocação física e bloqueio de estoque quando o instrumento permitir. | Criar parcela de dinheiro ou disponibilizar o mesmo lote para nova venda. |
 | Registrar comissão parcelada. | Criar regra de direito com gatilho, calendário e recebedor. | Marcar como paga antes de instrução, retorno e conciliação. |
 | Receber aditivo/cessão. | Criar versão/caso novo e preservar o vínculo anterior. | Sobrescrever partes, valores ou datas históricas sem trilha. |
+| Unificar dois parceiros em um grupo. | Criar grupo contratual, objetos compartilhados e visão comum a partir da eficácia. | Exibir dados de participantes/objetos não incluídos ou apagar direitos individuais. |
+| Registrar aporte parcelado. | Criar compromisso e marcos independentes com condição, evidência, estado e owner. | Tratar aporte como distribuição ou alterar titularidade automaticamente. |
 
 ## Referências internas
 

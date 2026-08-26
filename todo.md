@@ -339,3 +339,11 @@
 - [x] Definir o dossiê contratual, financeiro, documental e histórico individual de cada vínculo/negociação.
 - [x] Atualizar estratégia, matriz de Loteadora e apresentação de auditoria com a decisão aprovada.
 - [x] Revisar coerência, salvar checkpoint e entregar a atualização.
+
+## Sócios e Parceiros: direitos, painéis e grupos de participação
+
+- [x] Formalizar direitos por entrada, parcela e intermediária, em percentual ou valor fixo, com estado de previsão, realização e conciliação.
+- [x] Definir grupos de participação que unificam somente os membros e objetos previstos no contrato, sem vazamento aos demais parceiros.
+- [x] Definir painel transparente do parceiro com ganhos, projeções, contratos, lotes e adimplência/inadimplência no escopo autorizado.
+- [x] Modelar aportes parcelados de investidor, cronograma, condição de capital e efeito contratual sem inferir distribuição automática.
+- [x] Atualizar estratégia, matriz e apresentação de Loteadora com os requisitos avançados; revisar e salvar checkpoint.
