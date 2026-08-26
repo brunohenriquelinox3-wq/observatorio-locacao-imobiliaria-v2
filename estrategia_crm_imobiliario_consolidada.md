@@ -228,6 +228,12 @@ Obras e Infraestrutura será ativado como **módulo posterior**, após a fundaç
 
 O módulo futuro terá domínio próprio para baseline, pacotes de trabalho, medições, riscos, mudanças, compromissos de obra, comunicações e análises. Sua ativação depende de owners técnicos, vocabulário/evidência, matriz de impactos transacionais, integração financeira controlada, policies e rollout testado. Ele não poderá mudar lote, proposta, contrato, carteira, repasse ou comunicação ao comprador por inferência de estado técnico. [44]
 
+### Relatórios contextuais e consolidação executiva
+
+Relatórios não formam setor próprio na Loteadora. Estoque/Mapa, Propostas/Reservas/Contratos, Financeiro/Carteira, Repasses/Distribuição e Sócios/Parceiros respondem suas perguntas operacionais com métricas, listas, filtros e drill-down ligados ao fato fonte. O Painel Loteadora e o ADM consolidam poucos indicadores executivos com organização/SPE, cobertura, fórmula, estado, `as_of`, frescor, limitação e link para a origem. O dashboard não corrige fatos, não reinterpreta métricas nem mistura VGV, recebível, caixa, entitlement, instrução e settlement por conveniência. [45]
+
+Filtros e exportação são comandos governados: política revalida escopo de organização, SPE, empreendimento, contrato, lote, carteira, recebedor e período; URL e visibilidade não conferem acesso. Exportação futura exigirá finalidade, conteúdo mínimo, snapshot/definição, arquivo privado, retenção e audit event, e não será habilitada simplesmente por um card estar visível. [45]
+
 ### Direitos por parcela, grupos de participação e aporte de capital
 
 Na Loteadora, o simples cadastro de uma pessoa como sócio, parceiro, proprietário da terra, permutante, investidor, captador, corretor, imobiliária, credor ou beneficiário **não cria recebimento**. O direito nasce de vínculo e instrumento próprios e deve indicar qual evento pode alimentá-lo: entrada, parcela regular, intermediária, reforço, amortização, acordo, resultado apurado ou outro evento contratado. A regra pode ser percentual, valor fixo ou híbrida, mas sempre declara base, escopo, vigência, ordem, teto, condição, versão e memória de cálculo. A plataforma diferencia projeção, direito aguardando condição, recebimento em análise, direito elegível, instrução autorizada, liquidação pendente de conciliação, conciliado, bloqueado e reversão. [36]

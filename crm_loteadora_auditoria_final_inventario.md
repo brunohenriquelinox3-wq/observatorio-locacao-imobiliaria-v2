@@ -15,7 +15,7 @@
 | 6 | **Financeiro Loteadora** | Fundamental e coração financeiro. | Boletos/instruções, parcelas, recebíveis, pagáveis, atrasos, carteira, acordos, comprovantes e alertas. | Quais telas vêm primeiro: carteira, cobrança, baixa/conciliação, acordos, contas a pagar ou relatórios? |
 | 7 | **Repasses e Distribuição** | Fundamental e setor próprio conectado ao Financeiro. | Comissão, direito de parceiro, permutante, sócio, imobiliária, captador, planos, bloqueios, instruções, returns e distribuição datada. | **Decisão aprovada:** setor próprio; direito, instrução, settlement e conciliação não se confundem com cobrança/caixa. |
 | 8 | **Obras e Infraestrutura** | Módulo posterior. | Na fundação: marcos, evidências, restrições, owners e alertas de implantação. Futuramente: cronograma, medições, riscos, mudanças e compromissos próprios. | **Decisão aprovada:** módulo posterior; não atrasar comercial, contratos, carteira e repasses. |
-| 9 | **Relatórios de Loteadora** | Necessário, mas pode ser tela dentro de Financeiro/ADM. | Estoque, vendas, carteira, inadimplência, recebíveis, parceiros e desempenho por empreendimento. | Deve ser setor próprio ou atalhos dentro dos setores operacionais? |
+| 9 | **Relatórios contextuais** | Necessário, sem setor próprio. | Leituras de estoque, vendas, carteira, inadimplência, recebíveis, parceiros e desempenho por empreendimento dentro de cada setor; Painel/ADM consolida indicadores executivos. | **Decisão aprovada:** atalhos contextuais e consolidação, sem menu principal de relatórios. |
 
 ## Conexões que nenhum ajuste de menu pode quebrar
 
@@ -40,7 +40,7 @@
 | Reserva | Etapa de Vendas e Contratos. | Setor próprio de Reservas. | Etapa de Vendas inicialmente; virar setor próprio somente se houver central de reservas/canais concorrentes. |
 | Repasses | Aba dentro do Financeiro. | Setor próprio. | Setor próprio dentro da coluna quando houver muitos parceiros, permutantes e cascatas; caso contrário, aba de Financeiro. |
 | Obras | Já no menu inicial. | Módulo posterior. | **Decisão aprovada:** módulo posterior, mantendo na fundação marcos, evidências, restrições, owners e alertas essenciais. |
-| Relatórios | Coluna/setor próprio. | Atalhos por setor e consolidação no ADM. | Relatórios operacionais dentro de cada setor e visão executiva no ADM. |
+| Relatórios | Coluna/setor próprio. | Atalhos por setor e consolidação no ADM. | **Decisão aprovada:** relatórios operacionais dentro de cada setor e visão executiva no Painel Loteadora/ADM, com métrica/policy/frescor explícitos. |
 
 ## Separações que devem continuar obrigatórias
 

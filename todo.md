@@ -379,3 +379,9 @@
 - [x] Definir marcos, evidências, restrições e alertas de obra que permanecem na fundação da Loteadora.
 - [x] Definir fronteiras, objetos, integrações e gates para ativar futuramente o módulo de Obras e Infraestrutura.
 - [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.
+
+## Decisão aprovada: Relatórios contextuais, sem setor próprio
+
+- [x] Definir leituras, métricas e contratos de dados contextuais para Estoque, Vendas, Financeiro, Repasses e Painel Loteadora.
+- [x] Definir filtros, consolidação executiva, exportação controlada, estados de atualização e limites de acesso.
+- [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.

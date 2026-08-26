@@ -18,7 +18,7 @@
 | 6 | **Financeiro e Carteira** | **MANTER** como setor central e principal. | É o coração financeiro da loteadora e concentra o ciclo de parcelas, cobrança, recebíveis, pagáveis e carteira. | Boletos/instruções, parcelas, vencimentos, recebíveis, pagáveis, pagamentos, retorno, conciliação, atrasos, acordos, comprovantes, alertas e filtros. |
 | 7 | **Repasses e Distribuição** | **SEPARAR** do Financeiro como setor próprio, porém conectado. | **Decisão aprovada:** muitos recebedores, regras e exceções exigem leitura própria sem colapsar no fluxo de cobrança. | Planos/versionamento, comissões, corretor, imobiliária, captador, fazendeiro/proprietário da terra, permutante, parceiro, sócio, direitos, bloqueios, alçadas, instruções, retornos, settlements, compensações e auditoria. |
 | 8 | **Obras e Infraestrutura** | **MÓDULO POSTERIOR**. | **Decisão aprovada:** é relevante, mas não deve atrasar a fundação comercial/financeira/de repasses. | Na fundação: marcos, evidências, restrições, owners e alertas. Posteriormente: cronograma, pacotes, medições, riscos, mudanças, compromissos e análises próprios. |
-| 9 | **Relatórios da Loteadora** | **NÃO criar como setor principal agora.** | Relatórios devem aparecer dentro de cada setor e no Painel Loteadora/ADM, evitando um menu de relatórios vazio ou duplicado. | Atalhos contextuais para estoque, vendas, carteira, inadimplência, recebíveis, parceiros, repasses e desempenho por empreendimento. |
+| 9 | **Relatórios contextuais** | **NÃO criar como setor principal agora.** | **Decisão aprovada:** leituras aparecem em cada setor e no Painel Loteadora/ADM, evitando menu vazio ou duplicação de números. | Atalhos contextuais para estoque, vendas, carteira, inadimplência, recebíveis, parceiros, repasses e desempenho por empreendimento, sempre com métrica/fonte/`as_of`/policy. |
 
 > **Convenção aprovada:** a **Quadra** é sempre a matriz de seus lotes. A identificação operacional usa `Qn · Ln`: por exemplo, `Q12 · L1` até `Q12 · L100`. Cadastro de Loteamentos cria a matriz; Estoque/Mapa de Lotes opera o mesmo lote sem duplicá-lo.
 
@@ -76,7 +76,7 @@ Dois ou mais participantes podem integrar um **Grupo de Participação** quando 
 | LOT-A04 | Reserva fica dentro de Vendas ou setor próprio? | **Dentro de Propostas, Reservas e Contratos.** | **APROVADO: seguir a recomendação; reserva é etapa com prazo, alçada, concorrência e transição auditável.** |
 | LOT-A05 | Repasses ficam dentro de Financeiro ou setor próprio? | **Setor próprio: Repasses e Distribuição.** | **APROVADO: setor próprio conectado ao Financeiro e Carteira, sem misturar direito, cobrança, caixa e conciliação.** |
 | LOT-A06 | Obras e Infraestrutura entra já ou depois? | **Depois, como módulo posterior**, salvo se for prioridade imediata. | **APROVADO: módulo posterior; fundação mantém somente marcos, evidências, restrições e alertas essenciais.** |
-| LOT-A07 | Relatórios ficam como setor próprio? | **Não; usar atalhos nos setores e visão no Painel/ADM.** |  |
+| LOT-A07 | Relatórios ficam como setor próprio? | **Não; usar atalhos nos setores e visão no Painel/ADM.** | **APROVADO: relatórios contextuais, com consolidação executiva no Painel Loteadora/ADM.** |
 | LOT-A08 | Painel Loteadora entra como primeira tela? | **Sim.** |  |
 
 ## 6. Estrutura final sugerida, se você aprovar todas as recomendações

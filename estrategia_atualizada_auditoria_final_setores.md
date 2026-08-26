@@ -61,7 +61,7 @@ Esta é a coluna central para empresas que trabalham com glebas, empreendimentos
 | **Financeiro Loteadora** | Boletos/instruções, parcelas, recebíveis, pagáveis, carteira, atrasos, alertas, comprovantes, acordos e filtros por empreendimento/loteamento. | Contrato → parcela/instrução → retorno → conciliação → carteira. | Quais telas financeiras precisam existir primeiro: carteira, cobrança, baixa, acordo, repasse ou relatórios? |
 | **Repasses e Distribuição** | Planos/regras, direitos de corretores, imobiliária, sócios, parceiros e permutantes, por entrada, parcela regular, intermediária ou outro evento contratual, em valor fixo, percentual ou regra híbrida; alçadas, instruções e conciliação própria. | Direito datado/versionado + evento + base + gatilho + prioridade + recebedor/grupo + evidência + instrução/settlement separados. | **Decisão aprovada:** setor próprio conectado ao Financeiro e Carteira; não mistura direito, cobrança, caixa e conciliação. |
 | **Obras e Infraestrutura** *(módulo posterior)* | Na fundação: marcos, pendências, evidências, restrições, owners e vínculo com empreendimento/fase/lote. Futuramente: cronograma, medições, riscos, mudanças e compromissos de obra. | Empreendimento/fase + owner técnico + evidência + policy de impacto. | **Decisão aprovada:** módulo posterior; marco técnico não altera estoque, contrato, carteira ou repasse sozinho. |
-| **Relatórios de loteadora** | Estoque, vendas, carteira, inadimplência, recebíveis, parceiros e desempenho por empreendimento. | Recorte por empresa, empreendimento, loteamento, fase e lote. | Quais relatórios são obrigatórios para a diretoria da loteadora? |
+| **Relatórios contextuais** *(sem setor próprio)* | Estoque, vendas, carteira, inadimplência, recebíveis, parceiros e desempenho por empreendimento dentro dos respectivos setores; Painel Loteadora/ADM consolida o executivo. | Recorte por empresa, SPE, empreendimento, loteamento, fase, lote, contrato, recebedor e período, sempre revalidado por policy. | **Decisão aprovada:** atalhos dentro dos setores e visão executiva consolidada, sem menu próprio. |
 
 ### Convenção aprovada de Quadras e Lotes
 
@@ -90,6 +90,10 @@ Reserva não abre um setor separado. Ela nasce de proposta e lote elegíveis, gu
 ### Obras e Infraestrutura: decisão de faseamento
 
 O módulo operacional de Obras e Infraestrutura não entra agora. A Loteadora conserva, desde a fundação, marcos técnicos, evidências, restrições, owners e alertas ligados a empreendimento, fase, quadra ou lote; isso permite contextualizar a elegibilidade sem transformar um marco em liberação ou promessa. Cronograma detalhado, medições, riscos, mudanças, fornecedores, compromissos e análises entram somente depois dos gates de operação, segurança, integração financeira e rollout.
+
+### Relatórios contextuais e visão executiva
+
+Não haverá setor próprio de relatórios. O usuário encontra a leitura necessária no setor onde o fato nasce — mapa de estoque, proposta/reserva/contrato, carteira, direito ou vínculo — e o Painel Loteadora/ADM consolida apenas os indicadores executivos definidos. Cada número precisa informar fórmula, recorte, fonte, estado de prova, data de atualização e limitação; filtros, drill-down e eventual exportação preservam a mesma policy e não ampliam o acesso.
 
 ### Transparência contratual de Sócios e Parceiros
 
