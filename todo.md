@@ -367,3 +367,9 @@
 - [x] Definir a jornada, estados e evidências de proposta, reserva, venda e contrato de lote.
 - [x] Definir prazo, concorrência de lote, alçadas, expiração, transições e alertas de reserva sem duplicar o estoque.
 - [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.
+
+## Decisão aprovada: Repasses e Distribuição como setor próprio
+
+- [x] Definir a fronteira, as áreas internas e os objetos do setor Repasses e Distribuição.
+- [x] Definir estados, integrações e controles entre direito, instrução, liquidação, conciliação, Financeiro e Carteira.
+- [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.

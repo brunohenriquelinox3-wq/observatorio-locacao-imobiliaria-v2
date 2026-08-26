@@ -59,7 +59,7 @@ Esta é a coluna central para empresas que trabalham com glebas, empreendimentos
 | **Clientes Loteadora** | Proponentes, compradores, coadquirentes, representantes e empresas compradoras; ficha completa com documentos, fotos, validade, revisão e histórico. | Uma parte pode estar em vários contratos e ter mais de um papel; CPF/CNPJ localiza a ficha sob policy e a venda reaproveita evidências elegíveis. | **Decisão aprovada:** manter o nome `Clientes Loteadora`; dados e documentos são únicos, versionados e auditáveis. |
 | **Propostas, Reservas e Contratos** | Proposta versionada, reserva com prazo, escolha de lote, tabela, venda, documentação, contrato, pós-venda e visão de contratos realizados por lote. | Estoque elegível + Cliente Loteadora + dossiê/checklist + condição + reserva transacional + contrato + carteira. | **Decisão aprovada:** Reserva permanece como etapa interna, com prazo, alçada, concorrência, evidência e transição auditável. |
 | **Financeiro Loteadora** | Boletos/instruções, parcelas, recebíveis, pagáveis, carteira, atrasos, alertas, comprovantes, acordos e filtros por empreendimento/loteamento. | Contrato → parcela/instrução → retorno → conciliação → carteira. | Quais telas financeiras precisam existir primeiro: carteira, cobrança, baixa, acordo, repasse ou relatórios? |
-| **Comissões, direitos e repasses** | Direitos de corretores, imobiliária, sócios, parceiros e permutantes, por entrada, parcela regular, intermediária ou outro evento contratual, em valor fixo, percentual ou regra híbrida. | Direito datado/versionado + evento + base + gatilho + prioridade + recebedor/grupo + evidência. | Deve aparecer dentro de Financeiro ou como setor próprio chamado “Repasses e Distribuição”? |
+| **Repasses e Distribuição** | Planos/regras, direitos de corretores, imobiliária, sócios, parceiros e permutantes, por entrada, parcela regular, intermediária ou outro evento contratual, em valor fixo, percentual ou regra híbrida; alçadas, instruções e conciliação própria. | Direito datado/versionado + evento + base + gatilho + prioridade + recebedor/grupo + evidência + instrução/settlement separados. | **Decisão aprovada:** setor próprio conectado ao Financeiro e Carteira; não mistura direito, cobrança, caixa e conciliação. |
 | **Obras e infraestrutura** | Cronograma, pendências, marcos, evidências e vínculo com empreendimento. | Empreendimento/fase + owner técnico + evidência. | Deve entrar desde o início da Loteadora ou ser módulo futuro? |
 | **Relatórios de loteadora** | Estoque, vendas, carteira, inadimplência, recebíveis, parceiros e desempenho por empreendimento. | Recorte por empresa, empreendimento, loteamento, fase e lote. | Quais relatórios são obrigatórios para a diretoria da loteadora? |
 
@@ -74,6 +74,8 @@ O setor financeiro é o coração operacional da loteadora. Após a finalizaçã
 No entanto, o CRM não pode afirmar que boleto emitido é boleto pago. A sequência correta é:
 
 > **Contrato → parcela/cobrança → instrução/boleto → retorno ou comprovante → aplicação de caixa → conciliação → estado da carteira.**
+
+O setor próprio de **Repasses e Distribuição** parte de fatos/condições elegíveis dessa cadeia, mas possui seu ciclo específico: **plano/regra → direito projetado/elegível/bloqueado → alçada → instrução externa → retorno → settlement → conciliação/compensação**. Assim, um comprador pode estar conciliado na carteira enquanto o direito de um parceiro continua bloqueado, ou um direito pode estar autorizado sem settlement confirmado.
 
 ### Clientes Loteadora: ficha reutilizável na venda
 

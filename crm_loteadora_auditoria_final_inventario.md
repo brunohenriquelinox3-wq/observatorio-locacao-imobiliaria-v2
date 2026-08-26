@@ -13,7 +13,7 @@
 | 4 | **Clientes Loteadora** | Fundamental. | Proponentes, compradores, coadquirentes, representantes e empresas compradoras; ficha completa e dossiê documental/fotográfico versionado. | **Decisão aprovada:** Clientes Loteadora; ficha única e busca protegida por CPF/CNPJ reutilizam dados/evidências elegíveis na venda. |
 | 5 | **Propostas, Reservas e Contratos** | Fundamental. | Proposta versionada, reserva com prazo/alçada, escolha de lote, venda, documentação, contrato, pós-venda e lente de contratos realizados por lote. | **Decisão aprovada:** Reserva é etapa interna da jornada, com estados/evidências próprios e sem setor separado. |
 | 6 | **Financeiro Loteadora** | Fundamental e coração financeiro. | Boletos/instruções, parcelas, recebíveis, pagáveis, atrasos, carteira, acordos, comprovantes e alertas. | Quais telas vêm primeiro: carteira, cobrança, baixa/conciliação, acordos, contas a pagar ou relatórios? |
-| 7 | **Repasses e Distribuição** | Fundamental, mas pode ser setor interno do Financeiro. | Comissão, direito de parceiro, permutante, sócio, imobiliária, captador e distribuição datada. | Fica dentro de Financeiro ou como setor separado? |
+| 7 | **Repasses e Distribuição** | Fundamental e setor próprio conectado ao Financeiro. | Comissão, direito de parceiro, permutante, sócio, imobiliária, captador, planos, bloqueios, instruções, returns e distribuição datada. | **Decisão aprovada:** setor próprio; direito, instrução, settlement e conciliação não se confundem com cobrança/caixa. |
 | 8 | **Obras e Infraestrutura** | Opcional/faseável. | Cronograma, marcos, pendências e evidências de implantação. | Entra já na primeira versão ou vira módulo posterior? |
 | 9 | **Relatórios de Loteadora** | Necessário, mas pode ser tela dentro de Financeiro/ADM. | Estoque, vendas, carteira, inadimplência, recebíveis, parceiros e desempenho por empreendimento. | Deve ser setor próprio ou atalhos dentro dos setores operacionais? |
 
@@ -27,7 +27,7 @@
 | Clientes Loteadora | Vendas e Contratos | Proponente principal, coadquirente e representante podem participar de um mesmo contrato sem duplicar pessoa/empresa; a venda reutiliza ficha/dossiê e congela snapshot das evidências usadas. |
 | Vendas e Contratos | Estoque/Mapa de Lotes | Contratos realizados por `Qn · Ln` formam uma lente de carteira contratual com alertas de dossiê, assinatura, agenda, carteira e conflito lote × contrato; não recriam o estoque. |
 | Vendas e Contratos | Financeiro Loteadora | Contrato cria parcelas/cobranças e carteira; boleto não confirma pagamento. |
-| Financeiro Loteadora | Repasses e Distribuição | Caixa/conciliação e condições da regra determinam direito elegível; repasse não é criado por etiqueta percentual isolada. |
+| Financeiro Loteadora | Repasses e Distribuição | Caixa/conciliação e condições da regra determinam direito elegível; repasse não é criado por etiqueta percentual isolada. Recebível do comprador, entitlement, instrução e settlement permanecem fatos separados. |
 | Repasses e Distribuição | Painel de Sócio/Parceiro | O parceiro/grupo vê projeções, realizado, contratos, lotes e inadimplência apenas no escopo concedido; painel não é setor administrativo. |
 | Obras e Infraestrutura | Cadastro de Loteamentos / Estoque | Marco técnico pode gerar restrição ou alerta, mas não altera estoque nem libera venda sozinho. |
 

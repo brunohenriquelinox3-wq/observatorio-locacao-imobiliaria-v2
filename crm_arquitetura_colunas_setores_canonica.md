@@ -46,6 +46,7 @@
 | **Clientes Loteadora** | Cadastro completo de proponentes, compradores, coadquirentes, representantes e empresas envolvidas na compra; ficha única, dossiê documental/fotográfico e histórico. | Uma mesma pessoa/empresa pode aparecer em vários contratos e papéis sem duplicar cadastro; CPF/CNPJ é buscado sob policy, e evidências reutilizáveis mantêm estado, validade, revisão, finalidade e versão. |
 | **Propostas, Reservas e Contratos** | Jornada única de proposta versionada, reserva com prazo, venda, contrato, pós-venda e lente de contratos realizados por lote. | Proposta, reserva, contrato, lote, dossiê e carteira mantêm estados próprios; somente transação/policy cria ou converte reserva, impede concorrência incompatível e reavalia vencimento antes de liberar elegibilidade. |
 | **Financeiro Loteadora** | Boletos/instruções após contrato, recebíveis, pagáveis, parcelas pagas/em atraso, alertas, comprovantes, carteira e filtros por empreendimento/loteamento. | Boleto é instrução/cobrança, não confirmação de caixa; pagamento, retorno, settlement e conciliação permanecem distintos. |
+| **Repasses e Distribuição** | Planos/regras versionados, recebedores/grupos, direitos por evento, bloqueios, alçadas, instruções, retornos, settlements, compensações e auditoria. | Setor próprio conectado ao Financeiro e Carteira: recebe fatos elegíveis para calcular/controlar direitos, mas não emite boleto, cobra comprador, baixa carteira ou confirma caixa por conta própria. |
 | **Busca financeira e de clientes** | Busca por CPF/CNPJ, proponente principal, coadquirentes, empreendimento, loteamento, lote, contrato e carteira. | Busca usa índice/policy e respeita escopo; CPF/CNPJ é dado protegido e nunca é liberado só porque existe filtro. |
 
 ## 5. Coluna VENDAS URBANAS
@@ -99,6 +100,7 @@
 | **Boleto/instrução × pagamento confirmado** | Emitir/espelhar boleto não confirma recebimento; confirmação exige retorno, evidência, conciliação e tratamento de exceção. |
 | **Direito econômico × acesso de portal** | Direito contratual e grant de portal são relações independentes; ambos exigem escopo, vigência e auditoria. |
 | **Aporte × titularidade × distribuição** | Compromisso de capital, caixa conciliado, efeito societário e direito econômico posterior possuem estados, evidências e owners distintos. |
+| **Carteira × direito × repasse** | Recebível do comprador, entitlement, instrução externa e settlement de repasse possuem transições, correlações, owners e conciliações próprios; um estado não confirma o outro por inferência. |
 | **Login × escopo de painel** | Autenticação identifica a pessoa; Grant de Portal ativo, contexto, vigência e policy determinam a visão individual/grupo. E-mail, URL, filtro ou papel exibido não liberam dados. |
 
 ## 9. Próximo passo
