@@ -332,3 +332,10 @@
 - [x] Formalizar a relação obrigatória QUADRA → LOTES e o padrão de identificação `Qn · Ln` com até 100 lotes por quadra.
 - [x] Atualizar estratégia, matriz de Loteadora e apresentação de auditoria com a convenção de nomenclatura.
 - [x] Revisar coerência, salvar checkpoint e entregar a convenção aplicada.
+
+## Decisão aprovada: Sócios e Parceiros completos
+
+- [x] Formalizar o setor Sócios e Parceiros com todas as modalidades de participação, incluindo donos/fazendeiros da terra e sócios investidores.
+- [x] Definir o dossiê contratual, financeiro, documental e histórico individual de cada vínculo/negociação.
+- [x] Atualizar estratégia, matriz de Loteadora e apresentação de auditoria com a decisão aprovada.
+- [x] Revisar coerência, salvar checkpoint e entregar a atualização.

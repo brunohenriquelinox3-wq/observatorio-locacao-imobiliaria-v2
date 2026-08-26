@@ -9,7 +9,7 @@
 | --- | --- | --- | --- | --- |
 | 1 | **Cadastro de Loteamentos** | Fundamental. | Glebas, empreendimentos, fases, quadras, lotes, unidades, documentos, evidências, registros e tabelas-base. | **Decisão aprovada:** setor separado para criação e estrutura. |
 | 2 | **Estoque/Mapa de Lotes** | Fundamental. | Mapa/espelho, tabela vigente, disponibilidade, alocação, restrição, hold, reserva, proposta e contrato dos lotes já cadastrados. | **Decisão aprovada:** setor separado para operação diária do estoque. |
-| 3 | **Sócios, Parceiros e Origem da Terra** | Fundamental. | Sócios, parceiros, fazendeiros/proprietários da terra, permutantes e beneficiários. | Qual nome representa melhor sua operação: `Sócios e Parceiros`, `Parceiros e Origem da Terra` ou outro? |
+| 3 | **Sócios e Parceiros** | Fundamental. | Sócios, parceiros, fazendeiros/proprietários da terra, permutantes, investidores, captadores, corretores, imobiliárias, credores/garantidores e beneficiários. | **Decisão aprovada:** o setor deve ser completo e minucioso; cada contrato/negociação mantém vínculo próprio. |
 | 4 | **Clientes** | Fundamental. | Proponentes, compradores, coadquirentes, representantes e empresas compradoras. | Manter com este nome ou usar `Clientes e Compradores`? |
 | 5 | **Vendas e Contratos** | Fundamental. | Proposta, reserva, escolha de lote, venda, documentação, contrato e pós-venda comercial. | Reserva deve ser apenas etapa interna ou virar setor próprio? |
 | 6 | **Financeiro Loteadora** | Fundamental e coração financeiro. | Boletos/instruções, parcelas, recebíveis, pagáveis, atrasos, carteira, acordos, comprovantes e alertas. | Quais telas vêm primeiro: carteira, cobrança, baixa/conciliação, acordos, contas a pagar ou relatórios? |
@@ -23,7 +23,7 @@
 | --- | --- | --- |
 | Cadastro de Loteamentos | Estoque/Mapa de Lotes | Cria a estrutura de loteamento e lote; não duplica a operação diária da disponibilidade. |
 | Estoque/Mapa de Lotes | Vendas e Contratos | Um lote somente pode entrar em proposta/venda quando sua elegibilidade estiver comprovada por disponibilidade, restrição, alocação, tabela e alçada. |
-| Sócios, Parceiros e Origem da Terra | Repasses e Distribuição | Parceiro/fazendeiro/permutante não recebe só por estar cadastrado; direito depende de instrumento, objeto, base, condição e vigência. |
+| Sócios e Parceiros | Repasses e Distribuição | Sócio, parceiro, fazendeiro/proprietário da terra, permutante, investidor ou captador não recebe só por estar cadastrado; direito depende de instrumento, objeto, base, condição e vigência. |
 | Clientes | Vendas e Contratos | Proponente principal, coadquirente e representante podem participar de um mesmo contrato sem duplicar pessoa/empresa. |
 | Vendas e Contratos | Financeiro Loteadora | Contrato cria parcelas/cobranças e carteira; boleto não confirma pagamento. |
 | Financeiro Loteadora | Repasses e Distribuição | Caixa/conciliação e condições da regra determinam direito elegível; repasse não é criado por etiqueta percentual isolada. |
@@ -34,7 +34,7 @@
 | Tema | Opção A | Opção B | Recomendação atual |
 | --- | --- | --- | --- |
 | Cadastro/estoque | Um setor único. | Dois setores: Cadastro de Loteamentos e Estoque/Mapa de Lotes. | **Decisão aprovada:** manter separado sem duplicar dados. |
-| Parceiros da terra | Dentro de Sócios e Parceiros. | Setor próprio de Origem da Terra/Permuta. | Manter no mesmo setor, mas com abas claras: sócios, parceiros, fazendeiros/proprietários, permutantes e beneficiários. |
+| Parceiros da terra | Dentro de Sócios e Parceiros. | Setor próprio de Origem da Terra/Permuta. | **Decisão aprovada:** manter dentro de Sócios e Parceiros, com modalidades completas e vínculos contratuais independentes. |
 | Reserva | Etapa de Vendas e Contratos. | Setor próprio de Reservas. | Etapa de Vendas inicialmente; virar setor próprio somente se houver central de reservas/canais concorrentes. |
 | Repasses | Aba dentro do Financeiro. | Setor próprio. | Setor próprio dentro da coluna quando houver muitos parceiros, permutantes e cascatas; caso contrário, aba de Financeiro. |
 | Obras | Já no menu inicial. | Módulo posterior. | Tratar como módulo posterior, mantendo só marcos/evidências essenciais no cadastro de empreendimento. |
