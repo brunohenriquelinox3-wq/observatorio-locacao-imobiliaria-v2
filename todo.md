@@ -347,3 +347,10 @@
 - [x] Definir painel transparente do parceiro com ganhos, projeções, contratos, lotes e adimplência/inadimplência no escopo autorizado.
 - [x] Modelar aportes parcelados de investidor, cronograma, condição de capital e efeito contratual sem inferir distribuição automática.
 - [x] Atualizar estratégia, matriz e apresentação de Loteadora com os requisitos avançados; revisar e salvar checkpoint.
+
+## Painel de parceiro conectado e direcionado por escopo
+
+- [x] Definir o contrato de leitura entre o painel de parceiro e os setores de contratos, parcelas/boletos, cobranças/carteira e estoque/Mapa de Lotes.
+- [x] Modelar login, grant de portal, resolução de contexto e direcionamento seguro à visão individual ou do grupo contratado.
+- [x] Definir isolamento, erros seguros e testes permitir/negar contra vazamento entre parceiros, grupos, contratos, clientes e lotes.
+- [x] Atualizar estratégia, matriz, apresentação e backlog; revisar, validar e salvar checkpoint.

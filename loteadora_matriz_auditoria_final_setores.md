@@ -49,7 +49,7 @@ O **Financeiro e Carteira** permanece o setor mais importante da Loteadora. Ele 
 
 > **Regra:** um percentual cadastrado não é pagamento. Primeiro existe o direito econômico; depois vem aprovação, instrução, retorno externo e conciliação.
 
-Dois ou mais participantes podem integrar um **Grupo de Participação** quando o instrumento unir glebas, lotes, contratos, recebimentos ou visualização. O grupo precisa declarar membros, escopo, regra econômica e vigência. Cada membro vê a mesma visão compartilhada **somente** para o pool contratado; vínculos individuais e direitos de terceiros continuam isolados. O painel do parceiro é de leitura e solicitação: apresenta ganhos realizados/projeções, contratos, lotes e clientes adimplentes/inadimplentes dentro do escopo, sem permitir baixa, alteração de lote, contrato, regra ou acesso administrativo.
+Dois ou mais participantes podem integrar um **Grupo de Participação** quando o instrumento unir glebas, lotes, contratos, recebimentos ou visualização. O grupo precisa declarar membros, escopo, regra econômica e vigência. Cada membro vê a mesma visão compartilhada **somente** para o pool contratado; vínculos individuais e direitos de terceiros continuam isolados. O painel do parceiro é de leitura e solicitação: recebe os recortes autorizados de contratos, parcelas/boletos, cobranças/carteira, estoque e direitos; apresenta ganhos realizados/projeções, lotes e clientes adimplentes/inadimplentes dentro do escopo, sem permitir baixa, alteração de lote, contrato, regra ou acesso administrativo. Após login, Grant de Portal e vigência resolvem diretamente o contexto individual/grupo; URL, filtro ou e-mail não escolhem escopo.
 
 ## 4. Conexões obrigatórias entre os setores
 
@@ -62,6 +62,8 @@ Dois ou mais participantes podem integrar um **Grupo de Participação** quando 
 | Financeiro e Carteira | Repasses e Distribuição | Evento conciliado e regra aprovada podem tornar direitos elegíveis; não há repasse por simples etiqueta percentual. |
 | Sócios e Parceiros | Estoque / Repasses e Distribuição | Relação com a terra pode bloquear/alocar lote e também criar direito econômico; grupos/painéis refletem somente o escopo contratado, e esses efeitos permanecem separados. |
 | Repasses e Distribuição | Painel de Sócio/Parceiro | Direito projetado, em análise, elegível, bloqueado ou conciliado pode ser exibido no recorte autorizado do beneficiário/grupo. |
+| Propostas, Reservas e Contratos / Financeiro e Carteira / Estoque | Painel de Sócio/Parceiro | Contratos, parcelas/boletos, cobrança/adimplência e lotes só abastecem o read model do painel quando o vínculo ou grupo e o Grant de Portal autorizam o objeto. |
+| Identidade e Grant de Portal | Painel de Sócio/Parceiro | Login resolve rota interna fixa para o único contexto válido ou seletor de contextos autorizados; expiração/revogação nega a leitura sem enumerar recursos. |
 | Obras e Infraestrutura | Cadastro / Estoque | Marco técnico pode gerar alerta/restrição; não libera venda ou altera carteira sozinho. |
 
 ## 5. Decisões que preciso de você agora

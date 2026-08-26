@@ -77,7 +77,9 @@ No entanto, o CRM não pode afirmar que boleto emitido é boleto pago. A sequên
 
 ### Transparência contratual de Sócios e Parceiros
 
-O parceiro acompanha no painel somente o seu vínculo individual ou o grupo contratual do qual participa. A visão autorizada mostra ganhos realizados e projeções futuras, contratos, lotes, lotes ainda disponíveis/vendidos e clientes adimplentes/inadimplentes vinculados ao direito econômico. O painel não permite baixar cobrança, editar lote, alterar contrato, mudar regra, aprovar repasse ou administrar usuários. Um grupo de participação só existe por instrumento: se dois parceiros unificam glebas e recebimentos, ambos veem o mesmo pool contratado; os demais permanecem isolados.
+O parceiro acompanha no painel somente o seu vínculo individual ou o grupo contratual do qual participa. A visão autorizada recebe dados dos setores de contratos, parcelas/boletos, cobranças/carteira, estoque/Mapa de Lotes e direitos/repasses; mostra ganhos realizados e projeções futuras, lotes ainda disponíveis/vendidos e clientes adimplentes/inadimplentes vinculados ao direito econômico. O painel não permite baixar cobrança, editar lote, alterar contrato, mudar regra, aprovar repasse ou administrar usuários. Um grupo de participação só existe por instrumento: se dois parceiros unificam glebas e recebimentos, ambos veem o mesmo pool contratado; os demais permanecem isolados.
+
+No login, a identidade é verificada primeiro. Depois, um **Grant de Portal** ativo decide o contexto individual ou de grupo e direciona a pessoa diretamente à sua visualização; se houver mais de um contexto permitido, ela escolhe em uma lista limitada aos seus próprios acessos. E-mail, nome, URL, filtro ou código de contrato/lote não concedem acesso. Grant expirado, revogado ou sessão inválida não exibe histórico de terceiros nem confirma que o objeto solicitado existe.
 
 Quando um investidor realiza aporte inicial e aportes futuros, o CRM registra compromisso, cronograma, condições, comprovantes, conciliação e eventual evento de titularidade como objetos separados. Aporte conciliado não cria sozinho direito sobre entradas, parcelas, intermediárias ou resultado do loteamento.
 
@@ -140,6 +142,7 @@ Esta coluna atende tanto a gestão do imóvel para o proprietário quanto a loca
 | Boleto não é pagamento. | A operação precisa de retorno, aplicação e conciliação para confirmar o caixa. |
 | Comissão, repasse e sociedade não são a mesma coisa. | Cada direito econômico tem base, condição, prioridade, vigência e tratamento próprio. |
 | Portais são mínimos por finalidade. | Cliente, proprietário e parceiro veem somente o que lhes é autorizado; painel externo não concede poder operacional interno. |
+| Login não é autorização de objeto. | Após autenticação, grant, escopo, vigência, finalidade e policy precisam permitir cada contrato, parcela, cobrança, lote, cliente e documento exibido. |
 
 ## 9. Checklist para sua auditoria final
 
