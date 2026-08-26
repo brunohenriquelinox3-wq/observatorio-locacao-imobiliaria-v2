@@ -1,0 +1,29 @@
+[build]
+  command = "pnpm run build:netlify"
+  publish = "dist/public"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["express", "serverless-http", "@trpc/server", "cookie", "jose", "axios", "mysql2", "drizzle-orm"]
+
+# Regras específicas sempre vêm antes do fallback SPA.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/manus-storage/*"
+  to = "/.netlify/functions/api/manus-storage/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
