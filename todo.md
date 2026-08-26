@@ -320,3 +320,9 @@
 - [x] Inventariar os setores atuais de Loteadora, as conexões e os pontos de decisão do usuário.
 - [x] Revisar estoque, parceiros, clientes, vendas/contratos, financeiro, repasses e obras sem misturar naturezas.
 - [x] Preparar e entregar a matriz de manter, separar, unir, renomear ou adicionar para a decisão do usuário.
+
+## Decisão aprovada: Cadastro e Estoque de Lotes separados
+
+- [x] Registrar a divisão aprovada entre Cadastro de Loteamentos e Estoque/Mapa de Lotes, sem duplicar dados de lote/quadra.
+- [x] Atualizar estratégia, matriz de auditoria e apresentação de setores com a separação aprovada.
+- [x] Revisar coerência, salvar checkpoint e entregar a decisão aplicada.

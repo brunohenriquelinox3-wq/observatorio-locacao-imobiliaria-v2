@@ -53,7 +53,8 @@ Esta é a coluna central para empresas que trabalham com glebas, empreendimentos
 
 | Setor | O que deve existir | Ligação obrigatória | Auditoria final: o que você pode ajustar |
 | --- | --- | --- | --- |
-| **Cadastro de loteamentos e estoque** | Glebas, empreendimentos, fases, quadras, lotes, unidades, mapa/espelho, tabelas, disponibilidade, reserva, alocação e restrições. | Gleba → empreendimento → fase → quadra → lote/unidade. | Você quer separar “Cadastro de Loteamentos” e “Estoque de Lotes” em dois setores ou manter juntos? |
+| **Cadastro de Loteamentos** | Glebas, empreendimentos, fases, quadras, lotes, unidades, parâmetros, documentos, evidências, registros e tabelas-base. | Gleba → empreendimento → fase → quadra → lote/unidade. | **Decisão aprovada:** este é o setor de criação e estrutura do loteamento. |
+| **Estoque/Mapa de Lotes** | Mapa/espelho, lote já cadastrado, tabela vigente, disponibilidade, reserva, proposta, contrato, bloqueio, alocação e restrições. | Lote cadastrado → situação operacional diária. | **Decisão aprovada:** este é o setor de operação diária do estoque, sem recriar o cadastro. |
 | **Sócios, parceiros e origem da terra** | Sócios, parceiros, fazendeiros/proprietários da terra, permutantes e beneficiários vinculados ao negócio. | Pessoa/PJ + papel + instrumento + objeto + vigência + condição. | O nome deve ser “Sócios e Parceiros”, “Parceiros e Proprietários da Terra” ou outro? |
 | **Clientes** | Proponentes, compradores, coadquirentes, representantes e empresas compradoras. | Uma parte pode estar em vários contratos e ter mais de um papel. | Quais campos de cliente são obrigatórios antes de iniciar uma proposta? |
 | **Vendas e contratos** | Proposta, reserva, escolha de lote, tabela, venda, documentação, contrato e pós-venda comercial. | Estoque elegível + cliente(s) + condição + contrato. | Reserva deve ser um setor separado ou uma etapa dentro de Vendas? |

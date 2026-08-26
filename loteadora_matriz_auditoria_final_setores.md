@@ -3,7 +3,7 @@
 **Objetivo:** decidir a estrutura final da coluna LOTEADORA antes de qualquer implementação.  
 **Como responder:** para cada linha, indique apenas **MANTER**, **SEPARAR**, **UNIR**, **RENOMEAR**, **REMOVER** ou **ADICIONAR**, seguido da sua observação.
 
-> **Minha recomendação principal:** a coluna LOTEADORA deve abrir com um **Painel de Loteadora** e possuir seis setores operacionais centrais: **Cadastro de Loteamentos**, **Estoque e Mapa de Lotes**, **Parceiros e Origem da Terra**, **Clientes e Compradores**, **Propostas, Reservas e Contratos**, **Financeiro e Carteira** e **Repasses e Distribuição**. Obras deve ser uma decisão sua de módulo imediato ou posterior.
+> **Decisão aprovada:** `LOT-A01` foi aprovado pelo usuário. **Cadastro de Loteamentos** e **Estoque/Mapa de Lotes** serão dois setores distintos, ligados à mesma estrutura de gleba, empreendimento, fase, quadra e lote, sem cadastro duplicado.
 
 ## 1. Estrutura recomendada para decisão
 
@@ -63,7 +63,7 @@ O **Financeiro e Carteira** permanece o setor mais importante da Loteadora. Ele 
 
 | Código | Decisão | Minha recomendação | Sua resposta |
 | --- | --- | --- | --- |
-| LOT-A01 | Cadastro de Loteamentos e Estoque ficam juntos ou separados? | **Separar.** |  |
+| LOT-A01 | Cadastro de Loteamentos e Estoque ficam juntos ou separados? | **Separar.** | **APROVADO: separados.** |
 | LOT-A02 | Nome do setor de parceiros. | **Parceiros e Origem da Terra.** |  |
 | LOT-A03 | Nome do setor de clientes. | **Clientes e Compradores.** |  |
 | LOT-A04 | Reserva fica dentro de Vendas ou setor próprio? | **Dentro de Propostas, Reservas e Contratos.** |  |
