@@ -36,3 +36,19 @@ Com aprovação explícita, foram aplicadas no ambiente isolado as migrations ve
 Todas as tabelas nasceram sem linhas, com RLS habilitada, privilégios diretos revogados para `anon` e `authenticated` e policies explícitas de negação. A consulta posterior ao advisor de segurança do Supabase não retornou avisos. Não foram inseridos dados, criados convites, configurados segredos de aplicação, emitidos tokens ou ativado o principal inicial.
 
 > **Próximo limite:** a próxima subetapa poderá conectar a aplicação ao projeto de desenvolvimento e construir a Central de Plataforma em estado vazio. Ela ainda não poderá executar provisionamento, grant, revogação ou bootstrap sem migrations de comandos, testes e nova aprovação.
+
+## Aplicação manual no projeto oficial
+
+O usuário confirmou que o projeto oficial é `mjgrloxzvmnrvrgiagbv`. As migrations A0 e A0.1 foram aplicadas manualmente no **SQL Editor** desse projeto, em sequência, com retorno `Success. No rows returned` para ambas.
+
+Foram executadas quatro verificações somente leitura no próprio SQL Editor: presença das sete tabelas administrativas, RLS habilitada em todas, sete policies `*_deny_direct_access` para os papéis `anon` e `authenticated`, e contagem zero nas sete tabelas. A consulta final de grants diretos para `anon` e `authenticated` retornou zero linhas.
+
+| Prova | Resultado no projeto oficial |
+| --- | --- |
+| Tabelas A0 | 7 de 7 presentes |
+| RLS | `true` em 7 de 7 |
+| Policies de negação A0.1 | 7 de 7, comando `ALL` para `anon` e `authenticated` |
+| Dados administrativos | 0 registros em cada tabela |
+| Grants diretos ao browser | 0 linhas |
+
+O ambiente está pronto para receber somente a próxima migration de comandos transacionais. Ele não contém principal de plataforma, organização, convite, grant, sessão administrativa ou acesso liberado.

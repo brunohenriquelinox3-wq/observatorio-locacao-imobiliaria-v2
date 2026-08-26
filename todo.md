@@ -220,6 +220,10 @@
 - [x] Definir e validar o caminho de infraestrutura Supabase-native para Auth, Postgres e RLS antes de criar migrations administrativas.
 - [x] Preparar a base full-stack e o modelo de organizações, memberships, grants, auditoria e bootstrap protegido.
 - [x] Construir a primeira superfície do painel de Super Admin com casos vazios e controles de menor privilégio.
+- [x] Validar a conexão server-side ao projeto Supabase oficial `mjgrloxzvmnrvrgiagbv` antes de comandos administrativos.
+- [x] Comparar o projeto Supabase informado pelo usuário com o ambiente isolado criado e aprovar um único destino de desenvolvimento.
+- [x] Entregar roteiro manual completo e seguro para aplicar e verificar as migrations A0/A0.1 no projeto Supabase oficial.
+- [x] Guiar e verificar a aplicação assistida de A0 e A0.1 pelo SQL Editor do projeto oficial.
 - [ ] Implementar jornadas de criação de organização, delegação, suspensão e revogação com alçada e evidência.
 - [ ] Validar autenticação, MFA, RLS, permitir/negar, auditoria e recuperação; revisar desktop/mobile.
 - [ ] Salvar checkpoint e entregar a fundação administrativa.
