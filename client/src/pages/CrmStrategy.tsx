@@ -19,6 +19,7 @@ import { competitiveReviewLenses } from "@/lib/competitiveReview";
 import { executionDisciplineLenses } from "@/lib/executionDiscipline";
 import { integralAuditLenses } from "@/lib/integralAudit";
 import { sidebarReviewLenses } from "@/lib/sidebarReview";
+import { dashboardReviewLenses } from "@/lib/dashboardReview";
 import {
   ArrowDownRight, ArrowUpRight, BookOpenCheck, Check, ChevronRight, Compass,
   Banknote, Calculator, Database, FileCheck2, GitBranch, History, Landmark,
@@ -612,6 +613,50 @@ function SidebarReviewSection() {
   );
 }
 
+function DashboardReviewSection() {
+  const [active, setActive] = useState(0);
+  const lens = dashboardReviewLenses[active];
+
+  return (
+    <section id="dashboards-governados" className="study-integration dashboard-review">
+      <div className="content-section">
+        <div className="section-head">
+          <aside><Eyebrow>06H · DASHBOARDS GOVERNADOS</Eyebrow><p>Um painel não é uma parede de cards. É uma decisão com métrica definida, recorte, evidência, limite e caminho seguro para investigar.</p></aside>
+          <div><h2>O gráfico revela um padrão. <em>A definição e a tabela sustentam a decisão.</em></h2><p>A revisão atualiza métricas, funis, filtros, estados de frescor e acessibilidade. Ela não ativa dados reais, exportações, tempo real ou novos privilégios.</p></div>
+        </div>
+
+        <div className="study-integration-shell">
+          <aside className="study-integration-index">
+            <Radar className="h-7 w-7" />
+            <span>⌖ LEITURA COM PROVA</span>
+            <b>DEFINIR<br />→ EXPLICAR<br />→ AGIR</b>
+            <div className="study-integration-tabs" aria-label="Lentes da auditoria de dashboards">
+              {dashboardReviewLenses.map((item, index) => <button key={item.key} type="button" onClick={() => setActive(index)} className={active === index ? "active" : ""} aria-pressed={active === index}><code>{item.code}</code><b>{item.tab}</b></button>)}
+            </div>
+            <p>Uma métrica precisa continuar verdadeira quando muda o período, o papel, a organização, a cor, a interação ou o método de leitura.</p>
+          </aside>
+
+          <article className="study-integration-panel" aria-live="polite">
+            <span>{lens.code} · DECISÃO DE VISUALIZAÇÃO</span>
+            <h3>{lens.title}</h3>
+            <p>{lens.text}</p>
+            <div className="study-integration-promoted">
+              {lens.promoted.map((item, index) => <div key={item}><code>0{index + 1}</code><span>{item}</span></div>)}
+            </div>
+            <div className="study-integration-block"><ShieldCheck className="h-5 w-5" /><div><b>ATALHO ANALÍTICO BLOQUEADO</b><p>{lens.blocked}</p></div></div>
+          </article>
+
+          <aside className="study-integration-proof">
+            <span>MÉTRICA, ESCOPO & ACESSO</span>
+            <div className="study-integration-proof-row"><p>Dashboard operacional, analítico ou estratégico só é útil quando a pessoa consegue explicar pergunta, período, unidade, fonte, atualização, incerteza e próxima ação. Filtro, drill-down e exportação não ultrapassam a policy que protege o dado.</p><div className="study-integration-sources">{lens.sources.map((source) => <a key={source.href} href={source.href} target="_blank" rel="noreferrer">{source.label} <ArrowUpRight className="inline h-3 w-3" /></a>)}</div></div>
+            <div className="study-integration-benefits">{integrationBenefits.map((benefit) => <span key={benefit}>{benefit}</span>)}</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function IntegralAuditSection() {
   const [active, setActive] = useState(0);
   const lens = integralAuditLenses[active];
@@ -681,7 +726,7 @@ export default function CrmStrategy() {
     <div className="paper-noise" />
     <header className="site-header crm-header">
       <a href="/" className="brand"><img src={logo} alt="Símbolo Bússola de Lote"/><span><b>Observatório</b><small>ESTRATÉGIA CRM</small></span></a>
-      <nav><a href="/">Locação</a><a href="/vendas">Vendas & lotes</a><a href="#nucleo">Núcleo</a><a href="#cadastro">Cadastro</a><a href="#operacao">Pessoas & acesso</a><a href="#loteadora">Loteadoras</a><a href="#financeiro">Financeiro</a><a href="#cur-finance">CUR-01/02</a><a href="#divergencias">Divergências</a><a href="#estudos-integrados">Estudos integrados</a><a href="#auditoria-competitiva">Auditoria competitiva</a><a href="#diretriz-execucao">Execução sem atalhos</a><a href="#sidebar-moderna">Sidebar moderna</a><a href="#auditoria-integral-2026">Auditoria integral</a><a href="#benchmark">Benchmark</a><a href="#experiencia">Experiência</a><a href="#arquitetura">Arquitetura</a><a href="#auditoria">Auditoria</a><a href="#antierro">Anti-erro</a><a href="#pente-fino">Pente fino</a><a href="#identidade">Identidade & login</a><a href="#dez-ciclos">10 ciclos</a><a href="#pesquisa">Pesquisa contínua</a></nav>
+      <nav><a href="/">Locação</a><a href="/vendas">Vendas & lotes</a><a href="#nucleo">Núcleo</a><a href="#cadastro">Cadastro</a><a href="#operacao">Pessoas & acesso</a><a href="#loteadora">Loteadoras</a><a href="#financeiro">Financeiro</a><a href="#cur-finance">CUR-01/02</a><a href="#divergencias">Divergências</a><a href="#estudos-integrados">Estudos integrados</a><a href="#auditoria-competitiva">Auditoria competitiva</a><a href="#diretriz-execucao">Execução sem atalhos</a><a href="#sidebar-moderna">Sidebar moderna</a><a href="#dashboards-governados">Dashboards</a><a href="#auditoria-integral-2026">Auditoria integral</a><a href="#benchmark">Benchmark</a><a href="#experiencia">Experiência</a><a href="#arquitetura">Arquitetura</a><a href="#auditoria">Auditoria</a><a href="#antierro">Anti-erro</a><a href="#pente-fino">Pente fino</a><a href="#identidade">Identidade & login</a><a href="#dez-ciclos">10 ciclos</a><a href="#pesquisa">Pesquisa contínua</a></nav>
       <a href="#roteiro" className="nav-cta">Ver roteiro <ArrowDownRight className="h-4 w-4"/></a>
     </header>
 
@@ -714,6 +759,8 @@ export default function CrmStrategy() {
       <ExecutionDisciplineSection />
 
       <SidebarReviewSection />
+
+      <DashboardReviewSection />
 
       <IntegralAuditSection />
 

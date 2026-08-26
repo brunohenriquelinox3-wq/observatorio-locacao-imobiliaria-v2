@@ -286,3 +286,11 @@
 - [x] Consolidar achados, severidade, evidência, owner e plano de correção sem esconder incertezas.
 - [x] Atualizar estratégia, backlog e observatório conforme achados comprovados; validar desktop/mobile.
 - [x] Salvar checkpoint e entregar a auditoria integral.
+
+## Auditoria de visualização de dados e dashboards
+
+- [x] Inventariar padrões, métricas, gráficos, interações, acessibilidade e limites do curso e do HTML de referência enviados.
+- [x] Confrontar escolha de gráfico, funil, KPI, contraste, dado alternativo e leitura por papel com fontes prioritárias.
+- [x] Consolidar decisões, owners, limites de métrica, evidência e critérios de aceite para dashboards do CRM.
+- [x] Atualizar estratégia, backlog e observatório; validar desktop/mobile.
+- [x] Salvar checkpoint e entregar a auditoria de dashboards.

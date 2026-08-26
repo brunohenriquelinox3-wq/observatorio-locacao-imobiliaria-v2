@@ -499,6 +499,25 @@ O pente fino de agosto de 2026 confirma que a estratégia cobre os domínios nec
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
 
+## 9.16 Dashboards governados: número, contexto, evidência e ação
+
+O dashboard é uma superfície de decisão, não uma parede de KPIs. Cada painel declara **papel, pergunta, horizonte, período, recorte, fonte, atualização, limitação e próxima ação**. O produto separa dashboard operacional, analítico e estratégico: o primeiro aponta o que exige ação agora; o segundo explica padrão e exceção; o terceiro acompanha direção, meta e trade-off. Uma mesma métrica pode atravessar lentes, mas nunca perde a definição e o `as_of` que tornam sua comparação honesta.
+
+Todo número relevante nasce de uma `MetricDefinition` versionada: fórmula, unidade, denominador, polaridade, janela, timezone, inclusões, exclusões, estados, owner e regra de comparação. A lineage preserva fonte, transformação, frescor, confiança, limitação e aprovação. Assim, **VGV, receita própria, valor de terceiro, previsão, recebível, settlement, inadimplência e direito econômico não compartilham um card por conveniência**. A interface nunca apresenta projeção como caixa conciliado, nem callback como liquidação confirmada.
+
+| Pergunta | Visual candidato | Complemento obrigatório | Bloqueio de promoção |
+| --- | --- | --- | --- |
+| Onde a coorte perde conversão? | Funil com valores e conversão entre etapas. | Coorte, período, etapas, reentrada, lista de perdas e definição de denominador. | Estados paralelos, sequência inexistente ou coortes incompatíveis. |
+| Qual exceção exige ação? | Barra horizontal/tabela priorizada. | Limiar, owner, data, unidade, fonte e abertura segura de caso. | Prioridade baseada em cor, ordenação implícita ou métrica sem recorte. |
+| Como carteira e aging evoluem? | Barras por faixa + tendência/tabela por natureza. | Competência/caixa, contrato, evento, conciliação, reversão, `as_of` e explicação de parcialidade. | Saldo sem evento, valor de terceiro como receita ou previsão como settlement. |
+| Como estoque se distribui? | Planta/grade ou barra/tabela de estados. | Registro, alocação, restrição, compromisso, carteira e atualização. | Status comercial manual tratado como fonte de elegibilidade. |
+
+Gráfico material possui título, insight, unidade, período, recorte, fonte, escala, estado vazio/erro/desatualizado e alternativa estruturada. Gráficos são imagens complexas quando carregam informação substancial; a WAI recomenda descrição curta/longa e, quando apropriado, tabela estruturada com valores, relações e tendências. [57] Tabelas de evidência preservam cabeçalhos e relações programáticas, permitindo contexto para tecnologia assistiva. [58] Tooltip aprofunda o dado, mas não carrega a única informação decisiva.
+
+Filtros, drill-down, cross-filter e exportação são comandos de dados. Eles preservam policy, organização/SPE/carteira, finalidade, URL ou estado reproduzível, correlação, limite, estado de carregamento, parcialidade e audit event. “Tempo real” somente descreve frescor/evento observado; nunca presume que reserva, liquidação ou integração externa está confirmada antes da evidência e da reconciliação aplicáveis. Exportação exige permissão, conteúdo permitido, lote ou watermark, retenção e trilha de auditoria.
+
+Cor não é o único sinal de tendência, severidade, seleção ou estado. A diferença de série usa rótulo, forma, padrão, posição ou texto além de matiz; objetos gráficos e componentes necessários à compreensão preservam contraste aplicável. [59] [60] O CRM privilegia gráfico + tabela + dossiê de métrica: assim cada pessoa pode **explorar os dados de forma mais intuitiva**, **entender melhor as tendências** e **salvar ou compartilhar facilmente** sem transformar visualização em promessa opaca.
+
 ## 10. Conclusão
 
 O caminho de ponta não é começar por inteligência artificial, integrações ou automação de documentos. É criar uma espinha dorsal confiável de partes, ativos, relações, propostas, carteira e evidências; fazer a equipe usá-la todos os dias; e permitir que pesquisa, dados territoriais e automações cresçam sobre essa base, com versão, governança e limites explícitos.
@@ -616,3 +635,13 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [55] [Auditoria de sidebar moderna — decisões, evidências e critérios](crm_sidebar_moderna_consolidacao.md)
 
 [56] [Relatório de auditoria integral de completude e coerência — agosto de 2026](crm_auditoria_integral_relatorio_20260826.md)
+
+[57] [W3C WAI — Complex Images](https://www.w3.org/WAI/tutorials/images/complex/)
+
+[58] [W3C WAI — Tables Tutorial](https://www.w3.org/WAI/tutorials/tables/)
+
+[59] [W3C WCAG 2.2 — Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
+
+[60] [W3C WCAG 2.2 — Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
+
+[61] [Auditoria de visualização de dados e dashboards](crm_dashboard_visualizacao_consolidacao.md)
