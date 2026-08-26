@@ -262,3 +262,10 @@
 - [x] Consolidar diferenciais, decisões, owners, limites e critérios de aceite sem duplicar itens existentes no backlog.
 - [x] Atualizar guia estratégico, backlog e observatório; validar desktop/mobile.
 - [x] Salvar checkpoint e entregar a auditoria competitiva.
+
+## Diretriz permanente: execução sem atalhos
+
+- [x] Inventariar os controles, gates, auditorias, pente finos e testes já existentes; identificar lacunas de disciplina operacional.
+- [x] Consolidar a diretriz raiz de evidência, revisão, teste prático, validação proporcional ao risco, owner e aprendizado contínuo.
+- [x] Atualizar estratégia, backlog e observatório com os critérios permanentes; validar desktop/mobile.
+- [x] Salvar checkpoint e entregar a diretriz integrada.

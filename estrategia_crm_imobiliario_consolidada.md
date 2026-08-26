@@ -455,6 +455,20 @@ As nove referências adicionais enviadas — CV CRM, Jetimob, Sistemas GL/SUB100
 
 > **Tese competitiva refinada:** a venda deve parecer simples a quem atua em campo, enquanto a estrutura invisível conserva evidência, política, direito, exceção, integração e responsabilidade até o fechamento. O produto não promete ser banco, ERP completo ou autoridade jurídica/fiscal; promete fazer com que cada integração e cada decisão sejam explicáveis, verificáveis e reversíveis no escopo correto.
 
+## 8.17 Diretriz permanente: execução sem atalhos, prova antes de promoção
+
+Esta estratégia passa a operar por uma disciplina raiz: **nenhuma atividade é concluída por parecer pronta**. Estudo, decisão, documento, tela, regra, migration, integração, comando, release e incidente devem preservar intenção, evidência, decisão, requisito, prova prática, observação e aprendizado. A velocidade aceitável é a que reduz retrabalho por antecipar a prova; urgência reduz escopo para a menor mudança comprovável, jamais remove fonte, owner, teste, validação ou recuperação. [54]
+
+| Momento | Regra permanente | Evidência que permite avançar |
+| --- | --- | --- |
+| Antes de começar | `D-0` fixa problema, não-objetivo, risco, owner, hipótese, fonte e limite. | Objetivo compreensível, classificação inicial e critério de promoção; hipótese sem prova permanece não promovida. |
+| Antes de decidir | Conflito, dependência profissional e limite de automação são explícitos. | Decisão datada, owner, alternativa rejeitada, impacto e reabertura prevista. |
+| Antes de entregar | Todo requisito possui caminho de sucesso e tentativa de falha proporcional ao risco. | Invariante, permitir/negar, concorrência, duplicata, expiração, timeout, reversão ou cenário equivalente. |
+| Depois de promover | Operação não depende de confiança visual ou memória oral. | Sinal, correlação, owner, limiar, runbook e fila/caso de exceção. |
+| Depois de falhar | A correção não apaga o fato nem encerra o caso por workaround. | Reprodução segura, regressão, compensação/recuperação, ação corretiva e revisão de risco. |
+
+> **Regra de eficácia:** o produto só é eficaz quando alcança o resultado observável no escopo e no risco declarados; só é eficiente quando o faz reduzindo retrabalho, duplicidade e raio de erro. Uma tela renderizada, uma fonte isolada, um teste feliz ou uma urgência de negócio não substituem essa prova.
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -570,3 +584,5 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [52] [Revisão aprofundada do cadastro de loteamentos — inventário, evidências, modelo e consolidação](crm_cadastro_loteamentos_revisao_consolidacao.md)
 
 [53] [Auditoria competitiva em cinco ciclos — entidades, evidências, confrontos e decisões](crm_auditoria_competitiva_consolidacao.md)
+
+[54] [Diretriz raiz — execução sem atalhos, prova antes de promoção](crm_diretriz_execucao_sem_atalhos.md)

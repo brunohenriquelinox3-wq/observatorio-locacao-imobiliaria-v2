@@ -16,6 +16,7 @@ import "../payment-asset-integration.css";
 import { integrationBenefits, integrationLenses } from "@/lib/studyIntegration";
 import { lotRegistrationReview } from "@/lib/lotCadastroReview";
 import { competitiveReviewLenses } from "@/lib/competitiveReview";
+import { executionDisciplineLenses } from "@/lib/executionDiscipline";
 import {
   ArrowDownRight, ArrowUpRight, BookOpenCheck, Check, ChevronRight, Compass,
   Banknote, Calculator, Database, FileCheck2, GitBranch, History, Landmark,
@@ -521,6 +522,50 @@ function CompetitiveReviewSection() {
   );
 }
 
+function ExecutionDisciplineSection() {
+  const [active, setActive] = useState(0);
+  const lens = executionDisciplineLenses[active];
+
+  return (
+    <section id="diretriz-execucao" className="study-integration execution-discipline">
+      <div className="content-section">
+        <div className="section-head">
+          <aside><Eyebrow>06E · DIRETRIZ PERMANENTE</Eyebrow><p>A execução não acelera pulando prova. Ela reduz retrabalho ao tornar intenção, decisão, teste e aprendizado verificáveis antes que um risco escale.</p></aside>
+          <div><h2>Nada é “feito” <em>até que a prova acompanhe o resultado.</em></h2><p>Esta disciplina atravessa estudo, documento, interface, dado, integração, dinheiro, acesso, produção e incidente. Toda lente aponta o que permite avançar e o que permanece bloqueado.</p></div>
+        </div>
+
+        <div className="study-integration-shell">
+          <aside className="study-integration-index">
+            <ShieldCheck className="h-7 w-7" />
+            <span>⌖ PROVA CONTÍNUA</span>
+            <b>INTENÇÃO<br />→ PROVA<br />→ APRENDER</b>
+            <div className="study-integration-tabs" aria-label="Portas da diretriz de execução">
+              {executionDisciplineLenses.map((item, index) => <button key={item.key} type="button" onClick={() => setActive(index)} className={active === index ? "active" : ""} aria-pressed={active === index}><code>{item.code}</code><b>{item.tab}</b></button>)}
+            </div>
+            <p>Quando a prova não existe, o caminho seguro é reduzir escopo, investigar, testar ou manter o risco visível — nunca ocultá-lo.</p>
+          </aside>
+
+          <article className="study-integration-panel" aria-live="polite">
+            <span>{lens.code} · PORTA DE EXECUÇÃO</span>
+            <h3>{lens.title}</h3>
+            <p>{lens.text}</p>
+            <div className="study-integration-promoted">
+              {lens.promoted.map((item, index) => <div key={item}><code>0{index + 1}</code><span>{item}</span></div>)}
+            </div>
+            <div className="study-integration-block"><ShieldCheck className="h-5 w-5" /><div><b>ATALHO BLOQUEADO</b><p>{lens.blocked}</p></div></div>
+          </article>
+
+          <aside className="study-integration-proof">
+            <span>EFICIÊNCIA COM PROVA</span>
+            <div className="study-integration-proof-row"><p>Eficácia é alcançar o resultado observável no risco declarado. Eficiência é fazer isso com menos retrabalho, duplicidade e raio de erro. A urgência pode reduzir escopo, mas não pode remover fonte, owner, teste, validação ou recuperação.</p><div className="study-integration-sources">{lens.sources.map((source) => <a key={source.href} href={source.href} target="_blank" rel="noreferrer">{source.label} <ArrowUpRight className="inline h-3 w-3" /></a>)}</div></div>
+            <div className="study-integration-benefits">{integrationBenefits.map((benefit) => <span key={benefit}>{benefit}</span>)}</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function CrmStrategy() {
   const [phase, setPhase] = useState(0);
   const [mode, setMode] = useState(0);
@@ -546,7 +591,7 @@ export default function CrmStrategy() {
     <div className="paper-noise" />
     <header className="site-header crm-header">
       <a href="/" className="brand"><img src={logo} alt="Símbolo Bússola de Lote"/><span><b>Observatório</b><small>ESTRATÉGIA CRM</small></span></a>
-      <nav><a href="/">Locação</a><a href="/vendas">Vendas & lotes</a><a href="#nucleo">Núcleo</a><a href="#cadastro">Cadastro</a><a href="#operacao">Pessoas & acesso</a><a href="#loteadora">Loteadoras</a><a href="#financeiro">Financeiro</a><a href="#cur-finance">CUR-01/02</a><a href="#divergencias">Divergências</a><a href="#estudos-integrados">Estudos integrados</a><a href="#auditoria-competitiva">Auditoria competitiva</a><a href="#benchmark">Benchmark</a><a href="#experiencia">Experiência</a><a href="#arquitetura">Arquitetura</a><a href="#auditoria">Auditoria</a><a href="#antierro">Anti-erro</a><a href="#pente-fino">Pente fino</a><a href="#identidade">Identidade & login</a><a href="#dez-ciclos">10 ciclos</a><a href="#pesquisa">Pesquisa contínua</a></nav>
+      <nav><a href="/">Locação</a><a href="/vendas">Vendas & lotes</a><a href="#nucleo">Núcleo</a><a href="#cadastro">Cadastro</a><a href="#operacao">Pessoas & acesso</a><a href="#loteadora">Loteadoras</a><a href="#financeiro">Financeiro</a><a href="#cur-finance">CUR-01/02</a><a href="#divergencias">Divergências</a><a href="#estudos-integrados">Estudos integrados</a><a href="#auditoria-competitiva">Auditoria competitiva</a><a href="#diretriz-execucao">Execução sem atalhos</a><a href="#benchmark">Benchmark</a><a href="#experiencia">Experiência</a><a href="#arquitetura">Arquitetura</a><a href="#auditoria">Auditoria</a><a href="#antierro">Anti-erro</a><a href="#pente-fino">Pente fino</a><a href="#identidade">Identidade & login</a><a href="#dez-ciclos">10 ciclos</a><a href="#pesquisa">Pesquisa contínua</a></nav>
       <a href="#roteiro" className="nav-cta">Ver roteiro <ArrowDownRight className="h-4 w-4"/></a>
     </header>
 
@@ -575,6 +620,8 @@ export default function CrmStrategy() {
       <StudyIntegrationSection />
 
       <CompetitiveReviewSection />
+
+      <ExecutionDisciplineSection />
 
       <section id="benchmark" className="crm-benchmark"><div className="content-section"><div className="section-head"><aside><Eyebrow>07 · BENCHMARK COMPETITIVO</Eyebrow><p>Dez referências públicas mostram o que o mercado já espera — e onde a nossa estratégia precisa ser mais profunda.</p></aside><div><h2>Não copiar dez CRMs. Entender onde o contexto ainda se desfaz.</h2><p>O estudo analisa mensagem comercial, conteúdo, módulos e lacunas de evidência em Kenlo, Vista/Loft, Imobzi, Jetimob, Imoview, ImobTotal, CV CRM, Facilita, Sienge e Anapro. A ausência em páginas públicas não é ausência de produto.</p></div></div><div className="benchmark-map"><div className="benchmark-spine"><Radar className="h-6 w-6"/><span>10 REFERÊNCIAS</span><b>o piso do mercado</b><small>comercial, lançamento e ERP</small><i/><Compass className="h-6 w-6"/><span>1 TESE PRÓPRIA</span><b>contexto até o fechamento</b><small>direitos, carteira e evidência</small></div><div className="benchmark-console"><div className="benchmark-tabs">{benchmarkLenses.map((item, index) => <button key={item.key} onClick={() => setBenchmarkLens(index)} className={benchmarkLens === index ? "active" : ""} aria-pressed={benchmarkLens === index}><code>0{index + 1}</code>{item.title}</button>)}</div><article><span>{benchmark.tag}</span><h3>{benchmark.title}</h3><p>{benchmark.text}</p><div className="benchmark-companies">{benchmark.companies.map(company => <small key={company}>{company}</small>)}</div><ul>{benchmark.fields.map((field, index) => <li key={field}><code>0{index + 1}</code>{field}</li>)}</ul><div><ShieldCheck className="h-5 w-5"/><b>CRITÉRIO DE PRODUTO</b><p>{benchmark.gate}</p></div></article></div><aside className="benchmark-rule"><BookOpenCheck className="h-6 w-6"/><span>REGRA DE LEITURA</span><strong>Declaração pública não é prova de cobertura integral.</strong><p>Cada achado guarda fonte, data, escopo e limitação. O benchmark vira requisito apenas quando o problema aparece também em parceiro-piloto e tem critério de sucesso verificável.</p><div><small>FONTE</small><small>LIMITAÇÃO</small><small>PILOTO</small></div></aside></div><div className="benchmark-lanes"><div><b>PISO COMERCIAL</b><span>lead, canal, agenda, proposta, estoque, reserva e mobilidade são expectativas básicas</span></div><div><b>DOMÍNIO LOTEADORA</b><span>gleba, fase, lote, contrato, carteira, permuta e pós-entrega são uma linha de produto própria</span></div><div><b>DIFERENCIAL</b><span>direitos econômicos, subledger, contador e evidência levam o campo até o fechamento</span></div></div><div className="benchmark-note"><span>POSICIONAMENTO REVISADO</span><b>O sistema operacional de relações, direitos econômicos e evidências para imobiliárias e loteadoras que precisam vender, receber, distribuir e fechar com contexto.</b><a href="#roteiro">Ver roteiro priorizado <ArrowDownRight className="h-4 w-4"/></a></div></div></section>
 
