@@ -361,3 +361,9 @@
 - [x] Modelar a seleção de cliente por CPF/CNPJ na venda de lote, com reaproveitamento seguro de dados e documentos sem duplicação ou falsa aprovação.
 - [x] Definir o estoque de contratos realizados e seus alertas ligados a lote, venda, documento, carteira e situação contratual.
 - [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.
+
+## Decisão aprovada: Reserva dentro de Propostas, Reservas e Contratos
+
+- [x] Definir a jornada, estados e evidências de proposta, reserva, venda e contrato de lote.
+- [x] Definir prazo, concorrência de lote, alçadas, expiração, transições e alertas de reserva sem duplicar o estoque.
+- [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.
