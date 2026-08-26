@@ -483,6 +483,18 @@ A barra lateral passa a ser tratada como infraestrutura de orientação do CRM. 
 
 > **Limite de segurança:** ocultar um item não é negar acesso. Preferência de sidebar não cria capability, persiste dado sensível ou determina contexto de organização/SPE. A navegação mostra apenas o que a identidade já pode descobrir e continua sendo testada contra deep link, API e comando.
 
+## 8.19 Auditoria integral: cobertura alta não equivale a prontidão operacional
+
+O pente fino de agosto de 2026 confirma que a estratégia cobre os domínios necessários para o CRM — produto, cadastro, loteadora, financeiro, identidade, plataforma, UX, pesquisa, IA, integração e resiliência — sem encontrar uma vertical central esquecida. O veredito, porém, é deliberadamente mais rigoroso: **cobertura estratégica alta e prontidão operacional parcial**. Modelos, princípios e telas de observatório não autorizam comandos, dados reais, integração externa, pagamento, acesso administrativo, migration de negócio ou publicação. [56]
+
+| Prioridade | Bloqueio de auditoria | Evidência requerida antes de avançar |
+| --- | --- | --- |
+| P0 | Autoridade Supabase, RLS/policy, comando transacional, MFA/audit runtime e recuperação ainda não materializados para o domínio. | ADR de fronteira, matriz permitir/negar, catálogo de comandos, teste de falha, correlação, SLO e runbook. |
+| P1 | Vocabulário de workspace/organização/entidade legal/empreendimento e regras contextuais de registro/fiscal ainda exigem normalização e owner. | Glossário/ER, evidência versionada, vigência, alçada, checklist e parecer contextual. |
+| P2 | Partner profile, workspace de contador, sidebar operacional, pesquisa/IA com lineage e piloto por papel permanecem futuros. | Sandbox, teste acessível, registro de IA, policy, piloto sintético e decisão de promoção. |
+
+> **Regra de continuidade:** nenhuma lacuna deliberada é tratada como falha invisível, mas nenhuma decisão documentada é apresentada como capacidade pronta. A menor mudança comprovável vem antes de toda automação ou escala.
+
 ## 9. Validação com parceiros-piloto
 
 O desenvolvimento deve iniciar com três parceiros complementares: uma imobiliária de locação, uma imobiliária de vendas e uma operação de lotes/loteadora. A primeira descoberta deve usar cinco ativos e cinco perfis reais de cada parceiro, para mapear campos que se perdem, documentos reabertos, visitas desaderentes, propostas paradas e regras de tabela. O piloto deve medir tempo até primeira resposta, completude na etapa certa, visitas por perfil, tempo até proposta apta, pendências reabertas e motivos estruturados de perda.
@@ -602,3 +614,5 @@ O caminho de ponta não é começar por inteligência artificial, integrações 
 [54] [Diretriz raiz — execução sem atalhos, prova antes de promoção](crm_diretriz_execucao_sem_atalhos.md)
 
 [55] [Auditoria de sidebar moderna — decisões, evidências e critérios](crm_sidebar_moderna_consolidacao.md)
+
+[56] [Relatório de auditoria integral de completude e coerência — agosto de 2026](crm_auditoria_integral_relatorio_20260826.md)

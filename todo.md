@@ -277,3 +277,12 @@
 - [x] Consolidar decisões, conflitos, owners, limites e critérios de aceite da sidebar para CRM.
 - [x] Atualizar estratégia, backlog e observatório; validar desktop/mobile.
 - [x] Salvar checkpoint e entregar a auditoria de sidebar.
+
+## Auditoria integral de completude e coerência estratégica
+
+- [x] Inventariar documentos canônicos, decisões, fontes, backlog e superfícies do observatório; definir critérios de completude e coerência.
+- [x] Auditar em paralelo os domínios de produto, loteadora/ativos, financeiro, segurança/administração, plataforma e experiência.
+- [x] Confrontar fontes, dependências, owners, limites, requisitos de aceite e lacunas de implementação.
+- [x] Consolidar achados, severidade, evidência, owner e plano de correção sem esconder incertezas.
+- [x] Atualizar estratégia, backlog e observatório conforme achados comprovados; validar desktop/mobile.
+- [x] Salvar checkpoint e entregar a auditoria integral.

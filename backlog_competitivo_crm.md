@@ -152,3 +152,13 @@ Este backlog é uma **fila de hipótese de produto**, não um compromisso comerc
 ## Revisão de priorização
 
 O backlog deve ser revisado após cada piloto mensal. Uma prioridade só sobe quando houver problema repetido, impacto mensurável, viabilidade de integração e dono operacional. Itens `AUD-*` bloqueiam mudança sensível quando seu critério não estiver comprovado; uma hipótese pode ser rebaixada ou removida sem apagar o registro da decisão anterior.
+
+## Aplicação da auditoria integral de agosto de 2026
+
+| Achado integral | Itens existentes que o absorvem | Critério de especialização |
+| --- | --- | --- |
+| INT-01 — vocabulário de autoridade e domínio | `ORG-01`, `COMP-05`, `ENG-17` | Antes de criar schema de negócio, `Workspace`, `Organization`, `LegalEntity` e `Development` possuem glossário/ER, relações e escopo sem sinônimo implícito. |
+| INT-02 e INT-07 — administração segura e fronteira Supabase | `ADM-01` a `ADM-05`, `IAM-01` a `IAM-09`, `ENG-13`, `PLAT-04` | Nenhum dado/comando de domínio nasce em MySQL template como autoridade paralela; policy/RPC/MFA/audit são provados antes de bootstrap ou grant. |
+| INT-03, INT-05 e INT-06 — contexto profissional e parceiro | `COMP-05` a `COMP-08`, `FIN-02` a `FIN-04`, `CUR-03`, `CUR-04` | Regra municipal/fiscal, capacidade de parceiro e workspace de contador registram owner, fonte, vigência, limite e exceção antes de ativação. |
+| INT-04 e INT-08 — transação, operação e release | `ENG-11` a `ENG-19`, `AUD-03` a `AUD-08`, `CUR-07` | Comando, callback, migration e release têm idempotência, correlação, SLO, runbook, recuperação e provenance; build isolado não basta. |
+| INT-09 e INT-10 — UX/pesquisa em produto | `UX-06` a `UX-08`, `COMP-09`, `OPS-01`, `AUD-06`, `AUD-09`, `AUD-12` | Sidebar e pesquisa só avançam após teste por papel, acessibilidade, policy de dado, lineage/avaliação de IA e decisão de piloto. |
