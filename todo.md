@@ -517,3 +517,9 @@
 - [x] Detalhar sinais, filas e recomendações de Vendas Urbanas sem atribuição, campanha, sincronização ou publicação automáticas.
 - [x] Detalhar alertas, leituras, canais e portais de Locação sem cobrança, comunicação, repasse ou decisão automática.
 - [x] Definir contratos de métricas, tratamento de exceções, revisão humana, limites de autonomia e gates de ativação futura.
+
+## Consolidação documental: matriz mestre de Vendas Urbanas e Locação
+
+- [x] Inventariar os cadernos estratégicos, decisões, fontes internas, limites e critérios de aceite já atualizados.
+- [x] Consolidar uma matriz mestre por domínio, jornada, decisão, prova, risco, dependência, gate e documento de referência.
+- [x] Revisar, preservar checkpoint e apresentar o índice estratégico sem implementar funcionalidades do CRM.
