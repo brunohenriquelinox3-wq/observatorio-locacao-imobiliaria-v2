@@ -523,3 +523,9 @@
 - [x] Inventariar os cadernos estratégicos, decisões, fontes internas, limites e critérios de aceite já atualizados.
 - [x] Consolidar uma matriz mestre por domínio, jornada, decisão, prova, risco, dependência, gate e documento de referência.
 - [x] Revisar, preservar checkpoint e apresentar o índice estratégico sem implementar funcionalidades do CRM.
+
+## Aprofundamento documental: validação, pilotos e aprendizagem
+
+- [x] Definir hipóteses, segmentos de piloto, unidades de observação e limites de experimento para Vendas Urbanas e Locação.
+- [x] Definir métricas de sucesso, segurança, qualidade, eficiência e aprendizado por jornada, sem confundir métrica de piloto com fato financeiro.
+- [x] Definir gates de escala, pausa, reversão, correção e revisão de estratégia antes de qualquer implementação futura.
