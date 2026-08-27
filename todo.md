@@ -433,3 +433,12 @@
 - [ ] Registrar em cada bloco alternado a superfície, o controle, a evidência, o risco, a lacuna e a restauração segura do ambiente.
 - [ ] Exigir, em cada alternância, pelo menos uma evidência nova ou uma lacuna nova; quando não houver avanço seguro, registrar bloqueio e trocar de superfície sem repetir o mesmo teste.
 - [ ] Manter uma trilha de avanço que impeça retorno circular a controles já demonstrados, salvo validação de contradição ou correção de evidência incompleta.
+- [ ] Retomar os controles de Locação bloqueados por expiração de sessão somente quando houver acesso autenticado disponível, sem repetir tentativas de login ou usar credenciais.
+- [ ] Percorrer integralmente cada painel, formulário e página rolável acessível antes de registrá-lo como encerrado, distinguindo conteúdo lido, conteúdo inacessível e motivo do bloqueio.
+
+## Correção de fluxo: impedir repetição de setores na auditoria
+
+- [x] Inventariar a última superfície concluída, a superfície atual e as superfícies inéditas pendentes de Vendas Urbanas e Locação.
+- [x] Aplicar uma fila de alternância por superfície: após uma evidência nova, passar obrigatoriamente a uma superfície inédita da outra coluna.
+- [ ] Bloquear retorno a setor já percorrido no ciclo corrente, exceto diante de nova condição técnica, contradição documentada ou evidência incompleta.
+- [ ] Registrar a razão de cada troca de superfície e revisar o histórico da fila antes de qualquer nova interação no CRM externo.
