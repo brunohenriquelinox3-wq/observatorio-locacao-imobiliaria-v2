@@ -473,4 +473,4 @@
 - [x] Consolidar os requisitos de Vendas Urbanas, incluindo funil, partes, imóveis, empreendimentos, visitas, negócios, documentos, inteligência, publicação e financeiro.
 - [x] Consolidar os requisitos de Locação, incluindo partes, imóveis, contratos, carteira, cobrança, repasses, manutenção, prestadores, vistorias, sinistros, portais e financeiro.
 - [x] Atualizar as estratégias de Vendas Urbanas e CRM consolidada com decisões, requisitos, provas, lacunas, critérios de aceite e backlog rastreável.
-- [ ] Validar coerência, preservar checkpoint e apresentar a atualização estratégica completa para revisão do usuário.
+- [x] Validar coerência, preservar checkpoint e apresentar a atualização estratégica completa para revisão do usuário.
