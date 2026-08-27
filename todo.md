@@ -503,3 +503,10 @@
 - [x] Detalhar a jornada de Vendas Urbanas do lead à venda/contrato, incluindo agenda, dossiê, imóveis, empreendimento, publicação, financeiro e inteligência governada.
 - [x] Detalhar a jornada de Locação da administração à renovação/rescisão, incluindo partes, imóvel, garantia, contrato, carteira, manutenção, portais e financeiro governado.
 - [x] Definir cenários de exceção, critérios de aceite, indicadores e gates de decisão para as duas jornadas sem implementar funcionalidades.
+
+## Aprofundamento documental: financeiro de Vendas Urbanas e Locação
+
+- [x] Delimitar o subledger e separar obrigação, instrução de cobrança, retorno, aplicação de caixa, conciliação, direito, dedução, instrução de repasse e liquidação.
+- [x] Detalhar o ciclo de comissões e direitos econômicos de Vendas Urbanas, com versão, gatilho, alçada, exceção e reconciliação.
+- [x] Detalhar o ciclo de carteira, cobrança, despesas, taxa de administração, repasse e prestação de contas de Locação.
+- [x] Definir exceções financeiras, indicadores, evidências mínimas, controles e gates sem criar cobranças, pagamentos ou integrações.
