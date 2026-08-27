@@ -606,3 +606,18 @@
 - [x] Aplicar a menor correção compatível, sem alterar funcionalidades ou dados do CRM.
 - [x] Validar servidor, testes, tipos e build após a correção.
 - [x] Preservar checkpoint e apresentar o resultado da correção local.
+
+## Criação do CRM: fundação governada e corte inicial
+
+- [x] Registrar a decisão canônica de Supabase/PostgreSQL e o primeiro corte vertical não financeiro.
+- [x] Inspecionar o projeto Supabase e a base atual sem alterar dados existentes.
+- [x] Alinhar persistência, ambiente e contratos de fundação antes de criar migrations.
+- [x] Implementar fundação de organização, escopo, papéis e auditoria com menor privilégio.
+- [x] Construir o primeiro fluxo administrativo de baixo risco sobre a fundação validada.
+- [x] Validar isolamento, permitir/negar, recuperação, acessibilidade, testes, tipos e build.
+- [x] Salvar checkpoint e apresentar o marco inicial e o próximo corte.
+
+## Regra permanente de entrega de versões
+
+- [x] Entregar, a cada marco novo de criação do CRM, um ZIP pronto para upload e uma versão HTML correspondente, sem publicar automaticamente.
+- [x] Gerar e verificar os artefatos `fundacao-a0` sem arquivos de ambiente, segredos, dependências locais ou logs.

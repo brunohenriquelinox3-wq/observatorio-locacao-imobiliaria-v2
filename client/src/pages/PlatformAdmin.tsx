@@ -1,5 +1,6 @@
 import DashboardLayout, { type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { getPlatformCommandState, type PlatformCommand } from "@/lib/platformAdmin";
+import { trpc } from "@/lib/trpc";
 import {
   Activity,
   AlertTriangle,
@@ -66,7 +67,21 @@ function unavailable(command: PlatformCommand) {
 
 export default function PlatformAdmin() {
   const [focus, setFocus] = useState<FocusKey>("fundacao");
+  const readinessQuery = trpc.foundation.readiness.useQuery(undefined, { retry: false });
   const selectedFocus = focusPanels[focus];
+  const readiness = readinessQuery.data;
+  const metricValue = (value: number | undefined) => {
+    if (readinessQuery.isLoading) return "—";
+    if (readinessQuery.isError || value === undefined) return "Indisponível";
+    return String(value);
+  };
+  const foundationStatus = readinessQuery.isLoading
+    ? "Carregando fundação"
+    : readinessQuery.isError
+      ? "Leitura indisponível"
+      : readiness?.commandMode === "blocked"
+        ? "Fundação conectada · comandos bloqueados"
+        : "Estado indisponível";
 
   return (
     <DashboardLayout navigationItems={navigationItems} navigationTitle="Plataforma">
@@ -86,16 +101,16 @@ export default function PlatformAdmin() {
           </div>
           <aside className="platform-admin-session" aria-label="Estado atual da sessão">
             <div><ShieldCheck size={18} /><span>ESTADO DA FUNDAÇÃO</span></div>
-            <strong>Sem principal ativo</strong>
+            <strong>{foundationStatus}</strong>
             <p>O acesso privilegiado depende de convite, identidade confirmada, MFA e recuperação registrada.</p>
           </aside>
         </header>
 
         <section className="platform-admin-metrics" aria-label="Indicadores da central de plataforma">
-          <article><span>ORGANIZAÇÕES</span><strong>0</strong><p>Nenhuma locatária provisionada.</p></article>
-          <article><span>PRINCIPALS ATIVOS</span><strong>0</strong><p>Bootstrap ainda indisponível.</p></article>
-          <article><span>GRANTS TEMPORÁRIOS</span><strong>0</strong><p>Sem alçada ou suporte aberto.</p></article>
-          <article><span>EVENTOS ADMIN</span><strong>0</strong><p>Audit log aguarda RPC controlada.</p></article>
+          <article><span>ORGANIZAÇÕES</span><strong>{metricValue(readiness?.counts.organizations)}</strong><p>Leitura agregada; provisionamento permanece bloqueado.</p></article>
+          <article><span>PRINCIPALS ATIVOS</span><strong>{metricValue(readiness?.counts.principals)}</strong><p>Bootstrap ainda exige controles adicionais.</p></article>
+          <article><span>GRANTS TEMPORÁRIOS</span><strong>{metricValue(readiness?.counts.grants)}</strong><p>Leitura de alçada sem expor escopo individual.</p></article>
+          <article><span>EVENTOS ADMIN</span><strong>{metricValue(readiness?.counts.auditEvents)}</strong><p>Audit log aguarda RPC controlada.</p></article>
         </section>
 
         <section className="platform-admin-board">
