@@ -592,3 +592,10 @@
 - [x] Confrontar os domínios e jornadas de Vendas Urbanas e Locação com a matriz, sem alterar as demais colunas.
 - [x] Registrar somente lacunas materiais, seus tratamentos, limites e provas futuras, sem criar escopo por volume.
 - [x] Revisar coerência, preservar checkpoint e apresentar o resultado documental.
+
+## Avaliação de prontidão para desenvolvimento do CRM
+
+- [x] Delimitar critérios estratégicos e técnicos mínimos para início seguro do desenvolvimento.
+- [x] Verificar decisões, dependências, evidências pendentes e bloqueios dos primeiros pacotes de desenvolvimento.
+- [x] Registrar somente atualizações documentais indispensáveis e a sequência segura de entrada em desenvolvimento.
+- [x] Revisar a recomendação de prontidão e apresentar o resultado ao usuário.
