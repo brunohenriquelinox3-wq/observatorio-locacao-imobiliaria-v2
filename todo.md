@@ -555,4 +555,4 @@
 - [x] Definir o registro executivo de decisões com prioridade, owner, evidência, alternativa, risco, dependência, prazo de revisão e critério de aceite.
 - [x] Derivar requisitos atômicos e plano de adoção por papel para Vendas Urbanas e Locação, sem implementar CRM.
 - [x] Consolidar matriz de integrações, contingências e evidências pendentes da auditoria do CRM de referência.
-- [ ] Revisar a coerência, verificar a documentação e preservar o bloco estratégico de execução em checkpoint.
+- [x] Revisar a coerência, verificar a documentação e preservar o bloco estratégico de execução em checkpoint.
