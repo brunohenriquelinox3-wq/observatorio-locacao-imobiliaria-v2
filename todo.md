@@ -599,3 +599,10 @@
 - [x] Verificar decisões, dependências, evidências pendentes e bloqueios dos primeiros pacotes de desenvolvimento.
 - [x] Registrar somente atualizações documentais indispensáveis e a sequência segura de entrada em desenvolvimento.
 - [x] Revisar a recomendação de prontidão e apresentar o resultado ao usuário.
+
+## Correção local: resolução do dotenv
+
+- [x] Diagnosticar o processo local, a instalação e a resolução do pacote `dotenv`.
+- [x] Aplicar a menor correção compatível, sem alterar funcionalidades ou dados do CRM.
+- [x] Validar servidor, testes, tipos e build após a correção.
+- [x] Preservar checkpoint e apresentar o resultado da correção local.
