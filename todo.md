@@ -657,3 +657,12 @@
 - [x] Validar gates, falhas seguras, testes, tipos, build e interfaces responsivas.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o marco de ativação.
 - [x] Executar validação proporcional: remover repetições de baixo risco e manter os controles críticos de MFA, autorização, migration, isolamento e recuperação.
+
+## Criação do CRM: núcleo canônico de Vendas Urbanas e Locação
+
+- [x] Consolidar contrato de contexto, Party canônica, papel temporal, finalidade e estados de rascunho, sem dados pessoais reais.
+- [x] Preparar e aplicar migration com isolamento por organização, RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas para leitura agregada e criação de rascunhos sem acesso direto do navegador às tabelas.
+- [x] Construir a superfície inicial de contexto e cadastro de partes com estados vazio, carregando, erro e bloqueio.
+- [x] Validar proporcionalmente isolamento, entrada, idempotência, autorização, acessibilidade, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o núcleo canônico.

@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import VendasUrbanas from "./pages/VendasUrbanas";
 import CrmStrategy from "./pages/CrmStrategy";
 import PlatformAdmin from "./pages/PlatformAdmin";
+import DomainFoundation from "./pages/DomainFoundation";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -16,6 +17,7 @@ function Router() {
       <Route path={"/vendas"} component={VendasUrbanas} />
       <Route path={"/crm"} component={CrmStrategy} />
       <Route path={"/administracao"} component={PlatformAdmin} />
+      <Route path={"/cadastro-base"} component={DomainFoundation} />
       <Route path={"/404"} component={NotFound} />
       <Route path={"/"} component={Home} />
       {/* Final fallback route */}

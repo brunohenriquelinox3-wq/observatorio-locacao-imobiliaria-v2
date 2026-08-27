@@ -20,6 +20,16 @@ import {
   revokeMembershipInputSchema,
   suspendMembershipInputSchema,
 } from "../shared/adminCommandContracts";
+import {
+  domainContextSchema,
+  draftPartyInputSchema,
+  draftPartyRoleInputSchema,
+} from "../shared/domainFoundationContracts";
+import {
+  assignDraftPartyRole,
+  createDraftParty,
+  listDraftParties,
+} from "./domainFoundation";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -67,6 +77,18 @@ export const appRouter = router({
     revokeMembership: adminProcedure
       .input(revokeMembershipInputSchema)
       .mutation(({ ctx, input }) => revokeMembership(ctx.supabaseSubjectId, input)),
+  }),
+
+  domainFoundation: router({
+    listDraftParties: protectedProcedure
+      .input(domainContextSchema)
+      .query(({ ctx, input }) => listDraftParties(ctx.supabaseSubjectId ?? undefined, input)),
+    createDraftParty: protectedProcedure
+      .input(draftPartyInputSchema)
+      .mutation(({ ctx, input }) => createDraftParty(ctx.supabaseSubjectId ?? undefined, input)),
+    assignDraftPartyRole: protectedProcedure
+      .input(draftPartyRoleInputSchema)
+      .mutation(({ ctx, input }) => assignDraftPartyRole(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   // TODO: add feature routers here, e.g.
