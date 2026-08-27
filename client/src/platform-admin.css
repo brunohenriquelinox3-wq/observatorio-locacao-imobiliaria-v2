@@ -97,6 +97,21 @@
 .platform-admin-identity h2 { max-width: 680px; margin: 0; font: 500 clamp(27px, 3vw, 40px)/1.08 "Fraunces", Georgia, serif; letter-spacing: -.035em; }
 .platform-admin-identity > div > p:last-child { max-width: 660px; margin: 15px 0 0; color: #5d6c72; line-height: 1.65; }
 .platform-admin-identity__form { display: grid; gap: 8px; padding: 22px; border: 1px solid rgba(23,59,77,.15); background: var(--admin-paper); }
+.platform-admin-identity__mode { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0 0 8px; padding: 0 0 12px; border: 0; border-bottom: 1px solid var(--admin-line); }
+.platform-admin-identity__mode legend { width: 100%; padding: 0; font: 700 10px/1.2 "DM Sans", sans-serif; letter-spacing: .1em; color: var(--admin-olive); text-transform: uppercase; }
+.platform-admin-identity__mode label { display: inline-flex; align-items: center; gap: 6px; font: 600 12px/1.2 "DM Sans", sans-serif; letter-spacing: 0; color: var(--admin-ink); text-transform: none; }
+.platform-admin-identity__mode input { min-height: auto; margin: 0; accent-color: var(--admin-clay); }
+.platform-admin-security { display: grid; grid-template-columns: minmax(0, 1fr) minmax(230px, .55fr); gap: 22px; margin-top: 18px; padding: 24px; border: 1px solid var(--admin-line); background: color-mix(in srgb, var(--admin-paper) 84%, var(--admin-sand)); }
+.platform-admin-security h2 { max-width: 620px; margin: 5px 0 9px; font: 600 clamp(21px, 2.4vw, 32px)/1.03 "Fraunces", Georgia, serif; letter-spacing: -.03em; color: var(--admin-ink); }
+.platform-admin-security p { max-width: 670px; margin: 0; color: var(--admin-slate); font: 400 14px/1.6 "DM Sans", sans-serif; }
+.platform-admin-security__actions, .platform-admin-security__verify { display: grid; gap: 9px; align-content: start; }
+.platform-admin-security button { min-height: 42px; border: 0; background: var(--admin-ink); color: #fffaf0; font: 700 11px/1 "DM Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.platform-admin-security button.is-quiet { border: 1px solid var(--admin-ink); background: transparent; color: var(--admin-ink); }
+.platform-admin-security button:disabled { cursor: not-allowed; opacity: .58; }
+.platform-admin-security__verify label { font: 700 10px/1.2 "DM Sans", sans-serif; letter-spacing: .09em; text-transform: uppercase; color: var(--admin-olive); }
+.platform-admin-security__verify input { min-height: 42px; border: 1px solid var(--admin-line); border-radius: 0; padding: 0 11px; background: #fffdf8; color: var(--admin-ink); font: 600 16px/1 "DM Sans", sans-serif; letter-spacing: .17em; }
+.platform-admin-security__qr { width: 168px; height: 168px; grid-column: 2; justify-self: start; padding: 8px; background: white; border: 1px solid var(--admin-line); }
+@media (max-width: 720px) { .platform-admin-security { grid-template-columns: 1fr; } .platform-admin-security__qr { grid-column: auto; } }
 .platform-admin-identity__form label { font: 700 10px/1.2 "DM Sans", sans-serif; letter-spacing: .1em; color: var(--admin-olive); text-transform: uppercase; }
 .platform-admin-identity__form input { min-height: 42px; padding: 10px 12px; border: 1px solid rgba(23,59,77,.28); border-radius: 0; background: #fffdf7; color: var(--admin-ink); outline-offset: 3px; }
 .platform-admin-identity__form input:focus-visible { outline: 2px solid var(--admin-clay); }

@@ -25,6 +25,8 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
+import { validateIdentitySubmission, type IdentityFormMode } from "@/lib/identityRegistration";
+import { genericRecoveryNotice, toMfaQrImageSource, validateTotpCode } from "@/lib/identityMfa";
 import "../platform-admin.css";
 
 const navigationItems: DashboardNavigationItem[] = [
@@ -76,7 +78,15 @@ export default function PlatformAdmin() {
   const [focus, setFocus] = useState<FocusKey>("fundacao");
   const [identityEmail, setIdentityEmail] = useState("");
   const [identityPassword, setIdentityPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [identityFormMode, setIdentityFormMode] = useState<IdentityFormMode>("sign_in");
   const [isConnectingIdentity, setIsConnectingIdentity] = useState(false);
+  const [mfaFactorId, setMfaFactorId] = useState<string | null>(null);
+  const [mfaQrCode, setMfaQrCode] = useState<string | null>(null);
+  const [mfaCode, setMfaCode] = useState("");
+  const [isProcessingMfa, setIsProcessingMfa] = useState(false);
+  const [mfaVerified, setMfaVerified] = useState(false);
+  const [isRequestingRecovery, setIsRequestingRecovery] = useState(false);
   const { isAuthenticated, user } = useAuth();
   const canLoadIdentity = canLoadIdentityState(isAuthenticated);
   const canLoadAdministrativeData = canLoadAdministrativeState(isAuthenticated, user?.role);
@@ -136,17 +146,34 @@ export default function PlatformAdmin() {
       return;
     }
 
+    const validationError = validateIdentitySubmission({
+      mode: identityFormMode,
+      email: identityEmail,
+      password: identityPassword,
+      passwordConfirmation,
+    });
+    if (validationError) {
+      toast.error("Revise os dados de identidade", { description: validationError });
+      return;
+    }
+
     setIsConnectingIdentity(true);
     try {
-      const { error } = await client.auth.signInWithPassword({
-        email: identityEmail.trim(),
-        password: identityPassword,
-      });
+      const { error } = identityFormMode === "sign_in"
+        ? await client.auth.signInWithPassword({ email: identityEmail.trim(), password: identityPassword })
+        : await client.auth.signUp({
+            email: identityEmail.trim(),
+            password: identityPassword,
+            options: { emailRedirectTo: `${window.location.origin}/administracao` },
+          });
       if (error) throw error;
       setIdentityPassword("");
+      setPasswordConfirmation("");
       await Promise.all([identityQuery.refetch(), commandStatusQuery.refetch()]);
-      toast.success("Identidade Supabase conectada", {
-        description: "A sessão não concede alçada. Bootstrap, MFA, recuperação e grant continuam obrigatórios.",
+      toast.success(identityFormMode === "sign_in" ? "Identidade Supabase conectada" : "Cadastro iniciado", {
+        description: identityFormMode === "sign_in"
+          ? "A sessão não concede alçada. Bootstrap, MFA, recuperação e grant continuam obrigatórios."
+          : "Se a confirmação por e-mail estiver habilitada, conclua-a no provedor. Nenhuma alçada foi criada.",
       });
     } catch {
       toast.error("Não foi possível confirmar a identidade", {
@@ -154,6 +181,83 @@ export default function PlatformAdmin() {
       });
     } finally {
       setIsConnectingIdentity(false);
+    }
+  }
+
+  async function beginMfaEnrollment() {
+    const client = getSupabaseBrowserClient();
+    if (!client || identityQuery.data?.state !== "connected") {
+      toast.error("Conecte a identidade antes de preparar MFA.");
+      return;
+    }
+
+    setIsProcessingMfa(true);
+    try {
+      const { data: factors, error: factorsError } = await client.auth.mfa.listFactors();
+      if (factorsError) throw factorsError;
+      const existingFactor = factors.totp[0];
+      if (existingFactor) {
+        setMfaFactorId(existingFactor.id);
+        setMfaQrCode(null);
+        toast.message("Fator MFA encontrado", { description: "Informe o código atual do autenticador para verificar esta sessão." });
+        return;
+      }
+
+      const { data, error } = await client.auth.mfa.enroll({ factorType: "totp" });
+      if (error) throw error;
+      setMfaFactorId(data.id);
+      setMfaQrCode(data.totp.qr_code);
+      toast.message("MFA preparado", { description: "Leia o QR code no autenticador e confirme o código. A alçada continua bloqueada." });
+    } catch {
+      toast.error("Não foi possível preparar MFA", { description: "Nenhuma alçada ou acesso administrativo foi alterado." });
+    } finally {
+      setIsProcessingMfa(false);
+    }
+  }
+
+  async function verifyMfa(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const client = getSupabaseBrowserClient();
+    const validationError = validateTotpCode(mfaCode);
+    if (!client || !mfaFactorId || validationError) {
+      toast.error("Não foi possível verificar MFA", { description: validationError ?? "Prepare o fator MFA antes de informar o código." });
+      return;
+    }
+
+    setIsProcessingMfa(true);
+    try {
+      const { data: challenge, error: challengeError } = await client.auth.mfa.challenge({ factorId: mfaFactorId });
+      if (challengeError) throw challengeError;
+      const { error } = await client.auth.mfa.verify({ factorId: mfaFactorId, challengeId: challenge.id, code: mfaCode.trim() });
+      if (error) throw error;
+      setMfaCode("");
+      setMfaVerified(true);
+      setMfaQrCode(null);
+      toast.success("MFA verificado", { description: "A sessão foi reforçada, mas ativação e alçadas continuam sujeitas à política do servidor." });
+    } catch {
+      toast.error("Código MFA não confirmado", { description: "Tente um novo código do autenticador. Nenhuma alçada foi modificada." });
+    } finally {
+      setIsProcessingMfa(false);
+    }
+  }
+
+  async function requestRecovery() {
+    const client = getSupabaseBrowserClient();
+    if (!client || !/^\S+@\S+\.\S+$/.test(identityEmail.trim())) {
+      toast.error("Informe o e-mail da identidade para solicitar recuperação.");
+      return;
+    }
+    setIsRequestingRecovery(true);
+    try {
+      const { error } = await client.auth.resetPasswordForEmail(identityEmail.trim(), {
+        redirectTo: `${window.location.origin}/administracao`,
+      });
+      if (error) throw error;
+      toast.message("Solicitação processada", { description: genericRecoveryNotice });
+    } catch {
+      toast.error("Não foi possível processar a solicitação", { description: "Tente novamente mais tarde. Nenhuma alçada foi modificada." });
+    } finally {
+      setIsRequestingRecovery(false);
     }
   }
 
@@ -185,11 +289,16 @@ export default function PlatformAdmin() {
             <p className="platform-admin-eyebrow">IDENTIDADE DE FUNDAÇÃO · ETAPA CONTROLADA</p>
             <h2 id="identity-title">Conecte a identidade que poderá iniciar o bootstrap, sem ganhar privilégio automático.</h2>
             <p>
-              Esta conexão consulta exclusivamente o provedor de identidade. Ela não cria usuário, não envia convite,
-              não registra e-mail no CRM e não ativa nenhuma alçada administrativa.
+              A conexão só consulta o provedor; o cadastro é uma ação manual explícita. Nenhuma opção envia convite,
+              atribui papel administrativo ou ativa alçada por e-mail.
             </p>
           </div>
           <form onSubmit={connectSupabaseIdentity} className="platform-admin-identity__form">
+            <fieldset className="platform-admin-identity__mode">
+              <legend>Modo de identidade</legend>
+              <label><input type="radio" name="identity-mode" checked={identityFormMode === "sign_in"} onChange={() => setIdentityFormMode("sign_in")} /> Conectar</label>
+              <label><input type="radio" name="identity-mode" checked={identityFormMode === "sign_up"} onChange={() => setIdentityFormMode("sign_up")} /> Criar identidade</label>
+            </fieldset>
             <label htmlFor="supabase-email">E-mail da identidade Supabase</label>
             <input
               id="supabase-email"
@@ -208,10 +317,47 @@ export default function PlatformAdmin() {
               onChange={(event) => setIdentityPassword(event.target.value)}
               required
             />
+            {identityFormMode === "sign_up" && (
+              <>
+                <label htmlFor="supabase-password-confirmation">Confirmar senha</label>
+                <input
+                  id="supabase-password-confirmation"
+                  type="password"
+                  autoComplete="new-password"
+                  value={passwordConfirmation}
+                  onChange={(event) => setPasswordConfirmation(event.target.value)}
+                  required
+                />
+              </>
+            )}
             <button type="submit" disabled={isConnectingIdentity}>
-              {isConnectingIdentity ? "Confirmando identidade" : "Conectar identidade"} <ArrowUpRight size={15} />
+              {isConnectingIdentity ? "Confirmando identidade" : identityFormMode === "sign_in" ? "Conectar identidade" : "Criar identidade"} <ArrowUpRight size={15} />
             </button>
           </form>
+        </section>
+
+        <section className="platform-admin-security" aria-labelledby="mfa-title">
+          <div>
+            <p className="platform-admin-eyebrow">SESSÃO REFORÇADA · MFA E RECUPERAÇÃO</p>
+            <h2 id="mfa-title">A identidade deve provar o segundo fator antes de poder solicitar ativação.</h2>
+            <p>MFA e recuperação pertencem à identidade autenticada; não concedem papel, organização, grant ou comando administrativo.</p>
+          </div>
+          <div className="platform-admin-security__actions">
+            <button type="button" onClick={beginMfaEnrollment} disabled={isProcessingMfa || mfaVerified}>
+              {mfaVerified ? "MFA verificado nesta sessão" : isProcessingMfa ? "Preparando MFA" : "Preparar MFA"}
+            </button>
+            <button type="button" className="is-quiet" onClick={requestRecovery} disabled={isRequestingRecovery}>
+              {isRequestingRecovery ? "Processando" : "Solicitar recuperação"}
+            </button>
+          </div>
+          {mfaQrCode && <img className="platform-admin-security__qr" src={toMfaQrImageSource(mfaQrCode)} alt="QR code para cadastrar o fator TOTP no aplicativo autenticador" />}
+          {mfaFactorId && !mfaVerified && (
+            <form onSubmit={verifyMfa} className="platform-admin-security__verify">
+              <label htmlFor="supabase-mfa-code">Código do autenticador</label>
+              <input id="supabase-mfa-code" inputMode="numeric" autoComplete="one-time-code" maxLength={8} value={mfaCode} onChange={(event) => setMfaCode(event.target.value)} />
+              <button type="submit" disabled={isProcessingMfa}>{isProcessingMfa ? "Verificando" : "Verificar MFA"}</button>
+            </form>
+          )}
         </section>
 
         <section className="platform-admin-metrics" aria-label="Indicadores da central de plataforma">

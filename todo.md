@@ -631,3 +631,11 @@
 - [x] Validar isolamento, alçada, expiração, recuperação, acessibilidade, testes, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o marco administrativo.
 - [x] Alinhar Supabase Auth ao frontend e associar a identidade autenticada à fundação sem expor chave secreta.
+
+## Criação do CRM: ciclo de identidade administrativa
+
+- [x] Definir estados de cadastro, sessão, bootstrap pendente, MFA, recuperação, ativação e falha segura.
+- [x] Implementar cadastro e conexão manuais via Supabase Auth, sem convite ou ativação automática.
+- [x] Implementar a leitura de MFA, recuperação e estado de ativação para a central administrativa.
+- [x] Validar ciclo de sessão, isolamento, falhas seguras, acessibilidade, testes, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o marco de identidade.
