@@ -433,7 +433,7 @@
 - [ ] Registrar em cada bloco alternado a superfície, o controle, a evidência, o risco, a lacuna e a restauração segura do ambiente.
 - [ ] Exigir, em cada alternância, pelo menos uma evidência nova ou uma lacuna nova; quando não houver avanço seguro, registrar bloqueio e trocar de superfície sem repetir o mesmo teste.
 - [ ] Manter uma trilha de avanço que impeça retorno circular a controles já demonstrados, salvo validação de contradição ou correção de evidência incompleta.
-- [ ] Retomar os controles de Locação bloqueados por expiração de sessão somente quando houver acesso autenticado disponível, sem repetir tentativas de login ou usar credenciais.
+- [x] Retomar os controles de Locação bloqueados por expiração de sessão somente quando houver acesso autenticado disponível, sem repetir tentativas de login ou usar credenciais.
 - [ ] Percorrer integralmente cada painel, formulário e página rolável acessível antes de registrá-lo como encerrado, distinguindo conteúdo lido, conteúdo inacessível e motivo do bloqueio.
 
 ## Correção de fluxo: impedir repetição de setores na auditoria

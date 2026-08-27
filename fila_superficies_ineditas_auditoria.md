@@ -61,6 +61,7 @@ Cada nova linha deve declarar, além dos campos usuais, **superfície anterior**
 | 15 | Locação | `clientes.hincrivel.com.br` | Tela pública de acesso por WhatsApp, sem identificação ou envio de código. | Quarentena. |
 | 16 | Vendas Urbanas | `/crm/origemRoi` | Indicadores de origem/ROI em leitura; custos e período preservados. | Quarentena. |
 | 17 | Locação | `/marketing/social_accounts` | Rota do menu retornou 404; sem controle disponível. | Não demonstrável; não repetir sem rota válida. |
+| 18 | Vendas Urbanas | `/crm/rejeicaoSdr` | Indicadores e classificação por IA em estado vazio; processamento bloqueado. | Quarentena. |
 
 ## Próximo bloco elegível
 
@@ -69,3 +70,5 @@ Cada nova linha deve declarar, além dos campos usuais, **superfície anterior**
 | Locação | A antiga candidata `/negocios/cadastro/locacao` já foi auditada e cancelada com segurança. | Nenhuma rota da lista atual será reutilizada. Antes do próximo bloco, identificar uma superfície de Locação ainda não classificada a partir do menu/HTML, sem abrir listas que revelem dados de terceiros. |
 
 > **Pausa governada de Locação:** os candidatos seguros já percorridos foram colocados em quarentena, e o catálogo de rede foi removido por privacidade. Antes de qualquer nova navegação na coluna, a fila deve selecionar uma superfície ainda não classificada e confirmar que ela não apresenta dados pessoais de terceiros ou operação material logo na carga. Não é permitido retornar a `financeiro`, `serviços`, `prestadores`, `vistorias`, `sinistros`, `padrões`, `documentos`, `negócios/alugueis`, `nova locação` ou `imóveis de rede` apenas para manter a alternância.
+
+> **Guard de navegação lateral:** depois de qualquer rolagem, expansão ou mudança visual do menu, não usar o índice de elemento previamente observado para navegar. Primeiro retornar ao Dashboard, confirmar a nova numeração dos itens visíveis e só então acionar um alvo que possa ser validado imediatamente. Se o submenu exibido não corresponder ao destino pretendido, não navegar por ele; registrar o desvio e retomar a fila.
