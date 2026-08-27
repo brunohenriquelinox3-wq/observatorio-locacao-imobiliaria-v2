@@ -442,3 +442,9 @@
 - [x] Aplicar uma fila de alternância por superfície: após uma evidência nova, passar obrigatoriamente a uma superfície inédita da outra coluna.
 - [x] Bloquear retorno a setor já percorrido no ciclo corrente, exceto diante de nova condição técnica, contradição documentada ou evidência incompleta.
 - [x] Registrar a razão de cada troca de superfície e revisar o histórico da fila antes de qualquer nova interação no CRM externo.
+
+## Autorização registrada: leitura estrutural controlada
+
+- [ ] Abrir as superfícies pendentes em modo de leitura, sem reproduzir identificadores individuais nos documentos ou mensagens.
+- [ ] Mapear somente estrutura, controles, estados agregados, fluxos e lacunas, sem executar qualquer operação material.
+- [ ] Manter a proibição de criação, edição, exclusão, importação, exportação, comunicação, publicação, cobrança, pagamento, repasse, integração e alteração de permissões.

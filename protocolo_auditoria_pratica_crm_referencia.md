@@ -1,10 +1,12 @@
 # Protocolo de auditoria prática — CRM de referência
 
 **Status:** `autorizado_pelo_usuário_para_execução_controlada`  
-**Objetivo:** testar fluxos de Vendas Urbanas e Locação com dados sintéticos, sem usar pessoas reais, sem alterar registros existentes e sem gerar efeitos externos.  
+**Objetivo:** testar fluxos de Vendas Urbanas e Locação com dados sintéticos e, quando o usuário autorizar explicitamente, realizar leitura estrutural controlada de superfícies que contenham registros, sem alterar registros existentes, reter identificadores individuais ou gerar efeitos externos.
 **Identificador de todos os registros de teste:** `TESTE DE AUDITORIA — NÃO OPERACIONAL` mais um sufixo de frente e sequência, por exemplo `VU-01` ou `LC-01`.
 
 > **Regra de parada:** se uma tela puder enviar mensagem, publicar anúncio, disparar e-mail/SMS/WhatsApp, gerar cobrança, acionar parceiro, importar documento/planilha, alterar registro existente ou usar informação real, o teste para antes do comando e o comportamento é registrado como não testado por risco.
+
+> **Leitura estrutural autorizada:** a autorização para leitura não transforma dados exibidos em evidência reproduzível. Durante a inspeção de listas ou fichas, registrar somente a estrutura, os controles, os estados e os riscos agregados. Não transcrever nomes, telefones, e-mails, endereços, documentos, identificadores, valores individuais, mídias ou qualquer dado que permita reconhecer uma pessoa ou um registro.
 
 ## 1. Dados sintéticos e isolamento
 
@@ -20,7 +22,7 @@
 
 | Permitido | Proibido |
 | --- | --- |
-| Abrir menu, listagem, detalhe e formulário; preencher rascunho sintético; salvar somente registro claramente sintético; cancelar/sair; testar filtros locais; registrar erro/validação; apagar exclusivamente o registro sintético identificado ao fim, quando a tela permitir. | Criar/editar/excluir dado real; clicar em publicar, portal, mídia, importação, IA de contrato, enviar proposta, exportar, criar cobrança, registrar pagamento, repassar valor, convidar usuário, alterar cargo/permissão, criar integração, importar planilha/documento ou enviar qualquer comunicação. |
+| Abrir menu, listagem, detalhe e formulário; executar leitura estrutural controlada de telas autorizadas; preencher rascunho sintético; salvar somente registro claramente sintético; cancelar/sair; testar filtros locais; registrar erro/validação; apagar exclusivamente o registro sintético identificado ao fim, quando a tela permitir. | Criar/editar/excluir dado real; transcrever ou reter identificadores individuais; clicar em publicar, portal, mídia, importação, IA de contrato, enviar proposta, exportar, criar cobrança, registrar pagamento, repassar valor, convidar usuário, alterar cargo/permissão, criar integração, importar planilha/documento ou enviar qualquer comunicação. |
 
 ## 3. Sequência de execução por fluxo
 

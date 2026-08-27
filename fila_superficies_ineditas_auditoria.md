@@ -62,6 +62,14 @@ Cada nova linha deve declarar, além dos campos usuais, **superfície anterior**
 | 16 | Vendas Urbanas | `/crm/origemRoi` | Indicadores de origem/ROI em leitura; custos e período preservados. | Quarentena. |
 | 17 | Locação | `/marketing/social_accounts` | Rota do menu retornou 404; sem controle disponível. | Não demonstrável; não repetir sem rota válida. |
 | 18 | Vendas Urbanas | `/crm/rejeicaoSdr` | Indicadores e classificação por IA em estado vazio; processamento bloqueado. | Quarentena. |
+| 19 | Locação | `/negocios/financiamentos` | Tela de simulações/operações vazia; integração indisponível; nenhuma configuração aberta. | Quarentena. |
+| 20 | Vendas Urbanas | `/crm/campanhas` | Estado vazio de campanhas; comunicação em massa bloqueada antes de criação. | Quarentena. |
+| 21 | Locação | `/garantia_locaticia` | Rota candidata retornou 404. | Não demonstrável; não repetir sem rota válida. |
+| 22 | Vendas Urbanas | `/design` | Material gráfico observado em leitura; geração/download bloqueados. | Quarentena. |
+| 23 | Locação | Navegação `Central de Negócios` | Subrotas expostas sem navegação; especializadas já em quarentena. | Grupo esgotado no ciclo. |
+| 24 | Vendas Urbanas | Navegação `Central de Imóveis` | Subrotas expostas sem navegação; estoque/condomínios em quarentena e rede/mapa bloqueados por privacidade. | Grupo esgotado no ciclo. |
+| 25 | Locação | Navegação `Central de Clientes` | Subrotas Clientes, Proprietários e Visitas expostas sem navegação; clientes/visitas em quarentena e proprietários bloqueado por risco de dados reais. | Grupo esgotado no ciclo. |
+| 26 | Vendas Urbanas | Navegação `Central de Leads` | Subrotas exibidas sem navegação; apenas Sincronização de dados permanece não classificada. | Candidata condicionada a bloco prévio de Locação e a abertura sem efeito externo automático. |
 
 ## Próximo bloco elegível
 
