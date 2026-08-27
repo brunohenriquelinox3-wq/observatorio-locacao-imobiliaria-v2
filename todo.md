@@ -535,3 +535,10 @@
 - [x] Delimitar dados canônicos, classificações, qualidade, retenção e fronteiras de migração para Vendas Urbanas e Locação.
 - [x] Definir ingestão, staging, deduplicação, mapeamento, reconciliação, exceção e recuperação sem executar importação, exportação ou sincronização.
 - [x] Definir provas, controles, gates e critérios de aceite para ativação futura de migração e qualidade de dados.
+
+## Aprofundamento documental: experiência operacional e decisão
+
+- [x] Definir princípios de experiência por papel, hierarquia de leitura, estados, foco, acessibilidade e explicabilidade.
+- [x] Definir espaços de trabalho, filas, contexto e transições de Vendas Urbanas sem implementar telas ou automações.
+- [x] Definir espaços de trabalho, filas, contexto e transições de Locação sem implementar telas ou automações.
+- [x] Definir exploração de dados, tendências, exportação/compartilhamento governados e critérios de aceite de experiência.
