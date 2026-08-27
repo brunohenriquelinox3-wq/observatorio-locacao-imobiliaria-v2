@@ -1,5 +1,7 @@
 # Estratégia de produto — Vendas urbanas, lotes e dossiês de partes
 
+> **Atualização vigente em 27 de agosto de 2026:** a estratégia completa de Vendas Urbanas foi consolidada com a estratégia de Locação em [Estratégia atualizada — Vendas Urbanas e Locação](estrategia_vendas_urbanas_locacao_atualizada.md). Este documento preserva o estudo anterior de Vendas Urbanas, lotes e dossiês como base histórica; a atualização vigente restringe-se às colunas Vendas Urbanas e Locação e não altera a arquitetura canônica das demais colunas.
+
 ## Posição estratégica
 
 O produto deve entrar no mercado de vendas como uma **camada de origem, qualificação e governança de negócio**, não como substituto imediato de portal, CRM, ERP, cartório, banco ou jurídico. A promessa é simples: uma imobiliária ou loteadora deixa de trabalhar com um contato e passa a trabalhar com um dossiê vivo, no qual ativo, proprietário, comprador, proposta e evidências são objetos separados e rastreáveis.

@@ -460,3 +460,17 @@
 - [x] Registrar a pausa da auditoria por ausência de ambiente ou papel de demonstração que permita cobrir controles pendentes sem lacunas materiais.
 - [x] Manter inalteradas as estratégias de Locação e Vendas Urbanas até a conclusão comprovada da varredura e uma aprovação estratégica explícita.
 - [ ] Retomar pela fila anti-repetição quando houver acesso de demonstração e revalidar todos os controles antes de declarar completude.
+
+## Encerramento parcial autorizado: benchmark Hincrível
+
+- [x] Formalizar o encerramento da varredura como parcial, incluindo escopo, data, critério e vedação de declarar completude.
+- [x] Consolidar as evidências comprovadas e as lacunas não demonstráveis por Vendas Urbanas e Locação, sem recomendações de produto.
+- [ ] Revisar a integridade documental, preservar checkpoint e submeter o relatório parcial para aprovação específica de atualização estratégica limitada. **Substituído pela autorização explícita de atualização estratégica completa em 27 de agosto de 2026; a aprovação limitada não foi solicitada.**
+
+## Atualização estratégica completa autorizada: Vendas Urbanas e Locação
+
+- [x] Delimitar fontes internas, evidências verificadas, incertezas e fronteiras que guiam a atualização sem alterar Loteadora, ADM ou SUPER ADM.
+- [x] Consolidar os requisitos de Vendas Urbanas, incluindo funil, partes, imóveis, empreendimentos, visitas, negócios, documentos, inteligência, publicação e financeiro.
+- [x] Consolidar os requisitos de Locação, incluindo partes, imóveis, contratos, carteira, cobrança, repasses, manutenção, prestadores, vistorias, sinistros, portais e financeiro.
+- [x] Atualizar as estratégias de Vendas Urbanas e CRM consolidada com decisões, requisitos, provas, lacunas, critérios de aceite e backlog rastreável.
+- [ ] Validar coerência, preservar checkpoint e apresentar a atualização estratégica completa para revisão do usuário.

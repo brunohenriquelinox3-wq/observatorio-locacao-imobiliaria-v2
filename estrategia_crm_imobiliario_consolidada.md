@@ -4,6 +4,8 @@
 
 **Elaborado por Manus AI · Agosto de 2026**
 
+> **Adendo estratégico vigente em 27 de agosto de 2026:** os requisitos completos e atualizados de **Vendas Urbanas** e **Locação**, com critérios de aceite, provas e lacunas de benchmark, estão em [Estratégia atualizada — Vendas Urbanas e Locação](estrategia_vendas_urbanas_locacao_atualizada.md). O adendo respeita integralmente a ordem de colunas e não modifica SUPER ADM, ADM ou LOTEADORA.
+
 > **Atualização estratégica — revisão viva de agosto de 2026:** loteadoras e desenvolvimento de loteamentos deixam de ser vertical adjacente e passam a ser um domínio de primeira classe, no mesmo nível de locação, venda urbana e venda de construtora. Os estudos fornecidos pela BHL foram incorporados como referências de domínio e confrontados com fontes externas oficiais e setoriais; toda afirmação sensível mantém fonte, escopo, limitação e estado de revisão.
 
 ## Mudança de tese: loteadora é desenvolvimento urbano, não corretagem de lote

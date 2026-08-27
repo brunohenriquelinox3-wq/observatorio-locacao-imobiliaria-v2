@@ -1,9 +1,11 @@
 # Matriz de cobertura — segunda varredura do CRM de referência
 
-**Status:** `em_execução`  
+**Status:** `encerrada_parcialmente_por_autorização_explícita_do_usuário_2026-08-27`
 **Objetivo:** tornar verificável a segunda auditoria, listando cada superfície acessível relacionada a Vendas Urbanas ou Locação e classificando-a como **demonstrada**, **bloqueada por segurança**, **inconclusiva** ou **não demonstrável no papel/sessão atual**.
 
 > **Critério de completude acessível:** nenhuma rota, submenu, formulário, aba, ação, estado vazio, filtro, modal ou permissão descoberta ficará sem classificação. Isso não equivale a afirmar que o software não possui superfícies ocultas por plano, feature flag, papel, dados de terceiros ou integração externa; esses limites serão registrados separadamente.
+
+> **Encerramento parcial autorizado:** a matriz registra evidências obtidas e lacunas materiais ainda abertas, mas não comprova cobertura integral. Não é permitido declarar o estudo do CRM como completo, transformar lacunas em ausência de capacidade, nem atualizar as estratégias de Vendas Urbanas ou Locação antes de relatório de cobertura e aprovação estratégica posterior.
 
 ## 1. Legenda de evidência
 

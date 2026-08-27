@@ -1,7 +1,9 @@
 # Registro operacional — auditoria por controle, versão 2
 
-**Status:** `reiniciado_do_zero`  
+**Status:** `encerrado_parcialmente_por_autorização_explícita_do_usuário_2026-08-27`
 **Regra:** nenhuma linha pode ser preenchida com “página aberta”. Cada item precisa registrar um controle específico e seu resultado conforme o checklist v2.
+
+> **Encerramento parcial:** este registro conserva somente evidências individualmente observadas e lacunas explicitamente classificadas. Ele não comprova que todos os controles, papéis, dados, fluxos ou integrações do CRM foram auditados e não autoriza atualização estratégica até aprovação posterior específica.
 
 ## Controle de versões e invalidação
 
@@ -9,7 +11,7 @@
 | --- | --- |
 | Varreduras anteriores | `invalidada_para_decisão`; preservada apenas para histórico e limpeza de dados sintéticos. |
 | Recomendações estratégicas anteriores | `suspensas`; não podem ser integradas nem usadas como benchmark final. |
-| Nova fonte de decisão | Somente esta versão, após cobrir individualmente todos os controles acessíveis e registrar bloqueios/inconclusões. |
+| Nova fonte de decisão | Este registro parcial sustenta apenas relatório de cobertura, lacunas e limites; não sustenta decisão ou atualização estratégica enquanto a completude não for comprovada. |
 
 ## Gate de avanço e prevenção de ciclo improdutivo
 
