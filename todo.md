@@ -395,3 +395,41 @@
 
 - [x] Formalizar o Painel Loteadora como primeira tela dentro da coluna Loteadora, sem alterar a ordem global de colunas.
 - [x] Atualizar estratégia, arquitetura, matriz, inventário, apresentação e backlog; revisar, validar e salvar checkpoint.
+
+## Benchmark autorizado: CRM de referência para Vendas Urbanas e Locação
+
+- [x] Mapear a experiência pública e o acesso autenticado do CRM de referência, sem executar ações, criar dados ou alterar configurações.
+- [x] Inventariar fluxos, telas, entidades, estados, permissões e lacunas relevantes separadamente para Vendas Urbanas e Locação.
+- [ ] Comparar as evidências com a estratégia atual e preparar propostas de atualização rastreáveis, sem alterar Loteadora.
+- [ ] Integrar somente decisões aprovadas a Vendas Urbanas e Locação; revisar, validar e salvar checkpoint.
+
+## Auditoria prática aprofundada: CRM de referência
+
+- [x] Definir o protocolo de testes sintéticos, nomes, limites, evidências, limpeza e bloqueios de ação externa.
+- [ ] Executar e documentar testes sintéticos controlados de Vendas Urbanas: parte, proprietário, imóvel, visita, oportunidade, proposta e financiamento.
+- [ ] Executar e documentar testes sintéticos controlados de Locação: imóvel, proprietário, locatário, negócio, manutenção, prestador, cobrança e repasse.
+- [ ] Auditar comportamentos de formulário, filtros, permissões, documentos, dashboards, erros, ações em lote e importações sem acionar comunicação, cobrança ou publicação.
+- [ ] Confrontar resultados, submeter decisões separadas, integrar apenas aprovações e registrar checkpoint.
+
+## Segunda varredura exaustiva: cobertura comprovada do CRM de referência
+
+- [x] Criar matriz de cobertura por menu, rota, formulário, aba, botão, filtro, estado, permissão e risco de Vendas Urbanas e Locação.
+- [ ] Reexecutar e evidenciar todos os caminhos acessíveis de Vendas Urbanas, classificando-os como demonstrados, bloqueados ou não demonstráveis.
+- [ ] Reexecutar e evidenciar todos os caminhos acessíveis de Locação, classificando-os como demonstrados, bloqueados ou não demonstráveis.
+- [ ] Consolidar a cobertura, reavaliar lacunas e revisar as propostas antes de pedir aprovação estratégica.
+
+## Reinício integral aprovado: auditoria por controle
+
+- [x] Invalidar as conclusões e recomendações das varreduras anteriores, preservando-as apenas como histórico de metodologia insuficiente.
+- [x] Limpar exclusivamente os registros sintéticos identificados, após confirmação de exclusão, ou registrar item pendente se a exclusão não for segura.
+- [x] Construir checklist obrigatório por controle: aba, estado, botão, filtro, modal, formulário, validação, ação, erro, permissão, impacto e evidência.
+- [ ] Reiniciar Vendas Urbanas do zero, sem marcar controle como analisado antes da evidência individual.
+- [ ] Reiniciar Locação do zero, sem marcar controle como analisado antes da evidência individual.
+- [ ] Reconciliar cobertura e submeter somente o resultado integral para nova decisão estratégica.
+
+## Diretriz de execução: alternância entre colunas
+
+- [ ] Alternar blocos de auditoria entre Vendas Urbanas e Locação, sem permanecer concentrado em um único setor enquanto houver superfícies pendentes na outra coluna.
+- [ ] Registrar em cada bloco alternado a superfície, o controle, a evidência, o risco, a lacuna e a restauração segura do ambiente.
+- [ ] Exigir, em cada alternância, pelo menos uma evidência nova ou uma lacuna nova; quando não houver avanço seguro, registrar bloqueio e trocar de superfície sem repetir o mesmo teste.
+- [ ] Manter uma trilha de avanço que impeça retorno circular a controles já demonstrados, salvo validação de contradição ou correção de evidência incompleta.
