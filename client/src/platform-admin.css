@@ -83,6 +83,28 @@
 .platform-admin-session strong { display: block; margin: 15px 0 6px; font-family: "Fraunces", serif; font-size: 24px; }
 .platform-admin-session p { margin: 0; color: rgba(248, 244, 234, .68); font-size: 13px; line-height: 1.55; }
 
+.platform-admin-identity {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr);
+  gap: 34px;
+  align-items: start;
+  margin-top: 28px;
+  padding: clamp(24px, 4vw, 42px);
+  border: 1px solid var(--admin-line);
+  background: #fffdf7;
+}
+
+.platform-admin-identity h2 { max-width: 680px; margin: 0; font: 500 clamp(27px, 3vw, 40px)/1.08 "Fraunces", Georgia, serif; letter-spacing: -.035em; }
+.platform-admin-identity > div > p:last-child { max-width: 660px; margin: 15px 0 0; color: #5d6c72; line-height: 1.65; }
+.platform-admin-identity__form { display: grid; gap: 8px; padding: 22px; border: 1px solid rgba(23,59,77,.15); background: var(--admin-paper); }
+.platform-admin-identity__form label { font: 700 10px/1.2 "DM Sans", sans-serif; letter-spacing: .1em; color: var(--admin-olive); text-transform: uppercase; }
+.platform-admin-identity__form input { min-height: 42px; padding: 10px 12px; border: 1px solid rgba(23,59,77,.28); border-radius: 0; background: #fffdf7; color: var(--admin-ink); outline-offset: 3px; }
+.platform-admin-identity__form input:focus-visible { outline: 2px solid var(--admin-clay); }
+.platform-admin-identity__form button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; margin-top: 8px; border: 0; background: var(--admin-ink); color: #f8f4ea; cursor: pointer; font: 700 11px/1 "DM Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase; transition: transform 160ms cubic-bezier(.23,1,.32,1), background 160ms cubic-bezier(.23,1,.32,1); }
+.platform-admin-identity__form button:hover { background: var(--admin-clay); }
+.platform-admin-identity__form button:active { transform: scale(.98); }
+.platform-admin-identity__form button:disabled { cursor: wait; opacity: .65; }
+
 .platform-admin-metrics {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

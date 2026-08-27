@@ -34,7 +34,9 @@ async function countFoundationRows(table: FoundationTable): Promise<number> {
     .from(table)
     .select(countColumnByTable[table], { count: "exact", head: true });
 
-  if (error) throw error;
+  if (error) {
+    throw new Error(`FOUNDATION_COUNT_${table.toUpperCase()}_${error.code ?? "UNKNOWN"}`);
+  }
   return count ?? 0;
 }
 
@@ -58,7 +60,7 @@ export async function getFoundationReadiness(
     };
   } catch (error) {
     console.error("[FoundationReadiness] Aggregated readiness lookup failed", {
-      message: error instanceof Error ? error.message : "unknown",
+      code: error instanceof Error ? error.message.slice(0, 160) : "UNKNOWN",
     });
     throw new Error("FOUNDATION_READINESS_UNAVAILABLE");
   }

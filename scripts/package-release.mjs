@@ -22,13 +22,17 @@ const excludedRoots = new Set([
   "releases",
 ]);
 
+const excludedFiles = new Set([
+  ".project-config.json",
+]);
+
 function isIncluded(source) {
   const relative = path.relative(root, source);
   if (!relative || relative.startsWith("..")) return true;
   const [first] = relative.split(path.sep);
   if (excludedRoots.has(first)) return false;
   const basename = path.basename(source);
-  return !basename.startsWith(".env");
+  return !basename.startsWith(".env") && !excludedFiles.has(basename);
 }
 
 function inlineBuildAssets(indexHtml, files) {

@@ -28,6 +28,7 @@ function createContext(role: "admin" | "user"): TrpcContext {
     },
     req: {} as TrpcContext["req"],
     res: {} as TrpcContext["res"],
+    supabaseSubjectId: null,
   };
 }
 

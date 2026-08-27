@@ -621,3 +621,13 @@
 
 - [x] Entregar, a cada marco novo de criação do CRM, um ZIP pronto para upload e uma versão HTML correspondente, sem publicar automaticamente.
 - [x] Gerar e verificar os artefatos `fundacao-a0` sem arquivos de ambiente, segredos, dependências locais ou logs.
+
+## Criação do CRM: comandos administrativos controlados
+
+- [x] Definir contratos de bootstrap, organização, delegação, suspensão e revogação sem dados pessoais hardcoded.
+- [x] Validar a abordagem de funções transacionais e segurança em referências oficiais do Supabase.
+- [x] Preparar e aplicar migrations administrativas com funções controladas, trilha redigida e negação por padrão.
+- [x] Implementar APIs e superfícies administrativas sem expor acesso direto a tabelas ou comandos inseguros.
+- [x] Validar isolamento, alçada, expiração, recuperação, acessibilidade, testes, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o marco administrativo.
+- [x] Alinhar Supabase Auth ao frontend e associar a identidade autenticada à fundação sem expor chave secreta.

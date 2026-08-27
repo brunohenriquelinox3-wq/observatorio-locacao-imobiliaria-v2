@@ -31,8 +31,8 @@ const foundationCommandStates: Record<PlatformCommand, PlatformCommandState> = {
   },
   activateBootstrap: {
     enabled: false,
-    label: "Ativar principal inicial",
-    reason: "O bootstrap permanece indisponível até a função interna, o MFA e o canal de recuperação serem validados.",
+    label: "Preparar principal inicial",
+    reason: "O bootstrap só cria uma pendência vinculada à identidade Supabase; MFA, recuperação e ativação continuam obrigatórios.",
   },
 };
 
@@ -42,4 +42,12 @@ export function getPlatformCommandState(command: PlatformCommand): PlatformComma
 
 export function allFoundationCommandsBlocked(): boolean {
   return platformCommands.every(command => !getPlatformCommandState(command).enabled);
+}
+
+export function canLoadIdentityState(isAuthenticated: boolean): boolean {
+  return isAuthenticated;
+}
+
+export function canLoadAdministrativeState(isAuthenticated: boolean, role: "admin" | "user" | undefined): boolean {
+  return isAuthenticated && role === "admin";
 }

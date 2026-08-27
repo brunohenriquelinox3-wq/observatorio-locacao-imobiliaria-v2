@@ -1,5 +1,11 @@
 import DashboardLayout, { type DashboardNavigationItem } from "@/components/DashboardLayout";
-import { getPlatformCommandState, type PlatformCommand } from "@/lib/platformAdmin";
+import { useAuth } from "@/_core/hooks/useAuth";
+import {
+  canLoadAdministrativeState,
+  canLoadIdentityState,
+  getPlatformCommandState,
+  type PlatformCommand,
+} from "@/lib/platformAdmin";
 import { trpc } from "@/lib/trpc";
 import {
   Activity,
@@ -18,6 +24,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import "../platform-admin.css";
 
 const navigationItems: DashboardNavigationItem[] = [
@@ -32,7 +39,7 @@ const commandCards: Array<{
   { command: "provisionOrganization", icon: Building2, requirement: "AAL2 · domínio validado · correlação · idempotência" },
   { command: "grantMembership", icon: UsersRound, requirement: "alçada superior · escopo contido · vigência" },
   { command: "revokeMembership", icon: LockKeyhole, requirement: "motivo · sucessor quando necessário · invalidação" },
-  { command: "activateBootstrap", icon: KeyRound, requirement: "segredo interno · e-mail confirmado · MFA · recuperação" },
+  { command: "activateBootstrap", icon: KeyRound, requirement: "identidade Supabase · MFA · recuperação · ativação posterior" },
 ];
 
 const focusPanels = {
@@ -67,7 +74,29 @@ function unavailable(command: PlatformCommand) {
 
 export default function PlatformAdmin() {
   const [focus, setFocus] = useState<FocusKey>("fundacao");
-  const readinessQuery = trpc.foundation.readiness.useQuery(undefined, { retry: false });
+  const [identityEmail, setIdentityEmail] = useState("");
+  const [identityPassword, setIdentityPassword] = useState("");
+  const [isConnectingIdentity, setIsConnectingIdentity] = useState(false);
+  const { isAuthenticated, user } = useAuth();
+  const canLoadIdentity = canLoadIdentityState(isAuthenticated);
+  const canLoadAdministrativeData = canLoadAdministrativeState(isAuthenticated, user?.role);
+  const readinessQuery = trpc.foundation.readiness.useQuery(undefined, { retry: false, enabled: canLoadAdministrativeData });
+  const identityQuery = trpc.foundation.identity.useQuery(undefined, { retry: false, enabled: canLoadIdentity });
+  const commandStatusQuery = trpc.foundation.commandStatus.useQuery(undefined, { retry: false, enabled: canLoadAdministrativeData });
+  const bootstrapMutation = trpc.administration.bootstrap.useMutation({
+    onSuccess() {
+      toast.success("Principal criado como pendência de ativação", {
+        description: "Nenhuma alçada foi ativada. O próximo gate obrigatório é MFA e recuperação.",
+      });
+      void commandStatusQuery.refetch();
+      void readinessQuery.refetch();
+    },
+    onError() {
+      toast.error("Bootstrap não foi liberado", {
+        description: "Confirme a identidade Supabase, a ausência de principal anterior e os requisitos de segurança.",
+      });
+    },
+  });
   const selectedFocus = focusPanels[focus];
   const readiness = readinessQuery.data;
   const metricValue = (value: number | undefined) => {
@@ -82,6 +111,51 @@ export default function PlatformAdmin() {
       : readiness?.commandMode === "blocked"
         ? "Fundação conectada · comandos bloqueados"
         : "Estado indisponível";
+  const identityStatus = identityQuery.isLoading
+    ? "Verificando identidade"
+    : identityQuery.data?.state === "connected"
+      ? "Identidade Supabase conectada · alçada pendente"
+      : "Identidade Supabase ainda não conectada";
+  const canPrepareBootstrap = commandStatusQuery.data?.bootstrapAction === "available";
+
+  function executeCommand(command: PlatformCommand) {
+    if (command === "activateBootstrap" && canPrepareBootstrap) {
+      bootstrapMutation.mutate({ correlationId: crypto.randomUUID() });
+      return;
+    }
+    unavailable(command);
+  }
+
+  async function connectSupabaseIdentity(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const client = getSupabaseBrowserClient();
+    if (!client) {
+      toast.error("Identidade Supabase indisponível", {
+        description: "A configuração pública não está disponível neste ambiente.",
+      });
+      return;
+    }
+
+    setIsConnectingIdentity(true);
+    try {
+      const { error } = await client.auth.signInWithPassword({
+        email: identityEmail.trim(),
+        password: identityPassword,
+      });
+      if (error) throw error;
+      setIdentityPassword("");
+      await Promise.all([identityQuery.refetch(), commandStatusQuery.refetch()]);
+      toast.success("Identidade Supabase conectada", {
+        description: "A sessão não concede alçada. Bootstrap, MFA, recuperação e grant continuam obrigatórios.",
+      });
+    } catch {
+      toast.error("Não foi possível confirmar a identidade", {
+        description: "Verifique as credenciais no provedor de identidade. Nenhuma permissão foi criada ou alterada.",
+      });
+    } finally {
+      setIsConnectingIdentity(false);
+    }
+  }
 
   return (
     <DashboardLayout navigationItems={navigationItems} navigationTitle="Plataforma">
@@ -102,9 +176,43 @@ export default function PlatformAdmin() {
           <aside className="platform-admin-session" aria-label="Estado atual da sessão">
             <div><ShieldCheck size={18} /><span>ESTADO DA FUNDAÇÃO</span></div>
             <strong>{foundationStatus}</strong>
-            <p>O acesso privilegiado depende de convite, identidade confirmada, MFA e recuperação registrada.</p>
+            <p>{identityStatus}. O acesso privilegiado depende de convite, MFA, recuperação e alçada vigente.</p>
           </aside>
         </header>
+
+        <section className="platform-admin-identity" aria-labelledby="identity-title">
+          <div>
+            <p className="platform-admin-eyebrow">IDENTIDADE DE FUNDAÇÃO · ETAPA CONTROLADA</p>
+            <h2 id="identity-title">Conecte a identidade que poderá iniciar o bootstrap, sem ganhar privilégio automático.</h2>
+            <p>
+              Esta conexão consulta exclusivamente o provedor de identidade. Ela não cria usuário, não envia convite,
+              não registra e-mail no CRM e não ativa nenhuma alçada administrativa.
+            </p>
+          </div>
+          <form onSubmit={connectSupabaseIdentity} className="platform-admin-identity__form">
+            <label htmlFor="supabase-email">E-mail da identidade Supabase</label>
+            <input
+              id="supabase-email"
+              type="email"
+              autoComplete="email"
+              value={identityEmail}
+              onChange={(event) => setIdentityEmail(event.target.value)}
+              required
+            />
+            <label htmlFor="supabase-password">Senha</label>
+            <input
+              id="supabase-password"
+              type="password"
+              autoComplete="current-password"
+              value={identityPassword}
+              onChange={(event) => setIdentityPassword(event.target.value)}
+              required
+            />
+            <button type="submit" disabled={isConnectingIdentity}>
+              {isConnectingIdentity ? "Confirmando identidade" : "Conectar identidade"} <ArrowUpRight size={15} />
+            </button>
+          </form>
+        </section>
 
         <section className="platform-admin-metrics" aria-label="Indicadores da central de plataforma">
           <article><span>ORGANIZAÇÕES</span><strong>{metricValue(readiness?.counts.organizations)}</strong><p>Leitura agregada; provisionamento permanece bloqueado.</p></article>
@@ -176,8 +284,12 @@ export default function PlatformAdmin() {
                   <h3>{state.label}</h3>
                   <p>{state.reason}</p>
                   <small>{requirement}</small>
-                  <button type="button" onClick={() => unavailable(command)}>
-                    Ver bloqueio <ArrowUpRight size={15} />
+                  <button
+                    type="button"
+                    onClick={() => executeCommand(command)}
+                    disabled={command === "activateBootstrap" && bootstrapMutation.isPending}
+                  >
+                    {command === "activateBootstrap" && canPrepareBootstrap ? "Preparar pendência" : "Ver bloqueio"} <ArrowUpRight size={15} />
                   </button>
                 </article>
               );
