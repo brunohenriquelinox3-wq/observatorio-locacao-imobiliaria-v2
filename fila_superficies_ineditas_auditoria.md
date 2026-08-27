@@ -1,8 +1,10 @@
 # Fila operacional de superfícies inéditas — auditoria do CRM de referência
 
-**Status:** `ativa_desde_2026-08-27`  
+**Status:** `pausada_por_decisão_explícita_do_usuário_2026-08-27`
 **Escopo:** exclusivamente **Vendas Urbanas** e **Locação**.  
 **Objetivo:** impedir repetição de setor enquanto houver superfície inédita segura na outra coluna, sem alterar dados reais ou produzir recomendações estratégicas.
+
+> **Pausa aprovada:** o usuário escolheu aguardar ambiente de demonstração ou papel de teste, pois exige garantia de completude antes de qualquer atualização estratégica. A auditoria não pode ser declarada completa enquanto persistirem lacunas de rolagem/paginação, permissões, detalhes, confirmações e fluxos materiais. As estratégias de Locação e Vendas Urbanas permanecem inalteradas até a conclusão comprovada e nova aprovação explícita.
 
 > **Regra de avanço:** cada bloco encerra depois de uma única unidade verificável: um controle novo, uma lacuna nova ou um bloqueio formal. O setor recém-trabalhado entra em quarentena de fila e não pode ser reaberto no ciclo seguinte.
 
@@ -70,13 +72,24 @@ Cada nova linha deve declarar, além dos campos usuais, **superfície anterior**
 | 24 | Vendas Urbanas | Navegação `Central de Imóveis` | Subrotas expostas sem navegação; estoque/condomínios em quarentena e rede/mapa bloqueados por privacidade. | Grupo esgotado no ciclo. |
 | 25 | Locação | Navegação `Central de Clientes` | Subrotas Clientes, Proprietários e Visitas expostas sem navegação; clientes/visitas em quarentena e proprietários bloqueado por risco de dados reais. | Grupo esgotado no ciclo. |
 | 26 | Vendas Urbanas | Navegação `Central de Leads` | Subrotas exibidas sem navegação; apenas Sincronização de dados permanece não classificada. | Candidata condicionada a bloco prévio de Locação e a abertura sem efeito externo automático. |
+| 27 | Vendas Urbanas | `/leads` | Leitura estrutural autorizada da lista; paginação identificada e rolagem sem deslocamento demonstrável. | Quarentena até método de rolagem/paginação verificável. |
+| 28 | Locação | `/servicos` | Filtros, taxonomias, indicadores e tabela vazia registrados. | Quarentena. |
+| 29 | Vendas Urbanas | `/visitantes` | Funil de aquisição e estado vazio registrados. | Quarentena. |
+| 30 | Locação | `/negocios` | Carteira e importadores identificados, sem operação. | Quarentena. |
+| 31 | Vendas Urbanas | `/crm/segmentos` | Segmentação, IA declarada e estado vazio registrados. | Quarentena. |
+| 32 | Locação | `/imoveisagencia` | Cards, controles e ações identificados; rolagem sem deslocamento apesar de conteúdo abaixo. | Quarentena até método de rolagem verificável. |
+| 33 | Vendas Urbanas | `/crm/migracao` | Migração de carteira mapeada em leitura, sem abrir comando. | Quarentena. |
+| 34 | Locação | `/imoveisempreendimentos` | Catálogo de condomínios vazio e controles de lista registrados. | Quarentena. |
+| 35 | Vendas Urbanas | `/crm/configuracoes` | Negação 403 confirmada sem configuração. | Não repetir sem mudança comprovada de papel/permissão. |
+| 36 | Locação | `/servicos_prestadores` | Diretório de prestadores vazio, filtros e tabela registrados. | Quarentena. |
+| 37 | Vendas Urbanas | `/crm/ajuda` | Declarações de automação e tópicos de ajuda registrados; acordeões mantidos fechados. | Quarentena; reabrir somente após bloco de Locação e por tópico individual. |
 
 ## Próximo bloco elegível
 
 | Coluna exigida | Situação | Decisão operacional |
 | --- | --- | --- |
-| Locação | A antiga candidata `/negocios/cadastro/locacao` já foi auditada e cancelada com segurança. | Nenhuma rota da lista atual será reutilizada. Antes do próximo bloco, identificar uma superfície de Locação ainda não classificada a partir do menu/HTML, sem abrir listas que revelem dados de terceiros. |
+| Locação | A autorização expressa passou a permitir leitura estrutural, mas não operações materiais nem retenção de identificadores. Os principais candidatos de operação já foram reclassificados e colocados em quarentena. | Antes do próximo bloco, localizar no menu uma superfície de Locação ainda não classificada; se não houver, registrar formalmente o esgotamento em vez de reciclar setor. |
 
-> **Pausa governada de Locação:** os candidatos seguros já percorridos foram colocados em quarentena, e o catálogo de rede foi removido por privacidade. Antes de qualquer nova navegação na coluna, a fila deve selecionar uma superfície ainda não classificada e confirmar que ela não apresenta dados pessoais de terceiros ou operação material logo na carga. Não é permitido retornar a `financeiro`, `serviços`, `prestadores`, `vistorias`, `sinistros`, `padrões`, `documentos`, `negócios/alugueis`, `nova locação` ou `imóveis de rede` apenas para manter a alternância.
+> **Pausa governada de Locação:** os candidatos já percorridos, inclusive sob leitura estrutural autorizada, permanecem em quarentena. A autorização não permite operação, transcrição de identificadores ou retorno circular. Antes de qualquer nova navegação na coluna, a fila deve selecionar uma superfície ainda não classificada; se a lista estiver esgotada, deve registrar o fato e aguardar condição nova. Não é permitido retornar a `financeiro`, `serviços`, `prestadores`, `vistorias`, `sinistros`, `padrões`, `documentos`, `negócios/alugueis`, `nova locação`, `imóveis de rede`, `imóveis da agência` ou `empreendimentos` apenas para manter a alternância.
 
 > **Guard de navegação lateral:** depois de qualquer rolagem, expansão ou mudança visual do menu, não usar o índice de elemento previamente observado para navegar. Primeiro retornar ao Dashboard, confirmar a nova numeração dos itens visíveis e só então acionar um alvo que possa ser validado imediatamente. Se o submenu exibido não corresponder ao destino pretendido, não navegar por ele; registrar o desvio e retomar a fila.

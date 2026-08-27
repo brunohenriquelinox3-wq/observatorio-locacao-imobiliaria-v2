@@ -448,3 +448,15 @@
 - [ ] Abrir as superfícies pendentes em modo de leitura, sem reproduzir identificadores individuais nos documentos ou mensagens.
 - [ ] Mapear somente estrutura, controles, estados agregados, fluxos e lacunas, sem executar qualquer operação material.
 - [ ] Manter a proibição de criação, edição, exclusão, importação, exportação, comunicação, publicação, cobrança, pagamento, repasse, integração e alteração de permissões.
+
+## Novo ambiente ou papel de teste: continuidade de Locação
+
+- [ ] Confirmar o contexto autenticado e registrar o escopo observável do novo ambiente ou papel de teste, sem expor identificadores individuais.
+- [ ] Inventariar as superfícies inéditas de Locação liberadas pelo novo contexto e atualizar a fila anti-repetição.
+- [ ] Auditar controles de Locação e Vendas Urbanas alternadamente, preservando a evidência individual, a rolagem integral acessível e a proibição de operações materiais.
+
+## Pausa aprovada: aguardar ambiente de demonstração
+
+- [x] Registrar a pausa da auditoria por ausência de ambiente ou papel de demonstração que permita cobrir controles pendentes sem lacunas materiais.
+- [x] Manter inalteradas as estratégias de Locação e Vendas Urbanas até a conclusão comprovada da varredura e uma aprovação estratégica explícita.
+- [ ] Retomar pela fila anti-repetição quando houver acesso de demonstração e revalidar todos os controles antes de declarar completude.
