@@ -490,7 +490,7 @@
 
 - [x] Incorporar linearmente aprendizados comprovados do CRM de referência e dos estudos internos, sem solicitar aprovação intermediária para cada atualização documental.
 - [x] Registrar recomendação, evidência, alternativa, risco, dependência e critério de aceite em cada decisão estratégica relevante.
-- [ ] Apresentar ao usuário somente blocos estratégicos concluídos, coerentes e revisados, sem criar funcionalidades do CRM.
+- [x] Apresentar ao usuário somente blocos estratégicos concluídos, coerentes e revisados, sem criar funcionalidades do CRM.
 
 ## Aprofundamento documental: fundação compartilhada Vendas Urbanas e Locação
 
@@ -542,3 +542,10 @@
 - [x] Definir espaços de trabalho, filas, contexto e transições de Vendas Urbanas sem implementar telas ou automações.
 - [x] Definir espaços de trabalho, filas, contexto e transições de Locação sem implementar telas ou automações.
 - [x] Definir exploração de dados, tendências, exportação/compartilhamento governados e critérios de aceite de experiência.
+
+## Auditoria documental independente: comprovação de atualização estratégica
+
+- [x] Verificar a presença, o conteúdo material e as seções obrigatórias de cada documento estratégico atualizado.
+- [x] Verificar referências cruzadas, escopo exclusivo de Vendas Urbanas e Locação, limites de não implementação e ausência de dados individuais.
+- [x] Verificar integridade de formatação, diferenças documentais e histórico de checkpoints que preserva as atualizações.
+- [x] Registrar achados, corrigir lacunas comprovadas, revalidar e preservar uma evidência de conferência revisável.
