@@ -451,9 +451,9 @@
 
 ## Novo ambiente ou papel de teste: continuidade de Locação
 
-- [ ] Confirmar o contexto autenticado e registrar o escopo observável do novo ambiente ou papel de teste, sem expor identificadores individuais.
-- [ ] Inventariar as superfícies inéditas de Locação liberadas pelo novo contexto e atualizar a fila anti-repetição.
-- [ ] Auditar controles de Locação e Vendas Urbanas alternadamente, preservando a evidência individual, a rolagem integral acessível e a proibição de operações materiais.
+- [ ] Confirmar o contexto autenticado e registrar o escopo observável do novo ambiente ou papel de teste, sem expor identificadores individuais. **Pendente de condição futura:** o ambiente/papel não foi disponibilizado e a auditoria está pausada.
+- [ ] Inventariar as superfícies inéditas de Locação liberadas pelo novo contexto e atualizar a fila anti-repetição. **Pendente de condição futura:** depende da disponibilização do ambiente/papel de demonstração.
+- [ ] Auditar controles de Locação e Vendas Urbanas alternadamente, preservando a evidência individual, a rolagem integral acessível e a proibição de operações materiais. **Pendente de condição futura:** retomar somente após o ambiente de demonstração estar comprovadamente disponível.
 
 ## Pausa aprovada: aguardar ambiente de demonstração
 
