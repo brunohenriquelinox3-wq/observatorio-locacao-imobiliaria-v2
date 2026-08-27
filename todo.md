@@ -564,3 +564,10 @@
 - [x] Confrontar os achados com a estratégia atual, distinguindo prática comprovada, hipótese, decisão e item não aplicável.
 - [x] Atualizar a estratégia, a matriz mestre e o registro executivo com decisões rastreáveis, referências e critérios de aceite.
 - [x] Revisar fontes, links, coerência e integridade documental; preservar checkpoint e entregar o bloco de estudo incorporado.
+
+## Pesquisa externa aprofundada: mercado brasileiro e métricas operacionais
+
+- [x] Definir perguntas de mercado e métricas operacionais prioritárias para Vendas Urbanas e Locação.
+- [x] Coletar fontes brasileiras oficiais e setoriais sobre aluguel, venda, oferta, demanda, crédito e operação.
+- [x] Converter sinais de mercado em requisitos de exploração, tendência, decisão e qualidade de dado.
+- [x] Atualizar a estratégia documental com fontes, limites, critérios de aceite e referência aos indicadores pesquisados.

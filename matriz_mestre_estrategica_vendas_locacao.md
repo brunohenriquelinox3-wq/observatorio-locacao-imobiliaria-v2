@@ -30,6 +30,7 @@
 | `MT-08` | Integrar contexto de jornada sem fundir fontes de verdade ou permissões de escrita. | Leitura de parte, ativo, proposta, contrato, serviço e carteira informa origem, atualização e scope; comandos continuam próprios de cada domínio. | Workspace “360°” virar acesso amplo, estado implícito ou alteração fora de alçada. | Read model governado, policy por objeto/campo e eventos correlacionados. | [8] [9] |
 | `MT-09` | Tratar fornecedor externo como adaptador de capacidade, com contrato, dados mínimos e confirmação/reconciliação. | Cada capacidade prova escopo, idempotência, correlação, timeout, retentativa, fila de exceção e desligamento seguro. | Token global, callback não confiável, duplicidade e transformação de status externo em fato interno. | Inventário de integrações, avaliação de fornecedor e política de efeito externo. | [8] [9] |
 | `MT-10` | Manter critérios de acessibilidade e feedback de estado como parte do aceite de toda jornada. | Teclado, foco, leitor de tela, tabela, gráfico, modal, vazio e erro passam por prova de comportamento. | Painel visualmente atraente, porém incompreensível, não operável ou sem recuperação. | Design system, conteúdo semântico e plano de teste assistivo. | [8] [9] |
+| `MT-11` | Tratar indicador externo como contexto versionado, separado do fato de carteira e do comando operacional. | Métrica exibe fonte, universo, geografia, segmento, método, período, `as_of`, atraso, cobertura, limitação e tabela alternativa; sem comparabilidade, exibe indisponibilidade. | Transformar anúncio, amostra, série de crédito ou índice de plataforma em preço, previsão, score ou fato interno. | Catálogo de indicadores, contrato de proveniência, policy de leitura e revisão humana. | [10] |
 
 ## 3. Vendas Urbanas — matriz por domínio
 
@@ -45,6 +46,7 @@
 | `VU-M08` | Publicação e canais | Publicação é fluxo separado, com conteúdo versionado e autorização ativa. | Preview, canal, campos/mídias permitidos, confirmação, estado externo e retirada ficam auditáveis. | Anúncio indevido ou publicação sem reversão. | Autorização de captação e contrato de canal. | [3] [5] |
 | `VU-M09` | Financeiro e comissão | Direito econômico usa base, regra, gatilho, recebedor, teto e versão; não é pagamento. | Ciclo distingue estimativa, apuração, bloqueio, elegibilidade, instrução e settlement. | Comissão duplicada, antecipada ou sem regra. | `MT-07`, alçada e conciliação. | [4] |
 | `VU-M10` | Inteligência comercial | Usar saúde do funil, origem/ROI, prioridade e perda como leituras explicáveis. | Métrica traz fórmula, período, coorte, fonte, `as_of`, limitação e ação humana. | Causalidade falsa, viés e automação comercial sem controle. | `MT-05`, `MT-06` e revisão humana. | [5] [6] |
+| `VU-M11` | Contexto de mercado e crédito | Comparar preço de anúncio, oferta e sinais de crédito externos apenas por recortes aprovados e explicitamente comparáveis. | Cartão contextual separa preço interno, proposta, contrato e fonte externa; mostra praça/tipologia/período/cobertura e não altera elegibilidade ou decisão. | Precificação automática, indicação de financiamento ou leitura de mercado fora de cobertura. | `MT-11`, catálogo de indicadores e parecer humano. | [10] |
 
 ## 4. Locação — matriz por domínio
 
@@ -61,6 +63,7 @@
 | `LC-M09` | Vistorias e sinistros | Tratar item/ambiente, cronologia, evidência, alegação, decisão e obrigação como fatos diferentes. | Inclusão de foto/relato não atribui culpa, cobertura ou indenização. | Responsabilização sem processo/evidência. | Caso, policy, alçada e trilha de auditoria. | [3] [7] |
 | `LC-M10` | Portais e canais | Portal de cliente/proprietário/prestador recebe grant por objeto, finalidade e vigência. | URL manipulada, grant expirado ou objeto fora do escopo falham sem enumeração de dados. | Vazamento de contrato, imóvel, carteira, documento ou observação interna. | `MT-01`, `MT-03`, gestão de sessão e auditoria. | [2] [5] |
 | `LC-M11` | Alertas e inteligência | Alertar prazos, vencimentos, garantias, serviços e divergências com owner e ação humana. | Alerta demonstra dados/fontes/tempo/limitação e não aciona cobrança, repasse ou rescisão. | Ruído operacional e automação punitiva. | `MT-05`, `MT-06` e política de escalonamento. | [5] [6] |
+| `LC-M12` | Mercado, negociação e territorialidade | Distinguir valor anunciado, proposta, contraproposta, valor contratado e desconto interno; usar índice externo somente como contexto por praça/tipologia/período. | Leitura exibe metodologia, cobertura, fonte, `as_of` e limitação; indisponibilidade não gera estimativa ou ação automática. | Confundir anúncio com contrato, desconto externo com carteira ou contexto macro com risco individual. | `MT-11`, dados internos íntegros e aprovação humana de decisão. | [10] |
 
 ## 5. Ordem de gates estratégicos
 
@@ -102,3 +105,5 @@
 [8] [Registro de pesquisa externa de referências de mercado](registro_pesquisa_referencias_mercado_vendas_locacao.md)
 
 [9] [Matriz de confronto — referências externas × estratégia](matriz_confronto_referencias_estrategia_vendas_locacao.md)
+
+[10] [Caderno de indicadores de mercado — Vendas Urbanas e Locação](caderno_indicadores_mercado_vendas_locacao.md)

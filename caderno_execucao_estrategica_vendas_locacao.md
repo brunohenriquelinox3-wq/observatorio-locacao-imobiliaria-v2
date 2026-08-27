@@ -21,6 +21,7 @@
 | `EXE-09` | Adoção por papel e operação assistida | `P1` | Projetar treinamento, fila, ajuda contextual, exceção e suporte ao redor do trabalho real. | Operações + produto | Jornada aprovada, métricas e owners de fila. | Papéis de piloto concluem cenário essencial sem contorno inseguro e sabem encaminhar exceção. |
 | `EXE-10` | Piloto, escala e revisão | `P0` | Escalar por evidência de valor, qualidade, segurança e recuperação, nunca apenas por volume de usuários. | Patrocínio + produto + risco | Hipótese, coorte, baseline, critérios de pausa/reversão. | Gate de escala reúne métricas, incidentes, decisões pendentes e aprovação registrada. |
 | `EXE-11` | Workspace contextual e leitura governada | `P1` | Integrar na mesma experiência a leitura necessária de parte, ativo, jornada, dossiê, contrato, carteira e caso, preservando a fonte e a permissão de cada fato. | Produto + domínio + segurança | Read model por papel, policy de objeto/campo, origem/frescor e estados explícitos. | Papel de teste percorre a jornada sem alternar sistemas, mas não lê/escreve objeto ou campo fora do grant. |
+| `EXE-12` | Catálogo de indicadores e comparabilidade de mercado | `P1` | Tratar cada índice externo como contexto versionado com proveniência, método, cobertura, período, atraso e limitação; evita falsa precisão e decisão por dado incompatível. | Produto + dados + operação | Contrato de métrica, catálogo de fontes, dados internos íntegros e política de leitura. | Cartão contextual separa fato da carteira e benchmark externo, declara `as_of`/cobertura e não automatiza preço, crédito, garantia ou prioridade. |
 
 ## 2. Priorização e regra de passagem
 
@@ -45,6 +46,7 @@ Uma prioridade `P0` é pré-condição de segurança ou integridade. Uma priorid
 | `VU-REQ-06` | Converter para venda/contrato por comando explícito e idempotente. | `EXE-03`, `EXE-05`, `EXE-06` | Elegibilidade, dossiê, aprovação, snapshot de termos e owner. | Dupla confirmação não cria dois contratos, direitos ou agendas. |
 | `VU-REQ-07` | Apurar comissão e direito sem confundir com pagamento. | `EXE-05` | Regra versionada, base, gatilho, recebedor, dedução e elegibilidade. | Direito, instrução e liquidação permanecem entidades/fatos separados. |
 | `VU-REQ-08` | Oferecer inteligência explicável de pipeline, origem e saúde. | `EXE-07` | Fórmula/score, corte, fonte, versão, explicação e revisão. | Recomendação não altera fase, proprietário ou comunicação automaticamente. |
+| `VU-REQ-09` | Exibir contexto de preço, oferta e crédito externo somente em recortes aprovados. | `EXE-07`, `EXE-12` | Fonte, universo, praça, tipologia, período, `as_of`, atraso, cobertura e aviso de comparabilidade. | Benchmark indisponível/incomparável não gera preço, elegibilidade, score ou recomendação automática. |
 
 ## 4. Requisitos atômicos — Locação
 
@@ -59,6 +61,7 @@ Uma prioridade `P0` é pré-condição de segurança ou integridade. Uma priorid
 | `LC-REQ-07` | Apurar taxa, dedução, repasse e prestação de contas com reconciliação. | `EXE-05` | Regra, base, evento, dedução, elegibilidade, instrução e liquidação. | Prestação de contas mostra linhagem do fato sem revelar objetos sem permissão. |
 | `LC-REQ-08` | Tratar renovação, reajuste, rescisão e inadimplência como esteiras próprias. | `EXE-04`, `EXE-05` | Janela, gatilho, proposta, aprovação, efeitos e data de corte. | Um alerta não executa reajuste, aviso, cobrança ou encerramento por conta própria. |
 | `LC-REQ-09` | Expor portal de cliente/proprietário por grant mínimo e expiráveis. | `EXE-01`, `EXE-06`, `EXE-08` | Grant, escopo, validade, objeto/campo autorizado e registro de acesso. | URL, e-mail ou ID isolado não concede leitura de contrato, carteira ou documento. |
+| `LC-REQ-10` | Contextualizar negociação e disponibilidade com índices externos de locação quando houver comparabilidade. | `EXE-07`, `EXE-12` | Métrica externa datada, praça, tipologia, método, cobertura, fonte e valor interno correspondente separado. | Anúncio, desconto externo ou contexto macro não muda aluguel, garantia, contrato, cobrança ou prioridade de parte. |
 
 ## 5. Adoção por papel
 
@@ -83,6 +86,7 @@ Nenhum fornecedor é parte do núcleo canônico. A estratégia exige adaptador, 
 | Portais imobiliários | Publicar ativo elegível e sincronizar retorno controlado. | Campos aprovados de publicação e mídia autorizada. | Publicação de ativo indisponível ou dado excessivo. | Checklist de publicação, policy e reconciliação. | Retirar da fila; não remover/publicar externamente sem comando. |
 | Garantia/crédito | Apoiar análise e proposta, sem concluir decisão automaticamente. | Finalidade, dado mínimo e consentimento/base aplicável. | Decisão opaca ou coleta excessiva. | Avaliação de fornecedor, explicação e revisão humana. | Classificar como pendência; não negar/aprovar automaticamente. |
 | Gestão de workspace/dados | Reunir contexto de trabalho por jornada, mantendo cada domínio como fonte própria. | Identificadores internos correlacionados, estado, origem e frescor. | Visão integrada expor dados/ações não autorizados ou mascarar defasagem. | Read model governado, policy de campo e indicação de fonte/atualização. | Mostrar estado seguro e encaminhar ao domínio fonte para correção autorizada. |
+| Indicadores externos de mercado | Exibir benchmark contextual de preço, crédito, estoque ou negociação, quando a fonte/recorte for aprovado. | Fonte, universo, geografia, segmento, período, método, `as_of`, cobertura e aviso de limitação. | Índice incomparável, dado desatualizado, licença/termo incompatível ou preço externo tomado como fato interno. | Contrato de métrica, avaliação de acesso/licença, staging, revisão humana e policy de leitura. | Não exibir comparação; preservar fato interno e registrar a fonte como indisponível/pendente. |
 
 ## 7. Ledger de evidências pendentes — CRM de referência
 
@@ -95,6 +99,7 @@ O benchmark foi transformado em requisitos somente quando houve evidência demon
 | `EVD-03` | Perfis/permissões e rotas profundas apresentaram bloqueios de sessão ou acesso. | Não copiar ou desqualificar uma política de acesso sem prova. | Avaliar em papel/ambiente apropriado com matriz permitir/negar. |
 | `EVD-04` | Fluxos de importação, exportação, cobrança, repasse, publicação e integração permaneceram bloqueados por segurança. | Estratégia exige gates próprios, não comportamento presumido. | Testar somente em sandbox com fornecedor/conta de teste e reversibilidade. |
 | `EVD-05` | Alguns estados com dados não foram explorados além da leitura estrutural autorizada. | Métricas/UX futuras devem ter prova própria. | Validar casos anonimizados ou sintéticos sob mínimo privilégio. |
+| `EVD-06` | A auditoria prática do CRM de referência não demonstrou a proveniência, cobertura, atualização ou licença de benchmarks externos eventualmente exibidos. | Não copiar painel ou comparação sem contrato de métrica próprio. | Validar cada fonte em catálogo independente, com método, `as_of`, comparabilidade e política de acesso antes de ativar. |
 
 ## 8. Critério de completude da estratégia de execução
 
@@ -119,3 +124,7 @@ Este caderno estará pronto para orientar uma futura especificação quando toda
 [8] [Registro de pesquisa externa de referências de mercado](registro_pesquisa_referencias_mercado_vendas_locacao.md)
 
 [9] [Matriz de confronto — referências externas × estratégia](matriz_confronto_referencias_estrategia_vendas_locacao.md)
+
+[10] [Caderno de indicadores de mercado — Vendas Urbanas e Locação](caderno_indicadores_mercado_vendas_locacao.md)
+
+[11] [Registro de pesquisa externa de referências de mercado](registro_pesquisa_referencias_mercado_vendas_locacao.md)

@@ -199,6 +199,20 @@ A nova rodada de fontes primárias e referências de mercado confirmou que as ca
 
 > **Recomendação atual:** manter a estratégia orientada a capacidades governadas, em vez de copiar a promessa de “plataforma única”. A unidade valiosa é o **contexto verificável de trabalho**; a fronteira indispensável é a separação entre leitura, decisão, comando, confirmação externa e liquidação.
 
+## 11. Mercado brasileiro: contexto, não automatismo
+
+Os indicadores pesquisados reforçam a necessidade de diferenciar oferta anunciada, negociação, contrato, crédito e fato de carteira. Fontes como FipeZAP, BCB, IBGE, CBIC, CRECISP e índices de plataforma têm universos, períodos, recortes e atrasos distintos. A estratégia, portanto, não adota um “preço de mercado” único: cada leitura externa precisa de proveniência, cobertura, `as_of`, método, limitação e estado de comparabilidade. [10] [11] [12] [13] [14] [15]
+
+| Leitura estratégica | Vendas Urbanas | Locação | Regra que protege a decisão |
+| --- | --- | --- | --- |
+| Oferta e preço | Comparar preço de anúncio interno a índice externo somente em praça/tipologia/período comparáveis. | Separar valor anunciado, proposta, contraproposta, contrato e desconto interno antes de contextualizar a negociação. | Dados de anúncio não são preço de fechamento, avaliação individual ou valor de contrato. |
+| Crédito | Usar contexto agregado de taxa, indexador, LTV e defasagem para planejamento de funil. | Usar crédito externo apenas se houver finalidade explícita; ele não substitui política de garantia/contrato. | Série externa nunca aprova crédito, muda elegibilidade ou altera prioridade de pessoa. |
+| Oferta e giro | Ler estoque/ritmo externo como sinal para planejamento de captação e carteira. | Ler disponibilidade e tempo até locar a partir de fatos internos; pesquisa externa é só referência comparativa. | Métrica externa não sobrescreve disponibilidade, imóvel ativo, situação contratual ou SLA interno. |
+| Territorialidade | Exigir país/UF/município/bairro segundo a granularidade real da fonte. | Permitir comparação por praça e tipologia, nunca inferir um bairro sem cobertura declarada. | Ausência de comparabilidade exibe indisponibilidade, não um ranking ou estimativa silenciosa. |
+| Compartilhamento | Exportar leitura com fonte, período, universo, método, limitação e acesso ao fato interno autorizado. | Aplicar o mesmo recibo de contexto a relatórios de proprietário/gestor, respeitando grant e finalidade. | Um link, relatório ou portal não amplia o escopo de leitura nem remove o aviso metodológico. |
+
+> **Recomendação de sequência:** uma etapa futura deve começar por um catálogo de indicadores e cartões contextuais, não por dashboard automatizado. Primeiro se valida proveniência, comparabilidade, atraso, revisão, acessibilidade e policy; somente depois se permite uma visualização ou comparação assistida. O contrato completo está no caderno de indicadores. [10]
+
 ## Referências internas
 
 [1] [Arquitetura canônica de colunas e setores](crm_arquitetura_colunas_setores_canonica.md)
@@ -218,3 +232,17 @@ A nova rodada de fontes primárias e referências de mercado confirmou que as ca
 [8] [Registro de pesquisa externa de referências de mercado](registro_pesquisa_referencias_mercado_vendas_locacao.md)
 
 [9] [Matriz de confronto — referências externas × estratégia](matriz_confronto_referencias_estrategia_vendas_locacao.md)
+
+[10] [Caderno de indicadores de mercado — Vendas Urbanas e Locação](caderno_indicadores_mercado_vendas_locacao.md)
+
+## Referências externas
+
+[11] [FipeZAP — Índice FipeZAP](https://www.fipe.org.br/pt-br/indices/fipezap/)
+
+[12] [Banco Central do Brasil — Informações do Mercado Imobiliário](https://www.bcb.gov.br/estatisticas/mercadoimobiliario)
+
+[13] [IBGE — Domicílios alugados cresceram mais de 50% desde 2016](https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/46449-domicilios-alugados-cresceram-mais-de-50-desde-2016)
+
+[14] [CBIC — Estudos e Indicadores Imobiliários Nacionais](https://cbic.org.br/estudos/)
+
+[15] [CRECISP — Pesquisas de mercado](https://www.crecisp.gov.br/comunicacao/pesquisasmercado)
