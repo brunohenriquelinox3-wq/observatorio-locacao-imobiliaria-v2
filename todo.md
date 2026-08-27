@@ -571,3 +571,10 @@
 - [x] Coletar fontes brasileiras oficiais e setoriais sobre aluguel, venda, oferta, demanda, crédito e operação.
 - [x] Converter sinais de mercado em requisitos de exploração, tendência, decisão e qualidade de dado.
 - [x] Atualizar a estratégia documental com fontes, limites, critérios de aceite e referência aos indicadores pesquisados.
+
+## Pesquisa externa aprofundada: obrigações contratuais, privacidade e documentos
+
+- [x] Definir questões regulatórias e operacionais prioritárias para contratos, dossiês, garantias, cobrança e dados pessoais.
+- [x] Coletar e registrar fontes oficiais brasileiras aplicáveis, com escopo, vigência, limite e ponto que exige validação profissional.
+- [x] Converter apenas referências aplicáveis em requisitos estratégicos, controles e critérios de aceite, sem aconselhamento jurídico individual.
+- [x] Revisar fontes, coerência e integridade; preservar checkpoint e entregar a atualização regulatória documental.

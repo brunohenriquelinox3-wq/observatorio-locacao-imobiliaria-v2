@@ -213,6 +213,21 @@ Os indicadores pesquisados reforçam a necessidade de diferenciar oferta anuncia
 
 > **Recomendação de sequência:** uma etapa futura deve começar por um catálogo de indicadores e cartões contextuais, não por dashboard automatizado. Primeiro se valida proveniência, comparabilidade, atraso, revisão, acessibilidade e policy; somente depois se permite uma visualização ou comparação assistida. O contrato completo está no caderno de indicadores. [10]
 
+## 12. Contratos, dossiês e evidências externas: controle regulatório documental
+
+A nova pesquisa em fontes oficiais reforça que uma estratégia segura não trata o CRM como autoridade jurídica, registral ou financeira. O produto deve organizar evidências, versões, contexto e revisão; atos externos, eficácia contratual, validade de garantia, registro, certidão, assinatura, oferta e consequência patrimonial continuam dependentes do instrumento, da fonte competente e da análise aplicável. [16]
+
+| Tema | Decisão estratégica aplicável | Limite que não pode ser ultrapassado | Prova futura de aceite |
+| --- | --- | --- | --- |
+| Locação urbana | Registrar contrato, administração, garantia, aviso, entrega/devolução, vistoria, encargo, preferência quando aplicável e versão como fatos datados e correlacionados. | Não calcular ou impor automaticamente multa, preferência, despejo, garantia, distrato ou qualquer consequência jurídica. | Dado sintético preserva estados e evidências sem sobrescrever versão anterior ou disparar comunicação/cobrança. |
+| Garantia | Manter modalidade ativa única por contrato e versão, com revisão de conflito, vigência, documento, owner e exceção. | Status interno não decide aceitação, executabilidade, suficiência ou valor de fiador, seguro, caução ou outra garantia. | Uma segunda garantia ativa produz bloqueio explicado, auditado e encaminhado à revisão humana. |
+| Oferta, proposta e empreendimento | Versionar anúncio, proposta, quadro-resumo quando aplicável, aprovação, aceite, contrato e comunicação material. | Não generalizar regra de incorporação/empreendimento para toda venda urbana ou contrato de imóvel usado/intermediação. | Versão vinculada a uma negociação permanece recuperável e a alteração material abre nova revisão, nunca sobrescreve o aceite. |
+| Dossiê registral/notarial | Tratar certidão, matrícula, protocolo, ato, assinatura e documento de cartório como evidência externa com emissor, fonte, consulta, validade conhecida, arquivo, integridade e status de revisão. | Arquivo anexado ou assinatura não comprovam isoladamente propriedade, ônus, registro, transferência, vigência ou eficácia do ato. | Documento externo vencido, sem origem ou sem revisão não libera o rótulo “situação confirmada”. |
+| Dados e comunicação | Associar cada documento, canal, portal e compartilhamento a finalidade, minimização, acesso, retenção, política, vigência e evento de auditoria. | A existência de relacionamento comercial não autoriza marketing, consulta externa, compartilhamento amplo ou acesso a dossiê. | Teste permitir/negar prova escopo de objeto/campo/finalidade e falha segura fora da policy. |
+| Vigência normativa e integrações | Catalogar fonte, ato, versão, situação, data de verificação, alcance e owner de revisão antes de tornar regra externa requisito de produto. | Fonte revogada, alterada, parcial ou sem conteúdo diretamente verificável não habilita automação, checklist definitivo, conector ou alegação de conformidade. | Referência vencida/bloqueada deixa o requisito em “revisão necessária” e impede ativação material. |
+
+> **Recomendação atual:** introduzir o conceito de **evidência externa verificável**, e não o rótulo genérico de “documento válido”. A primeira descrição organiza o que o CRM efetivamente sabe, de onde veio, quando foi verificado e quem pode revisar; a segunda cria uma falsa certeza que não cabe ao produto declarar.
+
 ## Referências internas
 
 [1] [Arquitetura canônica de colunas e setores](crm_arquitetura_colunas_setores_canonica.md)
@@ -234,6 +249,8 @@ Os indicadores pesquisados reforçam a necessidade de diferenciar oferta anuncia
 [9] [Matriz de confronto — referências externas × estratégia](matriz_confronto_referencias_estrategia_vendas_locacao.md)
 
 [10] [Caderno de indicadores de mercado — Vendas Urbanas e Locação](caderno_indicadores_mercado_vendas_locacao.md)
+
+[16] [Registro de pesquisa regulatória — Vendas Urbanas e Locação](registro_pesquisa_regulatoria_vendas_locacao.md)
 
 ## Referências externas
 

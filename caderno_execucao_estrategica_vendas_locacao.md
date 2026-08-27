@@ -22,6 +22,7 @@
 | `EXE-10` | Piloto, escala e revisão | `P0` | Escalar por evidência de valor, qualidade, segurança e recuperação, nunca apenas por volume de usuários. | Patrocínio + produto + risco | Hipótese, coorte, baseline, critérios de pausa/reversão. | Gate de escala reúne métricas, incidentes, decisões pendentes e aprovação registrada. |
 | `EXE-11` | Workspace contextual e leitura governada | `P1` | Integrar na mesma experiência a leitura necessária de parte, ativo, jornada, dossiê, contrato, carteira e caso, preservando a fonte e a permissão de cada fato. | Produto + domínio + segurança | Read model por papel, policy de objeto/campo, origem/frescor e estados explícitos. | Papel de teste percorre a jornada sem alternar sistemas, mas não lê/escreve objeto ou campo fora do grant. |
 | `EXE-12` | Catálogo de indicadores e comparabilidade de mercado | `P1` | Tratar cada índice externo como contexto versionado com proveniência, método, cobertura, período, atraso e limitação; evita falsa precisão e decisão por dado incompatível. | Produto + dados + operação | Contrato de métrica, catálogo de fontes, dados internos íntegros e política de leitura. | Cartão contextual separa fato da carteira e benchmark externo, declara `as_of`/cobertura e não automatiza preço, crédito, garantia ou prioridade. |
+| `EXE-13` | Vigência normativa e evidência externa verificável | `P0` | Catalogar fonte competente, ato/documento, situação, versão, emissor, data de verificação, escopo e owner de revisão; evita que um anexo/status interno simule validade jurídica. | Produto + privacidade + risco | Dossiê classificado, registro de vigência, política de finalidade, revisão humana/profissional e contrato de capacidade. | Fonte/documento revogado, alterado, vencido, incompleto ou sem revisão não habilita automação, conector, checklist conclusivo ou alteração de estado material. |
 
 ## 2. Priorização e regra de passagem
 
@@ -47,6 +48,7 @@ Uma prioridade `P0` é pré-condição de segurança ou integridade. Uma priorid
 | `VU-REQ-07` | Apurar comissão e direito sem confundir com pagamento. | `EXE-05` | Regra versionada, base, gatilho, recebedor, dedução e elegibilidade. | Direito, instrução e liquidação permanecem entidades/fatos separados. |
 | `VU-REQ-08` | Oferecer inteligência explicável de pipeline, origem e saúde. | `EXE-07` | Fórmula/score, corte, fonte, versão, explicação e revisão. | Recomendação não altera fase, proprietário ou comunicação automaticamente. |
 | `VU-REQ-09` | Exibir contexto de preço, oferta e crédito externo somente em recortes aprovados. | `EXE-07`, `EXE-12` | Fonte, universo, praça, tipologia, período, `as_of`, atraso, cobertura e aviso de comparabilidade. | Benchmark indisponível/incomparável não gera preço, elegibilidade, score ou recomendação automática. |
+| `VU-REQ-10` | Correlacionar proposta/contrato a evidências externas sem declarar situação jurídica por inferência. | `EXE-06`, `EXE-13` | Documento/ato, emissor, origem, versão, data de consulta, status de vigência conhecido, finalidade, acesso e revisão. | Arquivo, assinatura ou status externo sem origem/revisão não torna ativo, poder, transferência ou obrigação “confirmados”. |
 
 ## 4. Requisitos atômicos — Locação
 
@@ -62,6 +64,7 @@ Uma prioridade `P0` é pré-condição de segurança ou integridade. Uma priorid
 | `LC-REQ-08` | Tratar renovação, reajuste, rescisão e inadimplência como esteiras próprias. | `EXE-04`, `EXE-05` | Janela, gatilho, proposta, aprovação, efeitos e data de corte. | Um alerta não executa reajuste, aviso, cobrança ou encerramento por conta própria. |
 | `LC-REQ-09` | Expor portal de cliente/proprietário por grant mínimo e expiráveis. | `EXE-01`, `EXE-06`, `EXE-08` | Grant, escopo, validade, objeto/campo autorizado e registro de acesso. | URL, e-mail ou ID isolado não concede leitura de contrato, carteira ou documento. |
 | `LC-REQ-10` | Contextualizar negociação e disponibilidade com índices externos de locação quando houver comparabilidade. | `EXE-07`, `EXE-12` | Métrica externa datada, praça, tipologia, método, cobertura, fonte e valor interno correspondente separado. | Anúncio, desconto externo ou contexto macro não muda aluguel, garantia, contrato, cobrança ou prioridade de parte. |
+| `LC-REQ-11` | Gerir contrato, garantia e dossiê externo como fatos revisáveis e não como veredito jurídico automatizado. | `EXE-04`, `EXE-06`, `EXE-13` | Instrumento/versionamento, modalidade, vigência, aviso, evidência, origem, revisão, exceção, owner e alçada. | Garantia/documento vencido ou não revisado abre bloqueio explicado; não executa cobrança, rescisão, repasse ou comunicação. |
 
 ## 5. Adoção por papel
 
@@ -85,6 +88,7 @@ Nenhum fornecedor é parte do núcleo canônico. A estratégia exige adaptador, 
 | Mensageria | Comunicar etapa aprovada ao destinatário autorizado. | Canal permitido, template, finalidade e objeto mínimo. | Comunicação indevida ou repetida. | Consentimento/base, preview, regras de frequência e log. | Não enviar; registrar falha e oferecer revisão humana. |
 | Portais imobiliários | Publicar ativo elegível e sincronizar retorno controlado. | Campos aprovados de publicação e mídia autorizada. | Publicação de ativo indisponível ou dado excessivo. | Checklist de publicação, policy e reconciliação. | Retirar da fila; não remover/publicar externamente sem comando. |
 | Garantia/crédito | Apoiar análise e proposta, sem concluir decisão automaticamente. | Finalidade, dado mínimo e consentimento/base aplicável. | Decisão opaca ou coleta excessiva. | Avaliação de fornecedor, explicação e revisão humana. | Classificar como pendência; não negar/aprovar automaticamente. |
+| Atos, certidões e registro/notariado | Correlacionar pedido, evidência/ato, origem e status de revisão a um caso autorizado, sem substituir a fonte competente. | Finalidade, referência interna, emissor, origem, documento/ato mínimo, status, data de consulta e escopo. | Fonte revogada, acesso não autorizado, documento sem integridade ou status externo tomado por situação jurídica interna. | Registro de vigência, contrato de capacidade, avaliação de acesso, revisão humana/profissional e política de retenção. | Manter em revisão/pendência; não solicitar ato, transmitir dados, alterar propriedade, contrato ou carteira automaticamente. |
 | Gestão de workspace/dados | Reunir contexto de trabalho por jornada, mantendo cada domínio como fonte própria. | Identificadores internos correlacionados, estado, origem e frescor. | Visão integrada expor dados/ações não autorizados ou mascarar defasagem. | Read model governado, policy de campo e indicação de fonte/atualização. | Mostrar estado seguro e encaminhar ao domínio fonte para correção autorizada. |
 | Indicadores externos de mercado | Exibir benchmark contextual de preço, crédito, estoque ou negociação, quando a fonte/recorte for aprovado. | Fonte, universo, geografia, segmento, período, método, `as_of`, cobertura e aviso de limitação. | Índice incomparável, dado desatualizado, licença/termo incompatível ou preço externo tomado como fato interno. | Contrato de métrica, avaliação de acesso/licença, staging, revisão humana e policy de leitura. | Não exibir comparação; preservar fato interno e registrar a fonte como indisponível/pendente. |
 
@@ -100,6 +104,7 @@ O benchmark foi transformado em requisitos somente quando houve evidência demon
 | `EVD-04` | Fluxos de importação, exportação, cobrança, repasse, publicação e integração permaneceram bloqueados por segurança. | Estratégia exige gates próprios, não comportamento presumido. | Testar somente em sandbox com fornecedor/conta de teste e reversibilidade. |
 | `EVD-05` | Alguns estados com dados não foram explorados além da leitura estrutural autorizada. | Métricas/UX futuras devem ter prova própria. | Validar casos anonimizados ou sintéticos sob mínimo privilégio. |
 | `EVD-06` | A auditoria prática do CRM de referência não demonstrou a proveniência, cobertura, atualização ou licença de benchmarks externos eventualmente exibidos. | Não copiar painel ou comparação sem contrato de métrica próprio. | Validar cada fonte em catálogo independente, com método, `as_of`, comparabilidade e política de acesso antes de ativar. |
+| `EVD-07` | A pesquisa regulatória identificou fontes oficiais revogadas, alteradas, parciais ou dependentes de contexto local/profissional. | Não transformar pesquisa normativa em implementação automática, promessa de conformidade ou decisão jurídica. | Manter registro de vigência, usar versão consolidada e submeter o ponto aplicável a revisão adequada antes de qualquer ativação. |
 
 ## 8. Critério de completude da estratégia de execução
 
@@ -128,3 +133,5 @@ Este caderno estará pronto para orientar uma futura especificação quando toda
 [10] [Caderno de indicadores de mercado — Vendas Urbanas e Locação](caderno_indicadores_mercado_vendas_locacao.md)
 
 [11] [Registro de pesquisa externa de referências de mercado](registro_pesquisa_referencias_mercado_vendas_locacao.md)
+
+[12] [Registro de pesquisa regulatória — Vendas Urbanas e Locação](registro_pesquisa_regulatoria_vendas_locacao.md)
