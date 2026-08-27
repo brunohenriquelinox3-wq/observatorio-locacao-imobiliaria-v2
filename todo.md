@@ -556,3 +556,11 @@
 - [x] Derivar requisitos atômicos e plano de adoção por papel para Vendas Urbanas e Locação, sem implementar CRM.
 - [x] Consolidar matriz de integrações, contingências e evidências pendentes da auditoria do CRM de referência.
 - [x] Revisar a coerência, verificar a documentação e preservar o bloco estratégico de execução em checkpoint.
+
+## Pesquisa externa aprofundada: referências de mercado
+
+- [x] Definir as dimensões prioritárias de produto, operação, dados, experiência, segurança, integração e adoção para Vendas Urbanas e Locação.
+- [x] Coletar e registrar fontes primárias e referências de mercado para cada dimensão, com data, escopo, limite e grau de confiança.
+- [x] Confrontar os achados com a estratégia atual, distinguindo prática comprovada, hipótese, decisão e item não aplicável.
+- [x] Atualizar a estratégia, a matriz mestre e o registro executivo com decisões rastreáveis, referências e critérios de aceite.
+- [x] Revisar fontes, links, coerência e integridade documental; preservar checkpoint e entregar o bloco de estudo incorporado.

@@ -27,6 +27,9 @@
 | `MT-05` | Listas, filtros, ordenações, paginação e gráficos são leituras governadas. | Alterar consulta não altera dados nem amplia escopo; vazio/erro são explicáveis. | Filtro/URL como atalho de acesso e métricas opacas. | Policy no dado e contrato de métrica. | [3] [5] |
 | `MT-06` | IA, automação, comunicação, publicação e integração começam em recomendação/preview. | Ação externa exige aprovação, outbox/inbox, correlação, idempotência, cancelamento e observabilidade. | Mensagem, anúncio, sincronização ou decisão automática indevida. | Contrato de dados, revisão humana e gate de efeito externo. | [5] |
 | `MT-07` | Cobrança, caixa, conciliação, direito, instrução e liquidação são fatos separados. | Dashboard e operação distinguem previsto, aberto, instruído, recebido, conciliado, elegível e liquidado. | Confundir boleto, comprovante, saldo, comissão ou repasse com dinheiro realizado. | Subledger, regras versionadas e segregação de deveres. | [4] |
+| `MT-08` | Integrar contexto de jornada sem fundir fontes de verdade ou permissões de escrita. | Leitura de parte, ativo, proposta, contrato, serviço e carteira informa origem, atualização e scope; comandos continuam próprios de cada domínio. | Workspace “360°” virar acesso amplo, estado implícito ou alteração fora de alçada. | Read model governado, policy por objeto/campo e eventos correlacionados. | [8] [9] |
+| `MT-09` | Tratar fornecedor externo como adaptador de capacidade, com contrato, dados mínimos e confirmação/reconciliação. | Cada capacidade prova escopo, idempotência, correlação, timeout, retentativa, fila de exceção e desligamento seguro. | Token global, callback não confiável, duplicidade e transformação de status externo em fato interno. | Inventário de integrações, avaliação de fornecedor e política de efeito externo. | [8] [9] |
+| `MT-10` | Manter critérios de acessibilidade e feedback de estado como parte do aceite de toda jornada. | Teclado, foco, leitor de tela, tabela, gráfico, modal, vazio e erro passam por prova de comportamento. | Painel visualmente atraente, porém incompreensível, não operável ou sem recuperação. | Design system, conteúdo semântico e plano de teste assistivo. | [8] [9] |
 
 ## 3. Vendas Urbanas — matriz por domínio
 
@@ -95,3 +98,7 @@
 [6] [Consolidação de Vendas Urbanas](consolidacao_vendas_urbanas_hincrivel.md)
 
 [7] [Estratégia atualizada — Vendas Urbanas e Locação](estrategia_vendas_urbanas_locacao_atualizada.md)
+
+[8] [Registro de pesquisa externa de referências de mercado](registro_pesquisa_referencias_mercado_vendas_locacao.md)
+
+[9] [Matriz de confronto — referências externas × estratégia](matriz_confronto_referencias_estrategia_vendas_locacao.md)

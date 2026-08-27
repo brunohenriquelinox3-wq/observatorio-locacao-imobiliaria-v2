@@ -183,6 +183,22 @@ Antes de qualquer escolha relevante de escopo, arquitetura, modelo de dados, per
 
 > Em caso de evidência insuficiente, a recomendação deve declarar a incerteza e propor o menor experimento seguro que a reduza. Nunca deve apresentar como garantido um comportamento apenas presumido.
 
+## 10. Reforços da pesquisa externa de mercado
+
+A nova rodada de fontes primárias e referências de mercado confirmou que as capacidades competitivas mais recorrentes são: relação contínua entre parte e ativo, pipeline/esteira orientado a próximos passos, centralização contextual de contrato/carteira/serviço, portais, dossiê transacional, integrações de canais e leituras analíticas. A nossa diferenciação estratégica não será acumular essas capacidades; será preservá-las em um núcleo canônico, com política de objeto/campo/função, estado explícito, explicação e reversibilidade.[8] [9]
+
+| Reforço confirmado | Atualização de estratégia | Limite obrigatório | Prova futura |
+| --- | --- | --- | --- |
+| Pipeline e fila contextual | Priorizar trabalho por estágio, idade, pendência, owner, próxima ação e causa de bloqueio, distinguindo pipeline de funil do comprador. | Estágio não altera contrato, disponibilidade, documento, comissão, cobrança ou repasse por inferência. | Cada item explica por que está na fila e qual pré-condição impede/permite a transição. |
+| Visão contextual de ciclo longo | Permitir leitura controlada de parte, ativo, proposta, contrato, carteira, serviço e renovação no mesmo workspace de Locação. | Leitura integrada não unifica permissão de escrita nem amplia visibilidade fora do grant. | Um papel de teste enxerga apenas objetos/campos autorizados e a origem/atualização de cada fato. |
+| Dossiê de transação | Ligar documentos, formulários, checklist, aprovações e assinatura a proposta/contrato por versão e responsável. | Anexo/assinatura não comprova, por si, autoridade, elegibilidade, pagamento ou liquidação. | O dossiê mostra versão vigente, pendências, owner, prazo, política e evento de decisão. |
+| Integração por capacidade | Avaliar portais, assinatura, mensageria, garantia, crédito, cobrança e pagamento por contrato de capacidade. | Fornecedor, token ou callback não recebe acesso global e não se torna fonte de verdade sem reconciliação. | Cada integração demonstra escopo, dados mínimos, consentimento/base aplicável, idempotência, correlação, erro e desligamento. |
+| Automação e IA responsáveis | Manter IA como explicação, síntese, priorização e rascunho até existir uma política específica para autonomia material. | A recomendação não envia mensagem, publica anúncio, altera responsável, nega garantia, cobra ou instrui repasse. | Toda saída informa fonte, versão, limitação, confiança, owner, revisão e override. |
+| Portal e compartilhamento | Expor somente o necessário ao cliente, proprietário ou prestador por grant de objeto/campo/finalidade/vigência. | Link, e-mail, sessão antiga ou ID não concedem acesso; download exige política e auditoria. | Acesso fora do grant falha sem enumeração; acesso válido tem escopo, expiração e recibo auditável. |
+| Segurança e acessibilidade | Transformar autorização de objeto/propriedade/função e acessibilidade por jornada em requisitos de aceite. | Componente visual, menu escondido ou validação de frontend não são controles suficientes. | Testes cobrem permitir/negar, teclado, foco, leitor de tela, estado vazio/erro, limite e rota direta. |
+
+> **Recomendação atual:** manter a estratégia orientada a capacidades governadas, em vez de copiar a promessa de “plataforma única”. A unidade valiosa é o **contexto verificável de trabalho**; a fronteira indispensável é a separação entre leitura, decisão, comando, confirmação externa e liquidação.
+
 ## Referências internas
 
 [1] [Arquitetura canônica de colunas e setores](crm_arquitetura_colunas_setores_canonica.md)
@@ -198,3 +214,7 @@ Antes de qualquer escolha relevante de escopo, arquitetura, modelo de dados, per
 [6] [Estratégia CRM consolidada](estrategia_crm_imobiliario_consolidada.md)
 
 [7] [Relatório independente de verificação da atualização estratégica](relatorio_verificacao_atualizacao_estrategica_vendas_locacao.md)
+
+[8] [Registro de pesquisa externa de referências de mercado](registro_pesquisa_referencias_mercado_vendas_locacao.md)
+
+[9] [Matriz de confronto — referências externas × estratégia](matriz_confronto_referencias_estrategia_vendas_locacao.md)

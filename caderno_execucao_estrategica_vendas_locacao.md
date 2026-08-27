@@ -20,6 +20,7 @@
 | `EXE-08` | Integrações e canais externos | `P1` | Adotar conectores desacoplados, com aprovação humana, idempotência, contrato, logs e contingência. | Produto + tecnologia | Avaliação de fornecedor, base legal, segurança e retorno. | Falha de fornecedor não duplica transação, não vaza dado e não altera estado interno sem reconciliação. |
 | `EXE-09` | Adoção por papel e operação assistida | `P1` | Projetar treinamento, fila, ajuda contextual, exceção e suporte ao redor do trabalho real. | Operações + produto | Jornada aprovada, métricas e owners de fila. | Papéis de piloto concluem cenário essencial sem contorno inseguro e sabem encaminhar exceção. |
 | `EXE-10` | Piloto, escala e revisão | `P0` | Escalar por evidência de valor, qualidade, segurança e recuperação, nunca apenas por volume de usuários. | Patrocínio + produto + risco | Hipótese, coorte, baseline, critérios de pausa/reversão. | Gate de escala reúne métricas, incidentes, decisões pendentes e aprovação registrada. |
+| `EXE-11` | Workspace contextual e leitura governada | `P1` | Integrar na mesma experiência a leitura necessária de parte, ativo, jornada, dossiê, contrato, carteira e caso, preservando a fonte e a permissão de cada fato. | Produto + domínio + segurança | Read model por papel, policy de objeto/campo, origem/frescor e estados explícitos. | Papel de teste percorre a jornada sem alternar sistemas, mas não lê/escreve objeto ou campo fora do grant. |
 
 ## 2. Priorização e regra de passagem
 
@@ -81,6 +82,7 @@ Nenhum fornecedor é parte do núcleo canônico. A estratégia exige adaptador, 
 | Mensageria | Comunicar etapa aprovada ao destinatário autorizado. | Canal permitido, template, finalidade e objeto mínimo. | Comunicação indevida ou repetida. | Consentimento/base, preview, regras de frequência e log. | Não enviar; registrar falha e oferecer revisão humana. |
 | Portais imobiliários | Publicar ativo elegível e sincronizar retorno controlado. | Campos aprovados de publicação e mídia autorizada. | Publicação de ativo indisponível ou dado excessivo. | Checklist de publicação, policy e reconciliação. | Retirar da fila; não remover/publicar externamente sem comando. |
 | Garantia/crédito | Apoiar análise e proposta, sem concluir decisão automaticamente. | Finalidade, dado mínimo e consentimento/base aplicável. | Decisão opaca ou coleta excessiva. | Avaliação de fornecedor, explicação e revisão humana. | Classificar como pendência; não negar/aprovar automaticamente. |
+| Gestão de workspace/dados | Reunir contexto de trabalho por jornada, mantendo cada domínio como fonte própria. | Identificadores internos correlacionados, estado, origem e frescor. | Visão integrada expor dados/ações não autorizados ou mascarar defasagem. | Read model governado, policy de campo e indicação de fonte/atualização. | Mostrar estado seguro e encaminhar ao domínio fonte para correção autorizada. |
 
 ## 7. Ledger de evidências pendentes — CRM de referência
 
@@ -113,3 +115,7 @@ Este caderno estará pronto para orientar uma futura especificação quando toda
 [6] [Governança e migração de dados](caderno_governanca_migracao_dados_vendas_locacao.md)
 
 [7] [Relatório independente de verificação](relatorio_verificacao_atualizacao_estrategica_vendas_locacao.md)
+
+[8] [Registro de pesquisa externa de referências de mercado](registro_pesquisa_referencias_mercado_vendas_locacao.md)
+
+[9] [Matriz de confronto — referências externas × estratégia](matriz_confronto_referencias_estrategia_vendas_locacao.md)
