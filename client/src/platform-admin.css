@@ -112,6 +112,22 @@
 .platform-admin-security__verify input { min-height: 42px; border: 1px solid var(--admin-line); border-radius: 0; padding: 0 11px; background: #fffdf8; color: var(--admin-ink); font: 600 16px/1 "DM Sans", sans-serif; letter-spacing: .17em; }
 .platform-admin-security__qr { width: 168px; height: 168px; grid-column: 2; justify-self: start; padding: 8px; background: white; border: 1px solid var(--admin-line); }
 @media (max-width: 720px) { .platform-admin-security { grid-template-columns: 1fr; } .platform-admin-security__qr { grid-column: auto; } }
+.platform-admin-console { margin-top: 18px; padding: 26px; border: 1px solid var(--admin-line); background: var(--admin-paper); }
+.platform-admin-console__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 20px; }
+.platform-admin-console__form { display: grid; align-content: start; gap: 8px; padding: 18px; border: 1px solid var(--admin-line); background: #fffdf8; }
+.platform-admin-console__form-title { display: flex; align-items: center; gap: 9px; color: var(--admin-clay); }
+.platform-admin-console__form-title h3 { margin: 0; color: var(--admin-ink); font: 600 20px/1.05 "Fraunces", Georgia, serif; }
+.platform-admin-console__form > p { min-height: 57px; margin: 2px 0 8px; color: var(--admin-slate); font: 400 12px/1.5 "DM Sans", sans-serif; }
+.platform-admin-console__form > label { margin-top: 3px; color: var(--admin-olive); font: 700 9px/1.2 "DM Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.platform-admin-console__form > label span { color: var(--admin-slate); font-weight: 500; letter-spacing: 0; text-transform: none; }
+.platform-admin-console__form input, .platform-admin-console__form select { min-height: 39px; border: 1px solid var(--admin-line); border-radius: 0; padding: 0 10px; background: #fffdf8; color: var(--admin-ink); font: 500 12px/1.2 "DM Sans", sans-serif; }
+.platform-admin-console__form button { display: inline-flex; justify-content: center; align-items: center; gap: 8px; min-height: 40px; margin-top: 7px; border: 0; background: var(--admin-ink); color: #fffaf0; font: 700 10px/1 "DM Sans", sans-serif; letter-spacing: .07em; text-transform: uppercase; }
+.platform-admin-console__form button:disabled, .platform-admin-console__form input:disabled, .platform-admin-console__form select:disabled { cursor: not-allowed; opacity: .55; }
+.platform-admin-console__scope { display: grid; gap: 7px; margin: 3px 0 0; padding: 10px 0; border: 0; border-top: 1px solid var(--admin-line); border-bottom: 1px solid var(--admin-line); }
+.platform-admin-console__scope legend { padding: 0; color: var(--admin-olive); font: 700 9px/1.2 "DM Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.platform-admin-console__scope label { display: flex; gap: 7px; align-items: center; color: var(--admin-ink); font: 500 12px/1.25 "DM Sans", sans-serif; }
+.platform-admin-console__scope input { min-height: auto; margin: 0; accent-color: var(--admin-clay); }
+@media (max-width: 980px) { .platform-admin-console__grid { grid-template-columns: 1fr; } .platform-admin-console__form > p { min-height: 0; } }
 .platform-admin-identity__form label { font: 700 10px/1.2 "DM Sans", sans-serif; letter-spacing: .1em; color: var(--admin-olive); text-transform: uppercase; }
 .platform-admin-identity__form input { min-height: 42px; padding: 10px 12px; border: 1px solid rgba(23,59,77,.28); border-radius: 0; background: #fffdf7; color: var(--admin-ink); outline-offset: 3px; }
 .platform-admin-identity__form input:focus-visible { outline: 2px solid var(--admin-clay); }

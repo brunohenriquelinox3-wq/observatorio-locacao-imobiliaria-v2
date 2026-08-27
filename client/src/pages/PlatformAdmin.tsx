@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { validateIdentitySubmission, type IdentityFormMode } from "@/lib/identityRegistration";
 import { genericRecoveryNotice, toMfaQrImageSource, validateTotpCode } from "@/lib/identityMfa";
+import { deriveAdministrativeConsoleState } from "@/lib/adminConsole";
 import "../platform-admin.css";
 
 const navigationItems: DashboardNavigationItem[] = [
@@ -87,6 +88,17 @@ export default function PlatformAdmin() {
   const [isProcessingMfa, setIsProcessingMfa] = useState(false);
   const [mfaVerified, setMfaVerified] = useState(false);
   const [isRequestingRecovery, setIsRequestingRecovery] = useState(false);
+  const [organizationName, setOrganizationName] = useState("");
+  const [organizationDomain, setOrganizationDomain] = useState("");
+  const [membershipOrganizationId, setMembershipOrganizationId] = useState("");
+  const [membershipSubjectId, setMembershipSubjectId] = useState("");
+  const [membershipRole, setMembershipRole] = useState("organization_admin");
+  const [membershipPurposeCode, setMembershipPurposeCode] = useState("");
+  const [membershipModules, setMembershipModules] = useState<Array<"platform" | "vendas_urbanas" | "locacao">>([]);
+  const [membershipExpiration, setMembershipExpiration] = useState("");
+  const [membershipAction, setMembershipAction] = useState<"suspend" | "revoke">("suspend");
+  const [membershipId, setMembershipId] = useState("");
+  const [membershipReason, setMembershipReason] = useState("");
   const { isAuthenticated, user } = useAuth();
   const canLoadIdentity = canLoadIdentityState(isAuthenticated);
   const canLoadAdministrativeData = canLoadAdministrativeState(isAuthenticated, user?.role);
@@ -105,6 +117,44 @@ export default function PlatformAdmin() {
       toast.error("Bootstrap não foi liberado", {
         description: "Confirme a identidade Supabase, a ausência de principal anterior e os requisitos de segurança.",
       });
+    },
+  });
+  const provisionOrganizationMutation = trpc.administration.provisionOrganization.useMutation({
+    onSuccess(result) {
+      toast.success("Organização em rascunho criada", { description: `Referência protegida: ${result.organizationId.slice(0, 8)}…` });
+      setOrganizationName("");
+      setOrganizationDomain("");
+      void readinessQuery.refetch();
+    },
+    onError() {
+      toast.error("Organização não criada", { description: "A política não liberou o comando ou os dados precisam de revisão. Nenhum acesso foi ampliado." });
+    },
+  });
+  const delegateMembershipMutation = trpc.administration.delegateMembership.useMutation({
+    onSuccess() {
+      toast.success("Delegação registrada", { description: "A membership permanece limitada ao escopo, finalidade e vigência enviados." });
+      void readinessQuery.refetch();
+    },
+    onError() {
+      toast.error("Delegação não concluída", { description: "Confirme os identificadores, o escopo e a política. Nenhuma alçada foi ampliada." });
+    },
+  });
+  const suspendMembershipMutation = trpc.administration.suspendMembership.useMutation({
+    onSuccess() {
+      toast.success("Suspensão registrada", { description: "A transição foi controlada pelo servidor e associada a uma correlação." });
+      void readinessQuery.refetch();
+    },
+    onError() {
+      toast.error("Suspensão não concluída", { description: "A policy bloqueou o comando ou os dados precisam de revisão." });
+    },
+  });
+  const revokeMembershipMutation = trpc.administration.revokeMembership.useMutation({
+    onSuccess() {
+      toast.success("Revogação registrada", { description: "A transição foi controlada pelo servidor e associada a uma correlação." });
+      void readinessQuery.refetch();
+    },
+    onError() {
+      toast.error("Revogação não concluída", { description: "A policy bloqueou o comando ou os dados precisam de revisão." });
     },
   });
   const selectedFocus = focusPanels[focus];
@@ -127,6 +177,7 @@ export default function PlatformAdmin() {
       ? "Identidade Supabase conectada · alçada pendente"
       : "Identidade Supabase ainda não conectada";
   const canPrepareBootstrap = commandStatusQuery.data?.bootstrapAction === "available";
+  const consoleState = deriveAdministrativeConsoleState(commandStatusQuery.data);
 
   function executeCommand(command: PlatformCommand) {
     if (command === "activateBootstrap" && canPrepareBootstrap) {
@@ -259,6 +310,51 @@ export default function PlatformAdmin() {
     } finally {
       setIsRequestingRecovery(false);
     }
+  }
+
+  function explainConsoleGate(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    toast.message(consoleState.title, { description: consoleState.description });
+  }
+
+  function toggleMembershipModule(module: "platform" | "vendas_urbanas" | "locacao") {
+    setMembershipModules((current) => current.includes(module) ? current.filter((item) => item !== module) : [...current, module]);
+  }
+
+  function submitOrganization(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!consoleState.isCommandFormAvailable) return explainConsoleGate(event);
+    provisionOrganizationMutation.mutate({
+      name: organizationName,
+      domain: organizationDomain.trim() || undefined,
+      correlationId: crypto.randomUUID(),
+    });
+  }
+
+  function submitMembership(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!consoleState.isCommandFormAvailable) return explainConsoleGate(event);
+    if (membershipModules.length === 0) {
+      toast.error("Selecione ao menos um módulo", { description: "A delegação precisa ser limitada a um escopo explícito." });
+      return;
+    }
+    delegateMembershipMutation.mutate({
+      organizationId: membershipOrganizationId,
+      subjectId: membershipSubjectId,
+      role: membershipRole as "organization_admin" | "area_admin" | "operator",
+      scopeSelector: { modules: membershipModules },
+      purposeCode: membershipPurposeCode,
+      expiresAt: membershipExpiration ? new Date(membershipExpiration).toISOString() : undefined,
+      correlationId: crypto.randomUUID(),
+    });
+  }
+
+  function submitMembershipEnd(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!consoleState.isCommandFormAvailable) return explainConsoleGate(event);
+    const input = { membershipId, reasonCode: membershipReason, correlationId: crypto.randomUUID() };
+    if (membershipAction === "suspend") suspendMembershipMutation.mutate(input);
+    else revokeMembershipMutation.mutate(input);
   }
 
   return (
@@ -440,6 +536,68 @@ export default function PlatformAdmin() {
                 </article>
               );
             })}
+          </div>
+        </section>
+
+        <section className="platform-admin-console" aria-labelledby="console-title">
+          <div className="platform-admin-section-heading">
+            <div>
+              <p className="platform-admin-eyebrow">CONSOLE TRANSACIONAL · GATE POR POLICY</p>
+              <h2 id="console-title">Prepare o comando antes de poder enviá-lo.</h2>
+            </div>
+            <p className="platform-admin-muted">{consoleState.title}: {consoleState.description}</p>
+          </div>
+          <div className="platform-admin-console__grid" aria-disabled={!consoleState.isCommandFormAvailable}>
+            <form onSubmit={submitOrganization} className="platform-admin-console__form">
+              <div className="platform-admin-console__form-title"><Building2 size={18} /><h3>Nova organização</h3></div>
+              <p>Cria somente uma organização em rascunho quando a política do servidor permitir.</p>
+              <label htmlFor="organization-name">Nome da organização</label>
+              <input id="organization-name" value={organizationName} onChange={(event) => setOrganizationName(event.target.value)} placeholder="Ex.: Imobiliária Horizonte" disabled={!consoleState.isCommandFormAvailable} required />
+              <label htmlFor="organization-domain">Domínio autorizado <span>opcional</span></label>
+              <input id="organization-domain" value={organizationDomain} onChange={(event) => setOrganizationDomain(event.target.value)} placeholder="empresa.example" disabled={!consoleState.isCommandFormAvailable} />
+              <button type="submit" disabled={!consoleState.isCommandFormAvailable || provisionOrganizationMutation.isPending}>{provisionOrganizationMutation.isPending ? "Criando rascunho" : "Validar e criar rascunho"} <ArrowUpRight size={15} /></button>
+            </form>
+
+            <form onSubmit={submitMembership} className="platform-admin-console__form">
+              <div className="platform-admin-console__form-title"><UsersRound size={18} /><h3>Delegar membership</h3></div>
+              <p>Exige identidade existente, escopo limitado, finalidade, vigência e correlação.</p>
+              <label htmlFor="membership-organization">ID da organização</label>
+              <input id="membership-organization" value={membershipOrganizationId} onChange={(event) => setMembershipOrganizationId(event.target.value)} placeholder="UUID da organização" disabled={!consoleState.isCommandFormAvailable} required />
+              <label htmlFor="membership-subject">ID da identidade</label>
+              <input id="membership-subject" value={membershipSubjectId} onChange={(event) => setMembershipSubjectId(event.target.value)} placeholder="UUID autenticado" disabled={!consoleState.isCommandFormAvailable} required />
+              <label htmlFor="membership-role">Papel contido</label>
+              <select id="membership-role" value={membershipRole} onChange={(event) => setMembershipRole(event.target.value)} disabled={!consoleState.isCommandFormAvailable}>
+                <option value="organization_admin">Administrador da organização</option>
+                <option value="area_admin">Administrador de área</option>
+                <option value="operator">Operador</option>
+              </select>
+              <label htmlFor="membership-purpose">Finalidade</label>
+              <input id="membership-purpose" value={membershipPurposeCode} onChange={(event) => setMembershipPurposeCode(event.target.value)} disabled={!consoleState.isCommandFormAvailable} required />
+              <fieldset className="platform-admin-console__scope">
+                <legend>Módulos no escopo</legend>
+                {(["platform", "vendas_urbanas", "locacao"] as const).map((module) => (
+                  <label key={module}><input type="checkbox" checked={membershipModules.includes(module)} onChange={() => toggleMembershipModule(module)} disabled={!consoleState.isCommandFormAvailable} /> {module === "platform" ? "Plataforma" : module === "vendas_urbanas" ? "Vendas Urbanas" : "Locação"}</label>
+                ))}
+              </fieldset>
+              <label htmlFor="membership-expiration">Vigência <span>opcional</span></label>
+              <input id="membership-expiration" type="datetime-local" value={membershipExpiration} onChange={(event) => setMembershipExpiration(event.target.value)} disabled={!consoleState.isCommandFormAvailable} />
+              <button type="submit" disabled={!consoleState.isCommandFormAvailable || delegateMembershipMutation.isPending}>{delegateMembershipMutation.isPending ? "Validando delegação" : "Validar delegação"} <ArrowUpRight size={15} /></button>
+            </form>
+
+            <form onSubmit={submitMembershipEnd} className="platform-admin-console__form">
+              <div className="platform-admin-console__form-title"><LockKeyhole size={18} /><h3>Suspender ou revogar</h3></div>
+              <p>O motivo é obrigatório e a ação só pode atuar em uma membership localizada pelo servidor.</p>
+              <fieldset className="platform-admin-identity__mode">
+                <legend>Decisão</legend>
+                <label><input type="radio" name="membership-action" checked={membershipAction === "suspend"} onChange={() => setMembershipAction("suspend")} disabled={!consoleState.isCommandFormAvailable} /> Suspender</label>
+                <label><input type="radio" name="membership-action" checked={membershipAction === "revoke"} onChange={() => setMembershipAction("revoke")} disabled={!consoleState.isCommandFormAvailable} /> Revogar</label>
+              </fieldset>
+              <label htmlFor="membership-id">ID da membership</label>
+              <input id="membership-id" value={membershipId} onChange={(event) => setMembershipId(event.target.value)} placeholder="UUID da membership" disabled={!consoleState.isCommandFormAvailable} required />
+              <label htmlFor="membership-reason">Motivo em código</label>
+              <input id="membership-reason" value={membershipReason} onChange={(event) => setMembershipReason(event.target.value.toUpperCase())} placeholder="EX.: ACESSO_ENCERRADO" disabled={!consoleState.isCommandFormAvailable} required />
+              <button type="submit" disabled={!consoleState.isCommandFormAvailable || suspendMembershipMutation.isPending || revokeMembershipMutation.isPending}>{suspendMembershipMutation.isPending || revokeMembershipMutation.isPending ? "Validando transição" : `Validar ${membershipAction === "suspend" ? "suspensão" : "revogação"}`} <ArrowUpRight size={15} /></button>
+            </form>
           </div>
         </section>
 

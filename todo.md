@@ -639,3 +639,11 @@
 - [x] Implementar a leitura de MFA, recuperação e estado de ativação para a central administrativa.
 - [x] Validar ciclo de sessão, isolamento, falhas seguras, acessibilidade, testes, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o marco de identidade.
+
+## Criação do CRM: console de Super Admin
+
+- [x] Definir estados de interface, bloqueios e contratos de validação para organização, membership, suspensão e revogação.
+- [x] Implementar formulários controlados sem pré-preencher identidades, criar dados ou ampliar alçada automaticamente.
+- [x] Conectar os comandos transacionais server-side à console com retorno redigido, correlação e feedback seguro.
+- [x] Validar autorização, transições, acessibilidade, recuperação, testes, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar a console administrativa.
