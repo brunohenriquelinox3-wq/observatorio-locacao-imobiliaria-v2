@@ -485,3 +485,21 @@
 - [x] Manter o trabalho exclusivamente em estratégia, requisitos, critérios de aceite, riscos, roadmap e documentação de Vendas Urbanas e Locação.
 - [x] Não criar ou alterar schema, migrations, rotas, telas, integrações, permissões operacionais, dados ou automações do CRM sem autorização futura específica.
 - [x] Preparar somente o plano estratégico de ondas e gates de desenvolvimento para revisão, sem executar implementação.
+
+## Autonomia aprovada: atualização estratégica documental linear
+
+- [x] Incorporar linearmente aprendizados comprovados do CRM de referência e dos estudos internos, sem solicitar aprovação intermediária para cada atualização documental.
+- [x] Registrar recomendação, evidência, alternativa, risco, dependência e critério de aceite em cada decisão estratégica relevante.
+- [ ] Apresentar ao usuário somente blocos estratégicos concluídos, coerentes e revisados, sem criar funcionalidades do CRM.
+
+## Aprofundamento documental: fundação compartilhada Vendas Urbanas e Locação
+
+- [x] Definir contexto, papéis, grants, responsabilidades e negações por padrão sem alterar a hierarquia canônica.
+- [x] Definir regras de identidade, relações temporais, dossiê, dados sensíveis, eventos e trilha de auditoria para as duas colunas.
+- [x] Definir critérios de aceite, matriz permitir/negar e gates de saída antes de qualquer implementação futura.
+
+## Aprofundamento documental: jornadas Vendas Urbanas e Locação
+
+- [x] Detalhar a jornada de Vendas Urbanas do lead à venda/contrato, incluindo agenda, dossiê, imóveis, empreendimento, publicação, financeiro e inteligência governada.
+- [x] Detalhar a jornada de Locação da administração à renovação/rescisão, incluindo partes, imóvel, garantia, contrato, carteira, manutenção, portais e financeiro governado.
+- [x] Definir cenários de exceção, critérios de aceite, indicadores e gates de decisão para as duas jornadas sem implementar funcionalidades.
