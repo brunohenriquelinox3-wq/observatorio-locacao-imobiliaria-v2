@@ -529,3 +529,9 @@
 - [x] Definir hipóteses, segmentos de piloto, unidades de observação e limites de experimento para Vendas Urbanas e Locação.
 - [x] Definir métricas de sucesso, segurança, qualidade, eficiência e aprendizado por jornada, sem confundir métrica de piloto com fato financeiro.
 - [x] Definir gates de escala, pausa, reversão, correção e revisão de estratégia antes de qualquer implementação futura.
+
+## Aprofundamento documental: governança, migração e qualidade de dados
+
+- [x] Delimitar dados canônicos, classificações, qualidade, retenção e fronteiras de migração para Vendas Urbanas e Locação.
+- [x] Definir ingestão, staging, deduplicação, mapeamento, reconciliação, exceção e recuperação sem executar importação, exportação ou sincronização.
+- [x] Definir provas, controles, gates e critérios de aceite para ativação futura de migração e qualidade de dados.
