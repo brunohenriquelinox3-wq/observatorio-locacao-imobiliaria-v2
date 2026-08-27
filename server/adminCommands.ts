@@ -7,6 +7,7 @@ import type {
   SuspendMembershipInput,
 } from "../shared/adminCommandContracts";
 import { getSupabaseAdminClient } from "./supabase";
+import type { SupabaseMfaAttestation } from "./supabaseIdentity";
 
 type AdminClient = Pick<SupabaseClient, "from" | "rpc">;
 
@@ -76,6 +77,32 @@ export async function bootstrapCurrentSubject(
     client,
   );
   return { principalId, state: "pending_activation" };
+}
+
+export async function activatePendingPlatformPrincipal(
+  attestation: SupabaseMfaAttestation | null,
+  correlationId: string,
+  client: AdminClient = getSupabaseAdminClient(),
+): Promise<{ principalId: string; state: "active" }> {
+  if (!attestation || attestation.assuranceLevel !== "aal2" || attestation.method !== "totp" || !attestation.verifiedRecoveryChannel) {
+    throw configurationError();
+  }
+  const status = await getAdministrativeSubjectStatus(attestation.subjectId, client);
+  if (status.identityState !== "pending_activation") throw configurationError();
+
+  const principalId = await callUuidRpc(
+    "platform_attest_and_activate_principal",
+    {
+      p_subject_id: attestation.subjectId,
+      p_aal: attestation.assuranceLevel,
+      p_amr_method: attestation.method,
+      p_amr_at: attestation.verifiedAt,
+      p_verified_recovery_channel: attestation.verifiedRecoveryChannel,
+      p_correlation_id: correlationId,
+    },
+    client,
+  );
+  return { principalId, state: "active" };
 }
 
 async function requireActivePlatformPrincipal(subjectId: string | null, client: AdminClient): Promise<string> {

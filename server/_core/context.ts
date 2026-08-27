@@ -8,6 +8,7 @@ export type TrpcContext = {
   res: CreateExpressContextOptions["res"];
   user: User | null;
   supabaseSubjectId: string | null;
+  supabaseAccessToken?: string;
 };
 
 export async function createContext(
@@ -32,5 +33,6 @@ export async function createContext(
     res: opts.res,
     user,
     supabaseSubjectId,
+    supabaseAccessToken: typeof supabaseHeader === "string" ? supabaseHeader : undefined,
   };
 }

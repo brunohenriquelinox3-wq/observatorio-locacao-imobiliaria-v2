@@ -647,3 +647,13 @@
 - [x] Conectar os comandos transacionais server-side à console com retorno redigido, correlação e feedback seguro.
 - [x] Validar autorização, transições, acessibilidade, recuperação, testes, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar a console administrativa.
+
+## Criação do CRM: atestação MFA e ativação controlada
+
+- [x] Validar o contrato de assurance JWT, MFA recente e ativação explícita em referências oficiais.
+- [x] Preparar e aplicar a migration de atestação MFA e ativação com negação por padrão e trilha redigida.
+- [x] Implementar o gate server-side que atesta MFA e ativa o principal somente após os requisitos válidos.
+- [x] Conectar a jornada de ativação controlada à central administrativa sem expor alegação ou segredo.
+- [x] Validar gates, falhas seguras, testes, tipos, build e interfaces responsivas.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o marco de ativação.
+- [x] Executar validação proporcional: remover repetições de baixo risco e manter os controles críticos de MFA, autorização, migration, isolamento e recuperação.

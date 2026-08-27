@@ -5,12 +5,14 @@ import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_
 import { getFoundationReadiness } from "./foundationReadiness";
 import {
   bootstrapCurrentSubject,
+  activatePendingPlatformPrincipal,
   delegateMembership,
   getAdministrativeSubjectStatus,
   provisionOrganization,
   revokeMembership,
   suspendMembership,
 } from "./adminCommands";
+import { attestSupabaseMfa } from "./supabaseIdentity";
 import {
   administrativeRequestMetaSchema,
   grantMembershipInputSchema,
@@ -47,6 +49,12 @@ export const appRouter = router({
     bootstrap: adminProcedure
       .input(administrativeRequestMetaSchema)
       .mutation(({ ctx, input }) => bootstrapCurrentSubject(ctx.supabaseSubjectId, input.correlationId)),
+    activateBootstrap: adminProcedure
+      .input(administrativeRequestMetaSchema)
+      .mutation(async ({ ctx, input }) => activatePendingPlatformPrincipal(
+        await attestSupabaseMfa(ctx.supabaseAccessToken),
+        input.correlationId,
+      )),
     provisionOrganization: adminProcedure
       .input(provisionOrganizationInputSchema)
       .mutation(({ ctx, input }) => provisionOrganization(ctx.supabaseSubjectId, input)),

@@ -119,6 +119,20 @@ export default function PlatformAdmin() {
       });
     },
   });
+  const activateBootstrapMutation = trpc.administration.activateBootstrap.useMutation({
+    onSuccess() {
+      toast.success("Principal de plataforma ativado", {
+        description: "A ativação foi validada pelo servidor. Organizações e delegações continuam exigindo correlação e policy a cada comando.",
+      });
+      void commandStatusQuery.refetch();
+      void readinessQuery.refetch();
+    },
+    onError() {
+      toast.error("Ativação não liberada", {
+        description: "Conclua uma sessão Supabase com MFA TOTP recente e canal de recuperação verificado. Nenhuma alçada foi ampliada.",
+      });
+    },
+  });
   const provisionOrganizationMutation = trpc.administration.provisionOrganization.useMutation({
     onSuccess(result) {
       toast.success("Organização em rascunho criada", { description: `Referência protegida: ${result.organizationId.slice(0, 8)}…` });
@@ -177,11 +191,16 @@ export default function PlatformAdmin() {
       ? "Identidade Supabase conectada · alçada pendente"
       : "Identidade Supabase ainda não conectada";
   const canPrepareBootstrap = commandStatusQuery.data?.bootstrapAction === "available";
+  const canActivateBootstrap = commandStatusQuery.data?.identityState === "pending_activation" && mfaVerified;
   const consoleState = deriveAdministrativeConsoleState(commandStatusQuery.data);
 
   function executeCommand(command: PlatformCommand) {
     if (command === "activateBootstrap" && canPrepareBootstrap) {
       bootstrapMutation.mutate({ correlationId: crypto.randomUUID() });
+      return;
+    }
+    if (command === "activateBootstrap" && canActivateBootstrap) {
+      activateBootstrapMutation.mutate({ correlationId: crypto.randomUUID() });
       return;
     }
     unavailable(command);
@@ -456,6 +475,21 @@ export default function PlatformAdmin() {
           )}
         </section>
 
+        <section className="platform-admin-activation" aria-labelledby="activation-title">
+          <div>
+            <p className="platform-admin-eyebrow">ATIVAÇÃO EXPLÍCITA · GATE DO SERVIDOR</p>
+            <h2 id="activation-title">MFA não vira privilégio sem uma atestação recente e uma decisão transacional.</h2>
+            <p>O botão não interpreta código, JWT ou papel. Ele pede ao servidor que confirme AAL2, TOTP recente, identidade pendente e canal de recuperação verificado no mesmo comando.</p>
+          </div>
+          <div className="platform-admin-activation__action">
+            <strong>{canActivateBootstrap ? "Pronto para pedir atestação" : commandStatusQuery.data?.identityState === "pending_activation" ? "MFA precisa ser verificado nesta sessão" : "Bootstrap pendente é necessário antes da ativação"}</strong>
+            <button type="button" onClick={() => executeCommand("activateBootstrap")} disabled={!canPrepareBootstrap && (!canActivateBootstrap || activateBootstrapMutation.isPending)}>
+              {bootstrapMutation.isPending ? "Preparando bootstrap" : activateBootstrapMutation.isPending ? "Atestando e ativando" : canPrepareBootstrap ? "Preparar bootstrap" : canActivateBootstrap ? "Pedir ativação controlada" : "Ver requisito"}
+              <ArrowUpRight size={15} />
+            </button>
+          </div>
+        </section>
+
         <section className="platform-admin-metrics" aria-label="Indicadores da central de plataforma">
           <article><span>ORGANIZAÇÕES</span><strong>{metricValue(readiness?.counts.organizations)}</strong><p>Leitura agregada; provisionamento permanece bloqueado.</p></article>
           <article><span>PRINCIPALS ATIVOS</span><strong>{metricValue(readiness?.counts.principals)}</strong><p>Bootstrap ainda exige controles adicionais.</p></article>
@@ -531,7 +565,7 @@ export default function PlatformAdmin() {
                     onClick={() => executeCommand(command)}
                     disabled={command === "activateBootstrap" && bootstrapMutation.isPending}
                   >
-                    {command === "activateBootstrap" && canPrepareBootstrap ? "Preparar pendência" : "Ver bloqueio"} <ArrowUpRight size={15} />
+                    {command === "activateBootstrap" && canPrepareBootstrap ? "Preparar pendência" : command === "activateBootstrap" && canActivateBootstrap ? "Pedir ativação" : "Ver bloqueio"} <ArrowUpRight size={15} />
                   </button>
                 </article>
               );

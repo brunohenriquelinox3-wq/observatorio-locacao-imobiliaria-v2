@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { bootstrapCurrentSubject, getAdministrativeSubjectStatus } from "./adminCommands";
+import { activatePendingPlatformPrincipal, bootstrapCurrentSubject, getAdministrativeSubjectStatus } from "./adminCommands";
 
 const subjectId = "550e8400-e29b-41d4-a716-446655440000";
 const correlationId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
@@ -43,5 +43,30 @@ describe("admin command service", () => {
       commandMode: "blocked",
       mfaVerified: false,
     });
+  });
+
+  it("activates only a pending principal with server-attested MFA and verified recovery", async () => {
+    const client = clientWithPrincipal({ state: "pending_activation", mfa_verified_at: null });
+    client.rpc.mockResolvedValue({ data: subjectId, error: null });
+    const result = await activatePendingPlatformPrincipal({
+      subjectId,
+      assuranceLevel: "aal2",
+      method: "totp",
+      verifiedRecoveryChannel: true,
+      verifiedAt: "2026-08-27T23:19:50.000Z",
+    }, correlationId, client);
+
+    expect(result).toEqual({ principalId: subjectId, state: "active" });
+    expect(client.rpc).toHaveBeenCalledWith("platform_attest_and_activate_principal", expect.objectContaining({
+      p_subject_id: subjectId,
+      p_aal: "aal2",
+      p_amr_method: "totp",
+      p_verified_recovery_channel: true,
+    }));
+  });
+
+  it("rejects activation when the server does not have a complete attestation", async () => {
+    const client = clientWithPrincipal({ state: "pending_activation", mfa_verified_at: null });
+    await expect(activatePendingPlatformPrincipal(null, correlationId, client)).rejects.toMatchObject({ code: "PRECONDITION_FAILED" });
   });
 });
