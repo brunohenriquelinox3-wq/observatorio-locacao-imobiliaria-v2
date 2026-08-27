@@ -510,3 +510,10 @@
 - [x] Detalhar o ciclo de comissões e direitos econômicos de Vendas Urbanas, com versão, gatilho, alçada, exceção e reconciliação.
 - [x] Detalhar o ciclo de carteira, cobrança, despesas, taxa de administração, repasse e prestação de contas de Locação.
 - [x] Definir exceções financeiras, indicadores, evidências mínimas, controles e gates sem criar cobranças, pagamentos ou integrações.
+
+## Aprofundamento documental: inteligência, métricas, automação e canais
+
+- [x] Delimitar métricas, inteligência, automações, comunicação e publicação como capacidades governadas, explicáveis e reversíveis.
+- [x] Detalhar sinais, filas e recomendações de Vendas Urbanas sem atribuição, campanha, sincronização ou publicação automáticas.
+- [x] Detalhar alertas, leituras, canais e portais de Locação sem cobrança, comunicação, repasse ou decisão automática.
+- [x] Definir contratos de métricas, tratamento de exceções, revisão humana, limites de autonomia e gates de ativação futura.
