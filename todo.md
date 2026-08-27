@@ -474,3 +474,14 @@
 - [x] Consolidar os requisitos de Locação, incluindo partes, imóveis, contratos, carteira, cobrança, repasses, manutenção, prestadores, vistorias, sinistros, portais e financeiro.
 - [x] Atualizar as estratégias de Vendas Urbanas e CRM consolidada com decisões, requisitos, provas, lacunas, critérios de aceite e backlog rastreável.
 - [x] Validar coerência, preservar checkpoint e apresentar a atualização estratégica completa para revisão do usuário.
+
+## Diretriz permanente: recomendação antes de decisão
+
+- [x] Apresentar, antes de cada decisão relevante, a recomendação técnica/operacional, as razões, o risco de alternativas e o nível de evidência disponível.
+- [x] Priorizar o caminho que preserve segurança, rastreabilidade, reversibilidade e completude, comunicando dependências e gates de aprovação.
+
+## Limite aprovado: estratégia sem implementação de CRM
+
+- [x] Manter o trabalho exclusivamente em estratégia, requisitos, critérios de aceite, riscos, roadmap e documentação de Vendas Urbanas e Locação.
+- [x] Não criar ou alterar schema, migrations, rotas, telas, integrações, permissões operacionais, dados ou automações do CRM sem autorização futura específica.
+- [x] Preparar somente o plano estratégico de ondas e gates de desenvolvimento para revisão, sem executar implementação.

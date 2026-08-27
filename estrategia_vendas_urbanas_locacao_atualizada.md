@@ -4,6 +4,8 @@
 **Status:** `atualização_estratégica_completa_autorizada`  
 **Escopo:** exclusivamente as colunas **Vendas Urbanas** e **Locação**. A arquitetura global permanece **SUPER ADM → ADM → LOTEADORA → VENDAS URBANAS → LOCAÇÃO**; nenhuma decisão deste documento altera setores, políticas ou dados das outras colunas. [1]
 
+> **Limite de execução aprovado:** esta etapa permanece estritamente documental. Ela especifica visão, domínio, jornadas, requisitos, critérios de aceite, riscos, roadmap e provas; não autoriza criar ou alterar schema, migrations, rotas, telas, integrações, permissões operacionais, automações ou dados do CRM. Qualquer implementação será uma etapa futura e exigirá recomendação prévia e autorização explícita.
+
 > **Tese de produto:** o CRM não deve ser apenas uma lista de contatos, imóveis e contratos. Ele deve guardar o contexto correto de cada relação, pedir a evidência no momento certo e transformar o próximo trabalho da equipe em uma ação explicável, segura e reversível.
 
 ## 1. Base de decisão e limites
@@ -161,6 +163,23 @@ Toda alteração futura deve carregar a cadeia **intenção → evidência → d
 | Ação financeira ou externa | Definir idempotência, prévia, confirmação, alçada, correlação, retorno, conciliação e compensação. |
 | Portal, lista ou exportação | Validar policy por organização/objeto/campo, minimização, expiração, logs e tentativa de acesso direto. |
 | Aprendizado de piloto | Anexar evidência agregada, decidir manter/alterar/rejeitar, versionar a regra e não sobrescrever o histórico. |
+
+## 9. Padrão permanente de recomendação antes de decisão
+
+Antes de qualquer escolha relevante de escopo, arquitetura, modelo de dados, permissão, fluxo financeiro, integração, automação ou experiência, a liderança receberá uma recomendação objetiva. A recomendação não substitui a decisão do negócio: ela torna explícitos o melhor caminho técnico conhecido, sua evidência, as alternativas, os riscos, as dependências e o gate necessário para avançar com segurança.
+
+| Elemento obrigatório | Pergunta que a recomendação responde |
+| --- | --- |
+| Decisão e objetivo | O que precisa ser decidido e qual resultado de negócio/usuário se busca? |
+| Recomendação | Qual é o caminho mais seguro e completo no estado atual do conhecimento? |
+| Evidência | Quais fontes, testes, normas, dados agregados ou decisões anteriores sustentam a escolha? |
+| Alternativas | Que opções existem e por que ficam em segundo plano, em espera ou são rejeitadas? |
+| Risco e impacto | O que pode falhar em segurança, operação, privacidade, financeiro, prazo ou experiência? |
+| Pré-condições | Que schema, policy, contrato, protótipo, teste, integração ou validação precisa existir antes? |
+| Critério de aceite | Qual prova prática confirma que a decisão foi implementada corretamente? |
+| Owner e retorno | Quem aprova, quem executa, quando revisar e como reverter/compensar se necessário? |
+
+> Em caso de evidência insuficiente, a recomendação deve declarar a incerteza e propor o menor experimento seguro que a reduza. Nunca deve apresentar como garantido um comportamento apenas presumido.
 
 ## Referências internas
 
