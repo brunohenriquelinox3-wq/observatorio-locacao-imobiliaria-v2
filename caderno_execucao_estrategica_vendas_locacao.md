@@ -23,6 +23,8 @@
 | `EXE-11` | Workspace contextual e leitura governada | `P1` | Integrar na mesma experiência a leitura necessária de parte, ativo, jornada, dossiê, contrato, carteira e caso, preservando a fonte e a permissão de cada fato. | Produto + domínio + segurança | Read model por papel, policy de objeto/campo, origem/frescor e estados explícitos. | Papel de teste percorre a jornada sem alternar sistemas, mas não lê/escreve objeto ou campo fora do grant. |
 | `EXE-12` | Catálogo de indicadores e comparabilidade de mercado | `P1` | Tratar cada índice externo como contexto versionado com proveniência, método, cobertura, período, atraso e limitação; evita falsa precisão e decisão por dado incompatível. | Produto + dados + operação | Contrato de métrica, catálogo de fontes, dados internos íntegros e política de leitura. | Cartão contextual separa fato da carteira e benchmark externo, declara `as_of`/cobertura e não automatiza preço, crédito, garantia ou prioridade. |
 | `EXE-13` | Vigência normativa e evidência externa verificável | `P0` | Catalogar fonte competente, ato/documento, situação, versão, emissor, data de verificação, escopo e owner de revisão; evita que um anexo/status interno simule validade jurídica. | Produto + privacidade + risco | Dossiê classificado, registro de vigência, política de finalidade, revisão humana/profissional e contrato de capacidade. | Fonte/documento revogado, alterado, vencido, incompleto ou sem revisão não habilita automação, conector, checklist conclusivo ou alteração de estado material. |
+| `EXE-14` | Adoção por cenário e prova de valor | `P1` | Medir adoção pela conclusão segura de uma jornada essencial por papel, incluindo a recuperação de exceção e o uso de ajuda contextual. | Operações + produto + suporte | Jornada definida, coorte, telemetria proporcional, material por papel, fila de suporte e critérios de pausa. | Usuário de teste conclui cenário útil sem planilha paralela, acesso excessivo ou comando material; métricas não se limitam a login/clique. |
+| `EXE-15` | Portal mínimo e compartilhamento governado | `P1` | Expor recorte útil de contrato, carteira, documento, caso ou prestação de contas por grant mínimo, mantendo fonte, corte temporal e explicação. | Produto + segurança + Locação | Read model governado, policy de objeto/campo, sessão, expiração, storage privado e audit event. | Acesso válido mostra só o que foi liberado; URL, ID, link, cache ou sessão fora do grant falham sem enumerar dados. |
 
 ## 2. Priorização e regra de passagem
 
@@ -49,6 +51,7 @@ Uma prioridade `P0` é pré-condição de segurança ou integridade. Uma priorid
 | `VU-REQ-08` | Oferecer inteligência explicável de pipeline, origem e saúde. | `EXE-07` | Fórmula/score, corte, fonte, versão, explicação e revisão. | Recomendação não altera fase, proprietário ou comunicação automaticamente. |
 | `VU-REQ-09` | Exibir contexto de preço, oferta e crédito externo somente em recortes aprovados. | `EXE-07`, `EXE-12` | Fonte, universo, praça, tipologia, período, `as_of`, atraso, cobertura e aviso de comparabilidade. | Benchmark indisponível/incomparável não gera preço, elegibilidade, score ou recomendação automática. |
 | `VU-REQ-10` | Correlacionar proposta/contrato a evidências externas sem declarar situação jurídica por inferência. | `EXE-06`, `EXE-13` | Documento/ato, emissor, origem, versão, data de consulta, status de vigência conhecido, finalidade, acesso e revisão. | Arquivo, assinatura ou status externo sem origem/revisão não torna ativo, poder, transferência ou obrigação “confirmados”. |
+| `VU-REQ-11` | Conduzir gestor e corretor por ativação contextual do primeiro cenário útil. | `EXE-09`, `EXE-14` | Papel, coorte, cenário, passo, pendência, ajuda, responsável, estado de suporte e resultado observável. | Adoção é comprovada por cenário concluído e exceção recuperada, não por login, clique ou preenchimento cego. |
 
 ## 4. Requisitos atômicos — Locação
 
@@ -65,6 +68,7 @@ Uma prioridade `P0` é pré-condição de segurança ou integridade. Uma priorid
 | `LC-REQ-09` | Expor portal de cliente/proprietário por grant mínimo e expiráveis. | `EXE-01`, `EXE-06`, `EXE-08` | Grant, escopo, validade, objeto/campo autorizado e registro de acesso. | URL, e-mail ou ID isolado não concede leitura de contrato, carteira ou documento. |
 | `LC-REQ-10` | Contextualizar negociação e disponibilidade com índices externos de locação quando houver comparabilidade. | `EXE-07`, `EXE-12` | Métrica externa datada, praça, tipologia, método, cobertura, fonte e valor interno correspondente separado. | Anúncio, desconto externo ou contexto macro não muda aluguel, garantia, contrato, cobrança ou prioridade de parte. |
 | `LC-REQ-11` | Gerir contrato, garantia e dossiê externo como fatos revisáveis e não como veredito jurídico automatizado. | `EXE-04`, `EXE-06`, `EXE-13` | Instrumento/versionamento, modalidade, vigência, aviso, evidência, origem, revisão, exceção, owner e alçada. | Garantia/documento vencido ou não revisado abre bloqueio explicado; não executa cobrança, rescisão, repasse ou comunicação. |
+| `LC-REQ-12` | Onboardar proprietário e expor portal mínimo por jornada de administração. | `EXE-09`, `EXE-15` | Grant, objeto/campo, finalidade, vigência, owner, expectativa, dossiê elegível, `as_of`, origem e suporte. | Portal não replica backoffice; acesso fora do grant falha seguro e usuário identifica pendência/responsável sem ampliar escopo. |
 
 ## 5. Adoção por papel
 
@@ -135,3 +139,9 @@ Este caderno estará pronto para orientar uma futura especificação quando toda
 [11] [Registro de pesquisa externa de referências de mercado](registro_pesquisa_referencias_mercado_vendas_locacao.md)
 
 [12] [Registro de pesquisa regulatória — Vendas Urbanas e Locação](registro_pesquisa_regulatoria_vendas_locacao.md)
+
+[13] [Registro de posicionamento e adoção](registro_pesquisa_posicionamento_adocao_vendas_locacao.md)
+
+[14] [Registro complementar de adoção e operação](registro_pesquisa_adocao_operacao_vendas_locacao.md)
+
+[15] [Registro de operação, portal e implantação](registro_pesquisa_operacao_portais_vendas_locacao.md)

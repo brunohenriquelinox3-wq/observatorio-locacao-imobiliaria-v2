@@ -228,6 +228,21 @@ A nova pesquisa em fontes oficiais reforça que uma estratégia segura não trat
 
 > **Recomendação atual:** introduzir o conceito de **evidência externa verificável**, e não o rótulo genérico de “documento válido”. A primeira descrição organiza o que o CRM efetivamente sabe, de onde veio, quando foi verificado e quem pode revisar; a segunda cria uma falsa certeza que não cabe ao produto declarar.
 
+## 13. Posicionamento, adoção e portal mínimo governado
+
+As novas referências de produto e operação imobiliária apontam que o mercado já oferece listas, funis, contratos, financeiro, portais, integrações e automação. A diferenciação sustentável não é listar mais capacidades, mas conectar o contexto de trabalho por papel sem misturar fonte de verdade, permissão, comando externo ou liquidação. Assim, a promessa de produto deve ser apresentada por jornada e cenário concluído, não por quantidade de telas ou por alegação genérica de “tudo em um”. [17] [18] [19]
+
+| Tema | Decisão estratégica | Limite obrigatório | Prova futura de aceite |
+| --- | --- | --- | --- |
+| Embalagem por capacidade | Diferenciar núcleo canônico, módulos de jornada, conectores e serviços de adoção; cada capacidade tem escopo, owner, dependência e contingência. | Um fornecedor, token, menu ou lista de integração não é uma capacidade ativa nem autorização de acesso. | Catálogo por capacidade declara dados mínimos, policy, estado, suporte, contingência e métrica de adoção. |
+| Primeiro valor por papel | Definir para cada papel um cenário essencial, uma exceção previsível e um resultado observável antes de medir adoção. | Login, clique, permanência na tela ou volume de registros não são prova isolada de valor. | Coorte de teste conclui cenário essencial com qualidade, sabe recuperar erro e não usa contorno inseguro. |
+| Onboarding contínuo | Tratar entrada de equipe, proprietário e usuário externo como jornada com contexto, owner, material por papel, pendência, expectativa e revisão. | Ajuda, lembrete ou comunicação não são enviados automaticamente sem canal, finalidade, política e aprovação aplicáveis. | O usuário identifica o próximo responsável, o prazo e a rota de escalonamento para uma pendência crítica. |
+| Portal mínimo | Expor ao cliente, proprietário ou prestador somente um recorte de objetos, campos, documentos, fatos e ações explicitamente autorizados. | Portal não é cópia do backoffice; credencial, link, sessão antiga, URL, ID ou e-mail não ampliam o grant. | Papel de teste lê o contexto permitido com `as_of` e lineage; fora do escopo, a resposta falha sem enumeração. |
+| Operação conectada | Reunir, na leitura contextual, parte, ativo, contrato, carteira, caso e evidência necessários a uma jornada. | O workspace conectado não funde contrato, obrigação, dado sensível, permissão de escrita ou fonte de verdade. | A jornada de teste mostra origem/frescor de cada fato e encaminha comando ao domínio autorizado. |
+| IA e automação | Usar IA e regras inicialmente para explicar, priorizar, rascunhar e sinalizar bloqueios. | Sugestão não atribui, publica, comunica, cobra, aprova, paga ou repassa sem gate humano e trilha. | A saída informa fonte, versão, limitação, confiança, owner, revisão, override e desligamento seguro. |
+
+> **Recomendação atual:** posicionar a futura plataforma como **contexto verificável de trabalho para imobiliárias**, e não como substituta da responsabilidade comercial, contratual, financeira ou humana. O valor inicial deve ser demonstrado por uma jornada curta e segura por papel; profundidade, automação e integrações entram somente após as provas de contexto, qualidade, suporte e reversão.
+
 ## Referências internas
 
 [1] [Arquitetura canônica de colunas e setores](crm_arquitetura_colunas_setores_canonica.md)
@@ -251,6 +266,12 @@ A nova pesquisa em fontes oficiais reforça que uma estratégia segura não trat
 [10] [Caderno de indicadores de mercado — Vendas Urbanas e Locação](caderno_indicadores_mercado_vendas_locacao.md)
 
 [16] [Registro de pesquisa regulatória — Vendas Urbanas e Locação](registro_pesquisa_regulatoria_vendas_locacao.md)
+
+[17] [Registro de posicionamento e adoção](registro_pesquisa_posicionamento_adocao_vendas_locacao.md)
+
+[18] [Registro complementar de adoção e operação](registro_pesquisa_adocao_operacao_vendas_locacao.md)
+
+[19] [Registro de operação, portal e implantação](registro_pesquisa_operacao_portais_vendas_locacao.md)
 
 ## Referências externas
 

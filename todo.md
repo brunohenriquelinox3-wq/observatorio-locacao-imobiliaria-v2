@@ -578,3 +578,10 @@
 - [x] Coletar e registrar fontes oficiais brasileiras aplicáveis, com escopo, vigência, limite e ponto que exige validação profissional.
 - [x] Converter apenas referências aplicáveis em requisitos estratégicos, controles e critérios de aceite, sem aconselhamento jurídico individual.
 - [x] Revisar fontes, coerência e integridade; preservar checkpoint e entregar a atualização regulatória documental.
+
+## Pesquisa externa aprofundada: posicionamento e adoção comercial
+
+- [x] Definir perguntas de posicionamento, diferenciação, adoção, implantação e prova de valor para Vendas Urbanas e Locação.
+- [x] Coletar referências atuais de mercado e fontes primárias sobre produto, implantação, sucesso do cliente e operação imobiliária.
+- [x] Converter achados em princípios de embalagem, posicionamento, adoção, métricas e limites, sem precificar ou operar comercialmente.
+- [x] Revisar fontes, coerência e integridade; preservar checkpoint e entregar a atualização de posicionamento documental.
