@@ -17,3 +17,9 @@
 ## Regra de reinício
 
 Nenhuma recomendação, comparação ou proposta anterior será apresentada como resultado do benchmark enquanto a matriz de controle não registrar cobertura individual de cada superfície acessível em Vendas Urbanas e Locação.
+
+## Pausa aprovada e condição de retomada
+
+Em 27 de agosto de 2026, o usuário escolheu aguardar um ambiente de demonstração ou papel de teste para cobrir as lacunas materiais restantes. A auditoria permanece **pausada**, não concluída: conteúdos paginados/roláveis, detalhes, confirmações, permissões e fluxos com possível efeito material continuam sem demonstração completa. As estratégias de Vendas Urbanas e Locação não podem ser atualizadas com base nesta varredura até a retomada, a conclusão verificável e uma nova aprovação explícita.
+
+> **Retomada obrigatória:** revalidar o contexto de demonstração, atualizar a fila anti-repetição e executar a cobertura controle por controle. Não reciclar superfícies já colocadas em quarentena apenas para sustentar aparência de avanço.
