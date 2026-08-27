@@ -585,3 +585,10 @@
 - [x] Coletar referências atuais de mercado e fontes primárias sobre produto, implantação, sucesso do cliente e operação imobiliária.
 - [x] Converter achados em princípios de embalagem, posicionamento, adoção, métricas e limites, sem precificar ou operar comercialmente.
 - [x] Revisar fontes, coerência e integridade; preservar checkpoint e entregar a atualização de posicionamento documental.
+
+## Auditoria de cobertura estratégica: Vendas Urbanas e Locação
+
+- [x] Definir matriz de cobertura para intenção, evidência, decisão, requisito, risco, owner, dependência, exceção e prova de aceite.
+- [x] Confrontar os domínios e jornadas de Vendas Urbanas e Locação com a matriz, sem alterar as demais colunas.
+- [x] Registrar somente lacunas materiais, seus tratamentos, limites e provas futuras, sem criar escopo por volume.
+- [x] Revisar coerência, preservar checkpoint e apresentar o resultado documental.
