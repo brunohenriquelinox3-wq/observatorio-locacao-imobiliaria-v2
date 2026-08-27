@@ -400,8 +400,8 @@
 
 - [x] Mapear a experiência pública e o acesso autenticado do CRM de referência, sem executar ações, criar dados ou alterar configurações.
 - [x] Inventariar fluxos, telas, entidades, estados, permissões e lacunas relevantes separadamente para Vendas Urbanas e Locação.
-- [ ] Comparar as evidências com a estratégia atual e preparar propostas de atualização rastreáveis, sem alterar Loteadora.
-- [ ] Integrar somente decisões aprovadas a Vendas Urbanas e Locação; revisar, validar e salvar checkpoint.
+- [x] Comparar as evidências com a estratégia atual e preparar propostas de atualização rastreáveis, sem alterar Loteadora.
+- [x] Integrar somente decisões aprovadas a Vendas Urbanas e Locação; revisar, validar e salvar checkpoint.
 
 ## Auditoria prática aprofundada: CRM de referência
 
