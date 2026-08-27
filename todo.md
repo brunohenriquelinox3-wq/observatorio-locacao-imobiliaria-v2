@@ -440,5 +440,5 @@
 
 - [x] Inventariar a última superfície concluída, a superfície atual e as superfícies inéditas pendentes de Vendas Urbanas e Locação.
 - [x] Aplicar uma fila de alternância por superfície: após uma evidência nova, passar obrigatoriamente a uma superfície inédita da outra coluna.
-- [ ] Bloquear retorno a setor já percorrido no ciclo corrente, exceto diante de nova condição técnica, contradição documentada ou evidência incompleta.
-- [ ] Registrar a razão de cada troca de superfície e revisar o histórico da fila antes de qualquer nova interação no CRM externo.
+- [x] Bloquear retorno a setor já percorrido no ciclo corrente, exceto diante de nova condição técnica, contradição documentada ou evidência incompleta.
+- [x] Registrar a razão de cada troca de superfície e revisar o histórico da fila antes de qualquer nova interação no CRM externo.

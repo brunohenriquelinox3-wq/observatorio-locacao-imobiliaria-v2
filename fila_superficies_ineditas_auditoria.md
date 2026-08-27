@@ -52,9 +52,20 @@ Cada nova linha deve declarar, além dos campos usuais, **superfície anterior**
 | 6 | Vendas Urbanas | `/vendas` | Estado vazio e criação bloqueada antes de qualquer vínculo/faturamento. | Quarentena. |
 | 7 | Locação | `/padroes` | Configuração de padrões identificada; edição bloqueada. | Quarentena. |
 | 8 | Vendas Urbanas | `/crm/inteligencia` | Painel de scoring vazio; worker não acionado. | Quarentena. |
+| 9 | Locação | `/negocios/cadastro/locacao` | Primeira etapa da esteira observada; cancelamento confirmado sem inclusão. | Quarentena. |
+| 10 | Vendas Urbanas | `/visitas` | Estado vazio; criação bloqueada antes de agenda e comunicação. | Quarentena. |
+| 11 | Locação | `/imoveisrede` | Catálogo de terceiros exibiu identificação e contato diretamente; navegação interrompida sem interação. | Bloqueada por privacidade; removida da fila ativa. |
+| 12 | Vendas Urbanas | `/crm/saude` | Indicadores e limiares de exceção em estado vazio, sem alteração. | Quarentena. |
+| 13 | Locação | `/portais` | Catálogo de integrações de anúncio em leitura, sem abrir configuração ou conexão. | Quarentena. |
+| 14 | Vendas Urbanas | `/crm/propensao` | Indicadores e filtros de propensão vazios; recálculo bloqueado. | Quarentena. |
+| 15 | Locação | `clientes.hincrivel.com.br` | Tela pública de acesso por WhatsApp, sem identificação ou envio de código. | Quarentena. |
+| 16 | Vendas Urbanas | `/crm/origemRoi` | Indicadores de origem/ROI em leitura; custos e período preservados. | Quarentena. |
+| 17 | Locação | `/marketing/social_accounts` | Rota do menu retornou 404; sem controle disponível. | Não demonstrável; não repetir sem rota válida. |
 
 ## Próximo bloco elegível
 
-| Coluna exigida | Superfície | Motivo de elegibilidade | Limite operacional |
-| --- | --- | --- | --- |
-| Locação | `/negocios/cadastro/locacao` | É uma rota distinta das superfícies em quarentena e permite verificar a renderização do formulário vazio. | Não selecionar pessoa, imóvel, contrato, garantia, valor, data, documento, assinatura, cobrança ou salvar. Se o formulário trouxer dados reais automaticamente, abandonar e registrar o bloqueio. |
+| Coluna exigida | Situação | Decisão operacional |
+| --- | --- | --- |
+| Locação | A antiga candidata `/negocios/cadastro/locacao` já foi auditada e cancelada com segurança. | Nenhuma rota da lista atual será reutilizada. Antes do próximo bloco, identificar uma superfície de Locação ainda não classificada a partir do menu/HTML, sem abrir listas que revelem dados de terceiros. |
+
+> **Pausa governada de Locação:** os candidatos seguros já percorridos foram colocados em quarentena, e o catálogo de rede foi removido por privacidade. Antes de qualquer nova navegação na coluna, a fila deve selecionar uma superfície ainda não classificada e confirmar que ela não apresenta dados pessoais de terceiros ou operação material logo na carga. Não é permitido retornar a `financeiro`, `serviços`, `prestadores`, `vistorias`, `sinistros`, `padrões`, `documentos`, `negócios/alugueis`, `nova locação` ou `imóveis de rede` apenas para manter a alternância.
