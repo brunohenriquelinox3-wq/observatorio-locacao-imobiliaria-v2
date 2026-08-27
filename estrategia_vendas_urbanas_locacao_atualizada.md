@@ -12,6 +12,8 @@
 
 Esta versão combina o estudo setorial acumulado, as estratégias existentes, a arquitetura aprovada e a auditoria prática por controle do CRM de referência. A referência confirmou expectativas de mercado — como funil, listas, filtros, cadastros, imóveis, agenda, carteira, documentos, manutenção e inteligência — mas não determina nossa arquitetura. Onde houve bloqueio, erro, permissão insuficiente ou ação que não poderia ser concluída com segurança, a estratégia estabelece um requisito de prova próprio, e não uma cópia inferida. [2] [3] [4]
 
+A conferência documental independente registrou a presença, materialidade, referências internas, limites de escopo, privacidade e checkpoints desta atualização. Essa conferência demonstra que os documentos foram realmente atualizados e preservados; ela não transforma lacunas da auditoria prática em certeza funcional. [7]
+
 | Fundamento | Decisão de estratégia |
 | --- | --- |
 | Evidência demonstrada | Converte-se em requisito de experiência ou fluxo, com critério de aceite próprio. |
@@ -194,3 +196,5 @@ Antes de qualquer escolha relevante de escopo, arquitetura, modelo de dados, per
 [5] [Estratégia de Vendas Urbanas anterior](estrategia_vendas_urbanas.md)
 
 [6] [Estratégia CRM consolidada](estrategia_crm_imobiliario_consolidada.md)
+
+[7] [Relatório independente de verificação da atualização estratégica](relatorio_verificacao_atualizacao_estrategica_vendas_locacao.md)
