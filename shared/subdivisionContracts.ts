@@ -23,6 +23,13 @@ export const draftSubdivisionLotInputSchema = subdivisionContextSchema.extend({
   lotNumber: z.number().int().min(1).max(100),
 });
 
+export const subdivisionLotInventoryPhaseSchema = z.enum(["reference_confirmed", "structure_review", "review_required"]);
+export const draftSubdivisionLotInventoryStateInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  lotId: z.string().uuid(),
+  inventoryPhase: subdivisionLotInventoryPhaseSchema,
+});
+
 export const draftSubdivisionDevelopmentInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
   internalReference: z.string().trim().toUpperCase().regex(/^[A-Z][A-Z0-9_]{2,79}$/),
@@ -33,3 +40,4 @@ export type SubdivisionContext = z.infer<typeof subdivisionContextSchema>;
 export type DraftSubdivisionDevelopmentInput = z.infer<typeof draftSubdivisionDevelopmentInputSchema>;
 export type DraftSubdivisionBlockInput = z.infer<typeof draftSubdivisionBlockInputSchema>;
 export type DraftSubdivisionLotInput = z.infer<typeof draftSubdivisionLotInputSchema>;
+export type DraftSubdivisionLotInventoryStateInput = z.infer<typeof draftSubdivisionLotInventoryStateInputSchema>;

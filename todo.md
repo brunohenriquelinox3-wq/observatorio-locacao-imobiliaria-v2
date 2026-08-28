@@ -787,3 +787,13 @@
 - [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de cadastro-base de lotes.
 - [x] Corrigir a tipagem do procedimento de cadastro de lotes após incluir seu schema no roteador.
+
+## Criação do CRM: Estoque/Mapa de Lotes — situação interna de inventário
+
+- [x] Consolidar o contrato da situação interna de inventário para Lotes em rascunho, sem disponibilidade, reserva, venda, contrato ou financeiro.
+- [x] Completar a migration de inventário com idempotência, auditoria redigida e leitura minimizada antes de aplicá-la.
+- [x] Preparar e aplicar migration contextual da situação de inventário com RLS, grants mínimos, idempotência, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas e leitura minimizada da situação de inventário.
+- [x] Estender o setor separado de Estoque/Mapa de Lotes com a situação interna e estados protegidos.
+- [x] Empacotar e preservar o corte de situação interna de inventário após a validação proporcional concluída.
+- [x] Corrigir a inclusão parcial do contrato de inventário antes de expor qualquer procedimento novo.
