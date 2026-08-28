@@ -2,7 +2,7 @@ import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { trpc } from "@/lib/trpc";
-import { Building2, CalendarClock, CircleAlert, ClipboardCheck, Compass, House, Link2, ShieldCheck, UsersRound, Workflow } from "lucide-react";
+import { Building2, CalendarClock, CircleAlert, ClipboardCheck, Compass, House, Link2, Search, ShieldCheck, UsersRound, Workflow } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../rental-pipeline.css";
@@ -34,6 +34,22 @@ const agendaStates = {
   cancelled: "Cancelado",
   occurred: "Realizado",
   not_held: "Não realizado",
+} as const;
+
+const assetKinds = {
+  apartment: "Apartamento",
+  house: "Casa",
+  kitnet: "Kitnet",
+  commercial_unit: "Unidade comercial",
+  urban_lot: "Lote urbano",
+  building: "Edificação",
+  other_urban_asset: "Outro ativo urbano",
+} as const;
+
+const occupancyTimings = {
+  immediate: "Imediata",
+  up_to_30_days: "Até 30 dias",
+  flexible: "Flexível",
 } as const;
 
 const rentalAccessGate: DashboardAccessGate = {
@@ -70,12 +86,17 @@ export default function RentalPipeline() {
   const [agendaReasonCode, setAgendaReasonCode] = useState("");
   const [managementIntakeId, setManagementIntakeId] = useState("");
   const [managementAssetId, setManagementAssetId] = useState("");
+  const [tenantProfileIntakeId, setTenantProfileIntakeId] = useState("");
+  const [acceptedAssetKinds, setAcceptedAssetKinds] = useState<(keyof typeof assetKinds)[]>(["apartment"]);
+  const [occupancyTiming, setOccupancyTiming] = useState<keyof typeof occupancyTimings>("immediate");
+  const [preferenceCode, setPreferenceCode] = useState("");
 
   const context = useMemo(() => ({ organizationId: organizationId.trim(), module: "locacao" as const, purposeCode: purposeCode.trim().toUpperCase() }), [organizationId, purposeCode]);
   const isContextReady = isDomainContextReady(context);
   const isWorkspaceReady = isAuthenticated && isContextReady;
   const intakesQuery = trpc.rentalPipeline.listDraftIntakes.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const managementAssetLinksQuery = trpc.rentalPipeline.listDraftManagementAssetLinks.useQuery(context, { enabled: isWorkspaceReady, retry: false });
+  const tenantSearchProfilesQuery = trpc.rentalPipeline.listDraftTenantSearchProfiles.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const utils = trpc.useUtils();
 
   const createMutation = trpc.rentalPipeline.createDraftIntake.useMutation({
@@ -110,6 +131,14 @@ export default function RentalPipeline() {
     },
     onError() { toast.error("Ativo não vinculado", { description: "O servidor exige uma entrada de administração, ativo em rascunho no módulo Locação e contexto autorizado." }); },
   });
+  const tenantSearchProfileMutation = trpc.rentalPipeline.upsertDraftTenantSearchProfile.useMutation({
+    onSuccess() {
+      setTenantProfileIntakeId(""); setAcceptedAssetKinds(["apartment"]); setOccupancyTiming("immediate"); setPreferenceCode("");
+      toast.success("Perfil de busca registrado", { description: "O perfil é interno e não sugere imóvel, preço, proposta, visita, análise, garantia ou contrato." });
+      void utils.rentalPipeline.listDraftTenantSearchProfiles.invalidate(context);
+    },
+    onError() { toast.error("Perfil não registrado", { description: "O servidor exige uma entrada de locatário, contexto autorizado e preferências codificadas dentro do limite permitido." }); },
+  });
 
   function createIntake(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -127,6 +156,16 @@ export default function RentalPipeline() {
   function linkManagementAsset(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     managementAssetLinkMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: managementIntakeId.trim(), assetId: managementAssetId.trim() });
+  }
+  function toggleAssetKind(kind: keyof typeof assetKinds) {
+    setAcceptedAssetKinds((current) => {
+      if (current.includes(kind)) return current.length === 1 ? current : current.filter((entry) => entry !== kind);
+      return current.length === 4 ? current : [...current, kind];
+    });
+  }
+  function upsertTenantSearchProfile(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    tenantSearchProfileMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: tenantProfileIntakeId.trim(), acceptedAssetKinds, occupancyTiming, preferenceCode: preferenceCode.trim().toUpperCase() });
   }
 
   return (
@@ -177,6 +216,27 @@ export default function RentalPipeline() {
               <button type="submit" disabled={!isWorkspaceReady || agendaMutation.isPending}>{agendaMutation.isPending ? "Registrando agenda" : "Registrar agenda"}</button>
             </form>
           </div>
+        </section>
+
+        <section className="rental-pipeline-search" aria-labelledby="rental-tenant-search-title">
+          <div className="rental-pipeline-heading"><div><p className="rental-pipeline-eyebrow">02B · PERFIL DE BUSCA</p><h2 id="rental-tenant-search-title">Estruture a busca somente para interesse de locatário.</h2></div><p>O perfil registra tipos de ativo, janela declarada de ocupação e código operacional. Ele não usa endereço, CEP, geolocalização, preço, renda, contato, documento, análise ou garantia.</p></div>
+          <div className="rental-pipeline-search__grid">
+            <form className="rental-pipeline-card rental-pipeline-search__card" onSubmit={upsertTenantSearchProfile}>
+              <div className="rental-pipeline-card__title"><Search size={19} /><h3>Perfil interno de busca</h3></div><p>Use uma entrada de locatário já em rascunho. O servidor nega interesse de administração, listas vazias e mais de quatro tipos.</p>
+              <label htmlFor="rental-tenant-profile-intake">ID da entrada de locatário</label><input id="rental-tenant-profile-intake" value={tenantProfileIntakeId} onChange={(event) => setTenantProfileIntakeId(event.target.value)} placeholder="UUID da entrada em rascunho" disabled={!isWorkspaceReady} required />
+              <fieldset><legend>Tipos de ativo aceitos</legend><div className="rental-pipeline-search__choices">{Object.entries(assetKinds).map(([value, label]) => <label key={value} className="rental-pipeline-search__choice"><input type="checkbox" checked={acceptedAssetKinds.includes(value as keyof typeof assetKinds)} onChange={() => toggleAssetKind(value as keyof typeof assetKinds)} disabled={!isWorkspaceReady} />{label}</label>)}</div></fieldset>
+              <label htmlFor="rental-occupancy-timing">Janela declarada</label><select id="rental-occupancy-timing" value={occupancyTiming} onChange={(event) => setOccupancyTiming(event.target.value as keyof typeof occupancyTimings)} disabled={!isWorkspaceReady}>{Object.entries(occupancyTimings).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
+              <label htmlFor="rental-preference-code">Preferência em código</label><input id="rental-preference-code" value={preferenceCode} onChange={(event) => setPreferenceCode(event.target.value.toUpperCase())} placeholder="EX.: MORADIA_URBANA" disabled={!isWorkspaceReady} required minLength={3} maxLength={80} />
+              <button type="submit" disabled={!isWorkspaceReady || tenantSearchProfileMutation.isPending}>{tenantSearchProfileMutation.isPending ? "Registrando perfil" : "Registrar perfil de busca"}</button>
+            </form>
+            <aside className="rental-pipeline-search__limits" aria-label="Limites do perfil de busca"><ShieldCheck size={19} /><div><h3>Não é recomendação</h3><p>O corte não procura imóveis, não ranqueia opções, não cria visita, não propõe valores nem produz decisão automática. Ele organiza uma intenção de busca declarada.</p></div></aside>
+          </div>
+          {!isContextReady && <div className="rental-pipeline-empty"><CircleAlert size={18} /><p>Sem contexto não há consulta nem indicação de perfil de busca.</p></div>}
+          {isContextReady && !isAuthenticated && <div className="rental-pipeline-empty"><ShieldCheck size={18} /><p>O perfil e a leitura permanecem bloqueados até haver sessão autenticada.</p></div>}
+          {isWorkspaceReady && tenantSearchProfilesQuery.isLoading && <div className="rental-pipeline-empty"><span className="rental-pipeline-spinner" aria-hidden="true" /><p>Confirmando o contexto antes de solicitar a leitura minimizada dos perfis.</p></div>}
+          {isWorkspaceReady && tenantSearchProfilesQuery.isError && <div className="rental-pipeline-empty is-error"><CircleAlert size={18} /><p>A leitura dos perfis não foi liberada. Revise identidade, membership, grant, vigência e contexto sem tentar inferir buscas externas.</p></div>}
+          {isWorkspaceReady && tenantSearchProfilesQuery.data?.length === 0 && <div className="rental-pipeline-empty"><Search size={18} /><p>Nenhum perfil foi devolvido para este contexto. A resposta não revela outros interesses ou preferências.</p></div>}
+          {isWorkspaceReady && tenantSearchProfilesQuery.data && tenantSearchProfilesQuery.data.length > 0 && <div className="rental-pipeline-list__rows">{tenantSearchProfilesQuery.data.map((profile) => <article key={profile.profileId}><span>Perfil de locatário</span><h3>{profile.preferenceCode}</h3><p><b>{occupancyTimings[profile.occupancyTiming]}</b> · {profile.acceptedAssetKinds.map((kind) => assetKinds[kind]).join(", ")} · registro interno em {new Date(profile.createdAt).toLocaleString("pt-BR")}</p><code>{profile.intakeId} · {profile.profileId}</code></article>)}</div>}
         </section>
 
         <section className="rental-pipeline-link" aria-labelledby="rental-management-asset-title">

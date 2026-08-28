@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { draftRentalAgendaInputSchema, draftRentalIntakeInputSchema, rentalIntakeStageInputSchema, rentalManagementAssetLinkInputSchema } from "../shared/rentalPipelineContracts";
+import { draftRentalAgendaInputSchema, draftRentalIntakeInputSchema, draftRentalTenantSearchProfileInputSchema, rentalIntakeStageInputSchema, rentalManagementAssetLinkInputSchema } from "../shared/rentalPipelineContracts";
 
 const organizationId = "550e8400-e29b-41d4-a716-446655440000";
 const partyId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
@@ -24,5 +24,11 @@ describe("rental pipeline contracts", () => {
   it("accepts only a contextual UUID pair for a management asset link", () => {
     expect(rentalManagementAssetLinkInputSchema.parse({ ...context, intakeId, assetId })).toMatchObject({ module: "locacao", intakeId, assetId });
     expect(rentalManagementAssetLinkInputSchema.safeParse({ ...context, module: "vendas_urbanas", intakeId, assetId }).success).toBe(false);
+  });
+
+  it("accepts a small coded search profile only inside the Locação context", () => {
+    expect(draftRentalTenantSearchProfileInputSchema.safeParse({ ...context, intakeId, acceptedAssetKinds: ["apartment", "house"], occupancyTiming: "up_to_30_days", preferenceCode: "MORADIA_URBANA" }).success).toBe(true);
+    expect(draftRentalTenantSearchProfileInputSchema.safeParse({ ...context, intakeId, acceptedAssetKinds: [], occupancyTiming: "immediate", preferenceCode: "MORADIA_URBANA" }).success).toBe(false);
+    expect(draftRentalTenantSearchProfileInputSchema.safeParse({ ...context, module: "vendas_urbanas", intakeId, acceptedAssetKinds: ["house"], occupancyTiming: "flexible", preferenceCode: "MORADIA_URBANA" }).success).toBe(false);
   });
 });

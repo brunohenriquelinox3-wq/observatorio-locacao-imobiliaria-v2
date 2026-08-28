@@ -703,3 +703,12 @@
 - [x] Estender a superfície de Locação com vínculo de ativo e estados vazio, carregando, erro e bloqueio.
 - [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de vínculo de ativo de Locação.
+
+## Criação do CRM: Locação — perfil de busca de locatário
+
+- [x] Consolidar o contrato de perfil de busca estruturado para interesse de locatário em rascunho, sem endereço, preço, contato, análise, garantia, contrato ou financeiro.
+- [x] Preparar e aplicar migration de perfil de busca contextual com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas para registrar e ler o perfil minimizado, sem acesso direto do navegador às tabelas.
+- [x] Estender a superfície de Locação com perfil de busca e estados vazio, carregando, erro e bloqueio.
+- [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de perfil de busca de Locação.

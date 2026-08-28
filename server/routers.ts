@@ -56,7 +56,9 @@ import {
 import {
   draftRentalAgendaInputSchema,
   draftRentalIntakeInputSchema,
+  draftRentalTenantSearchProfileInputSchema,
   rentalIntakeStageInputSchema,
+  rentalManagementAssetLinkInputSchema,
   rentalOperatingContextSchema,
 } from "../shared/rentalPipelineContracts";
 import {
@@ -69,7 +71,10 @@ import {
   linkDraftRentalManagementAsset,
   listDraftRentalManagementAssetLinks,
 } from "./rentalManagementAssetLink";
-import { rentalManagementAssetLinkInputSchema } from "../shared/rentalPipelineContracts";
+import {
+  listDraftRentalTenantSearchProfiles,
+  upsertDraftRentalTenantSearchProfile,
+} from "./rentalTenantSearchProfile";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -180,6 +185,12 @@ export const appRouter = router({
     linkDraftManagementAsset: protectedProcedure
       .input(rentalManagementAssetLinkInputSchema)
       .mutation(({ ctx, input }) => linkDraftRentalManagementAsset(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftTenantSearchProfiles: protectedProcedure
+      .input(rentalOperatingContextSchema)
+      .query(({ ctx, input }) => listDraftRentalTenantSearchProfiles(ctx.supabaseSubjectId ?? undefined, input)),
+    upsertDraftTenantSearchProfile: protectedProcedure
+      .input(draftRentalTenantSearchProfileInputSchema)
+      .mutation(({ ctx, input }) => upsertDraftRentalTenantSearchProfile(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   // TODO: add feature routers here, e.g.
