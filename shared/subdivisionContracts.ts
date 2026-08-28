@@ -75,6 +75,12 @@ export const draftSubdivisionEconomicRuleComponentInputSchema = subdivisionConte
   workingState: subdivisionEconomicRuleSetWorkingStateSchema,
 });
 
+export const draftSubdivisionEconomicRuleComponentRoleReferenceInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  economicRuleComponentId: z.string().uuid(),
+  internalPartyRoleLinkId: z.string().uuid(),
+});
+
 export const draftSubdivisionDevelopmentInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
   internalReference: z.string().trim().toUpperCase().regex(/^[A-Z][A-Z0-9_]{2,79}$/),
@@ -93,3 +99,4 @@ export type DraftSubdivisionSaleDraftWorkStateInput = z.infer<typeof draftSubdiv
 export type DraftSubdivisionSaleDraftCoBuyerInput = z.infer<typeof draftSubdivisionSaleDraftCoBuyerInputSchema>;
 export type DraftSubdivisionEconomicRuleSetInput = z.infer<typeof draftSubdivisionEconomicRuleSetInputSchema>;
 export type DraftSubdivisionEconomicRuleComponentInput = z.infer<typeof draftSubdivisionEconomicRuleComponentInputSchema>;
+export type DraftSubdivisionEconomicRuleComponentRoleReferenceInput = z.infer<typeof draftSubdivisionEconomicRuleComponentRoleReferenceInputSchema>;

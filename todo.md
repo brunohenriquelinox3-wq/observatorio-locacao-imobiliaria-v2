@@ -911,3 +911,11 @@
 - [x] Implementar APIs protegidas e leitura minimizada dos componentes internos.
 - [x] Estender a área de Loteadora com componentes internos sem dados monetários.
 - [x] Validar, empacotar e preservar o corte de componentes internos.
+
+## Criação do CRM: Loteadora — referência interna de papel em regra
+
+- [x] Consolidar referência de papel interno sem direito econômico, beneficiário financeiro, valor, percentual, cálculo, cobrança, pagamento, repasse ou integração externa.
+- [x] Preparar e aplicar migration contextual com RLS, grants mínimos, idempotência e auditoria redigida.
+- [x] Implementar APIs protegidas e leitura minimizada das referências internas.
+- [x] Estender a área de Loteadora com referências internas de papel na regra.
+- [x] Validar, empacotar e preservar o corte de referência interna.
