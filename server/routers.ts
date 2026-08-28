@@ -104,6 +104,7 @@ import {
 import {
   draftSubdivisionBlockInputSchema,
   draftSubdivisionDevelopmentInputSchema,
+  draftSubdivisionLotInputSchema,
   subdivisionContextSchema,
 } from "../shared/subdivisionContracts";
 import {
@@ -114,6 +115,10 @@ import {
   createDraftSubdivisionBlock,
   listDraftSubdivisionBlocks,
 } from "./subdivisionBlock";
+import {
+  createDraftSubdivisionLot,
+  listDraftSubdivisionLots,
+} from "./subdivisionLot";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -275,6 +280,12 @@ export const appRouter = router({
     createDraftBlock: protectedProcedure
       .input(draftSubdivisionBlockInputSchema)
       .mutation(({ ctx, input }) => createDraftSubdivisionBlock(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftLots: protectedProcedure
+      .input(subdivisionContextSchema.extend({ blockId: z.string().uuid() }))
+      .query(({ ctx, input }) => listDraftSubdivisionLots(ctx.supabaseSubjectId ?? undefined, input, input.blockId)),
+    createDraftLot: protectedProcedure
+      .input(draftSubdivisionLotInputSchema)
+      .mutation(({ ctx, input }) => createDraftSubdivisionLot(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   // TODO: add feature routers here, e.g.

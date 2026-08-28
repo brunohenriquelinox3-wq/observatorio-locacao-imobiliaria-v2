@@ -777,3 +777,13 @@
 - [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de cadastro de quadras.
 - [x] Corrigir a tipagem do procedimento de leitura de Quadras após incluir seu schema contextual no roteador.
+
+## Criação do CRM: Loteadora — Estoque/Mapa de Lotes, cadastro-base
+
+- [x] Consolidar o contrato de lote em rascunho por Quadra matriz, com identificador numérico explícito e máximo técnico de 100 lotes por Quadra, sem disponibilidade, mapa, reserva, cliente, contrato ou financeiro.
+- [x] Preparar e aplicar migration de lotes contextuais com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas para registrar e ler lotes minimizados, sem acesso direto do navegador às tabelas.
+- [x] Estender a superfície de Estoque/Mapa de Lotes com cadastro-base e estados vazio, carregando, erro e bloqueio.
+- [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de cadastro-base de lotes.
+- [x] Corrigir a tipagem do procedimento de cadastro de lotes após incluir seu schema no roteador.
