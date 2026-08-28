@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const operatingModuleSchema = z.enum(["vendas_urbanas", "locacao"]);
+export const operatingModuleSchema = z.enum(["vendas_urbanas", "locacao", "loteadora"]);
 export const partyKindSchema = z.enum(["individual", "legal_entity"]);
 export const partyRoleSchema = z.enum([
   "lead",

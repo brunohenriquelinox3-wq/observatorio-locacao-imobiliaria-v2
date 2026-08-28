@@ -757,3 +757,13 @@
 - [x] Estender a superfície de Vendas Urbanas com classificação de agenda e estados vazio, carregando, erro e bloqueio.
 - [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de classificação interna de agenda de Vendas Urbanas.
+
+## Criação do CRM: Loteadora — cadastro-base de loteamento
+
+- [x] Estender o contexto canônico para Loteadora sem criar grants, memberships, alçadas ou acessos automáticos.
+- [x] Consolidar o contrato de cadastro de loteamento em rascunho por contexto, com referência interna e situação de trabalho, sem localização, quadras, lotes, estoque, parceiros, clientes, contratos ou financeiro.
+- [x] Preparar e aplicar migration de loteamento contextual com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas para registrar e ler o loteamento minimizado, sem acesso direto do navegador às tabelas.
+- [x] Construir a superfície de cadastro de loteamento com estados vazio, carregando, erro e bloqueio.
+- [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o primeiro corte de loteamento.

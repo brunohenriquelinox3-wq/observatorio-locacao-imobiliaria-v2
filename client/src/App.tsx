@@ -12,6 +12,7 @@ import DomainFoundation from "./pages/DomainFoundation";
 import AssetFoundation from "./pages/AssetFoundation";
 import UrbanPipeline from "./pages/UrbanPipeline";
 import RentalPipeline from "./pages/RentalPipeline";
+import SubdivisionFoundation from "./pages/SubdivisionFoundation";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -24,6 +25,7 @@ function Router() {
       <Route path={"/ativos-urbanos"} component={AssetFoundation} />
       <Route path={"/vendas-urbanas"} component={UrbanPipeline} />
       <Route path={"/locacao"} component={RentalPipeline} />
+      <Route path={"/loteadora"} component={SubdivisionFoundation} />
       <Route path={"/404"} component={NotFound} />
       <Route path={"/"} component={Home} />
       {/* Final fallback route */}

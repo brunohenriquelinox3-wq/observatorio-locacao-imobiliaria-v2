@@ -8,6 +8,7 @@ const partyId = "7ba7b810-9dad-11d1-80b4-00c04fd430c8";
 describe("canonical domain foundation contracts", () => {
   it("requires an explicit organization, module and purpose for every draft", () => {
     expect(domainContextSchema.safeParse({ organizationId, module: "vendas_urbanas", purposeCode: "CADASTRO_INICIAL" }).success).toBe(true);
+    expect(domainContextSchema.safeParse({ organizationId, module: "loteadora", purposeCode: "CADASTRO_INICIAL" }).success).toBe(true);
     expect(domainContextSchema.safeParse({ organizationId, module: "platform", purposeCode: "CADASTRO_INICIAL" }).success).toBe(false);
     expect(domainContextSchema.safeParse({ organizationId, module: "locacao", purposeCode: "L" }).success).toBe(false);
   });

@@ -100,6 +100,14 @@ import {
   listDraftRentalAgendaClassifications,
   upsertDraftRentalAgendaClassification,
 } from "./rentalAgendaClassification";
+import {
+  draftSubdivisionDevelopmentInputSchema,
+  subdivisionContextSchema,
+} from "../shared/subdivisionContracts";
+import {
+  createDraftSubdivisionDevelopment,
+  listDraftSubdivisionDevelopments,
+} from "./subdivisionDevelopment";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -246,6 +254,15 @@ export const appRouter = router({
     upsertDraftAgendaClassification: protectedProcedure
       .input(draftRentalAgendaClassificationInputSchema)
       .mutation(({ ctx, input }) => upsertDraftRentalAgendaClassification(ctx.supabaseSubjectId ?? undefined, input)),
+  }),
+
+  subdivisionFoundation: router({
+    listDraftDevelopments: protectedProcedure
+      .input(subdivisionContextSchema)
+      .query(({ ctx, input }) => listDraftSubdivisionDevelopments(ctx.supabaseSubjectId ?? undefined, input)),
+    createDraftDevelopment: protectedProcedure
+      .input(draftSubdivisionDevelopmentInputSchema)
+      .mutation(({ ctx, input }) => createDraftSubdivisionDevelopment(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   // TODO: add feature routers here, e.g.
