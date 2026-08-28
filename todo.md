@@ -881,3 +881,11 @@
 - [x] Implementar APIs protegidas e leitura minimizada da classificação de trabalho.
 - [x] Estender a área de Loteadora com a classificação interna e estados protegidos.
 - [x] Validar, empacotar e preservar o corte de classificação interna de rascunho de venda.
+
+## Criação do CRM: Loteadora — co-compradores internos de rascunho
+
+- [x] Consolidar o vínculo de co-comprador sem titularidade, percentual, preço, reserva, contrato, cobrança ou financeiro.
+- [x] Preparar e aplicar migration contextual com RLS, grants mínimos, idempotência e auditoria redigida.
+- [x] Implementar APIs protegidas e leitura minimizada de co-compradores internos.
+- [x] Estender a área de Loteadora para relacionar co-comprador ao rascunho autorizado.
+- [x] Validar, empacotar e preservar o corte de co-compradores internos.

@@ -109,6 +109,7 @@ import {
   draftSubdivisionLotInputSchema,
   draftSubdivisionLotInventoryStateInputSchema,
   draftSubdivisionSaleDraftInputSchema,
+  draftSubdivisionSaleDraftCoBuyerInputSchema,
   draftSubdivisionSaleDraftWorkStateInputSchema,
   subdivisionContextSchema,
 } from "../shared/subdivisionContracts";
@@ -131,6 +132,7 @@ import { createDraftSubdivisionBuyerClient, listDraftSubdivisionBuyerClients } f
 import { createBuyerAttachmentIntent, listBuyerAttachmentIntents } from "./subdivisionBuyerAttachmentIntent";
 import { createSubdivisionSaleDraft, listSubdivisionSaleDraftAttachmentCoverage, listSubdivisionSaleDrafts } from "./subdivisionSaleDraft";
 import { listSubdivisionSaleDraftWorkStates, upsertSubdivisionSaleDraftWorkState } from "./subdivisionSaleDraftWorkState";
+import { addSubdivisionSaleDraftCoBuyer, listSubdivisionSaleDraftCoBuyers } from "./subdivisionSaleDraftCoBuyer";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -311,7 +313,9 @@ export const appRouter = router({
     listSaleDrafts: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleDrafts(ctx.supabaseSubjectId ?? undefined, input)),
     listSaleDraftAttachmentCoverage: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleDraftAttachmentCoverage(ctx.supabaseSubjectId ?? undefined, input)),
     listSaleDraftWorkStates: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleDraftWorkStates(ctx.supabaseSubjectId ?? undefined, input)),
+    listSaleDraftCoBuyers: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleDraftCoBuyers(ctx.supabaseSubjectId ?? undefined, input)),
     createSaleDraft: protectedProcedure.input(draftSubdivisionSaleDraftInputSchema).mutation(({ ctx, input }) => createSubdivisionSaleDraft(ctx.supabaseSubjectId ?? undefined, input)),
+    addSaleDraftCoBuyer: protectedProcedure.input(draftSubdivisionSaleDraftCoBuyerInputSchema).mutation(({ ctx, input }) => addSubdivisionSaleDraftCoBuyer(ctx.supabaseSubjectId ?? undefined, input)),
     upsertSaleDraftWorkState: protectedProcedure.input(draftSubdivisionSaleDraftWorkStateInputSchema).mutation(({ ctx, input }) => upsertSubdivisionSaleDraftWorkState(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
