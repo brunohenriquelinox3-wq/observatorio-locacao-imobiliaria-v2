@@ -46,6 +46,7 @@ export default function SubdivisionFoundation() {
   const [internalRoleDevelopmentId, setInternalRoleDevelopmentId] = useState("");
   const [internalRoleId, setInternalRoleId] = useState("");
   const [buyerClientRoleId, setBuyerClientRoleId] = useState("");
+  const [buyerClientIdForAttachment, setBuyerClientIdForAttachment] = useState("");
 
   const context = useMemo(() => ({ organizationId: organizationId.trim(), module: "loteadora" as const, purposeCode: purposeCode.trim().toUpperCase() }), [organizationId, purposeCode]);
   const isContextReady = isDomainContextReady(context);
@@ -54,6 +55,7 @@ export default function SubdivisionFoundation() {
   const blocksQueryInput = useMemo(() => ({ ...context, developmentId: selectedDevelopmentId }), [context, selectedDevelopmentId]);
   const blocksQuery = trpc.subdivisionFoundation.listDraftBlocks.useQuery(blocksQueryInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const buyerClientsQuery = trpc.subdivisionFoundation.listDraftBuyerClients.useQuery(context, { enabled: isWorkspaceReady, retry: false });
+  const attachmentIntentsQuery = trpc.subdivisionFoundation.listBuyerAttachmentIntents.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const utils = trpc.useUtils();
   const createMutation = trpc.subdivisionFoundation.createDraftDevelopment.useMutation({
     onSuccess() {
@@ -73,6 +75,7 @@ export default function SubdivisionFoundation() {
   });
   const linkInternalRoleMutation = trpc.subdivisionFoundation.linkDraftInternalPartyRole.useMutation({ onSuccess() { setInternalRoleId(""); toast.success("Papel interno vinculado", { description: "O vínculo é temporal e interno; não define percentual, valor, contrato, portal, cobrança ou repasse." }); }, onError() { toast.error("Papel não vinculado", { description: "O servidor exige Party, papel e loteamento em rascunho no mesmo contexto autorizado." }); } });
   const createBuyerClientMutation = trpc.subdivisionFoundation.createDraftBuyerClient.useMutation({ onSuccess() { setBuyerClientRoleId(""); toast.success("Cliente comprador em rascunho registrado", { description: "O vínculo não contém documentos, identificadores fiscais, lote vendido, contrato, boleto ou financeiro." }); void utils.subdivisionFoundation.listDraftBuyerClients.invalidate(context); }, onError() { toast.error("Cliente não registrado", { description: "O servidor exige papel temporal de cliente ou comprador no mesmo contexto autorizado." }); } });
+  const createAttachmentIntentMutation = trpc.subdivisionFoundation.createBuyerAttachmentIntent.useMutation({ onSuccess() { setBuyerClientIdForAttachment(""); toast.success("Intenção privada registrada", { description: "Nenhum arquivo, URL, nome, tipo, conteúdo, download ou visualização foi aceito." }); void utils.subdivisionFoundation.listBuyerAttachmentIntents.invalidate(context); }, onError() { toast.error("Intenção não registrada", { description: "O servidor exige cliente comprador em rascunho no mesmo contexto autorizado." }); } });
 
   function createDevelopment(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -140,6 +143,11 @@ export default function SubdivisionFoundation() {
           <form className="subdivision-foundation-card" onSubmit={(event) => { event.preventDefault(); createBuyerClientMutation.mutate({ ...context, correlationId: crypto.randomUUID(), partyRoleAssignmentId: buyerClientRoleId }); }}><label htmlFor="subdivision-buyer-role">ID do papel temporal de cliente/comprador<input id="subdivision-buyer-role" value={buyerClientRoleId} onChange={(event) => setBuyerClientRoleId(event.target.value)} placeholder="UUID do papel interno" disabled={!isWorkspaceReady} required /></label><button type="submit" disabled={!isWorkspaceReady || !buyerClientRoleId || createBuyerClientMutation.isPending}>{createBuyerClientMutation.isPending ? "Registrando cliente" : "Registrar cliente em rascunho"}</button></form>
           {isWorkspaceReady && buyerClientsQuery.data?.length === 0 && <div className="subdivision-foundation-empty"><UsersRound size={18} /><p>Nenhum cliente comprador em rascunho foi devolvido para este contexto.</p></div>}
           {isWorkspaceReady && buyerClientsQuery.data && buyerClientsQuery.data.length > 0 && <div className="subdivision-foundation-list__rows">{buyerClientsQuery.data.map((client) => <article key={client.buyerClientId}><span>Cliente comprador em rascunho</span><h3>Vínculo interno de Party</h3><p>Criado em {new Date(client.createdAt).toLocaleString("pt-BR")}</p><code>{client.buyerClientId}</code></article>)}</div>}
+        </section>
+        <section className="subdivision-foundation-workspace" aria-labelledby="subdivision-attachment-title">
+          <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">07 · ANEXO PRIVADO</p><h2 id="subdivision-attachment-title">Apenas uma intenção técnica, sem receber arquivo.</h2></div><p>O marco registra uma intenção privada opaca para um cliente já autorizado. Upload, nome, URL, tipo, conteúdo, download e visualização permanecem bloqueados.</p></div>
+          <form className="subdivision-foundation-card" onSubmit={(event) => { event.preventDefault(); createAttachmentIntentMutation.mutate({ ...context, correlationId: crypto.randomUUID(), buyerClientId: buyerClientIdForAttachment }); }}><label htmlFor="subdivision-attachment-client">Cliente comprador em rascunho<select id="subdivision-attachment-client" value={buyerClientIdForAttachment} onChange={(event) => setBuyerClientIdForAttachment(event.target.value)} disabled={!isWorkspaceReady} required><option value="">Selecione um cliente autorizado</option>{buyerClientsQuery.data?.map((client) => <option key={client.buyerClientId} value={client.buyerClientId}>Vínculo de cliente · {client.buyerClientId.slice(0, 8)}</option>)}</select></label><button type="submit" disabled={!isWorkspaceReady || !buyerClientIdForAttachment || createAttachmentIntentMutation.isPending}>{createAttachmentIntentMutation.isPending ? "Registrando intenção" : "Registrar intenção privada"}</button></form>
+          {isWorkspaceReady && attachmentIntentsQuery.data?.length === 0 && <div className="subdivision-foundation-empty"><FileStack size={18} /><p>Nenhuma intenção privada de anexo foi devolvida para este contexto.</p></div>}
         </section>
       </main>
     </DashboardLayout>

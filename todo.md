@@ -827,4 +827,13 @@
 - [x] Implementar APIs protegidas e leitura minimizada do cliente comprador.
 - [x] Construir a superfície protegida de clientes de Loteadora com estados de bloqueio, vazio, carregando e erro.
 - [x] Empacotar e preservar o corte de clientes compradores de Loteadora após validação proporcional concluída.
+
+## Criação do CRM: Clientes Loteadora — anexos privados, fundação
+
+- [x] Consolidar o contrato de anexo privado por cliente comprador em rascunho, sem aceitar documento real, arquivo, leitura no navegador, contrato ou financeiro.
+- [x] Preparar e aplicar migration contextual de metadados de anexo com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Completar a migration de anexos com comandos contextuais, idempotência, auditoria redigida e leitura minimizada antes de aplicá-la.
+- [x] Implementar APIs protegidas de metadados, sem upload ou entrega de arquivos.
+- [x] Estender a área de clientes com estado protegido de anexos.
+- [x] Empacotar e preservar a fundação de anexos privados após validação proporcional concluída.
 - [x] Empacotar e preservar o corte de papéis internos de Loteadora após validação proporcional concluída.
