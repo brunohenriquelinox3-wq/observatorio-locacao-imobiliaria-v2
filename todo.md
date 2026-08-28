@@ -873,3 +873,11 @@
 - [x] Preparar e aplicar uma leitura contextual da cobertura opaca sem criar novas escritas.
 - [x] Exibir somente a cobertura opaca na lista protegida de rascunhos de venda.
 - [x] Validar, empacotar e preservar o corte de cobertura opaca no rascunho de venda.
+
+## Criação do CRM: Loteadora — classificação interna de rascunho de venda
+
+- [x] Consolidar classificações de trabalho sem reserva, proposta, contrato, preço, cobrança ou financeiro.
+- [x] Preparar e aplicar migration contextual com RLS, grants mínimos, idempotência e auditoria redigida.
+- [x] Implementar APIs protegidas e leitura minimizada da classificação de trabalho.
+- [x] Estender a área de Loteadora com a classificação interna e estados protegidos.
+- [x] Validar, empacotar e preservar o corte de classificação interna de rascunho de venda.
