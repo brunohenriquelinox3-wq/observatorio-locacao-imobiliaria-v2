@@ -840,11 +840,14 @@
 ## Criação do CRM: Clientes Loteadora — upload privado de anexos
 
 - [x] Consolidar o contrato de upload privado com limites de tipo e tamanho, sem arquivos reais na validação e sem URLs permanentes.
-- [ ] Implementar a fronteira server-side de upload e metadados privados com isolamento por contexto.
+- [x] Implementar a fronteira server-side de upload e metadados privados com isolamento por contexto.
+- [x] Exigir sessão, subject Supabase e MFA recente antes de processar multipart na rota privada.
 - [x] Validar a rejeição server-side de tipo de arquivo não permitido antes de qualquer envio ao armazenamento.
 - [x] Preparar o parser multipart no servidor sem habilitar o recebimento de arquivos reais.
 - [x] Aplicar migration própria de metadados privados de upload antes de aceitar qualquer arquivo.
-- [ ] Endurecer a leitura privada do armazenamento para impedir acesso por chave previsível antes de habilitar upload.
-- [ ] Implementar a experiência protegida de seleção de anexo sem dados reais.
-- [ ] Validar isolamento, tipo, tamanho, ausência de exposição, empacotar e preservar o corte de upload privado.
+- [x] Endurecer a leitura privada do armazenamento para impedir acesso por chave previsível antes de habilitar upload.
+- [x] Bloquear explicitamente o prefixo privado no proxy de armazenamento antes de aceitar anexos reais.
+- [x] Validar contexto e intenção por RPC antes de gravar bytes no armazenamento privado.
+- [x] Implementar a experiência protegida de seleção de anexo sem dados reais.
+- [x] Validar isolamento, tipo, tamanho e ausência de exposição antes de empacotar e preservar o corte de upload privado.
 - [x] Empacotar e preservar o corte de papéis internos de Loteadora após validação proporcional concluída.

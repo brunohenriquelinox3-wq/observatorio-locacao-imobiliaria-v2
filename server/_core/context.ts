@@ -11,28 +11,34 @@ export type TrpcContext = {
   supabaseAccessToken?: string;
 };
 
-export async function createContext(
-  opts: CreateExpressContextOptions
-): Promise<TrpcContext> {
+export async function resolveRequestIdentity(req: CreateExpressContextOptions["req"]) {
   let user: User | null = null;
 
   try {
-    user = await sdk.authenticateRequest(opts.req);
+    user = await sdk.authenticateRequest(req);
   } catch (error) {
     // Authentication is optional for public procedures.
     user = null;
   }
 
-  const supabaseHeader = opts.req.headers["x-supabase-access-token"];
+  const supabaseHeader = req.headers["x-supabase-access-token"];
   const supabaseSubjectId = await resolveSupabaseSubjectId(
     typeof supabaseHeader === "string" ? supabaseHeader : undefined,
   );
 
   return {
-    req: opts.req,
-    res: opts.res,
     user,
     supabaseSubjectId,
     supabaseAccessToken: typeof supabaseHeader === "string" ? supabaseHeader : undefined,
+  };
+}
+
+export async function createContext(
+  opts: CreateExpressContextOptions
+): Promise<TrpcContext> {
+  return {
+    req: opts.req,
+    res: opts.res,
+    ...(await resolveRequestIdentity(opts.req)),
   };
 }

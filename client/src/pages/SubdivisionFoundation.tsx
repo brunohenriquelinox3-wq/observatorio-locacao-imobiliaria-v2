@@ -1,9 +1,10 @@
 import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
+import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { trpc } from "@/lib/trpc";
 import { Building2, CircleAlert, Compass, FileStack, House, LandPlot, Layers3, ShieldCheck, UsersRound, Workflow } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import "../subdivision-foundation.css";
 
@@ -47,6 +48,10 @@ export default function SubdivisionFoundation() {
   const [internalRoleId, setInternalRoleId] = useState("");
   const [buyerClientRoleId, setBuyerClientRoleId] = useState("");
   const [buyerClientIdForAttachment, setBuyerClientIdForAttachment] = useState("");
+  const [attachmentIntentIdForUpload, setAttachmentIntentIdForUpload] = useState("");
+  const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
+  const [isAttachmentUploading, setIsAttachmentUploading] = useState(false);
+  const attachmentInputRef = useRef<HTMLInputElement>(null);
 
   const context = useMemo(() => ({ organizationId: organizationId.trim(), module: "loteadora" as const, purposeCode: purposeCode.trim().toUpperCase() }), [organizationId, purposeCode]);
   const isContextReady = isDomainContextReady(context);
@@ -86,6 +91,44 @@ export default function SubdivisionFoundation() {
     event.preventDefault();
     if (!selectedDevelopmentId) return;
     createBlockMutation.mutate({ ...context, correlationId: crypto.randomUUID(), developmentId: selectedDevelopmentId, blockNumber });
+  }
+
+  async function uploadPrivateAttachment(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!attachmentFile || !attachmentIntentIdForUpload || isAttachmentUploading) return;
+    if (attachmentFile.size < 1 || attachmentFile.size > 2 * 1024 * 1024 || !["application/pdf", "image/jpeg", "image/png"].includes(attachmentFile.type)) {
+      toast.error("Arquivo não aceito", { description: "Escolha PDF, JPEG ou PNG de até 2 MB. A validação definitiva ocorre no servidor." });
+      return;
+    }
+
+    setIsAttachmentUploading(true);
+    try {
+      const { data } = await getSupabaseBrowserClient()?.auth.getSession() ?? { data: { session: null } };
+      if (!data.session?.access_token) throw new Error("SUPABASE_SESSION_REQUIRED");
+
+      const form = new FormData();
+      form.set("attachment", attachmentFile);
+      form.set("organizationId", context.organizationId);
+      form.set("purposeCode", context.purposeCode);
+      form.set("correlationId", crypto.randomUUID());
+      const response = await fetch(`/api/private/subdivision-buyer-attachments/${attachmentIntentIdForUpload}`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "X-Supabase-Access-Token": data.session.access_token },
+        body: form,
+      });
+      if (!response.ok) throw new Error("PRIVATE_ATTACHMENT_REQUEST_REJECTED");
+
+      setAttachmentFile(null);
+      setAttachmentIntentIdForUpload("");
+      if (attachmentInputRef.current) attachmentInputRef.current.value = "";
+      toast.success("Anexo privado registrado", { description: "O sistema não retorna nome, URL, chave, conteúdo, download ou visualização do arquivo." });
+      void utils.subdivisionFoundation.listBuyerAttachmentIntents.invalidate(context);
+    } catch {
+      toast.error("Anexo não registrado", { description: "O servidor exige sessão, MFA recente, identidade, contexto, intenção autorizada, tipo e tamanho válidos, sem revelar detalhes internos." });
+    } finally {
+      setIsAttachmentUploading(false);
+    }
   }
 
   return (
@@ -145,9 +188,10 @@ export default function SubdivisionFoundation() {
           {isWorkspaceReady && buyerClientsQuery.data && buyerClientsQuery.data.length > 0 && <div className="subdivision-foundation-list__rows">{buyerClientsQuery.data.map((client) => <article key={client.buyerClientId}><span>Cliente comprador em rascunho</span><h3>Vínculo interno de Party</h3><p>Criado em {new Date(client.createdAt).toLocaleString("pt-BR")}</p><code>{client.buyerClientId}</code></article>)}</div>}
         </section>
         <section className="subdivision-foundation-workspace" aria-labelledby="subdivision-attachment-title">
-          <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">07 · ANEXO PRIVADO</p><h2 id="subdivision-attachment-title">Apenas uma intenção técnica, sem receber arquivo.</h2></div><p>O marco registra uma intenção privada opaca para um cliente já autorizado. Upload, nome, URL, tipo, conteúdo, download e visualização permanecem bloqueados.</p></div>
+          <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">07 · ANEXO PRIVADO</p><h2 id="subdivision-attachment-title">A intenção técnica condiciona o envio de um único anexo.</h2></div><p>O envio só avança com sessão, MFA recente, subject Supabase, contexto e intenção autorizada. Não há nome persistido, URL, chave, conteúdo, download ou visualização nesta tela.</p></div>
           <form className="subdivision-foundation-card" onSubmit={(event) => { event.preventDefault(); createAttachmentIntentMutation.mutate({ ...context, correlationId: crypto.randomUUID(), buyerClientId: buyerClientIdForAttachment }); }}><label htmlFor="subdivision-attachment-client">Cliente comprador em rascunho<select id="subdivision-attachment-client" value={buyerClientIdForAttachment} onChange={(event) => setBuyerClientIdForAttachment(event.target.value)} disabled={!isWorkspaceReady} required><option value="">Selecione um cliente autorizado</option>{buyerClientsQuery.data?.map((client) => <option key={client.buyerClientId} value={client.buyerClientId}>Vínculo de cliente · {client.buyerClientId.slice(0, 8)}</option>)}</select></label><button type="submit" disabled={!isWorkspaceReady || !buyerClientIdForAttachment || createAttachmentIntentMutation.isPending}>{createAttachmentIntentMutation.isPending ? "Registrando intenção" : "Registrar intenção privada"}</button></form>
           {isWorkspaceReady && attachmentIntentsQuery.data?.length === 0 && <div className="subdivision-foundation-empty"><FileStack size={18} /><p>Nenhuma intenção privada de anexo foi devolvida para este contexto.</p></div>}
+          {isWorkspaceReady && attachmentIntentsQuery.data && attachmentIntentsQuery.data.length > 0 && <form className="subdivision-foundation-card" onSubmit={uploadPrivateAttachment}><div className="subdivision-foundation-card__title"><FileStack size={19} /><h3>Enviar um anexo privado</h3></div><p>Selecione uma intenção autorizada e um único PDF, JPEG ou PNG de até 2 MB. Use somente informações permitidas pela política da sua organização.</p><label htmlFor="subdivision-attachment-intent">Intenção privada autorizada<select id="subdivision-attachment-intent" value={attachmentIntentIdForUpload} onChange={(event) => setAttachmentIntentIdForUpload(event.target.value)} disabled={isAttachmentUploading} required><option value="">Selecione uma intenção</option>{attachmentIntentsQuery.data.map((intent) => <option key={intent.attachmentIntentId} value={intent.attachmentIntentId}>Intenção privada · {intent.attachmentIntentId.slice(0, 8)}</option>)}</select></label><label htmlFor="subdivision-private-file">Arquivo local<input ref={attachmentInputRef} id="subdivision-private-file" type="file" accept="application/pdf,image/jpeg,image/png" onChange={(event) => setAttachmentFile(event.target.files?.[0] ?? null)} disabled={isAttachmentUploading} required /></label><p aria-live="polite">{attachmentFile ? "Arquivo selecionado localmente. O nome não é exibido nem persistido nesta tela." : "Nenhum arquivo selecionado."}</p><button type="submit" disabled={!attachmentIntentIdForUpload || !attachmentFile || isAttachmentUploading}>{isAttachmentUploading ? "Validando e enviando" : "Enviar anexo privado"}</button></form>}
         </section>
       </main>
     </DashboardLayout>

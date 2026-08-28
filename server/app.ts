@@ -4,6 +4,7 @@ import { appRouter } from "./routers";
 import { createContext } from "./_core/context";
 import { registerOAuthRoutes } from "./_core/oauth";
 import { registerStorageProxy } from "./_core/storageProxy";
+import { registerPrivateBuyerAttachmentRoute } from "./subdivisionBuyerAttachmentRoute";
 
 /**
  * Cria somente as rotas de aplicação compartilhadas entre o servidor local e
@@ -18,6 +19,7 @@ export function createApp() {
 
   registerStorageProxy(app);
   registerOAuthRoutes(app);
+  registerPrivateBuyerAttachmentRoute(app);
   app.use(
     "/api/trpc",
     createExpressMiddleware({

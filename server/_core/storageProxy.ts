@@ -9,6 +9,13 @@ export function registerStorageProxy(app: Express) {
       return;
     }
 
+    // Objetos privados exigirão uma rota dedicada que valide identidade e contexto.
+    // O proxy genérico nunca pode servir um anexo apenas porque sua chave foi obtida.
+    if (key.startsWith("private/")) {
+      res.status(404).send("Not found");
+      return;
+    }
+
     if (!ENV.forgeApiUrl || !ENV.forgeApiKey) {
       res.status(500).send("Storage proxy not configured");
       return;
