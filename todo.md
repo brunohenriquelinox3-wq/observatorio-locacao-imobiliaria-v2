@@ -694,3 +694,12 @@
 - [x] Validar proporcionalmente escopo, contexto, isolamento, transições, idempotência, acessibilidade, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o primeiro corte de Locação.
 - [x] Ajustar o gate sem sessão da rota de Locação para manter a separação explícita da central de Super Admin.
+
+## Criação do CRM: Locação — vínculo de ativo para interesse de administração
+
+- [x] Consolidar o contrato de vínculo entre entrada de administração e ativo urbano em rascunho, sem disponibilidade, contrato, publicação, garantia ou financeiro.
+- [x] Preparar e aplicar migration de vínculo contextual com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas para vincular e ler o ativo minimizado, sem acesso direto do navegador às tabelas.
+- [x] Estender a superfície de Locação com vínculo de ativo e estados vazio, carregando, erro e bloqueio.
+- [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de vínculo de ativo de Locação.

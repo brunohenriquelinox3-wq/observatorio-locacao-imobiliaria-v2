@@ -37,6 +37,13 @@ export const draftRentalAgendaInputSchema = rentalOperatingContextSchema.extend(
   }
 });
 
+export const rentalManagementAssetLinkInputSchema = rentalOperatingContextSchema.extend({
+  correlationId: z.string().uuid(),
+  intakeId: z.string().uuid(),
+  assetId: z.string().uuid(),
+});
+
 export type DraftRentalIntakeInput = z.infer<typeof draftRentalIntakeInputSchema>;
 export type RentalIntakeStageInput = z.infer<typeof rentalIntakeStageInputSchema>;
 export type DraftRentalAgendaInput = z.infer<typeof draftRentalAgendaInputSchema>;
+export type RentalManagementAssetLinkInput = z.infer<typeof rentalManagementAssetLinkInputSchema>;

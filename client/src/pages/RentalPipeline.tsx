@@ -2,7 +2,7 @@ import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { trpc } from "@/lib/trpc";
-import { Building2, CalendarClock, CircleAlert, ClipboardCheck, Compass, House, ShieldCheck, UsersRound, Workflow } from "lucide-react";
+import { Building2, CalendarClock, CircleAlert, ClipboardCheck, Compass, House, Link2, ShieldCheck, UsersRound, Workflow } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../rental-pipeline.css";
@@ -68,11 +68,14 @@ export default function RentalPipeline() {
   const [scheduledFor, setScheduledFor] = useState("");
   const [agendaState, setAgendaState] = useState<keyof typeof agendaStates>("scheduled");
   const [agendaReasonCode, setAgendaReasonCode] = useState("");
+  const [managementIntakeId, setManagementIntakeId] = useState("");
+  const [managementAssetId, setManagementAssetId] = useState("");
 
   const context = useMemo(() => ({ organizationId: organizationId.trim(), module: "locacao" as const, purposeCode: purposeCode.trim().toUpperCase() }), [organizationId, purposeCode]);
   const isContextReady = isDomainContextReady(context);
   const isWorkspaceReady = isAuthenticated && isContextReady;
   const intakesQuery = trpc.rentalPipeline.listDraftIntakes.useQuery(context, { enabled: isWorkspaceReady, retry: false });
+  const managementAssetLinksQuery = trpc.rentalPipeline.listDraftManagementAssetLinks.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const utils = trpc.useUtils();
 
   const createMutation = trpc.rentalPipeline.createDraftIntake.useMutation({
@@ -99,6 +102,14 @@ export default function RentalPipeline() {
     },
     onError() { toast.error("Agenda não registrada", { description: "O servidor exige um rascunho autorizado, contexto válido e justificativa quando aplicável." }); },
   });
+  const managementAssetLinkMutation = trpc.rentalPipeline.linkDraftManagementAsset.useMutation({
+    onSuccess() {
+      setManagementIntakeId(""); setManagementAssetId("");
+      toast.success("Ativo vinculado ao interesse de administração", { description: "O vínculo é interno e não prova propriedade, mandato, disponibilidade, exclusividade, contrato ou autorização de anúncio." });
+      void utils.rentalPipeline.listDraftManagementAssetLinks.invalidate(context);
+    },
+    onError() { toast.error("Ativo não vinculado", { description: "O servidor exige uma entrada de administração, ativo em rascunho no módulo Locação e contexto autorizado." }); },
+  });
 
   function createIntake(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -112,6 +123,10 @@ export default function RentalPipeline() {
     event.preventDefault();
     if (!scheduledFor) return;
     agendaMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: agendaIntakeId.trim(), scheduledFor: toIsoDate(scheduledFor), state: agendaState, reasonCode: ["cancelled", "not_held"].includes(agendaState) ? agendaReasonCode.trim().toUpperCase() : undefined });
+  }
+  function linkManagementAsset(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    managementAssetLinkMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: managementIntakeId.trim(), assetId: managementAssetId.trim() });
   }
 
   return (
@@ -162,6 +177,25 @@ export default function RentalPipeline() {
               <button type="submit" disabled={!isWorkspaceReady || agendaMutation.isPending}>{agendaMutation.isPending ? "Registrando agenda" : "Registrar agenda"}</button>
             </form>
           </div>
+        </section>
+
+        <section className="rental-pipeline-link" aria-labelledby="rental-management-asset-title">
+          <div className="rental-pipeline-heading"><div><p className="rental-pipeline-eyebrow">02A · ATIVO DECLARADO</p><h2 id="rental-management-asset-title">Vincule um ativo somente ao interesse de administração.</h2></div><p>O servidor nega a jornada de locatário e exige que o ativo esteja em rascunho para Locação. O vínculo não torna o imóvel disponível nem confirma qualquer direito.</p></div>
+          <div className="rental-pipeline-link__grid">
+            <form className="rental-pipeline-card" onSubmit={linkManagementAsset}>
+              <div className="rental-pipeline-card__title"><Link2 size={19} /><h3>Vínculo interno de ativo</h3></div><p>Use IDs já existentes no mesmo contexto. A relação é uma referência de triagem, não uma autorização comercial.</p>
+              <label htmlFor="rental-management-intake">ID da entrada de administração</label><input id="rental-management-intake" value={managementIntakeId} onChange={(event) => setManagementIntakeId(event.target.value)} placeholder="UUID da entrada em rascunho" disabled={!isWorkspaceReady} required />
+              <label htmlFor="rental-management-asset">ID do ativo urbano</label><input id="rental-management-asset" value={managementAssetId} onChange={(event) => setManagementAssetId(event.target.value)} placeholder="UUID do ativo em rascunho" disabled={!isWorkspaceReady} required />
+              <button type="submit" disabled={!isWorkspaceReady || managementAssetLinkMutation.isPending}>{managementAssetLinkMutation.isPending ? "Vinculando ativo" : "Vincular ativo em rascunho"}</button>
+            </form>
+            <aside className="rental-pipeline-link__limits" aria-label="Limites do vínculo de ativo"><ShieldCheck size={19} /><div><h3>Limites preservados</h3><p>Sem disponibilidade, exclusividade, endereço detalhado, preço, mídia, matrícula, publicação, proposta, reserva, contrato, garantia, cobrança, repasse ou financeiro.</p></div></aside>
+          </div>
+          {!isContextReady && <div className="rental-pipeline-empty"><CircleAlert size={18} /><p>Sem contexto não há consulta nem indicação de vínculo de ativo.</p></div>}
+          {isContextReady && !isAuthenticated && <div className="rental-pipeline-empty"><ShieldCheck size={18} /><p>O vínculo e a leitura permanecem bloqueados até haver sessão autenticada.</p></div>}
+          {isWorkspaceReady && managementAssetLinksQuery.isLoading && <div className="rental-pipeline-empty"><span className="rental-pipeline-spinner" aria-hidden="true" /><p>Confirmando o contexto antes de solicitar a leitura minimizada dos vínculos.</p></div>}
+          {isWorkspaceReady && managementAssetLinksQuery.isError && <div className="rental-pipeline-empty is-error"><CircleAlert size={18} /><p>A leitura dos vínculos não foi liberada. Revise identidade, membership, grant, vigência e contexto sem tentar inferir ativos externos.</p></div>}
+          {isWorkspaceReady && managementAssetLinksQuery.data?.length === 0 && <div className="rental-pipeline-empty"><Link2 size={18} /><p>Nenhum vínculo de ativo foi devolvido para este contexto. A resposta não revela ativos de outros contextos.</p></div>}
+          {isWorkspaceReady && managementAssetLinksQuery.data && managementAssetLinksQuery.data.length > 0 && <div className="rental-pipeline-list__rows">{managementAssetLinksQuery.data.map((link) => <article key={link.linkId}><span>Ativo em rascunho</span><h3>{link.assetReferenceLabel}</h3><p><b>{link.assetKind}</b> · código {link.assetInternalReference} · vínculo interno em {new Date(link.linkedAt).toLocaleString("pt-BR")}</p><code>{link.intakeId} · {link.assetId}</code></article>)}</div>}
         </section>
 
         <section className="rental-pipeline-list" aria-labelledby="rental-list-title">

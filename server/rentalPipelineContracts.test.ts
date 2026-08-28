@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { draftRentalAgendaInputSchema, draftRentalIntakeInputSchema, rentalIntakeStageInputSchema } from "../shared/rentalPipelineContracts";
+import { draftRentalAgendaInputSchema, draftRentalIntakeInputSchema, rentalIntakeStageInputSchema, rentalManagementAssetLinkInputSchema } from "../shared/rentalPipelineContracts";
 
 const organizationId = "550e8400-e29b-41d4-a716-446655440000";
 const partyId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const intakeId = "7ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const correlationId = "8ba7b810-9dad-11d1-80b4-00c04fd430c8";
+const assetId = "9ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const context = { organizationId, module: "locacao" as const, purposeCode: "CADASTRO_INICIAL", correlationId };
 
 describe("rental pipeline contracts", () => {
@@ -18,5 +19,10 @@ describe("rental pipeline contracts", () => {
     expect(rentalIntakeStageInputSchema.safeParse({ ...context, intakeId, nextStage: "closed_lost", reasonCode: "DESISTENCIA" }).success).toBe(true);
     expect(draftRentalAgendaInputSchema.safeParse({ ...context, intakeId, scheduledFor: "2026-08-28T14:00:00.000Z", state: "not_held" }).success).toBe(false);
     expect(draftRentalAgendaInputSchema.safeParse({ ...context, intakeId, scheduledFor: "2026-08-28T14:00:00.000Z", state: "scheduled" }).success).toBe(true);
+  });
+
+  it("accepts only a contextual UUID pair for a management asset link", () => {
+    expect(rentalManagementAssetLinkInputSchema.parse({ ...context, intakeId, assetId })).toMatchObject({ module: "locacao", intakeId, assetId });
+    expect(rentalManagementAssetLinkInputSchema.safeParse({ ...context, module: "vendas_urbanas", intakeId, assetId }).success).toBe(false);
   });
 });

@@ -65,6 +65,11 @@ import {
   listDraftRentalIntakes,
   transitionDraftRentalIntake,
 } from "./rentalPipeline";
+import {
+  linkDraftRentalManagementAsset,
+  listDraftRentalManagementAssetLinks,
+} from "./rentalManagementAssetLink";
+import { rentalManagementAssetLinkInputSchema } from "../shared/rentalPipelineContracts";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -169,6 +174,12 @@ export const appRouter = router({
     createDraftAgenda: protectedProcedure
       .input(draftRentalAgendaInputSchema)
       .mutation(({ ctx, input }) => createDraftRentalAgenda(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftManagementAssetLinks: protectedProcedure
+      .input(rentalOperatingContextSchema)
+      .query(({ ctx, input }) => listDraftRentalManagementAssetLinks(ctx.supabaseSubjectId ?? undefined, input)),
+    linkDraftManagementAsset: protectedProcedure
+      .input(rentalManagementAssetLinkInputSchema)
+      .mutation(({ ctx, input }) => linkDraftRentalManagementAsset(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   // TODO: add feature routers here, e.g.
