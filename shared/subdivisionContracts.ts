@@ -40,6 +40,12 @@ export const draftSubdivisionBuyerAttachmentIntentInputSchema = subdivisionConte
   buyerClientId: z.string().uuid(),
 });
 
+export const draftSubdivisionSaleDraftInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  lotId: z.string().uuid(),
+  buyerClientId: z.string().uuid(),
+});
+
 export const draftSubdivisionDevelopmentInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
   internalReference: z.string().trim().toUpperCase().regex(/^[A-Z][A-Z0-9_]{2,79}$/),
@@ -53,3 +59,4 @@ export type DraftSubdivisionLotInput = z.infer<typeof draftSubdivisionLotInputSc
 export type DraftSubdivisionLotInventoryStateInput = z.infer<typeof draftSubdivisionLotInventoryStateInputSchema>;
 export type DraftSubdivisionBuyerClientInput = z.infer<typeof draftSubdivisionBuyerClientInputSchema>;
 export type DraftSubdivisionBuyerAttachmentIntentInput = z.infer<typeof draftSubdivisionBuyerAttachmentIntentInputSchema>;
+export type DraftSubdivisionSaleDraftInput = z.infer<typeof draftSubdivisionSaleDraftInputSchema>;

@@ -858,3 +858,11 @@
 - [x] Preparar e aplicar a leitura minimizada do estado no mesmo contexto autorizado.
 - [x] Exibir o estado opaco na área protegida de anexos sem criar leitura de arquivo.
 - [x] Validar, empacotar e preservar o corte de estado opaco de anexos privados.
+
+## Criação do CRM: Loteadora — rascunho interno de venda de lote
+
+- [x] Consolidar o vínculo interno entre lote em rascunho e cliente comprador sem reserva, proposta, contrato, preço, cobrança ou financeiro.
+- [x] Preparar e aplicar migration contextual do rascunho de venda com RLS, grants mínimos, idempotência e auditoria redigida.
+- [x] Implementar APIs protegidas e leitura minimizada do rascunho de venda.
+- [x] Estender a área de Loteadora com o rascunho de venda e estados protegidos.
+- [x] Validar, empacotar e preservar o corte de rascunho interno de venda de lote.
