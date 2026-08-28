@@ -675,3 +675,12 @@
 - [x] Construir a superfície inicial de ativos e relações permitidas com estados vazio, carregando, erro e bloqueio.
 - [x] Validar proporcionalmente isolamento, estados, entrada, idempotência, autorização, acessibilidade, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o núcleo de ativos urbanos.
+
+## Criação do CRM: Vendas Urbanas — origem, qualificação e agenda
+
+- [x] Consolidar contrato de lead, interesse, etapa e agenda sem proposta, contrato, publicação, financeiro ou dados reais.
+- [x] Preparar e aplicar migration de funil urbano com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas para criar e ler rascunhos do funil sem acesso direto do navegador às tabelas.
+- [x] Construir a superfície de qualificação e agenda com estados vazio, carregando, erro e bloqueio.
+- [x] Validar proporcionalmente escopo, contexto, isolamento, transições, idempotência, acessibilidade, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o primeiro corte urbano.

@@ -41,6 +41,18 @@ import {
   draftAssetPartyRelationInputSchema,
   draftUrbanAssetInputSchema,
 } from "../shared/assetFoundationContracts";
+import {
+  draftUrbanAgendaInputSchema,
+  draftUrbanLeadInputSchema,
+  urbanLeadStageInputSchema,
+  urbanSalesContextSchema,
+} from "../shared/urbanPipelineContracts";
+import {
+  createDraftUrbanAgenda,
+  createDraftUrbanLead,
+  listDraftUrbanLeads,
+  transitionDraftUrbanLead,
+} from "./urbanPipeline";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -115,6 +127,21 @@ export const appRouter = router({
     setDraftAssetModuleState: protectedProcedure
       .input(draftAssetModuleStateInputSchema)
       .mutation(({ ctx, input }) => setDraftAssetModuleState(ctx.supabaseSubjectId ?? undefined, input)),
+  }),
+
+  urbanPipeline: router({
+    listDraftLeads: protectedProcedure
+      .input(urbanSalesContextSchema)
+      .query(({ ctx, input }) => listDraftUrbanLeads(ctx.supabaseSubjectId ?? undefined, input)),
+    createDraftLead: protectedProcedure
+      .input(draftUrbanLeadInputSchema)
+      .mutation(({ ctx, input }) => createDraftUrbanLead(ctx.supabaseSubjectId ?? undefined, input)),
+    transitionDraftLead: protectedProcedure
+      .input(urbanLeadStageInputSchema)
+      .mutation(({ ctx, input }) => transitionDraftUrbanLead(ctx.supabaseSubjectId ?? undefined, input)),
+    createDraftAgenda: protectedProcedure
+      .input(draftUrbanAgendaInputSchema)
+      .mutation(({ ctx, input }) => createDraftUrbanAgenda(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   // TODO: add feature routers here, e.g.
