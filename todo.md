@@ -889,3 +889,9 @@
 - [x] Implementar APIs protegidas e leitura minimizada de co-compradores internos.
 - [x] Estender a área de Loteadora para relacionar co-comprador ao rascunho autorizado.
 - [x] Validar, empacotar e preservar o corte de co-compradores internos.
+
+## Criação do CRM: Loteadora — síntese opaca de co-compradores
+
+- [x] Consolidar a síntese de cobertura sem expor documento, chave, URL, nome, tipo, tamanho, conteúdo, download ou visualização.
+- [x] Exibir a síntese somente a partir de respostas já contextualizadas e minimizadas.
+- [x] Validar, empacotar e preservar o corte de síntese opaca de co-compradores.
