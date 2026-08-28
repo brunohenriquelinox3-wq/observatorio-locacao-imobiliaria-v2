@@ -1,5 +1,6 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
+import { z } from "zod";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { getFoundationReadiness } from "./foundationReadiness";
@@ -101,6 +102,7 @@ import {
   upsertDraftRentalAgendaClassification,
 } from "./rentalAgendaClassification";
 import {
+  draftSubdivisionBlockInputSchema,
   draftSubdivisionDevelopmentInputSchema,
   subdivisionContextSchema,
 } from "../shared/subdivisionContracts";
@@ -108,6 +110,10 @@ import {
   createDraftSubdivisionDevelopment,
   listDraftSubdivisionDevelopments,
 } from "./subdivisionDevelopment";
+import {
+  createDraftSubdivisionBlock,
+  listDraftSubdivisionBlocks,
+} from "./subdivisionBlock";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -263,6 +269,12 @@ export const appRouter = router({
     createDraftDevelopment: protectedProcedure
       .input(draftSubdivisionDevelopmentInputSchema)
       .mutation(({ ctx, input }) => createDraftSubdivisionDevelopment(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftBlocks: protectedProcedure
+      .input(subdivisionContextSchema.extend({ developmentId: z.string().uuid() }))
+      .query(({ ctx, input }) => listDraftSubdivisionBlocks(ctx.supabaseSubjectId ?? undefined, input, input.developmentId)),
+    createDraftBlock: protectedProcedure
+      .input(draftSubdivisionBlockInputSchema)
+      .mutation(({ ctx, input }) => createDraftSubdivisionBlock(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   // TODO: add feature routers here, e.g.

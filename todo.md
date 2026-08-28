@@ -767,3 +767,13 @@
 - [x] Construir a superfície de cadastro de loteamento com estados vazio, carregando, erro e bloqueio.
 - [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o primeiro corte de loteamento.
+
+## Criação do CRM: Loteadora — cadastro de quadras matrizes
+
+- [x] Consolidar o contrato de quadra matriz em loteamento de rascunho, com numeração explícita e sem criar lotes, mapa, estoque, clientes, parceiros, contratos ou financeiro.
+- [x] Preparar e aplicar migration de quadras contextuais com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas para registrar e ler quadras minimizadas, sem acesso direto do navegador às tabelas.
+- [x] Estender a superfície de Loteadora com cadastro de quadras e estados vazio, carregando, erro e bloqueio.
+- [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de cadastro de quadras.
+- [x] Corrigir a tipagem do procedimento de leitura de Quadras após incluir seu schema contextual no roteador.

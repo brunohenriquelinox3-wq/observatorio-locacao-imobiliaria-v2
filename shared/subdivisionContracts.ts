@@ -11,6 +11,12 @@ export const subdivisionDevelopmentPhaseSchema = z.enum([
   "review_required",
 ]);
 
+export const draftSubdivisionBlockInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  developmentId: z.string().uuid(),
+  blockNumber: z.number().int().min(1).max(999),
+});
+
 export const draftSubdivisionDevelopmentInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
   internalReference: z.string().trim().toUpperCase().regex(/^[A-Z][A-Z0-9_]{2,79}$/),
@@ -19,3 +25,4 @@ export const draftSubdivisionDevelopmentInputSchema = subdivisionContextSchema.e
 
 export type SubdivisionContext = z.infer<typeof subdivisionContextSchema>;
 export type DraftSubdivisionDevelopmentInput = z.infer<typeof draftSubdivisionDevelopmentInputSchema>;
+export type DraftSubdivisionBlockInput = z.infer<typeof draftSubdivisionBlockInputSchema>;
