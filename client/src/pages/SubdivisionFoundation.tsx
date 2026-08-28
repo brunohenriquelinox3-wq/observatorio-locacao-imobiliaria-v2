@@ -27,6 +27,12 @@ const attachmentStates = {
   private_upload_recorded: "Arquivo privado registrado",
 } as const;
 
+const saleDraftAttachmentCoverageStates = {
+  no_attachment_intent: "Sem intenção de anexo",
+  attachment_awaiting_private_upload: "Anexo privado aguardando envio",
+  attachment_private_upload_recorded: "Anexo privado registrado",
+} as const;
+
 const subdivisionAccessGate: DashboardAccessGate = {
   eyebrow: "LOTEADORA RESTRITA · CONTEXTO ANTES DE LEITURA",
   title: "Acesse o cadastro-base de Loteadora somente no seu contexto autorizado.",
@@ -75,6 +81,7 @@ export default function SubdivisionFoundation() {
   const saleLotsQueryInput = useMemo(() => ({ ...context, blockId: saleBlockId }), [context, saleBlockId]);
   const saleLotsQuery = trpc.subdivisionFoundation.listDraftLots.useQuery(saleLotsQueryInput, { enabled: isWorkspaceReady && Boolean(saleBlockId), retry: false });
   const saleDraftsQuery = trpc.subdivisionFoundation.listSaleDrafts.useQuery(context, { enabled: isWorkspaceReady, retry: false });
+  const saleDraftAttachmentCoverageQuery = trpc.subdivisionFoundation.listSaleDraftAttachmentCoverage.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const uploadableAttachmentIntents = attachmentIntentsQuery.data?.filter((intent) => intent.attachmentState === "awaiting_private_upload") ?? [];
   const utils = trpc.useUtils();
   const createMutation = trpc.subdivisionFoundation.createDraftDevelopment.useMutation({
@@ -214,7 +221,7 @@ export default function SubdivisionFoundation() {
           <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">08 · RASCUNHO INTERNO DE VENDA</p><h2 id="subdivision-sale-draft-title">Lote e cliente comprador podem ser conectados sem mudar o inventário.</h2></div><p>Este registro organiza somente o próximo trabalho interno. Não é reserva, proposta, contrato, preço, cobrança, boleto, comissão, repasse ou financeiro.</p></div>
           <form className="subdivision-foundation-card" onSubmit={(event) => { event.preventDefault(); createSaleDraftMutation.mutate({ ...context, correlationId: crypto.randomUUID(), lotId: saleLotId, buyerClientId: saleBuyerClientId }); }}><label htmlFor="subdivision-sale-development">Loteamento em rascunho<select id="subdivision-sale-development" value={saleDevelopmentId} onChange={(event) => { setSaleDevelopmentId(event.target.value); setSaleBlockId(""); setSaleLotId(""); }} disabled={!isWorkspaceReady} required><option value="">Selecione um loteamento autorizado</option>{developmentsQuery.data?.map((development) => <option key={development.developmentId} value={development.developmentId}>{development.internalReference}</option>)}</select></label><label htmlFor="subdivision-sale-block">Quadra matriz<select id="subdivision-sale-block" value={saleBlockId} onChange={(event) => { setSaleBlockId(event.target.value); setSaleLotId(""); }} disabled={!isWorkspaceReady || !saleDevelopmentId} required><option value="">Selecione uma Quadra autorizada</option>{saleBlocksQuery.data?.map((block) => <option key={block.blockId} value={block.blockId}>Quadra {block.blockNumber}</option>)}</select></label><label htmlFor="subdivision-sale-lot">Lote em rascunho<select id="subdivision-sale-lot" value={saleLotId} onChange={(event) => setSaleLotId(event.target.value)} disabled={!isWorkspaceReady || !saleBlockId} required><option value="">Selecione um Lote autorizado</option>{saleLotsQuery.data?.map((lot) => <option key={lot.lotId} value={lot.lotId}>Lote {lot.lotNumber}</option>)}</select></label><label htmlFor="subdivision-sale-buyer">Cliente comprador em rascunho<select id="subdivision-sale-buyer" value={saleBuyerClientId} onChange={(event) => setSaleBuyerClientId(event.target.value)} disabled={!isWorkspaceReady} required><option value="">Selecione um cliente autorizado</option>{buyerClientsQuery.data?.map((client) => <option key={client.buyerClientId} value={client.buyerClientId}>Vínculo de cliente · {client.buyerClientId.slice(0, 8)}</option>)}</select></label><button type="submit" disabled={!isWorkspaceReady || !saleLotId || !saleBuyerClientId || createSaleDraftMutation.isPending}>{createSaleDraftMutation.isPending ? "Vinculando rascunho" : "Vincular rascunho interno"}</button></form>
           {isWorkspaceReady && saleDraftsQuery.data?.length === 0 && <div className="subdivision-foundation-empty"><Workflow size={18} /><p>Nenhum rascunho interno de venda foi devolvido para este contexto.</p></div>}
-          {isWorkspaceReady && saleDraftsQuery.data && saleDraftsQuery.data.length > 0 && <div className="subdivision-foundation-list__rows">{saleDraftsQuery.data.map((draft) => <article key={draft.saleDraftId}><span>Rascunho interno de venda</span><h3>Vínculo de lote e cliente comprador</h3><p>Criado em {new Date(draft.createdAt).toLocaleString("pt-BR")}. Sem reserva, proposta, contrato, cobrança ou financeiro.</p><code>{draft.saleDraftId}</code></article>)}</div>}
+          {isWorkspaceReady && saleDraftsQuery.data && saleDraftsQuery.data.length > 0 && <div className="subdivision-foundation-list__rows">{saleDraftsQuery.data.map((draft) => { const coverage = saleDraftAttachmentCoverageQuery.data?.find((item) => item.saleDraftId === draft.saleDraftId); return <article key={draft.saleDraftId}><span>Rascunho interno de venda</span><h3>Vínculo de lote e cliente comprador</h3><p><b>{coverage ? saleDraftAttachmentCoverageStates[coverage.attachmentCoverageState] : "Cobertura de anexo não disponível"}</b> · estado opaco, sem documento, nome, URL, download ou visualização.</p><p>Criado em {new Date(draft.createdAt).toLocaleString("pt-BR")}. Sem reserva, proposta, contrato, cobrança ou financeiro.</p><code>{draft.saleDraftId}</code></article>; })}</div>}
         </section>
       </main>
     </DashboardLayout>

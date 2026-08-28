@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createSubdivisionSaleDraft, listSubdivisionSaleDrafts } from "./subdivisionSaleDraft";
+import { createSubdivisionSaleDraft, listSubdivisionSaleDraftAttachmentCoverage, listSubdivisionSaleDrafts } from "./subdivisionSaleDraft";
 
 const input = { organizationId: "00000000-0000-4000-8000-000000000002", module: "loteadora" as const, purposeCode: "CADASTRO_INICIAL", lotId: "00000000-0000-4000-8000-000000000003", buyerClientId: "00000000-0000-4000-8000-000000000004", correlationId: "00000000-0000-4000-8000-000000000005" };
 
@@ -16,5 +16,12 @@ describe("subdivision sale draft", () => {
     const result = await listSubdivisionSaleDrafts("00000000-0000-4000-8000-000000000001", input, client);
     expect(result).toEqual([{ saleDraftId: "00000000-0000-4000-8000-000000000006", lotId: input.lotId, buyerClientId: input.buyerClientId, createdAt: "2026-08-28T00:00:00.000Z" }]);
     expect(result[0]).not.toHaveProperty("secret");
+  });
+
+  it("returns only declared opaque attachment coverage states", async () => {
+    const client = { rpc: vi.fn().mockResolvedValue({ data: [{ sale_draft_id: "00000000-0000-4000-8000-000000000006", attachment_coverage_state: "attachment_private_upload_recorded", storage_key: "must-not-pass" }], error: null }) } as never;
+    const result = await listSubdivisionSaleDraftAttachmentCoverage("00000000-0000-4000-8000-000000000001", input, client);
+    expect(result).toEqual([{ saleDraftId: "00000000-0000-4000-8000-000000000006", attachmentCoverageState: "attachment_private_upload_recorded" }]);
+    expect(result[0]).not.toHaveProperty("storageKey");
   });
 });

@@ -866,3 +866,10 @@
 - [x] Implementar APIs protegidas e leitura minimizada do rascunho de venda.
 - [x] Estender a área de Loteadora com o rascunho de venda e estados protegidos.
 - [x] Validar, empacotar e preservar o corte de rascunho interno de venda de lote.
+
+## Criação do CRM: Loteadora — cobertura opaca de anexo no rascunho de venda
+
+- [x] Consolidar a cobertura do anexo privado sem expor documento, chave, URL, nome, tipo, tamanho, conteúdo, download ou visualização.
+- [x] Preparar e aplicar uma leitura contextual da cobertura opaca sem criar novas escritas.
+- [x] Exibir somente a cobertura opaca na lista protegida de rascunhos de venda.
+- [x] Validar, empacotar e preservar o corte de cobertura opaca no rascunho de venda.
