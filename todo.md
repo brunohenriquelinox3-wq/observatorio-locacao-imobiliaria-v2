@@ -721,3 +721,12 @@
 - [x] Estender a superfície de Locação com escopo declarado e estados vazio, carregando, erro e bloqueio.
 - [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de escopo declarado de administração.
+
+## Criação do CRM: Vendas Urbanas — vínculo de lead e ativo
+
+- [x] Consolidar o contrato de vínculo entre lead urbano de interesse em ativo e ativo urbano em rascunho, sem preço, proposta, reserva, contrato, publicação ou financeiro.
+- [x] Preparar e aplicar migration de vínculo contextual com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas para vincular e ler o ativo minimizado, sem acesso direto do navegador às tabelas.
+- [x] Estender a superfície de Vendas Urbanas com vínculo de ativo e estados vazio, carregando, erro e bloqueio.
+- [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de vínculo de ativo de Vendas Urbanas.

@@ -44,6 +44,7 @@ import {
 import {
   draftUrbanAgendaInputSchema,
   draftUrbanLeadInputSchema,
+  urbanLeadAssetLinkInputSchema,
   urbanLeadStageInputSchema,
   urbanSalesContextSchema,
 } from "../shared/urbanPipelineContracts";
@@ -53,6 +54,10 @@ import {
   listDraftUrbanLeads,
   transitionDraftUrbanLead,
 } from "./urbanPipeline";
+import {
+  linkDraftUrbanLeadAsset,
+  listDraftUrbanLeadAssetLinks,
+} from "./urbanLeadAssetLink";
 import {
   draftRentalAgendaInputSchema,
   draftRentalIntakeInputSchema,
@@ -169,6 +174,12 @@ export const appRouter = router({
     createDraftAgenda: protectedProcedure
       .input(draftUrbanAgendaInputSchema)
       .mutation(({ ctx, input }) => createDraftUrbanAgenda(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftLeadAssetLinks: protectedProcedure
+      .input(urbanSalesContextSchema)
+      .query(({ ctx, input }) => listDraftUrbanLeadAssetLinks(ctx.supabaseSubjectId ?? undefined, input)),
+    linkDraftLeadAsset: protectedProcedure
+      .input(urbanLeadAssetLinkInputSchema)
+      .mutation(({ ctx, input }) => linkDraftUrbanLeadAsset(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   rentalPipeline: router({

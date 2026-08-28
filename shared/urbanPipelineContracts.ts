@@ -35,6 +35,13 @@ export const draftUrbanAgendaInputSchema = urbanSalesContextSchema.extend({
   }
 });
 
+export const urbanLeadAssetLinkInputSchema = urbanSalesContextSchema.extend({
+  correlationId: z.string().uuid(),
+  leadId: z.string().uuid(),
+  assetId: z.string().uuid(),
+});
+
 export type DraftUrbanLeadInput = z.infer<typeof draftUrbanLeadInputSchema>;
 export type UrbanLeadStageInput = z.infer<typeof urbanLeadStageInputSchema>;
 export type DraftUrbanAgendaInput = z.infer<typeof draftUrbanAgendaInputSchema>;
+export type UrbanLeadAssetLinkInput = z.infer<typeof urbanLeadAssetLinkInputSchema>;
