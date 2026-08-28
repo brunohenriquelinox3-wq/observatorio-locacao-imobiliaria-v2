@@ -929,3 +929,17 @@
 - [x] Executar apenas validações internas não materiais ainda aplicáveis e registrar seus resultados. **A35:** 7 arquivos e 20 testes administrativos, além da checagem de tipos, foram aprovados sem alteração de organização, membership, grant ou permissão real.
 - [x] Preservar a reconciliação do checklist em artefatos saneados, sem publicação automática.
 - [x] Registrar o resultado da verificação passiva de disponibilidade do ambiente de demonstração, sem tentativa de login ou ação material.
+
+## Identidade administrativa: convite com redirecionamento seguro
+
+- [x] Corrigir no Supabase o redirecionamento do convite administrativo para o endereço público real do CRM, sem usar localhost. **Confirmado em 28 de agosto de 2026:** Site URL e Redirect URL foram configuradas no endereço público de prévia.
+- [x] Revogar o convite com token temporário exposto e redirecionamento incorreto, e reemitir convite novo pelo painel do Supabase. **Confirmado em 28 de agosto de 2026:** o primeiro convite foi revogado e um novo convite foi emitido.
+- [ ] Confirmar o aceite, a criação de senha fora do chat e a ativação de MFA antes de iniciar o bootstrap protegido.
+- [ ] Revogar o segundo convite cuja sessão temporária apareceu em captura e reemitir convite somente após a correção de ativação estar preservada.
+
+## Identidade administrativa: ativação segura de convite
+
+- [x] Examinar o tratamento atual de sessão Supabase e confirmar por que a prévia mostra a página institucional após o convite.
+- [x] Implementar rota de ativação que processe somente sessão temporária, remova token da URL e exija criação de senha fora do chat.
+- [x] Impedir qualquer atribuição de Super Admin, organização, membership ou grant durante a ativação.
+- [x] Validar com fixture sintético, empacotar e preservar a correção sem reutilizar token real.
