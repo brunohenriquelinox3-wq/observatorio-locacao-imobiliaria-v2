@@ -730,3 +730,12 @@
 - [x] Estender a superfície de Vendas Urbanas com vínculo de ativo e estados vazio, carregando, erro e bloqueio.
 - [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de vínculo de ativo de Vendas Urbanas.
+
+## Criação do CRM: Vendas Urbanas — perfil de busca estruturado
+
+- [x] Consolidar o contrato de perfil de busca para lead urbano em rascunho, sem endereço, preço, contato, crédito, financiamento, proposta, reserva, contrato ou financeiro.
+- [x] Preparar e aplicar migration de perfil de busca contextual com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas para registrar e ler o perfil minimizado, sem acesso direto do navegador às tabelas.
+- [x] Estender a superfície de Vendas Urbanas com perfil de busca e estados vazio, carregando, erro e bloqueio.
+- [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de perfil de busca de Vendas Urbanas.

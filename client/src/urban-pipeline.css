@@ -186,6 +186,42 @@
 
 .urban-pipeline-link__grid .urban-pipeline-card { min-height: 0; }
 
+.urban-pipeline-search__card { min-height: 0; }
+
+.urban-pipeline-search__card fieldset {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding: 11px;
+  border: 1px solid rgba(23, 59, 77, .16);
+}
+
+.urban-pipeline-search__card legend {
+  padding: 0 4px;
+  color: #597078;
+  font: 700 10px/1.2 "DM Sans", sans-serif;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.urban-pipeline-search__options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.urban-pipeline-search__options label {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  color: #48616b;
+  font: 500 12px/1.35 "DM Sans", sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.urban-pipeline-search__options input { width: 15px; height: 15px; accent-color: #a74d2c; }
+
 .urban-pipeline-link__limits {
   display: flex;
   gap: 11px;
@@ -252,4 +288,5 @@
   .urban-pipeline-list__rows { grid-template-columns: 1fr; }
   .urban-pipeline-card { min-height: 0; }
   .urban-pipeline-card > p { min-height: 0; }
+  .urban-pipeline-search__options { grid-template-columns: 1fr; }
 }
