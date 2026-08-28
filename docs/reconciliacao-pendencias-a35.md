@@ -22,3 +22,17 @@ O próximo trabalho interno permitido é a reconciliação documental das pendê
 A reconciliação executou a bateria administrativa existente sem criar organização, membership, grant, convite ou alteração de permissão. Foram aprovados **7 arquivos de teste e 20 testes**, além da verificação de tipos. Essa evidência permite fechar os itens administrativos de implementação e validação interna; ela não substitui homologação em organização real nem habilita ações privilegiadas.
 
 O histórico também contém uma evidência direta para o marco inicial do CRM: há checkpoint registrado com geração de ZIP de código-fonte e HTML autônomo saneados. As demais seis entregas estratégicas antigas continuam pendentes de evidência individual, pois uma versão posterior por si só não prova que a entrega específica tenha ocorrido.
+
+## Vinculação de evidências históricas
+
+| Entrega pendente | Evidência encontrada no histórico | Estado após revisão |
+|---|---|---|
+| Marco inicial e materiais finais | Checkpoint com declaração explícita de ZIP de código-fonte e HTML autônomo saneados | Concluída por evidência específica. |
+| Ampliação de Vendas Urbanas e Lotes | Checkpoint de módulo e escopo estratégico | Mantida pendente: não foi localizada prova explícita do material final correspondente. |
+| Estratégia CRM consolidada | Checkpoint de consolidação de modelo, jornadas e roteiro | Mantida pendente: não foi localizada prova explícita da entrega final específica. |
+| Revisão de Loteadoras | Checkpoint de revisão viva e de auditoria do domínio | Mantida pendente: não foi localizada prova explícita da versão revisável correspondente. |
+| Revisão do núcleo cadastral | Histórico de modelagem e requisitos cadastrais | Mantida pendente: não foi localizada prova explícita do material de entrega correspondente. |
+| Revisão organizacional | Histórico de papéis, responsabilidades e governança | Mantida pendente: não foi localizada prova explícita do material de entrega correspondente. |
+| Revisão financeira estratégica | Checkpoints de estudo financeiro e fiscal | Mantida pendente: não foi localizada prova explícita do material de entrega correspondente; a Opção 1 permanece sem dados monetários. |
+
+Essa vinculação evita que uma atualização posterior apague a necessidade de prova individual. Os seis itens permanecem no checklist até que o material histórico específico possa ser localizado ou seja substituído por uma decisão explícita e documentada.

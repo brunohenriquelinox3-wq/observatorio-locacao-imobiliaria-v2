@@ -925,5 +925,6 @@
 - [x] Classificar cada pendência remanescente como superada, aplicável internamente, bloqueada por ambiente de demonstração ou dependente de decisão material.
 - [x] Marcar somente pendências com evidência de checkpoint ou validação atual verificável, preservando histórico e bloqueios.
 - [ ] Verificar no histórico a evidência explícita de checkpoint e material das sete entregas estratégicas pendentes antes de encerrá-las.
+- [x] Documentar a vinculação entre cada entrega histórica e sua evidência encontrada, mantendo abertas as que não tiverem material específico comprovado.
 - [x] Executar apenas validações internas não materiais ainda aplicáveis e registrar seus resultados. **A35:** 7 arquivos e 20 testes administrativos, além da checagem de tipos, foram aprovados sem alteração de organização, membership, grant ou permissão real.
 - [x] Preservar a reconciliação do checklist em artefatos saneados, sem publicação automática.
