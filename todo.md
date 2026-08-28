@@ -712,3 +712,12 @@
 - [x] Estender a superfície de Locação com perfil de busca e estados vazio, carregando, erro e bloqueio.
 - [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de perfil de busca de Locação.
+
+## Criação do CRM: Locação — escopo declarado de administração
+
+- [x] Consolidar o contrato do escopo de serviço declarado para interesse de administração em rascunho, sem mandato, contrato, preço, cobrança ou financeiro.
+- [x] Preparar e aplicar migration de escopo declarado contextual com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas para registrar e ler o escopo minimizado, sem acesso direto do navegador às tabelas.
+- [x] Estender a superfície de Locação com escopo declarado e estados vazio, carregando, erro e bloqueio.
+- [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de escopo declarado de administração.

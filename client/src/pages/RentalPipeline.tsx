@@ -2,7 +2,7 @@ import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { trpc } from "@/lib/trpc";
-import { Building2, CalendarClock, CircleAlert, ClipboardCheck, Compass, House, Link2, Search, ShieldCheck, UsersRound, Workflow } from "lucide-react";
+import { Building2, CalendarClock, CircleAlert, ClipboardCheck, Compass, FileCheck2, House, Link2, Search, ShieldCheck, UsersRound, Workflow } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../rental-pipeline.css";
@@ -52,6 +52,12 @@ const occupancyTimings = {
   flexible: "Flexível",
 } as const;
 
+const managementScopes = {
+  full_administration_interest: "Interesse em administração completa",
+  tenant_search_interest: "Interesse em busca de locatário",
+  undecided: "Escopo ainda não definido",
+} as const;
+
 const rentalAccessGate: DashboardAccessGate = {
   eyebrow: "LOCAÇÃO RESTRITA · CONTEXTO ANTES DE LEITURA",
   title: "Acesse a triagem de Locação somente dentro do seu contexto autorizado.",
@@ -90,6 +96,9 @@ export default function RentalPipeline() {
   const [acceptedAssetKinds, setAcceptedAssetKinds] = useState<(keyof typeof assetKinds)[]>(["apartment"]);
   const [occupancyTiming, setOccupancyTiming] = useState<keyof typeof occupancyTimings>("immediate");
   const [preferenceCode, setPreferenceCode] = useState("");
+  const [managementScopeIntakeId, setManagementScopeIntakeId] = useState("");
+  const [declaredScope, setDeclaredScope] = useState<keyof typeof managementScopes>("undecided");
+  const [managementNoteCode, setManagementNoteCode] = useState("");
 
   const context = useMemo(() => ({ organizationId: organizationId.trim(), module: "locacao" as const, purposeCode: purposeCode.trim().toUpperCase() }), [organizationId, purposeCode]);
   const isContextReady = isDomainContextReady(context);
@@ -97,6 +106,7 @@ export default function RentalPipeline() {
   const intakesQuery = trpc.rentalPipeline.listDraftIntakes.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const managementAssetLinksQuery = trpc.rentalPipeline.listDraftManagementAssetLinks.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const tenantSearchProfilesQuery = trpc.rentalPipeline.listDraftTenantSearchProfiles.useQuery(context, { enabled: isWorkspaceReady, retry: false });
+  const managementDeclaredScopesQuery = trpc.rentalPipeline.listDraftManagementDeclaredScopes.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const utils = trpc.useUtils();
 
   const createMutation = trpc.rentalPipeline.createDraftIntake.useMutation({
@@ -139,6 +149,14 @@ export default function RentalPipeline() {
     },
     onError() { toast.error("Perfil não registrado", { description: "O servidor exige uma entrada de locatário, contexto autorizado e preferências codificadas dentro do limite permitido." }); },
   });
+  const managementDeclaredScopeMutation = trpc.rentalPipeline.upsertDraftManagementDeclaredScope.useMutation({
+    onSuccess() {
+      setManagementScopeIntakeId(""); setDeclaredScope("undecided"); setManagementNoteCode("");
+      toast.success("Escopo declarado registrado", { description: "A informação é uma intenção de triagem, sem comprovar mandato, contrato, disponibilidade, preço, cobrança ou repasse." });
+      void utils.rentalPipeline.listDraftManagementDeclaredScopes.invalidate(context);
+    },
+    onError() { toast.error("Escopo não registrado", { description: "O servidor exige uma entrada de administração e contexto autorizado, sem revelar registros externos." }); },
+  });
 
   function createIntake(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -166,6 +184,10 @@ export default function RentalPipeline() {
   function upsertTenantSearchProfile(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     tenantSearchProfileMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: tenantProfileIntakeId.trim(), acceptedAssetKinds, occupancyTiming, preferenceCode: preferenceCode.trim().toUpperCase() });
+  }
+  function upsertManagementDeclaredScope(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    managementDeclaredScopeMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: managementScopeIntakeId.trim(), declaredScope, internalNoteCode: managementNoteCode.trim() || undefined });
   }
 
   return (
@@ -256,6 +278,26 @@ export default function RentalPipeline() {
           {isWorkspaceReady && managementAssetLinksQuery.isError && <div className="rental-pipeline-empty is-error"><CircleAlert size={18} /><p>A leitura dos vínculos não foi liberada. Revise identidade, membership, grant, vigência e contexto sem tentar inferir ativos externos.</p></div>}
           {isWorkspaceReady && managementAssetLinksQuery.data?.length === 0 && <div className="rental-pipeline-empty"><Link2 size={18} /><p>Nenhum vínculo de ativo foi devolvido para este contexto. A resposta não revela ativos de outros contextos.</p></div>}
           {isWorkspaceReady && managementAssetLinksQuery.data && managementAssetLinksQuery.data.length > 0 && <div className="rental-pipeline-list__rows">{managementAssetLinksQuery.data.map((link) => <article key={link.linkId}><span>Ativo em rascunho</span><h3>{link.assetReferenceLabel}</h3><p><b>{link.assetKind}</b> · código {link.assetInternalReference} · vínculo interno em {new Date(link.linkedAt).toLocaleString("pt-BR")}</p><code>{link.intakeId} · {link.assetId}</code></article>)}</div>}
+        </section>
+
+        <section className="rental-pipeline-scope" aria-labelledby="rental-management-scope-title">
+          <div className="rental-pipeline-heading"><div><p className="rental-pipeline-eyebrow">02C · ESCOPO DECLARADO</p><h2 id="rental-management-scope-title">Registre a intenção de serviço, não uma autorização.</h2></div><p>O escopo pertence apenas à entrada de administração e funciona como referência para revisão humana. Ele não estabelece mandato, exclusividade, gestão, anúncio, disponibilidade, preço ou cobrança.</p></div>
+          <div className="rental-pipeline-scope__grid">
+            <form className="rental-pipeline-card rental-pipeline-scope__card" onSubmit={upsertManagementDeclaredScope}>
+              <div className="rental-pipeline-card__title"><FileCheck2 size={19} /><h3>Declaração interna de escopo</h3></div><p>Use uma entrada de administração em rascunho. As opções são controladas e o código opcional não aceita narrativa livre.</p>
+              <label htmlFor="rental-management-scope-intake">ID da entrada de administração</label><input id="rental-management-scope-intake" value={managementScopeIntakeId} onChange={(event) => setManagementScopeIntakeId(event.target.value)} placeholder="UUID da entrada em rascunho" disabled={!isWorkspaceReady} required />
+              <label htmlFor="rental-declared-scope">Escopo declarado</label><select id="rental-declared-scope" value={declaredScope} onChange={(event) => setDeclaredScope(event.target.value as keyof typeof managementScopes)} disabled={!isWorkspaceReady}>{Object.entries(managementScopes).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
+              <label htmlFor="rental-management-note-code">Código interno opcional</label><input id="rental-management-note-code" value={managementNoteCode} onChange={(event) => setManagementNoteCode(event.target.value.toUpperCase())} placeholder="EX.: EM_REVISAO" disabled={!isWorkspaceReady} minLength={3} maxLength={80} />
+              <button type="submit" disabled={!isWorkspaceReady || managementDeclaredScopeMutation.isPending}>{managementDeclaredScopeMutation.isPending ? "Registrando escopo" : "Registrar escopo declarado"}</button>
+            </form>
+            <aside className="rental-pipeline-scope__limits" aria-label="Limites do escopo declarado"><ShieldCheck size={19} /><div><h3>Sem efeito operacional</h3><p>A declaração não aprova administração, não atribui poderes, não publica ativo, não cria valor, não gera contrato e não inicia nenhuma movimentação financeira.</p></div></aside>
+          </div>
+          {!isContextReady && <div className="rental-pipeline-empty"><CircleAlert size={18} /><p>Sem contexto não há consulta nem indicação de escopo declarado.</p></div>}
+          {isContextReady && !isAuthenticated && <div className="rental-pipeline-empty"><ShieldCheck size={18} /><p>O escopo e a leitura permanecem bloqueados até haver sessão autenticada.</p></div>}
+          {isWorkspaceReady && managementDeclaredScopesQuery.isLoading && <div className="rental-pipeline-empty"><span className="rental-pipeline-spinner" aria-hidden="true" /><p>Confirmando o contexto antes de solicitar a leitura minimizada dos escopos.</p></div>}
+          {isWorkspaceReady && managementDeclaredScopesQuery.isError && <div className="rental-pipeline-empty is-error"><CircleAlert size={18} /><p>A leitura dos escopos não foi liberada. Revise identidade, membership, grant, vigência e contexto sem tentar inferir entradas externas.</p></div>}
+          {isWorkspaceReady && managementDeclaredScopesQuery.data?.length === 0 && <div className="rental-pipeline-empty"><FileCheck2 size={18} /><p>Nenhum escopo declarado foi devolvido para este contexto. A resposta não revela outras entradas ou intenções.</p></div>}
+          {isWorkspaceReady && managementDeclaredScopesQuery.data && managementDeclaredScopesQuery.data.length > 0 && <div className="rental-pipeline-list__rows">{managementDeclaredScopesQuery.data.map((scope) => <article key={scope.scopeId}><span>Escopo de administração</span><h3>{managementScopes[scope.declaredScope]}</h3><p><b>{scope.internalNotePresent ? "Código interno informado" : "Sem código interno"}</b> · atualizado em {new Date(scope.updatedAt).toLocaleString("pt-BR")}</p><code>{scope.intakeId} · {scope.scopeId}</code></article>)}</div>}
         </section>
 
         <section className="rental-pipeline-list" aria-labelledby="rental-list-title">
