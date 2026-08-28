@@ -11,6 +11,7 @@ import PlatformAdmin from "./pages/PlatformAdmin";
 import DomainFoundation from "./pages/DomainFoundation";
 import AssetFoundation from "./pages/AssetFoundation";
 import UrbanPipeline from "./pages/UrbanPipeline";
+import RentalPipeline from "./pages/RentalPipeline";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -22,6 +23,7 @@ function Router() {
       <Route path={"/cadastro-base"} component={DomainFoundation} />
       <Route path={"/ativos-urbanos"} component={AssetFoundation} />
       <Route path={"/vendas-urbanas"} component={UrbanPipeline} />
+      <Route path={"/locacao"} component={RentalPipeline} />
       <Route path={"/404"} component={NotFound} />
       <Route path={"/"} component={Home} />
       {/* Final fallback route */}

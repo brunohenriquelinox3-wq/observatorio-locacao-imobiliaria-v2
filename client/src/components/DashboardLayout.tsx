@@ -39,6 +39,34 @@ export type DashboardNavigationItem = {
   path: string;
 };
 
+export type DashboardAccessGate = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  routeTitle: string;
+  routeDetail: string;
+  actionLabel: string;
+  footerLabel: string;
+  footerValue: string;
+  footerNote: string;
+  railTop: string;
+  railBottom: string;
+};
+
+const defaultAccessGate: DashboardAccessGate = {
+  eyebrow: "CAMADA RESTRITA · EVIDÊNCIA ANTES DE PRIVILÉGIO",
+  title: "Entre na central que governa a plataforma — não os dados de cada cliente.",
+  description: "Este acesso protege organizações, permissões, sessões e trilhas de auditoria. A identidade é só o primeiro passo: alçada, escopo e MFA continuam sendo verificados antes de qualquer comando sensível.",
+  routeTitle: "Rota de acesso",
+  routeDetail: "Autenticação → MFA → escopo vigente → policy",
+  actionLabel: "Acessar área governada",
+  footerLabel: "CAMPO DE LEITURA",
+  footerValue: "23° 33′ S · 46° 38′ W",
+  footerNote: "Nenhum e-mail ou login recebe privilégio por si só.",
+  railTop: "ADMIN",
+  railBottom: "PLATAFORMA",
+};
+
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
 const DEFAULT_WIDTH = 280;
 const MIN_WIDTH = 200;
@@ -48,10 +76,12 @@ export default function DashboardLayout({
   children,
   navigationItems = defaultMenuItems,
   navigationTitle = "Navegação",
+  accessGate = defaultAccessGate,
 }: {
   children: React.ReactNode;
   navigationItems?: DashboardNavigationItem[];
   navigationTitle?: string;
+  accessGate?: DashboardAccessGate;
 }) {
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY);
@@ -80,27 +110,24 @@ export default function DashboardLayout({
         </header>
         <main className="admin-access-gate__sheet">
           <aside className="admin-access-gate__rail" aria-hidden="true">
-            <span>ADMIN</span><i /><span>PLATAFORMA</span>
+            <span>{accessGate.railTop}</span><i /><span>{accessGate.railBottom}</span>
           </aside>
           <section className="admin-access-gate__content">
-            <p className="admin-access-gate__eyebrow">CAMADA RESTRITA · EVIDÊNCIA ANTES DE PRIVILÉGIO</p>
-            <h1>Entre na central que governa a plataforma — não os dados de cada cliente.</h1>
-            <p>
-              Este acesso protege organizações, permissões, sessões e trilhas de auditoria. A identidade é só o primeiro passo:
-              alçada, escopo e MFA continuam sendo verificados antes de qualquer comando sensível.
-            </p>
+            <p className="admin-access-gate__eyebrow">{accessGate.eyebrow}</p>
+            <h1>{accessGate.title}</h1>
+            <p>{accessGate.description}</p>
             <div className="admin-access-gate__method">
               <LockKeyhole size={18} />
-              <span><b>Rota de acesso</b><small>Autenticação → MFA → escopo vigente → policy</small></span>
+              <span><b>{accessGate.routeTitle}</b><small>{accessGate.routeDetail}</small></span>
             </div>
             <Button onClick={() => startLogin()} size="lg" className="admin-access-gate__cta">
-              Acessar área governada <ArrowUpRight size={17} />
+              {accessGate.actionLabel} <ArrowUpRight size={17} />
             </Button>
           </section>
           <footer className="admin-access-gate__note">
-            <span>CAMPO DE LEITURA</span>
-            <b>23° 33′ S · 46° 38′ W</b>
-            <p>Nenhum e-mail ou login recebe privilégio por si só.</p>
+            <span>{accessGate.footerLabel}</span>
+            <b>{accessGate.footerValue}</b>
+            <p>{accessGate.footerNote}</p>
           </footer>
         </main>
       </div>

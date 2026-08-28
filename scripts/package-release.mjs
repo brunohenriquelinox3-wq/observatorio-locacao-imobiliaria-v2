@@ -52,6 +52,13 @@ function inlineBuildAssets(indexHtml, files) {
     });
 }
 
+function redactRuntimeValues(html) {
+  return html
+    .replace(/sb_(?:secret|publishable)_[A-Za-z0-9_-]{10,}/g, "REDACTED_SUPABASE_CREDENTIAL")
+    .replace(/postgresql:\/\/[^\s"'<>]+/g, "REDACTED_DATABASE_URL")
+    .replace(/https:\/\/[a-z0-9-]+\.supabase\.co(?:\/[^\s"'<>]*)?/gi, "REDACTED_SUPABASE_URL");
+}
+
 async function readBuildAssets(indexHtml) {
   const references = [
     ...indexHtml.matchAll(/(?:href|src)="(\/assets\/[^\"]+\.(?:css|js))"/g),
@@ -84,7 +91,7 @@ async function main() {
       "O HTML autônomo acompanha esta entrega como artefato de visualização; ele não ativa comandos administrativos nem substitui o servidor.\n",
     "utf8",
   );
-  await writeFile(standaloneHtml, inlineBuildAssets(indexHtml, assets), "utf8");
+  await writeFile(standaloneHtml, redactRuntimeValues(inlineBuildAssets(indexHtml, assets)), "utf8");
   await execFileAsync("zip", ["-qr", sourceZip, "."], { cwd: sourceDirectory });
 
   console.log(`ZIP=${sourceZip}`);

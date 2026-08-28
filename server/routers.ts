@@ -53,6 +53,18 @@ import {
   listDraftUrbanLeads,
   transitionDraftUrbanLead,
 } from "./urbanPipeline";
+import {
+  draftRentalAgendaInputSchema,
+  draftRentalIntakeInputSchema,
+  rentalIntakeStageInputSchema,
+  rentalOperatingContextSchema,
+} from "../shared/rentalPipelineContracts";
+import {
+  createDraftRentalAgenda,
+  createDraftRentalIntake,
+  listDraftRentalIntakes,
+  transitionDraftRentalIntake,
+} from "./rentalPipeline";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -142,6 +154,21 @@ export const appRouter = router({
     createDraftAgenda: protectedProcedure
       .input(draftUrbanAgendaInputSchema)
       .mutation(({ ctx, input }) => createDraftUrbanAgenda(ctx.supabaseSubjectId ?? undefined, input)),
+  }),
+
+  rentalPipeline: router({
+    listDraftIntakes: protectedProcedure
+      .input(rentalOperatingContextSchema)
+      .query(({ ctx, input }) => listDraftRentalIntakes(ctx.supabaseSubjectId ?? undefined, input)),
+    createDraftIntake: protectedProcedure
+      .input(draftRentalIntakeInputSchema)
+      .mutation(({ ctx, input }) => createDraftRentalIntake(ctx.supabaseSubjectId ?? undefined, input)),
+    transitionDraftIntake: protectedProcedure
+      .input(rentalIntakeStageInputSchema)
+      .mutation(({ ctx, input }) => transitionDraftRentalIntake(ctx.supabaseSubjectId ?? undefined, input)),
+    createDraftAgenda: protectedProcedure
+      .input(draftRentalAgendaInputSchema)
+      .mutation(({ ctx, input }) => createDraftRentalAgenda(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   // TODO: add feature routers here, e.g.
