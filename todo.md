@@ -903,3 +903,11 @@
 - [x] Implementar APIs protegidas e leitura minimizada de regras internas.
 - [x] Estender a área de Loteadora com regras internas não financeiras.
 - [x] Validar, empacotar e preservar a fundação de regras internas.
+
+## Criação do CRM: Loteadora — componentes internos de regra econômica
+
+- [x] Consolidar componentes de referência sem beneficiário, valor, percentual, cálculo, parcela, cobrança, pagamento, repasse ou integração externa.
+- [x] Preparar e aplicar migration contextual com RLS, grants mínimos, idempotência e auditoria redigida.
+- [x] Implementar APIs protegidas e leitura minimizada dos componentes internos.
+- [x] Estender a área de Loteadora com componentes internos sem dados monetários.
+- [x] Validar, empacotar e preservar o corte de componentes internos.
