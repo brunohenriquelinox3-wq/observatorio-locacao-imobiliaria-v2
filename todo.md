@@ -797,3 +797,13 @@
 - [x] Estender o setor separado de Estoque/Mapa de Lotes com a situação interna e estados protegidos.
 - [x] Empacotar e preservar o corte de situação interna de inventário após a validação proporcional concluída.
 - [x] Corrigir a inclusão parcial do contrato de inventário antes de expor qualquer procedimento novo.
+
+## Criação do CRM: Loteadora — papéis internos de sócios e parceiros
+
+- [x] Consolidar o contrato de papéis temporais não financeiros de sócio, parceiro e cedente de terra sobre loteamento em rascunho.
+- [x] Preparar e aplicar migration contextual de papéis com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Completar a migration de papéis com comandos contextuais, idempotência, auditoria redigida e leitura minimizada antes de aplicá-la.
+- [x] Implementar APIs protegidas e leitura minimizada dos papéis internos.
+- [x] Estender a área de Loteadora com papéis internos e estados protegidos.
+- [x] Integrar a seleção protegida de papéis internos à tela de Loteadora após confirmar o fluxo de Parties existente.
+- [x] Empacotar e preservar o corte de papéis internos de Loteadora após validação proporcional concluída.

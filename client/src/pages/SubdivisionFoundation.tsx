@@ -43,6 +43,8 @@ export default function SubdivisionFoundation() {
   const [workingPhase, setWorkingPhase] = useState<keyof typeof workingPhases>("preliminary_reference");
   const [selectedDevelopmentId, setSelectedDevelopmentId] = useState("");
   const [blockNumber, setBlockNumber] = useState(1);
+  const [internalRoleDevelopmentId, setInternalRoleDevelopmentId] = useState("");
+  const [internalRoleId, setInternalRoleId] = useState("");
 
   const context = useMemo(() => ({ organizationId: organizationId.trim(), module: "loteadora" as const, purposeCode: purposeCode.trim().toUpperCase() }), [organizationId, purposeCode]);
   const isContextReady = isDomainContextReady(context);
@@ -67,6 +69,7 @@ export default function SubdivisionFoundation() {
     },
     onError() { toast.error("Quadra não registrada", { description: "O servidor exige o loteamento em rascunho no mesmo contexto autorizado, sem revelar registros externos." }); },
   });
+  const linkInternalRoleMutation = trpc.subdivisionFoundation.linkDraftInternalPartyRole.useMutation({ onSuccess() { setInternalRoleId(""); toast.success("Papel interno vinculado", { description: "O vínculo é temporal e interno; não define percentual, valor, contrato, portal, cobrança ou repasse." }); }, onError() { toast.error("Papel não vinculado", { description: "O servidor exige Party, papel e loteamento em rascunho no mesmo contexto autorizado." }); } });
 
   function createDevelopment(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -124,6 +127,10 @@ export default function SubdivisionFoundation() {
           {isWorkspaceReady && selectedDevelopmentId && blocksQuery.isError && <div className="subdivision-foundation-empty is-error"><CircleAlert size={18} /><p>A leitura não foi liberada. Revise o contexto e o loteamento selecionado sem tentar inferir registros externos.</p></div>}
           {isWorkspaceReady && selectedDevelopmentId && blocksQuery.data?.length === 0 && <div className="subdivision-foundation-empty"><Layers3 size={18} /><p>Nenhuma Quadra em rascunho foi devolvida para este loteamento. A resposta não revela outros contextos.</p></div>}
           {isWorkspaceReady && selectedDevelopmentId && blocksQuery.data && blocksQuery.data.length > 0 && <div className="subdivision-foundation-list__rows">{blocksQuery.data.map((block) => <article key={block.blockId}><span>Quadra matriz em rascunho</span><h3>Quadra {block.blockNumber}</h3><p><b>Vinculada ao loteamento selecionado</b> · criada em {new Date(block.createdAt).toLocaleString("pt-BR")}</p><code>{block.blockId}</code></article>)}</div>}
+        </section>
+        <section className="subdivision-foundation-workspace" aria-labelledby="subdivision-role-title">
+          <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">05 · PAPEL INTERNO TEMPORAL</p><h2 id="subdivision-role-title">Sócios, parceiros e cedentes começam sem participação econômica.</h2></div><p>Use um ID de papel temporal criado no Núcleo de cadastros dentro do módulo Loteadora. Nenhum percentual, valor, recebível, login, portal, contrato, cobrança ou repasse é definido aqui.</p></div>
+          <form className="subdivision-foundation-card" onSubmit={(event) => { event.preventDefault(); linkInternalRoleMutation.mutate({ ...context, correlationId: crypto.randomUUID(), developmentId: internalRoleDevelopmentId, partyRoleId: internalRoleId }); }}><label>Loteamento em rascunho<select value={internalRoleDevelopmentId} onChange={(event) => setInternalRoleDevelopmentId(event.target.value)} disabled={!isWorkspaceReady}><option value="">Selecione um loteamento autorizado</option>{developmentsQuery.data?.map((development) => <option key={development.developmentId} value={development.developmentId}>{development.internalReference}</option>)}</select></label><label>ID do papel temporal<input value={internalRoleId} onChange={(event) => setInternalRoleId(event.target.value)} placeholder="UUID do papel interno" disabled={!isWorkspaceReady} required /></label><button type="submit" disabled={!isWorkspaceReady || !internalRoleDevelopmentId || !internalRoleId || linkInternalRoleMutation.isPending}>{linkInternalRoleMutation.isPending ? "Vinculando papel" : "Vincular papel interno"}</button></form>
         </section>
       </main>
     </DashboardLayout>

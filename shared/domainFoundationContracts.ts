@@ -13,6 +13,9 @@ export const partyRoleSchema = z.enum([
   "representative",
   "broker",
   "provider",
+  "shareholder",
+  "partner",
+  "land_contributor",
 ]);
 
 export const domainContextSchema = z.object({

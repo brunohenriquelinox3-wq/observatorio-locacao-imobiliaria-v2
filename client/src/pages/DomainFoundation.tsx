@@ -17,12 +17,13 @@ const navigationItems: DashboardNavigationItem[] = [
 const moduleLabels = {
   vendas_urbanas: "Vendas Urbanas",
   locacao: "Locação",
+  loteadora: "Loteadora",
 } as const;
 
 export default function DomainFoundation() {
   const { isAuthenticated } = useAuth();
   const [organizationId, setOrganizationId] = useState("");
-  const [module, setModule] = useState<"vendas_urbanas" | "locacao">("vendas_urbanas");
+  const [module, setModule] = useState<"vendas_urbanas" | "locacao" | "loteadora">("vendas_urbanas");
   const [purposeCode, setPurposeCode] = useState("CADASTRO_INICIAL");
   const [partyKind, setPartyKind] = useState<"individual" | "legal_entity">("individual");
   const [displayName, setDisplayName] = useState("");
@@ -87,7 +88,7 @@ export default function DomainFoundation() {
       ...context,
       correlationId: crypto.randomUUID(),
       partyId: rolePartyId.trim(),
-      role: role as "lead" | "client" | "buyer" | "seller" | "owner" | "tenant" | "guarantor" | "representative" | "broker" | "provider",
+      role: role as "lead" | "client" | "buyer" | "seller" | "owner" | "tenant" | "guarantor" | "representative" | "broker" | "provider" | "shareholder" | "partner" | "land_contributor",
       beginsAt: roleBeginsAt ? new Date(roleBeginsAt).toISOString() : undefined,
       endsAt: roleEndsAt ? new Date(roleEndsAt).toISOString() : undefined,
     });
@@ -112,7 +113,7 @@ export default function DomainFoundation() {
           </div>
           <div className="domain-foundation-context__fields">
             <label htmlFor="domain-organization"><Building2 size={14} /> ID da organização<input id="domain-organization" value={organizationId} onChange={(event) => setOrganizationId(event.target.value)} placeholder="UUID da organização autorizada" /></label>
-            <label htmlFor="domain-module"><Layers3 size={14} /> Módulo<select id="domain-module" value={module} onChange={(event) => setModule(event.target.value as typeof module)}><option value="vendas_urbanas">Vendas Urbanas</option><option value="locacao">Locação</option></select></label>
+            <label htmlFor="domain-module"><Layers3 size={14} /> Módulo<select id="domain-module" value={module} onChange={(event) => setModule(event.target.value as typeof module)}><option value="vendas_urbanas">Vendas Urbanas</option><option value="locacao">Locação</option><option value="loteadora">Loteadora</option></select></label>
             <label htmlFor="domain-purpose"><ShieldCheck size={14} /> Finalidade<input id="domain-purpose" value={purposeCode} onChange={(event) => setPurposeCode(event.target.value.toUpperCase())} placeholder="CADASTRO_INICIAL" /></label>
           </div>
           <div className={`domain-foundation-context__status ${isContextReady ? "is-ready" : "is-blocked"}`}>
@@ -144,7 +145,7 @@ export default function DomainFoundation() {
               <input id="party-role-id" value={rolePartyId} onChange={(event) => setRolePartyId(event.target.value)} placeholder="UUID da Party em rascunho" disabled={!isContextReady} required />
               <label htmlFor="party-role">Papel</label>
               <select id="party-role" value={role} onChange={(event) => setRole(event.target.value)} disabled={!isContextReady}>
-                <option value="lead">Lead</option><option value="client">Cliente</option><option value="buyer">Comprador</option><option value="seller">Vendedor</option><option value="owner">Proprietário</option><option value="tenant">Locatário</option><option value="guarantor">Garantidor</option><option value="representative">Representante</option><option value="broker">Corretor</option><option value="provider">Prestador</option>
+                <option value="lead">Lead</option><option value="client">Cliente</option><option value="buyer">Comprador</option><option value="seller">Vendedor</option><option value="owner">Proprietário</option><option value="tenant">Locatário</option><option value="guarantor">Garantidor</option><option value="representative">Representante</option><option value="broker">Corretor</option><option value="provider">Prestador</option><option value="shareholder">Sócio</option><option value="partner">Parceiro</option><option value="land_contributor">Cedente de terra</option>
               </select>
               <label htmlFor="party-role-start">Início <span>opcional</span></label>
               <input id="party-role-start" type="datetime-local" value={roleBeginsAt} onChange={(event) => setRoleBeginsAt(event.target.value)} disabled={!isContextReady} />
