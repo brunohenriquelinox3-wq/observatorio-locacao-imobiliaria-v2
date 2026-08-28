@@ -806,4 +806,13 @@
 - [x] Implementar APIs protegidas e leitura minimizada dos papéis internos.
 - [x] Estender a área de Loteadora com papéis internos e estados protegidos.
 - [x] Integrar a seleção protegida de papéis internos à tela de Loteadora após confirmar o fluxo de Parties existente.
+
+## Criação do CRM: Estoque/Mapa de Lotes — histórico interno de inventário
+
+- [x] Consolidar o contrato de eventos internos da situação de inventário, sem disponibilidade, reserva, venda, cliente, contrato ou financeiro.
+- [x] Preparar e aplicar migration contextual de eventos com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Completar a migration de eventos com comandos contextuais, idempotência, auditoria redigida e leitura minimizada antes de aplicá-la.
+- [x] Implementar APIs protegidas e leitura minimizada do histórico de inventário.
+- [x] Estender o setor separado de Estoque/Mapa de Lotes com histórico interno e estados protegidos.
+- [x] Empacotar e preservar o corte de histórico interno de inventário após validação proporcional concluída.
 - [x] Empacotar e preservar o corte de papéis internos de Loteadora após validação proporcional concluída.
