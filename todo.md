@@ -851,3 +851,10 @@
 - [x] Implementar a experiência protegida de seleção de anexo sem dados reais.
 - [x] Validar isolamento, tipo, tamanho e ausência de exposição antes de empacotar e preservar o corte de upload privado.
 - [x] Empacotar e preservar o corte de papéis internos de Loteadora após validação proporcional concluída.
+
+## Criação do CRM: Clientes Loteadora — estado opaco de anexos privados
+
+- [x] Consolidar o resumo de estado do anexo sem expor chave, URL, nome, tipo, tamanho, conteúdo, download ou visualização.
+- [x] Preparar e aplicar a leitura minimizada do estado no mesmo contexto autorizado.
+- [x] Exibir o estado opaco na área protegida de anexos sem criar leitura de arquivo.
+- [x] Validar, empacotar e preservar o corte de estado opaco de anexos privados.
