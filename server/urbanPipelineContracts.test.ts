@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { draftUrbanAgendaInputSchema, draftUrbanLeadInputSchema, draftUrbanLeadSearchProfileInputSchema, urbanLeadAssetLinkInputSchema, urbanLeadStageInputSchema } from "../shared/urbanPipelineContracts";
+import { draftUrbanAgendaClassificationInputSchema, draftUrbanAgendaInputSchema, draftUrbanLeadInputSchema, draftUrbanLeadSearchProfileInputSchema, urbanLeadAssetLinkInputSchema, urbanLeadStageInputSchema } from "../shared/urbanPipelineContracts";
 
 const organizationId = "550e8400-e29b-41d4-a716-446655440000";
 const partyId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const leadId = "7ba7b810-9dad-11d1-80b4-00c04fd430c8";
-const correlationId = "8ba7b810-9dad-11d1-80b4-00c04fd430c8";
-const assetId = "9ba7b810-9dad-11d1-80b4-00c04fd430c8";
+const agendaId = "8ba7b810-9dad-11d1-80b4-00c04fd430c8";
+const assetId = "8ba7b810-9dad-11d1-80b4-00c04fd430c8";
+const correlationId = "9ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const context = { organizationId, module: "vendas_urbanas" as const, purposeCode: "CADASTRO_INICIAL", correlationId };
 
 describe("urban pipeline contracts", () => {
@@ -30,5 +31,11 @@ describe("urban pipeline contracts", () => {
     expect(draftUrbanLeadSearchProfileInputSchema.safeParse({ ...context, leadId, acceptedAssetKinds: ["apartment", "house"], searchTiming: "up_to_90_days", preferenceCode: "MORADIA_URBANA" }).success).toBe(true);
     expect(draftUrbanLeadSearchProfileInputSchema.safeParse({ ...context, leadId, acceptedAssetKinds: ["house", "house"], searchTiming: "immediate" }).success).toBe(false);
     expect(draftUrbanLeadSearchProfileInputSchema.safeParse({ ...context, module: "locacao", leadId, acceptedAssetKinds: ["house"], searchTiming: "flexible" }).success).toBe(false);
+  });
+
+  it("accepts an internal agenda classification only in the urban sales context", () => {
+    expect(draftUrbanAgendaClassificationInputSchema.safeParse({ ...context, correlationId, agendaId, classification: "context_preparation", internalCode: "EM_REVISAO" }).success).toBe(true);
+    expect(draftUrbanAgendaClassificationInputSchema.safeParse({ ...context, correlationId, agendaId, classification: "context_preparation", internalCode: "texto livre" }).success).toBe(false);
+    expect(draftUrbanAgendaClassificationInputSchema.safeParse({ ...context, module: "locacao", correlationId, agendaId, classification: "lead_review" }).success).toBe(false);
   });
 });

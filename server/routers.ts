@@ -42,6 +42,7 @@ import {
   draftUrbanAssetInputSchema,
 } from "../shared/assetFoundationContracts";
 import {
+  draftUrbanAgendaClassificationInputSchema,
   draftUrbanAgendaInputSchema,
   draftUrbanLeadInputSchema,
   draftUrbanLeadSearchProfileInputSchema,
@@ -63,6 +64,10 @@ import {
   listDraftUrbanLeadSearchProfiles,
   upsertDraftUrbanLeadSearchProfile,
 } from "./urbanLeadSearchProfile";
+import {
+  listDraftUrbanAgendaClassifications,
+  upsertDraftUrbanAgendaClassification,
+} from "./urbanAgendaClassification";
 import {
   draftRentalAgendaClassificationInputSchema,
   draftRentalAgendaInputSchema,
@@ -196,6 +201,12 @@ export const appRouter = router({
     upsertDraftLeadSearchProfile: protectedProcedure
       .input(draftUrbanLeadSearchProfileInputSchema)
       .mutation(({ ctx, input }) => upsertDraftUrbanLeadSearchProfile(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftAgendaClassifications: protectedProcedure
+      .input(urbanSalesContextSchema)
+      .query(({ ctx, input }) => listDraftUrbanAgendaClassifications(ctx.supabaseSubjectId ?? undefined, input)),
+    upsertDraftAgendaClassification: protectedProcedure
+      .input(draftUrbanAgendaClassificationInputSchema)
+      .mutation(({ ctx, input }) => upsertDraftUrbanAgendaClassification(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   rentalPipeline: router({

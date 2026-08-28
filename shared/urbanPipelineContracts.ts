@@ -42,6 +42,7 @@ export const urbanLeadAssetLinkInputSchema = urbanSalesContextSchema.extend({
 });
 
 export const urbanSearchTimingSchema = z.enum(["immediate", "up_to_90_days", "flexible"]);
+export const urbanAgendaClassificationSchema = z.enum(["lead_review", "context_preparation", "internal_follow_up"]);
 export const draftUrbanLeadSearchProfileInputSchema = urbanSalesContextSchema.extend({
   correlationId: z.string().uuid(),
   leadId: z.string().uuid(),
@@ -51,8 +52,16 @@ export const draftUrbanLeadSearchProfileInputSchema = urbanSalesContextSchema.ex
   preferenceCode: z.string().trim().toUpperCase().regex(/^[A-Z][A-Z0-9_]{2,79}$/).optional(),
 });
 
+export const draftUrbanAgendaClassificationInputSchema = urbanSalesContextSchema.extend({
+  correlationId: z.string().uuid(),
+  agendaId: z.string().uuid(),
+  classification: urbanAgendaClassificationSchema,
+  internalCode: z.string().trim().toUpperCase().regex(/^[A-Z][A-Z0-9_]{2,79}$/).optional(),
+});
+
 export type DraftUrbanLeadInput = z.infer<typeof draftUrbanLeadInputSchema>;
 export type UrbanLeadStageInput = z.infer<typeof urbanLeadStageInputSchema>;
 export type DraftUrbanAgendaInput = z.infer<typeof draftUrbanAgendaInputSchema>;
 export type UrbanLeadAssetLinkInput = z.infer<typeof urbanLeadAssetLinkInputSchema>;
 export type DraftUrbanLeadSearchProfileInput = z.infer<typeof draftUrbanLeadSearchProfileInputSchema>;
+export type DraftUrbanAgendaClassificationInput = z.infer<typeof draftUrbanAgendaClassificationInputSchema>;
