@@ -59,6 +59,14 @@ export const draftSubdivisionSaleDraftCoBuyerInputSchema = subdivisionContextSch
   buyerClientId: z.string().uuid(),
 });
 
+export const subdivisionEconomicRuleSetWorkingStateSchema = z.enum(["draft_internal", "review_required"]);
+export const draftSubdivisionEconomicRuleSetInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  developmentId: z.string().uuid(),
+  versionReference: z.string().trim().toUpperCase().regex(/^[A-Z][A-Z0-9_]{2,79}$/),
+  workingState: subdivisionEconomicRuleSetWorkingStateSchema,
+});
+
 export const draftSubdivisionDevelopmentInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
   internalReference: z.string().trim().toUpperCase().regex(/^[A-Z][A-Z0-9_]{2,79}$/),
@@ -75,3 +83,4 @@ export type DraftSubdivisionBuyerAttachmentIntentInput = z.infer<typeof draftSub
 export type DraftSubdivisionSaleDraftInput = z.infer<typeof draftSubdivisionSaleDraftInputSchema>;
 export type DraftSubdivisionSaleDraftWorkStateInput = z.infer<typeof draftSubdivisionSaleDraftWorkStateInputSchema>;
 export type DraftSubdivisionSaleDraftCoBuyerInput = z.infer<typeof draftSubdivisionSaleDraftCoBuyerInputSchema>;
+export type DraftSubdivisionEconomicRuleSetInput = z.infer<typeof draftSubdivisionEconomicRuleSetInputSchema>;

@@ -895,3 +895,11 @@
 - [x] Consolidar a síntese de cobertura sem expor documento, chave, URL, nome, tipo, tamanho, conteúdo, download ou visualização.
 - [x] Exibir a síntese somente a partir de respostas já contextualizadas e minimizadas.
 - [x] Validar, empacotar e preservar o corte de síntese opaca de co-compradores.
+
+## Criação do CRM: Loteadora — regras econômicas internas sem valores
+
+- [x] Consolidar regras internas versionadas sem valor, percentual, parcela, cobrança, pagamento, repasse ou integração externa.
+- [x] Preparar e aplicar migration contextual com RLS, grants mínimos, idempotência e auditoria redigida.
+- [x] Implementar APIs protegidas e leitura minimizada de regras internas.
+- [x] Estender a área de Loteadora com regras internas não financeiras.
+- [x] Validar, empacotar e preservar a fundação de regras internas.
