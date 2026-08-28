@@ -943,3 +943,10 @@
 - [x] Implementar rota de ativação que processe somente sessão temporária, remova token da URL e exija criação de senha fora do chat.
 - [x] Impedir qualquer atribuição de Super Admin, organização, membership ou grant durante a ativação.
 - [x] Validar com fixture sintético, empacotar e preservar a correção sem reutilizar token real.
+
+## Identidade administrativa: retorno OAuth com estado inválido
+
+- [x] Examinar o retorno `invalid oauth state` sem reutilizar a URL de callback, token ou código exibidos em captura.
+- [x] Corrigir o ciclo de state e cookie do OAuth preservando a validação CSRF e o retorno no mesmo navegador.
+- [x] Validar com fixture sintética que state ausente ou divergente continua negado e state válido retorna ao CRM.
+- [x] Empacotar e preservar a correção do retorno OAuth sem publicação automática.

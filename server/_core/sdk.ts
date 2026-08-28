@@ -5,7 +5,6 @@ import { parse as parseCookieHeader } from "cookie";
 import type { Request } from "express";
 import { SignJWT, jwtVerify } from "jose";
 import type { User } from "../../drizzle/schema";
-import * as db from "../db";
 import { ENV } from "./env";
 import type {
   ExchangeTokenRequest,
@@ -285,39 +284,33 @@ class SDKServer {
       return buildCronUser(userInfo);
     }
 
-    const sessionUserId = session.openId;
     const signedInAt = new Date();
-    let user = await db.getUserByOpenId(sessionUserId);
-
-    // If user not in DB, sync from OAuth server automatically
-    if (!user) {
-      try {
-        const userInfo = await this.getUserInfoWithJwt(sessionToken ?? "");
-        await db.upsertUser({
-          openId: userInfo.openId,
-          name: userInfo.name || null,
-          email: userInfo.email ?? null,
-          loginMethod: userInfo.loginMethod ?? userInfo.platform ?? null,
-          lastSignedIn: signedInAt,
-        });
-        user = await db.getUserByOpenId(userInfo.openId);
-      } catch (error) {
-        console.error("[Auth] Failed to sync user from OAuth:", error);
-        throw ForbiddenError("Failed to sync user info");
-      }
+    const userInfo = await this.getUserInfoWithJwt(sessionToken ?? "");
+    if (!userInfo.openId || userInfo.openId !== session.openId) {
+      throw ForbiddenError("OAuth session identity mismatch");
     }
 
-    if (!user) {
-      throw ForbiddenError("User not found");
-    }
-
-    await db.upsertUser({
-      openId: user.openId,
-      lastSignedIn: signedInAt,
-    });
-
-    return user;
+    return buildTransientOauthUser(userInfo, signedInAt);
   }
+}
+
+type TransientOauthIdentity = Pick<GetUserInfoWithJwtResponse, "openId" | "name" | "email" | "loginMethod" | "platform">;
+
+// This project stores governed identities in Supabase, not in the template's optional MySQL users table.
+// A session-derived user is intentionally least-privileged; contextual Supabase authority remains mandatory.
+export function buildTransientOauthUser(userInfo: TransientOauthIdentity, signedInAt: Date): User {
+  if (!userInfo.openId) throw ForbiddenError("OAuth user info missing openId");
+  return {
+    id: 0,
+    openId: userInfo.openId,
+    name: userInfo.name || null,
+    email: userInfo.email ?? null,
+    loginMethod: userInfo.loginMethod ?? userInfo.platform ?? null,
+    role: "user",
+    createdAt: signedInAt,
+    updatedAt: signedInAt,
+    lastSignedIn: signedInAt,
+  };
 }
 
 const CRON_OPEN_ID_PREFIX = "cron_";
