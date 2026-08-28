@@ -101,10 +101,11 @@ export default function PlatformAdmin() {
   const [membershipReason, setMembershipReason] = useState("");
   const { isAuthenticated, user } = useAuth();
   const canLoadIdentity = canLoadIdentityState(isAuthenticated);
-  const canLoadAdministrativeData = canLoadAdministrativeState(isAuthenticated, user?.role);
-  const readinessQuery = trpc.foundation.readiness.useQuery(undefined, { retry: false, enabled: canLoadAdministrativeData });
   const identityQuery = trpc.foundation.identity.useQuery(undefined, { retry: false, enabled: canLoadIdentity });
-  const commandStatusQuery = trpc.foundation.commandStatus.useQuery(undefined, { retry: false, enabled: canLoadAdministrativeData });
+  const canLoadBootstrapStatus = canLoadIdentity && identityQuery.data?.state === "connected";
+  const commandStatusQuery = trpc.foundation.commandStatus.useQuery(undefined, { retry: false, enabled: canLoadBootstrapStatus });
+  const canLoadAdministrativeData = canLoadAdministrativeState(isAuthenticated, user?.role) || commandStatusQuery.data?.commandMode === "ready_for_controlled_commands";
+  const readinessQuery = trpc.foundation.readiness.useQuery(undefined, { retry: false, enabled: canLoadAdministrativeData });
   const bootstrapMutation = trpc.administration.bootstrap.useMutation({
     onSuccess() {
       toast.success("Principal criado como pendência de ativação", {

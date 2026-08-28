@@ -28,14 +28,26 @@ vi.mock("./adminCommands", () => ({
   suspendMembership: vi.fn(),
 }));
 
+vi.mock("./supabaseIdentity", () => ({
+  attestSupabaseMfa: vi.fn(async () => ({
+    subjectId,
+    assuranceLevel: "aal2",
+    method: "totp",
+    verifiedAt: new Date().toISOString(),
+    verifiedRecoveryChannel: false,
+  })),
+}));
+
+vi.mock("./_core/env", () => ({ ENV: { ownerOpenId: "test-owner" } }));
+
 import { appRouter } from "./routers";
 
-function createContext(role: "admin" | "user", supabaseSubjectId: string | null): TrpcContext {
+function createContext(role: "admin" | "user", supabaseSubjectId: string | null, openId = "test-owner"): TrpcContext {
   const now = new Date();
   return {
     user: {
       id: 1,
-      openId: `test-${role}`,
+      openId,
       name: "Test User",
       email: null,
       loginMethod: "test",
@@ -51,21 +63,21 @@ function createContext(role: "admin" | "user", supabaseSubjectId: string | null)
 }
 
 describe("administration command router", () => {
-  it("denies bootstrap to a non-administrative app session", async () => {
+  it("denies bootstrap to a non-owner app session", async () => {
     await expect(
-      appRouter.createCaller(createContext("user", subjectId)).administration.bootstrap({ correlationId }),
+      appRouter.createCaller(createContext("user", subjectId, "other-owner")).administration.bootstrap({ correlationId }),
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
   it("requires a connected Supabase subject before controlled bootstrap", async () => {
     await expect(
       appRouter.createCaller(createContext("admin", null)).administration.bootstrap({ correlationId }),
-    ).rejects.toMatchObject({ code: "PRECONDITION_FAILED", message: "ADMIN_COMMAND_PRECONDITIONS_UNMET" });
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
-  it("returns only pending bootstrap state to an eligible administrative caller", async () => {
+  it("returns only pending bootstrap state to the owner with a connected subject and synthetic MFA", async () => {
     await expect(
-      appRouter.createCaller(createContext("admin", subjectId)).administration.bootstrap({ correlationId }),
+      appRouter.createCaller(createContext("user", subjectId)).administration.bootstrap({ correlationId }),
     ).resolves.toEqual({ principalId: subjectId, state: "pending_activation" });
   });
 });

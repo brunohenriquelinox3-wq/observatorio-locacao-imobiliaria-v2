@@ -1,8 +1,9 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { systemRouter } from "./_core/systemRouter";
-import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { bootstrapOwnerProcedure, platformActiveProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { getFoundationReadiness } from "./foundationReadiness";
 import {
   bootstrapCurrentSubject,
@@ -155,35 +156,41 @@ export const appRouter = router({
   }),
 
   foundation: router({
-    readiness: adminProcedure.query(() => getFoundationReadiness()),
+    readiness: platformActiveProcedure.query(() => getFoundationReadiness()),
     identity: protectedProcedure.query(({ ctx }) => ({
       provider: "supabase",
       state: ctx.supabaseSubjectId ? "connected" : "not_connected",
       commandMode: "blocked" as const,
     })),
-    commandStatus: adminProcedure.query(({ ctx }) => getAdministrativeSubjectStatus(ctx.supabaseSubjectId)),
+    commandStatus: bootstrapOwnerProcedure.query(({ ctx }) => getAdministrativeSubjectStatus(ctx.supabaseSubjectId)),
   }),
 
   administration: router({
-    bootstrap: adminProcedure
+    bootstrap: bootstrapOwnerProcedure
       .input(administrativeRequestMetaSchema)
-      .mutation(({ ctx, input }) => bootstrapCurrentSubject(ctx.supabaseSubjectId, input.correlationId)),
-    activateBootstrap: adminProcedure
+      .mutation(async ({ ctx, input }) => {
+        const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
+        if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2" || attestation.method !== "totp") {
+          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ADMIN_COMMAND_PRECONDITIONS_UNMET" });
+        }
+        return bootstrapCurrentSubject(ctx.supabaseSubjectId, input.correlationId);
+      }),
+    activateBootstrap: bootstrapOwnerProcedure
       .input(administrativeRequestMetaSchema)
       .mutation(async ({ ctx, input }) => activatePendingPlatformPrincipal(
         await attestSupabaseMfa(ctx.supabaseAccessToken),
         input.correlationId,
       )),
-    provisionOrganization: adminProcedure
+    provisionOrganization: platformActiveProcedure
       .input(provisionOrganizationInputSchema)
       .mutation(({ ctx, input }) => provisionOrganization(ctx.supabaseSubjectId, input)),
-    delegateMembership: adminProcedure
+    delegateMembership: platformActiveProcedure
       .input(grantMembershipInputSchema)
       .mutation(({ ctx, input }) => delegateMembership(ctx.supabaseSubjectId, input)),
-    suspendMembership: adminProcedure
+    suspendMembership: platformActiveProcedure
       .input(suspendMembershipInputSchema)
       .mutation(({ ctx, input }) => suspendMembership(ctx.supabaseSubjectId, input)),
-    revokeMembership: adminProcedure
+    revokeMembership: platformActiveProcedure
       .input(revokeMembershipInputSchema)
       .mutation(({ ctx, input }) => revokeMembership(ctx.supabaseSubjectId, input)),
   }),

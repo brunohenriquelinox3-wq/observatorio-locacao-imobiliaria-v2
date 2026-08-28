@@ -935,7 +935,8 @@
 - [x] Corrigir no Supabase o redirecionamento do convite administrativo para o endereço público real do CRM, sem usar localhost. **Confirmado em 28 de agosto de 2026:** Site URL e Redirect URL foram configuradas no endereço público de prévia.
 - [x] Revogar o convite com token temporário exposto e redirecionamento incorreto, e reemitir convite novo pelo painel do Supabase. **Confirmado em 28 de agosto de 2026:** o primeiro convite foi revogado e um novo convite foi emitido.
 - [ ] Confirmar o aceite, a criação de senha fora do chat e a ativação de MFA antes de iniciar o bootstrap protegido.
-- [ ] Revogar o segundo convite cuja sessão temporária apareceu em captura e reemitir convite somente após a correção de ativação estar preservada.
+- [x] Revogar o segundo convite cuja sessão temporária apareceu em captura e reemitir convite somente após a correção de ativação estar preservada. **Confirmado em 28 de agosto de 2026:** o convite reemitido foi aceito pela rota de ativação segura.
+- [x] Conectar a identidade Supabase na Administração sem conceder Super Admin, organização, membership ou grant. **Confirmado em 28 de agosto de 2026:** a interface informou identidade conectada e alçada pendente.
 
 ## Identidade administrativa: ativação segura de convite
 
@@ -950,3 +951,10 @@
 - [x] Corrigir o ciclo de state e cookie do OAuth preservando a validação CSRF e o retorno no mesmo navegador.
 - [x] Validar com fixture sintética que state ausente ou divergente continua negado e state válido retorna ao CRM.
 - [x] Empacotar e preservar a correção do retorno OAuth sem publicação automática.
+
+## Identidade administrativa: gate de preparação do bootstrap
+
+- [x] Examinar por que identidade conectada com MFA verificado não recebe a opção de preparar bootstrap.
+- [x] Definir elegibilidade inicial que não dependa de papel administrativo prévio e não conceda alçada automaticamente.
+- [x] Implementar o gate server-side e a projeção visual de preparação de bootstrap com negação segura.
+- [x] Validar com fixtures sintéticas, empacotar e preservar a correção sem executar bootstrap real.
