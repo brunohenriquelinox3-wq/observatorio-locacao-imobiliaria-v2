@@ -45,6 +45,7 @@ export default function SubdivisionFoundation() {
   const [blockNumber, setBlockNumber] = useState(1);
   const [internalRoleDevelopmentId, setInternalRoleDevelopmentId] = useState("");
   const [internalRoleId, setInternalRoleId] = useState("");
+  const [buyerClientRoleId, setBuyerClientRoleId] = useState("");
 
   const context = useMemo(() => ({ organizationId: organizationId.trim(), module: "loteadora" as const, purposeCode: purposeCode.trim().toUpperCase() }), [organizationId, purposeCode]);
   const isContextReady = isDomainContextReady(context);
@@ -52,6 +53,7 @@ export default function SubdivisionFoundation() {
   const developmentsQuery = trpc.subdivisionFoundation.listDraftDevelopments.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const blocksQueryInput = useMemo(() => ({ ...context, developmentId: selectedDevelopmentId }), [context, selectedDevelopmentId]);
   const blocksQuery = trpc.subdivisionFoundation.listDraftBlocks.useQuery(blocksQueryInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
+  const buyerClientsQuery = trpc.subdivisionFoundation.listDraftBuyerClients.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const utils = trpc.useUtils();
   const createMutation = trpc.subdivisionFoundation.createDraftDevelopment.useMutation({
     onSuccess() {
@@ -70,6 +72,7 @@ export default function SubdivisionFoundation() {
     onError() { toast.error("Quadra não registrada", { description: "O servidor exige o loteamento em rascunho no mesmo contexto autorizado, sem revelar registros externos." }); },
   });
   const linkInternalRoleMutation = trpc.subdivisionFoundation.linkDraftInternalPartyRole.useMutation({ onSuccess() { setInternalRoleId(""); toast.success("Papel interno vinculado", { description: "O vínculo é temporal e interno; não define percentual, valor, contrato, portal, cobrança ou repasse." }); }, onError() { toast.error("Papel não vinculado", { description: "O servidor exige Party, papel e loteamento em rascunho no mesmo contexto autorizado." }); } });
+  const createBuyerClientMutation = trpc.subdivisionFoundation.createDraftBuyerClient.useMutation({ onSuccess() { setBuyerClientRoleId(""); toast.success("Cliente comprador em rascunho registrado", { description: "O vínculo não contém documentos, identificadores fiscais, lote vendido, contrato, boleto ou financeiro." }); void utils.subdivisionFoundation.listDraftBuyerClients.invalidate(context); }, onError() { toast.error("Cliente não registrado", { description: "O servidor exige papel temporal de cliente ou comprador no mesmo contexto autorizado." }); } });
 
   function createDevelopment(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -131,6 +134,12 @@ export default function SubdivisionFoundation() {
         <section className="subdivision-foundation-workspace" aria-labelledby="subdivision-role-title">
           <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">05 · PAPEL INTERNO TEMPORAL</p><h2 id="subdivision-role-title">Sócios, parceiros e cedentes começam sem participação econômica.</h2></div><p>Use um ID de papel temporal criado no Núcleo de cadastros dentro do módulo Loteadora. Nenhum percentual, valor, recebível, login, portal, contrato, cobrança ou repasse é definido aqui.</p></div>
           <form className="subdivision-foundation-card" onSubmit={(event) => { event.preventDefault(); linkInternalRoleMutation.mutate({ ...context, correlationId: crypto.randomUUID(), developmentId: internalRoleDevelopmentId, partyRoleId: internalRoleId }); }}><label>Loteamento em rascunho<select value={internalRoleDevelopmentId} onChange={(event) => setInternalRoleDevelopmentId(event.target.value)} disabled={!isWorkspaceReady}><option value="">Selecione um loteamento autorizado</option>{developmentsQuery.data?.map((development) => <option key={development.developmentId} value={development.developmentId}>{development.internalReference}</option>)}</select></label><label>ID do papel temporal<input value={internalRoleId} onChange={(event) => setInternalRoleId(event.target.value)} placeholder="UUID do papel interno" disabled={!isWorkspaceReady} required /></label><button type="submit" disabled={!isWorkspaceReady || !internalRoleDevelopmentId || !internalRoleId || linkInternalRoleMutation.isPending}>{linkInternalRoleMutation.isPending ? "Vinculando papel" : "Vincular papel interno"}</button></form>
+        </section>
+        <section className="subdivision-foundation-workspace" aria-labelledby="subdivision-buyer-title">
+          <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">06 · CLIENTE COMPRADOR</p><h2 id="subdivision-buyer-title">O cadastro-base reutiliza Party e papel temporal.</h2></div><p>Registre somente o ID técnico de um papel interno `client` ou `buyer` do módulo Loteadora. Não há CPF/CNPJ, contato, documento, anexo, lote vendido, contrato, boleto ou valor.</p></div>
+          <form className="subdivision-foundation-card" onSubmit={(event) => { event.preventDefault(); createBuyerClientMutation.mutate({ ...context, correlationId: crypto.randomUUID(), partyRoleAssignmentId: buyerClientRoleId }); }}><label htmlFor="subdivision-buyer-role">ID do papel temporal de cliente/comprador<input id="subdivision-buyer-role" value={buyerClientRoleId} onChange={(event) => setBuyerClientRoleId(event.target.value)} placeholder="UUID do papel interno" disabled={!isWorkspaceReady} required /></label><button type="submit" disabled={!isWorkspaceReady || !buyerClientRoleId || createBuyerClientMutation.isPending}>{createBuyerClientMutation.isPending ? "Registrando cliente" : "Registrar cliente em rascunho"}</button></form>
+          {isWorkspaceReady && buyerClientsQuery.data?.length === 0 && <div className="subdivision-foundation-empty"><UsersRound size={18} /><p>Nenhum cliente comprador em rascunho foi devolvido para este contexto.</p></div>}
+          {isWorkspaceReady && buyerClientsQuery.data && buyerClientsQuery.data.length > 0 && <div className="subdivision-foundation-list__rows">{buyerClientsQuery.data.map((client) => <article key={client.buyerClientId}><span>Cliente comprador em rascunho</span><h3>Vínculo interno de Party</h3><p>Criado em {new Date(client.createdAt).toLocaleString("pt-BR")}</p><code>{client.buyerClientId}</code></article>)}</div>}
         </section>
       </main>
     </DashboardLayout>

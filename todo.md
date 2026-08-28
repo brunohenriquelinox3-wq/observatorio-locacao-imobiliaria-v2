@@ -815,4 +815,16 @@
 - [x] Implementar APIs protegidas e leitura minimizada do histórico de inventário.
 - [x] Estender o setor separado de Estoque/Mapa de Lotes com histórico interno e estados protegidos.
 - [x] Empacotar e preservar o corte de histórico interno de inventário após validação proporcional concluída.
+
+## Criação do CRM: Loteadora — clientes compradores, cadastro-base
+
+- [x] Consolidar o contrato de cliente comprador de Loteadora em rascunho, reutilizando Party canônica e sem documentos, identificadores fiscais, anexos, contratos, boletos ou financeiro.
+- [x] Preparar a fundação de cliente comprador com vínculo restrito a Party e papel temporal no mesmo contexto autorizado.
+- [x] Preparar e aplicar migration contextual de cliente comprador com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Completar a leitura minimizada de clientes compradores antes de aplicar a migration A23.
+- [x] Confirmar a aplicação manual controlada da migration A23 no Supabase, sem inserir dados de negócio.
+- [x] Restabelecer a integração Supabase e repetir a validação externa pendente sem reaplicar a migration A23.
+- [x] Implementar APIs protegidas e leitura minimizada do cliente comprador.
+- [x] Construir a superfície protegida de clientes de Loteadora com estados de bloqueio, vazio, carregando e erro.
+- [x] Empacotar e preservar o corte de clientes compradores de Loteadora após validação proporcional concluída.
 - [x] Empacotar e preservar o corte de papéis internos de Loteadora após validação proporcional concluída.

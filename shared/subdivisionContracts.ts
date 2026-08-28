@@ -30,6 +30,11 @@ export const draftSubdivisionLotInventoryStateInputSchema = subdivisionContextSc
   inventoryPhase: subdivisionLotInventoryPhaseSchema,
 });
 
+export const draftSubdivisionBuyerClientInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  partyRoleAssignmentId: z.string().uuid(),
+});
+
 export const draftSubdivisionDevelopmentInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
   internalReference: z.string().trim().toUpperCase().regex(/^[A-Z][A-Z0-9_]{2,79}$/),
@@ -41,3 +46,4 @@ export type DraftSubdivisionDevelopmentInput = z.infer<typeof draftSubdivisionDe
 export type DraftSubdivisionBlockInput = z.infer<typeof draftSubdivisionBlockInputSchema>;
 export type DraftSubdivisionLotInput = z.infer<typeof draftSubdivisionLotInputSchema>;
 export type DraftSubdivisionLotInventoryStateInput = z.infer<typeof draftSubdivisionLotInventoryStateInputSchema>;
+export type DraftSubdivisionBuyerClientInput = z.infer<typeof draftSubdivisionBuyerClientInputSchema>;
