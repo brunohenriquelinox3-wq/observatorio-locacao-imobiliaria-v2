@@ -38,6 +38,22 @@ describe("Supabase identity bridge", () => {
     });
   });
 
+  it("uses the most recent TOTP event even when AMR includes password events", async () => {
+    const client = {
+      auth: { getUser: vi.fn().mockResolvedValue({ data: { user: { id: subjectId, email_confirmed_at: "2026-08-01T00:00:00.000Z" } }, error: null }) },
+    } as never;
+    const token = tokenWith({
+      sub: subjectId,
+      aal: "aal2",
+      amr: [
+        { method: "password", timestamp: Math.floor(now.getTime() / 1_000) },
+        { method: "totp", timestamp: Math.floor(now.getTime() / 1_000) - 30 },
+      ],
+    });
+
+    await expect(attestSupabaseMfa(token, client, now)).resolves.toMatchObject({ subjectId, method: "totp" });
+  });
+
   it("fails closed when AAL, MFA recency, subject match or verified recovery is missing", async () => {
     const client = {
       auth: { getUser: vi.fn().mockResolvedValue({ data: { user: { id: subjectId, email_confirmed_at: null } }, error: null }) },

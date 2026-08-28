@@ -299,11 +299,18 @@ export default function PlatformAdmin() {
     try {
       const { data: challenge, error: challengeError } = await client.auth.mfa.challenge({ factorId: mfaFactorId });
       if (challengeError) throw challengeError;
-      const { error } = await client.auth.mfa.verify({ factorId: mfaFactorId, challengeId: challenge.id, code: mfaCode.trim() });
+      const { data: verifiedSession, error } = await client.auth.mfa.verify({ factorId: mfaFactorId, challengeId: challenge.id, code: mfaCode.trim() });
       if (error) throw error;
+      if (!verifiedSession?.access_token || !verifiedSession.refresh_token) throw new Error("MFA_SESSION_REFRESH_REQUIRED");
+      const { error: setSessionError } = await client.auth.setSession({
+        access_token: verifiedSession.access_token,
+        refresh_token: verifiedSession.refresh_token,
+      });
+      if (setSessionError) throw setSessionError;
       setMfaCode("");
       setMfaVerified(true);
       setMfaQrCode(null);
+      await Promise.all([identityQuery.refetch(), commandStatusQuery.refetch()]);
       toast.success("MFA verificado", { description: "A sessão foi reforçada, mas ativação e alçadas continuam sujeitas à política do servidor." });
     } catch {
       toast.error("Código MFA não confirmado", { description: "Tente um novo código do autenticador. Nenhuma alçada foi modificada." });

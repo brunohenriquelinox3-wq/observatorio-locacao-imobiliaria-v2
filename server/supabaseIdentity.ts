@@ -57,7 +57,10 @@ export async function attestSupabaseMfa(
   const payload = readJwtPayload(accessToken);
   if (!payload || payload.aal !== "aal2" || typeof payload.sub !== "string" || !Array.isArray(payload.amr)) return null;
 
-  const mostRecentMethod = payload.amr[0] as JwtAmrEntry | undefined;
+  const mostRecentMethod = payload.amr
+    .map((entry) => entry as JwtAmrEntry)
+    .filter((entry) => entry.method === "totp" && typeof entry.timestamp === "number")
+    .reduce<JwtAmrEntry | undefined>((latest, entry) => !latest || Number(entry.timestamp) > Number(latest.timestamp) ? entry : latest, undefined);
   const timestamp = typeof mostRecentMethod?.timestamp === "number" ? mostRecentMethod.timestamp : NaN;
   const verifiedAt = new Date(timestamp * 1_000);
   const ageMs = now.getTime() - verifiedAt.getTime();

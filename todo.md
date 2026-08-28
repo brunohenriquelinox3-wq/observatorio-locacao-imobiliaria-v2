@@ -958,3 +958,10 @@
 - [x] Definir elegibilidade inicial que não dependa de papel administrativo prévio e não conceda alçada automaticamente.
 - [x] Implementar o gate server-side e a projeção visual de preparação de bootstrap com negação segura.
 - [x] Validar com fixtures sintéticas, empacotar e preservar a correção sem executar bootstrap real.
+
+## Identidade administrativa: divergência de atestação MFA no bootstrap
+
+- [x] Examinar a recusa server-side após MFA verificado visualmente, sem reutilizar senha, código, token ou link real.
+- [x] Corrigir a propagação de sessão ou a atestação para exigir MFA TOTP real no servidor, sem rebaixar o gate.
+- [x] Validar com fixtures sintéticas a negação sem token, com AAL insuficiente e com subject divergente.
+- [x] Empacotar e preservar a correção sem executar bootstrap real.
