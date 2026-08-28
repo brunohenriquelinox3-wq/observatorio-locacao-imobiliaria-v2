@@ -666,3 +666,12 @@
 - [x] Construir a superfície inicial de contexto e cadastro de partes com estados vazio, carregando, erro e bloqueio.
 - [x] Validar proporcionalmente isolamento, entrada, idempotência, autorização, acessibilidade, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o núcleo canônico.
+
+## Criação do CRM: núcleo de ativos urbanos
+
+- [x] Consolidar contrato de ativo, titularidade, gestão e disponibilidade separada por módulo, sem endereço preciso ou dados reais.
+- [x] Preparar e aplicar migration de ativos e relações contextuais com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas de rascunho e leitura contextual de ativos sem acesso direto do navegador às tabelas.
+- [x] Construir a superfície inicial de ativos e relações permitidas com estados vazio, carregando, erro e bloqueio.
+- [x] Validar proporcionalmente isolamento, estados, entrada, idempotência, autorização, acessibilidade, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o núcleo de ativos urbanos.

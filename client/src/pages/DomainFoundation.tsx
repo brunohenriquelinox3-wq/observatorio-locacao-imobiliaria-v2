@@ -2,7 +2,7 @@ import DashboardLayout, { type DashboardNavigationItem } from "@/components/Dash
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { trpc } from "@/lib/trpc";
-import { Building2, CircleAlert, Compass, Layers3, ShieldCheck, UserRoundPlus, UsersRound } from "lucide-react";
+import { Building2, CircleAlert, Compass, House, Layers3, ShieldCheck, UserRoundPlus, UsersRound } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../domain-foundation.css";
@@ -10,6 +10,7 @@ import "../domain-foundation.css";
 const navigationItems: DashboardNavigationItem[] = [
   { icon: Compass, label: "Central de plataforma", path: "/administracao" },
   { icon: UsersRound, label: "Núcleo de cadastros", path: "/cadastro-base" },
+  { icon: House, label: "Ativos urbanos", path: "/ativos-urbanos" },
 ];
 
 const moduleLabels = {

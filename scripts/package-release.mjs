@@ -5,7 +5,12 @@ import path from "node:path";
 
 const execFileAsync = promisify(execFile);
 const root = process.cwd();
-const releaseLabel = process.env.RELEASE_LABEL ?? "fundacao-a0";
+const tagArgumentIndex = process.argv.indexOf("--tag");
+const requestedReleaseLabel = tagArgumentIndex >= 0 ? process.argv[tagArgumentIndex + 1] : process.env.RELEASE_LABEL ?? "fundacao-a0";
+if (!requestedReleaseLabel || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(requestedReleaseLabel)) {
+  throw new Error("RELEASE_LABEL_INVALID");
+}
+const releaseLabel = requestedReleaseLabel;
 const releaseName = `crm-imobiliario-${releaseLabel}`;
 const outputDir = path.resolve("/home/ubuntu/Downloads", "crm-imobiliario-entregas");
 const sourceDirectory = path.join(outputDir, `${releaseName}-codigo-fonte`);
