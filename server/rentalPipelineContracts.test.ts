@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { draftRentalAgendaInputSchema, draftRentalIntakeInputSchema, draftRentalManagementScopeInputSchema, draftRentalTenantSearchProfileInputSchema, rentalIntakeStageInputSchema, rentalManagementAssetLinkInputSchema } from "../shared/rentalPipelineContracts";
+import { draftRentalAgendaClassificationInputSchema, draftRentalAgendaInputSchema, draftRentalIntakeInputSchema, draftRentalManagementScopeInputSchema, draftRentalTenantSearchProfileInputSchema, rentalIntakeStageInputSchema, rentalManagementAssetLinkInputSchema } from "../shared/rentalPipelineContracts";
 
 const organizationId = "550e8400-e29b-41d4-a716-446655440000";
 const partyId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const intakeId = "7ba7b810-9dad-11d1-80b4-00c04fd430c8";
+const agendaId = "8ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const correlationId = "8ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const assetId = "9ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const context = { organizationId, module: "locacao" as const, purposeCode: "CADASTRO_INICIAL", correlationId };
@@ -36,5 +37,11 @@ describe("rental pipeline contracts", () => {
     expect(draftRentalManagementScopeInputSchema.safeParse({ ...context, intakeId, declaredScope: "full_administration_interest", internalNoteCode: "EM_REVISAO" }).success).toBe(true);
     expect(draftRentalManagementScopeInputSchema.safeParse({ ...context, intakeId, declaredScope: "full_administration_interest", internalNoteCode: "texto livre" }).success).toBe(false);
     expect(draftRentalManagementScopeInputSchema.safeParse({ ...context, module: "vendas_urbanas", intakeId, declaredScope: "undecided" }).success).toBe(false);
+  });
+
+  it("accepts an internal agenda classification only inside the Locação context", () => {
+    expect(draftRentalAgendaClassificationInputSchema.safeParse({ ...context, correlationId, agendaId, classification: "context_preparation", internalCode: "EM_REVISAO" }).success).toBe(true);
+    expect(draftRentalAgendaClassificationInputSchema.safeParse({ ...context, correlationId, agendaId, classification: "context_preparation", internalCode: "texto livre" }).success).toBe(false);
+    expect(draftRentalAgendaClassificationInputSchema.safeParse({ ...context, module: "vendas_urbanas", correlationId, agendaId, classification: "intake_review" }).success).toBe(false);
   });
 });

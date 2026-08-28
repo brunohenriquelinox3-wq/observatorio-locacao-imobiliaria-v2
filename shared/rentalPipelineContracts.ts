@@ -8,6 +8,7 @@ export const rentalIntakeStageSchema = z.enum(["intake", "qualification", "agend
 export const rentalAgendaStateSchema = z.enum(["scheduled", "rescheduled", "cancelled", "occurred", "not_held"]);
 export const rentalSearchOccupancyTimingSchema = z.enum(["immediate", "up_to_30_days", "flexible"]);
 export const rentalManagementServiceScopeSchema = z.enum(["full_administration_interest", "tenant_search_interest", "undecided"]);
+export const rentalAgendaClassificationSchema = z.enum(["intake_review", "context_preparation", "internal_follow_up"]);
 export const urbanAssetKindSchema = z.enum(["apartment", "house", "kitnet", "commercial_unit", "urban_lot", "building", "other_urban_asset"]);
 
 export const draftRentalIntakeInputSchema = rentalOperatingContextSchema.extend({
@@ -61,9 +62,17 @@ export const draftRentalManagementScopeInputSchema = rentalOperatingContextSchem
   internalNoteCode: z.string().trim().toUpperCase().regex(/^[A-Z][A-Z0-9_]{2,79}$/).optional(),
 });
 
+export const draftRentalAgendaClassificationInputSchema = rentalOperatingContextSchema.extend({
+  correlationId: z.string().uuid(),
+  agendaId: z.string().uuid(),
+  classification: rentalAgendaClassificationSchema,
+  internalCode: z.string().trim().toUpperCase().regex(/^[A-Z][A-Z0-9_]{2,79}$/).optional(),
+});
+
 export type DraftRentalIntakeInput = z.infer<typeof draftRentalIntakeInputSchema>;
 export type RentalIntakeStageInput = z.infer<typeof rentalIntakeStageInputSchema>;
 export type DraftRentalAgendaInput = z.infer<typeof draftRentalAgendaInputSchema>;
 export type RentalManagementAssetLinkInput = z.infer<typeof rentalManagementAssetLinkInputSchema>;
 export type DraftRentalTenantSearchProfileInput = z.infer<typeof draftRentalTenantSearchProfileInputSchema>;
 export type DraftRentalManagementScopeInput = z.infer<typeof draftRentalManagementScopeInputSchema>;
+export type DraftRentalAgendaClassificationInput = z.infer<typeof draftRentalAgendaClassificationInputSchema>;

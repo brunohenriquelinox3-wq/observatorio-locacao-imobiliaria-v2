@@ -2,7 +2,7 @@ import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { trpc } from "@/lib/trpc";
-import { Building2, CalendarClock, CircleAlert, ClipboardCheck, Compass, FileCheck2, House, Link2, Search, ShieldCheck, UsersRound, Workflow } from "lucide-react";
+import { Building2, CalendarClock, CircleAlert, ClipboardCheck, Compass, FileCheck2, House, Link2, Search, ShieldCheck, Tag, UsersRound, Workflow } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../rental-pipeline.css";
@@ -58,6 +58,12 @@ const managementScopes = {
   undecided: "Escopo ainda não definido",
 } as const;
 
+const agendaClassifications = {
+  intake_review: "Revisão da entrada",
+  context_preparation: "Preparação de contexto",
+  internal_follow_up: "Acompanhamento interno",
+} as const;
+
 const rentalAccessGate: DashboardAccessGate = {
   eyebrow: "LOCAÇÃO RESTRITA · CONTEXTO ANTES DE LEITURA",
   title: "Acesse a triagem de Locação somente dentro do seu contexto autorizado.",
@@ -99,6 +105,9 @@ export default function RentalPipeline() {
   const [managementScopeIntakeId, setManagementScopeIntakeId] = useState("");
   const [declaredScope, setDeclaredScope] = useState<keyof typeof managementScopes>("undecided");
   const [managementNoteCode, setManagementNoteCode] = useState("");
+  const [classificationAgendaId, setClassificationAgendaId] = useState("");
+  const [agendaClassification, setAgendaClassification] = useState<keyof typeof agendaClassifications>("intake_review");
+  const [agendaInternalCode, setAgendaInternalCode] = useState("");
 
   const context = useMemo(() => ({ organizationId: organizationId.trim(), module: "locacao" as const, purposeCode: purposeCode.trim().toUpperCase() }), [organizationId, purposeCode]);
   const isContextReady = isDomainContextReady(context);
@@ -107,6 +116,7 @@ export default function RentalPipeline() {
   const managementAssetLinksQuery = trpc.rentalPipeline.listDraftManagementAssetLinks.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const tenantSearchProfilesQuery = trpc.rentalPipeline.listDraftTenantSearchProfiles.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const managementDeclaredScopesQuery = trpc.rentalPipeline.listDraftManagementDeclaredScopes.useQuery(context, { enabled: isWorkspaceReady, retry: false });
+  const agendaClassificationsQuery = trpc.rentalPipeline.listDraftAgendaClassifications.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const utils = trpc.useUtils();
 
   const createMutation = trpc.rentalPipeline.createDraftIntake.useMutation({
@@ -157,6 +167,14 @@ export default function RentalPipeline() {
     },
     onError() { toast.error("Escopo não registrado", { description: "O servidor exige uma entrada de administração e contexto autorizado, sem revelar registros externos." }); },
   });
+  const agendaClassificationMutation = trpc.rentalPipeline.upsertDraftAgendaClassification.useMutation({
+    onSuccess() {
+      setClassificationAgendaId(""); setAgendaClassification("intake_review"); setAgendaInternalCode("");
+      toast.success("Classificação interna registrada", { description: "A classificação não dispara comunicação, não confirma visita e não integra calendário externo." });
+      void utils.rentalPipeline.listDraftAgendaClassifications.invalidate(context);
+    },
+    onError() { toast.error("Classificação não registrada", { description: "O servidor exige agenda autorizada em rascunho, contexto válido e finalidade codificada." }); },
+  });
 
   function createIntake(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -189,6 +207,10 @@ export default function RentalPipeline() {
     event.preventDefault();
     managementDeclaredScopeMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: managementScopeIntakeId.trim(), declaredScope, internalNoteCode: managementNoteCode.trim() || undefined });
   }
+  function upsertAgendaClassification(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    agendaClassificationMutation.mutate({ ...context, correlationId: crypto.randomUUID(), agendaId: classificationAgendaId.trim(), classification: agendaClassification, internalCode: agendaInternalCode.trim() || undefined });
+  }
 
   return (
     <DashboardLayout navigationItems={navigationItems} navigationTitle="Núcleo CRM" accessGate={rentalAccessGate}>
@@ -197,7 +219,7 @@ export default function RentalPipeline() {
           <div>
             <p className="rental-pipeline-eyebrow">LOCAÇÃO · ENTRADA ANTES DE QUALQUER CONTRATAÇÃO</p>
             <h1>Separe o interesse de administrar do interesse de alugar.</h1>
-            <p>Este primeiro corte registra apenas uma Party existente, a origem e a jornada declarada. A interface mantém contexto, qualificação e agenda interna explícitos para reduzir ambiguidade operacional.</p>
+            <p>Este primeiro corte registra uma Party existente, origem, jornada, preferências codificadas, vínculos internos e agenda classificada. A interface mantém contexto e qualificação explícitos para reduzir ambiguidade operacional.</p>
           </div>
           <div className="rental-pipeline-hero__rule"><ShieldCheck size={18} /><span>Rascunho contextual<br /><b>sem contrato, garantia ou financeiro</b></span></div>
         </header>
@@ -298,6 +320,26 @@ export default function RentalPipeline() {
           {isWorkspaceReady && managementDeclaredScopesQuery.isError && <div className="rental-pipeline-empty is-error"><CircleAlert size={18} /><p>A leitura dos escopos não foi liberada. Revise identidade, membership, grant, vigência e contexto sem tentar inferir entradas externas.</p></div>}
           {isWorkspaceReady && managementDeclaredScopesQuery.data?.length === 0 && <div className="rental-pipeline-empty"><FileCheck2 size={18} /><p>Nenhum escopo declarado foi devolvido para este contexto. A resposta não revela outras entradas ou intenções.</p></div>}
           {isWorkspaceReady && managementDeclaredScopesQuery.data && managementDeclaredScopesQuery.data.length > 0 && <div className="rental-pipeline-list__rows">{managementDeclaredScopesQuery.data.map((scope) => <article key={scope.scopeId}><span>Escopo de administração</span><h3>{managementScopes[scope.declaredScope]}</h3><p><b>{scope.internalNotePresent ? "Código interno informado" : "Sem código interno"}</b> · atualizado em {new Date(scope.updatedAt).toLocaleString("pt-BR")}</p><code>{scope.intakeId} · {scope.scopeId}</code></article>)}</div>}
+        </section>
+
+        <section className="rental-pipeline-scope" aria-labelledby="rental-agenda-classification-title">
+          <div className="rental-pipeline-heading"><div><p className="rental-pipeline-eyebrow">02D · AGENDA INTERNA</p><h2 id="rental-agenda-classification-title">Classifique a finalidade, não uma ação externa.</h2></div><p>A agenda só pode receber uma finalidade interna enquanto ela e sua entrada estiverem em rascunho. Não há convite, mensagem, confirmação de visita ou sincronização de calendário.</p></div>
+          <div className="rental-pipeline-scope__grid">
+            <form className="rental-pipeline-card rental-pipeline-scope__card" onSubmit={upsertAgendaClassification}>
+              <div className="rental-pipeline-card__title"><Tag size={19} /><h3>Finalidade interna</h3></div><p>Use uma agenda agendada ou reagendada já criada no mesmo contexto. O código opcional é estruturado e não aceita narrativa livre.</p>
+              <label htmlFor="rental-classification-agenda">ID da agenda interna</label><input id="rental-classification-agenda" value={classificationAgendaId} onChange={(event) => setClassificationAgendaId(event.target.value)} placeholder="UUID da agenda em rascunho" disabled={!isWorkspaceReady} required />
+              <label htmlFor="rental-agenda-classification">Finalidade</label><select id="rental-agenda-classification" value={agendaClassification} onChange={(event) => setAgendaClassification(event.target.value as keyof typeof agendaClassifications)} disabled={!isWorkspaceReady}>{Object.entries(agendaClassifications).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
+              <label htmlFor="rental-agenda-internal-code">Código interno opcional</label><input id="rental-agenda-internal-code" value={agendaInternalCode} onChange={(event) => setAgendaInternalCode(event.target.value.toUpperCase())} placeholder="EX.: EM_REVISAO" disabled={!isWorkspaceReady} minLength={3} maxLength={80} />
+              <button type="submit" disabled={!isWorkspaceReady || agendaClassificationMutation.isPending}>{agendaClassificationMutation.isPending ? "Classificando agenda" : "Registrar finalidade interna"}</button>
+            </form>
+            <aside className="rental-pipeline-scope__limits" aria-label="Limites da classificação de agenda"><ShieldCheck size={19} /><div><h3>Sem confirmação externa</h3><p>A classificação não cria contato, não compromete participante, não altera data, não registra presença, não cria contrato e não gera qualquer efeito financeiro.</p></div></aside>
+          </div>
+          {!isContextReady && <div className="rental-pipeline-empty"><CircleAlert size={18} /><p>Sem contexto não há consulta nem indicação de classificação de agenda.</p></div>}
+          {isContextReady && !isAuthenticated && <div className="rental-pipeline-empty"><ShieldCheck size={18} /><p>A classificação e a leitura permanecem bloqueadas até haver sessão autenticada.</p></div>}
+          {isWorkspaceReady && agendaClassificationsQuery.isLoading && <div className="rental-pipeline-empty"><span className="rental-pipeline-spinner" aria-hidden="true" /><p>Confirmando o contexto antes de solicitar a leitura minimizada das classificações.</p></div>}
+          {isWorkspaceReady && agendaClassificationsQuery.isError && <div className="rental-pipeline-empty is-error"><CircleAlert size={18} /><p>A leitura das classificações não foi liberada. Revise identidade, membership, grant, vigência e contexto sem tentar inferir agendas externas.</p></div>}
+          {isWorkspaceReady && agendaClassificationsQuery.data?.length === 0 && <div className="rental-pipeline-empty"><Tag size={18} /><p>Nenhuma classificação foi devolvida para este contexto. A resposta não revela outras agendas ou finalidades.</p></div>}
+          {isWorkspaceReady && agendaClassificationsQuery.data && agendaClassificationsQuery.data.length > 0 && <div className="rental-pipeline-list__rows">{agendaClassificationsQuery.data.map((item) => <article key={item.classificationId}><span>Agenda interna</span><h3>{agendaClassifications[item.classification]}</h3><p><b>{item.internalCodePresent ? "Código interno informado" : "Sem código interno"}</b> · atualizado em {new Date(item.updatedAt).toLocaleString("pt-BR")}</p><code>{item.agendaId} · {item.classificationId}</code></article>)}</div>}
         </section>
 
         <section className="rental-pipeline-list" aria-labelledby="rental-list-title">

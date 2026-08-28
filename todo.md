@@ -739,3 +739,12 @@
 - [x] Estender a superfície de Vendas Urbanas com perfil de busca e estados vazio, carregando, erro e bloqueio.
 - [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
 - [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de perfil de busca de Vendas Urbanas.
+
+## Criação do CRM: Locação — classificação interna de agenda
+
+- [x] Consolidar o contrato de classificação de finalidade interna para agenda de Locação em rascunho, sem comunicação, visita confirmada, calendário externo, contrato, garantia ou financeiro.
+- [x] Preparar e aplicar migration de classificação contextual de agenda com RLS, grants mínimos, funções server-side e trilha redigida.
+- [x] Implementar APIs protegidas para registrar e ler a classificação minimizada, sem acesso direto do navegador às tabelas.
+- [x] Estender a superfície de Locação com classificação de agenda e estados vazio, carregando, erro e bloqueio.
+- [x] Validar proporcionalmente escopo, contexto, isolamento, idempotência, acessibilidade, tipos e build.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o corte de classificação interna de agenda.

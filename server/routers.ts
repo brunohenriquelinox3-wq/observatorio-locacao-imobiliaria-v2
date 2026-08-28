@@ -64,6 +64,7 @@ import {
   upsertDraftUrbanLeadSearchProfile,
 } from "./urbanLeadSearchProfile";
 import {
+  draftRentalAgendaClassificationInputSchema,
   draftRentalAgendaInputSchema,
   draftRentalIntakeInputSchema,
   draftRentalManagementScopeInputSchema,
@@ -90,6 +91,10 @@ import {
   listDraftRentalManagementDeclaredScopes,
   upsertDraftRentalManagementDeclaredScope,
 } from "./rentalManagementDeclaredScope";
+import {
+  listDraftRentalAgendaClassifications,
+  upsertDraftRentalAgendaClassification,
+} from "./rentalAgendaClassification";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -224,6 +229,12 @@ export const appRouter = router({
     upsertDraftManagementDeclaredScope: protectedProcedure
       .input(draftRentalManagementScopeInputSchema)
       .mutation(({ ctx, input }) => upsertDraftRentalManagementDeclaredScope(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftAgendaClassifications: protectedProcedure
+      .input(rentalOperatingContextSchema)
+      .query(({ ctx, input }) => listDraftRentalAgendaClassifications(ctx.supabaseSubjectId ?? undefined, input)),
+    upsertDraftAgendaClassification: protectedProcedure
+      .input(draftRentalAgendaClassificationInputSchema)
+      .mutation(({ ctx, input }) => upsertDraftRentalAgendaClassification(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   // TODO: add feature routers here, e.g.
