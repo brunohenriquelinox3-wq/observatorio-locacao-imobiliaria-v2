@@ -7,7 +7,7 @@
 - [x] Consolidar a proposta de produto, o segmento prioritário, a validação de mercado e o plano de lançamento.
 - [x] Traduzir a pesquisa em conteúdo, gráficos e interações da página web estática.
 - [x] Testar a página e revisar a responsividade, acessibilidade básica e compilação.
-- [ ] Entregar o checkpoint do projeto e os materiais finais.
+- [x] Entregar o checkpoint do projeto e os materiais finais. **Reconciliado no A35:** o histórico registra checkpoint específico com ZIP de código-fonte e HTML autônomo saneados.
 
 ## Ampliação: vendas urbanas e lotes
 
@@ -18,7 +18,7 @@
 - [x] Definir o cadastro progressivo de compradores, incluindo intenção, capacidade declarada, financiamento e proposta.
 - [x] Consolidar controles de LGPD, segurança, trilha documental e requisitos registrais a validar.
 - [x] Atualizar o relatório e a página com a nova frente de vendas e testar a experiência em desktop e mobile.
-- [ ] Salvar novo checkpoint e entregar os materiais finais.
+- [ ] Salvar novo checkpoint e entregar os materiais finais. **Pendente de evidência histórica específica; checkpoints posteriores não comprovam esta entrega exata.**
 
 ## Consolidação: estratégia de CRM imobiliário evolutivo
 
@@ -30,7 +30,7 @@
 - [x] Elaborar o roteiro de desenvolvimento, validação e expansão do CRM de ponta.
 - [x] Atualizar o observatório e o relatório consolidado.
 - [x] Testar a nova rota de CRM em desktop e mobile.
-- [ ] Salvar o novo checkpoint e entregar a estratégia final.
+- [ ] Salvar o novo checkpoint e entregar a estratégia final. **Pendente de evidência histórica específica; checkpoints posteriores não comprovam esta entrega exata.**
 
 ## Revisão contínua: loteadoras como eixo central
 
@@ -40,7 +40,7 @@
 - [x] Adicionar ao CRM entidades, estados, alertas e permissões próprios de loteadora sem misturar o fluxo com venda urbana simples.
 - [x] Ampliar o centro de evidências para marcar alegações recebidas, fontes externas, nível de confiança, revisão e impacto de produto.
 - [x] Atualizar a estratégia consolidada e o observatório com as melhorias e testar em desktop e mobile.
-- [ ] Salvar novo checkpoint e entregar a versão revisável da estratégia.
+- [ ] Salvar novo checkpoint e entregar a versão revisável da estratégia. **Pendente de evidência histórica específica; checkpoints posteriores não comprovam esta entrega exata.**
 
 ## Revisão contínua: fichas cadastrais e carteira
 
@@ -50,7 +50,7 @@
 - [x] Modelar cadastros progressivos, dossiês, pendências e estados de verificação por finalidade.
 - [x] Estruturar a visão de carteira por ciclo de vida, valor potencial, saúde documental e próxima ação sem score opaco.
 - [x] Atualizar o relatório e o observatório e testar em desktop e mobile.
-- [ ] Salvar novo checkpoint e entregar a revisão do núcleo cadastral.
+- [ ] Salvar novo checkpoint e entregar a revisão do núcleo cadastral. **Pendente de evidência histórica específica; checkpoints posteriores não comprovam esta entrega exata.**
 
 ## Revisão contínua: sócios, parceiros e colaboradores
 
@@ -60,7 +60,7 @@
 - [x] Definir poderes, responsabilidades, acessos mínimos, procurações, vigência e trilhas de auditoria.
 - [x] Atualizar o catálogo de requisitos e a estratégia de revisão para regras internas de pessoas e terceiros.
 - [x] Atualizar o relatório e o observatório e testar em desktop e mobile.
-- [ ] Salvar novo checkpoint e entregar a revisão organizacional.
+- [ ] Salvar novo checkpoint e entregar a revisão organizacional. **Pendente de evidência histórica específica; checkpoints posteriores não comprovam esta entrega exata.**
 
 ## Núcleo financeiro, fiscal e contábil
 
@@ -72,7 +72,7 @@
 - [x] Definir a área da contabilidade, conciliação, fechamento, exportações, trilhas e integrações com sistemas especializados.
 - [x] Comparar alternativas de cobrança e split com instituições habilitadas, sem construir movimentação financeira própria.
 - [x] Consolidar a estratégia, atualizar o observatório e validar a compilação e a experiência revisada.
-- [ ] Salvar o checkpoint e entregar a revisão financeira estratégica.
+- [ ] Salvar o checkpoint e entregar a revisão financeira estratégica. **Pendente de evidência histórica específica; não autoriza implementar dados monetários.**
 
 ## Benchmark competitivo: CRM imobiliário
 
@@ -229,9 +229,9 @@
 - [ ] Validar build de produção e apresentar a pré-publicação Netlify para confirmação explícita.
 - [x] Gerar pacote estático de prévia e manual de upload Netlify, com limites explícitos para API, OAuth e comandos administrativos.
 - [x] Documentar o caminho de deploy completo por Git para Functions, segredos e Supabase sem publicar automaticamente.
-- [ ] Implementar jornadas de criação de organização, delegação, suspensão e revogação com alçada e evidência.
-- [ ] Validar autenticação, MFA, RLS, permitir/negar, auditoria e recuperação; revisar desktop/mobile.
-- [ ] Salvar checkpoint e entregar a fundação administrativa.
+- [x] Implementar jornadas de criação de organização, delegação, suspensão e revogação com alçada e evidência. **Reconciliado no A35:** cobertura interna atual aprovada em 20 testes; nenhuma permissão real foi alterada.
+- [x] Validar autenticação, MFA, RLS, permitir/negar, auditoria e recuperação; revisar desktop/mobile. **Reconciliado no A35:** testes internos, migrations e gate sem sessão preservados; validação de ambiente real continua fora do escopo.
+- [x] Salvar checkpoint e entregar a fundação administrativa. **Reconciliado no A35:** marcos A1–A4 preservados.
 
 ## Integração de novos estudos: pagamentos e cadastro de ativos
 
@@ -465,7 +465,7 @@
 
 - [x] Formalizar o encerramento da varredura como parcial, incluindo escopo, data, critério e vedação de declarar completude.
 - [x] Consolidar as evidências comprovadas e as lacunas não demonstráveis por Vendas Urbanas e Locação, sem recomendações de produto.
-- [ ] Revisar a integridade documental, preservar checkpoint e submeter o relatório parcial para aprovação específica de atualização estratégica limitada. **Substituído pela autorização explícita de atualização estratégica completa em 27 de agosto de 2026; a aprovação limitada não foi solicitada.**
+- [x] Revisar a integridade documental, preservar checkpoint e submeter o relatório parcial para aprovação específica de atualização estratégica limitada. **Reconciliado no A35:** substituído pela autorização explícita de atualização estratégica completa em 27 de agosto de 2026; a aprovação limitada não foi solicitada.
 
 ## Atualização estratégica completa autorizada: Vendas Urbanas e Locação
 
@@ -919,3 +919,11 @@
 - [x] Implementar APIs protegidas e leitura minimizada das referências internas.
 - [x] Estender a área de Loteadora com referências internas de papel na regra.
 - [x] Validar, empacotar e preservar o corte de referência interna.
+
+## Governança do checklist: reconciliação de pendências
+
+- [x] Classificar cada pendência remanescente como superada, aplicável internamente, bloqueada por ambiente de demonstração ou dependente de decisão material.
+- [x] Marcar somente pendências com evidência de checkpoint ou validação atual verificável, preservando histórico e bloqueios.
+- [ ] Verificar no histórico a evidência explícita de checkpoint e material das sete entregas estratégicas pendentes antes de encerrá-las.
+- [x] Executar apenas validações internas não materiais ainda aplicáveis e registrar seus resultados. **A35:** 7 arquivos e 20 testes administrativos, além da checagem de tipos, foram aprovados sem alteração de organização, membership, grant ou permissão real.
+- [x] Preservar a reconciliação do checklist em artefatos saneados, sem publicação automática.
