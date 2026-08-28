@@ -692,5 +692,5 @@
 - [x] Implementar APIs protegidas para criar e ler rascunhos de Locação sem acesso direto do navegador às tabelas.
 - [x] Construir a superfície de qualificação e agenda de Locação com estados vazio, carregando, erro e bloqueio.
 - [x] Validar proporcionalmente escopo, contexto, isolamento, transições, idempotência, acessibilidade, tipos e build.
-- [ ] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o primeiro corte de Locação.
+- [x] Gerar ZIP e versão HTML, salvar checkpoint e apresentar o primeiro corte de Locação.
 - [x] Ajustar o gate sem sessão da rota de Locação para manter a separação explícita da central de Super Admin.
