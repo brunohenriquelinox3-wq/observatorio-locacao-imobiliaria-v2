@@ -928,3 +928,4 @@
 - [x] Documentar a vinculação entre cada entrega histórica e sua evidência encontrada, mantendo abertas as que não tiverem material específico comprovado.
 - [x] Executar apenas validações internas não materiais ainda aplicáveis e registrar seus resultados. **A35:** 7 arquivos e 20 testes administrativos, além da checagem de tipos, foram aprovados sem alteração de organização, membership, grant ou permissão real.
 - [x] Preservar a reconciliação do checklist em artefatos saneados, sem publicação automática.
+- [x] Registrar o resultado da verificação passiva de disponibilidade do ambiente de demonstração, sem tentativa de login ou ação material.

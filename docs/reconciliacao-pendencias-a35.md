@@ -36,3 +36,7 @@ O histórico também contém uma evidência direta para o marco inicial do CRM: 
 | Revisão financeira estratégica | Checkpoints de estudo financeiro e fiscal | Mantida pendente: não foi localizada prova explícita do material de entrega correspondente; a Opção 1 permanece sem dados monetários. |
 
 Essa vinculação evita que uma atualização posterior apague a necessidade de prova individual. Os seis itens permanecem no checklist até que o material histórico específico possa ser localizado ou seja substituído por uma decisão explícita e documentada.
+
+## Verificação passiva do ambiente de demonstração
+
+Em 28 de agosto de 2026, a verificação passiva da referência externa abriu apenas a tela de autenticação. Não houve sessão disponível, tentativa de login, uso de credenciais, criação, alteração, exportação, comunicação ou qualquer operação material. As auditorias de Vendas Urbanas e Locação que dependem de ambiente de demonstração seguem bloqueadas até que um contexto apropriado seja disponibilizado pelo usuário.
