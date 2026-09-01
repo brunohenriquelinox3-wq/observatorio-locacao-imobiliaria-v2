@@ -1,6 +1,15 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "@/components/ui/command";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -27,9 +36,10 @@ import { useIsMobile } from "@/hooks/useMobile";
 import { shouldCloseMobileNavigationAfterRouteChange } from "@/lib/dashboardNavigationBehavior";
 import { dashboardMainContentId, dashboardSkipLinkLabel } from "@/lib/dashboardAccessibility";
 import { groupDashboardNavigation } from "@/lib/dashboardNavigationGroups";
+import { isNavigationPaletteShortcut } from "@/lib/dashboardNavigationPalette";
 import { getDashboardProfilePresentation } from "@/lib/dashboardProfilePresentation";
 import { getSidebarWidthAfterKeyboardCommand } from "@/lib/dashboardSidebarResize";
-import { ArrowUpRight, Compass, LayoutDashboard, LockKeyhole, LogOut, PanelLeft, Users, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, Compass, LayoutDashboard, LockKeyhole, LogOut, PanelLeft, Search, Users, type LucideIcon } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -179,6 +189,7 @@ function DashboardLayoutContent({
   const { state, toggleSidebar, setOpenMobile } = useSidebar();
   const isCollapsed = state === "collapsed";
   const [isResizing, setIsResizing] = useState(false);
+  const [isNavigationPaletteOpen, setIsNavigationPaletteOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeMenuItem = navigationItems.find(item => item.path === location);
   const navigationGroups = groupDashboardNavigation(navigationItems);
@@ -190,6 +201,11 @@ function DashboardLayoutContent({
     if (shouldCloseMobileNavigationAfterRouteChange(isMobile)) {
       setOpenMobile(false);
     }
+  };
+
+  const navigateFromPalette = (path: string) => {
+    setIsNavigationPaletteOpen(false);
+    navigateTo(path);
   };
 
   const handleResizeKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -244,11 +260,50 @@ function DashboardLayoutContent({
     };
   }, [isResizing, setSidebarWidth]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!isNavigationPaletteShortcut(event)) return;
+      event.preventDefault();
+      setIsNavigationPaletteOpen(open => !open);
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <>
       <a href={`#${dashboardMainContentId}`} className="sr-only fixed left-4 top-4 z-[100] rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-lg focus:not-sr-only focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
         {dashboardSkipLinkLabel}
       </a>
+      <CommandDialog
+        open={isNavigationPaletteOpen}
+        onOpenChange={setIsNavigationPaletteOpen}
+        title="Ir para"
+        description="Navegue somente entre as áreas disponíveis nesta sessão."
+      >
+        <CommandInput placeholder="Buscar uma área disponível..." />
+        <CommandList>
+          <CommandEmpty>Nenhuma área disponível encontrada.</CommandEmpty>
+          {navigationGroups.map((group, groupIndex) => (
+            <div key={group.id}>
+              {groupIndex > 0 ? <CommandSeparator /> : null}
+              <CommandGroup heading={group.label}>
+                {group.items.map(item => (
+                  <CommandItem
+                    key={item.path}
+                    value={`${group.label} ${item.label}`}
+                    onSelect={() => navigateFromPalette(item.path)}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    <span>{item.label}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </div>
+          ))}
+        </CommandList>
+      </CommandDialog>
       <div className="relative" ref={sidebarRef}>
         <Sidebar
           collapsible="icon"
@@ -256,7 +311,7 @@ function DashboardLayoutContent({
           disableTransition={isResizing}
         >
           <SidebarHeader className="h-16 justify-center">
-            <div className="flex items-center gap-3 px-2 transition-all w-full">
+            <div className="flex w-full items-center gap-3 px-2 transition-all">
               <button
                 onClick={toggleSidebar}
                 className="h-8 w-8 flex items-center justify-center hover:bg-accent rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0"
@@ -271,6 +326,16 @@ function DashboardLayoutContent({
                   </span>
                 </div>
               ) : null}
+              <button
+                type="button"
+                onClick={() => setIsNavigationPaletteOpen(true)}
+                className="ml-auto flex h-8 items-center gap-1.5 rounded-md px-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Abrir paleta de navegação"
+                title="Abrir paleta de navegação (Control ou Command + K)"
+              >
+                <Search className="h-4 w-4" />
+                {!isCollapsed ? <span className="text-[10px] font-semibold tracking-wide">⌘K</span> : null}
+              </button>
             </div>
           </SidebarHeader>
 

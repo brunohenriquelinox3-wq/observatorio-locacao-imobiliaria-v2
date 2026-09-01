@@ -1300,3 +1300,10 @@
 - [x] Definir ajuste por teclas com limites de largura e sem alterar a interação por mouse.
 - [x] Implementar o controle sem mudar rotas, dados, sessões, guardas ou permissões.
 - [x] Validar acessibilidade, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Navegação: paleta de acesso por teclado
+
+- [x] Auditar os componentes de comando disponíveis e a navegação compartilhada.
+- [x] Criar uma paleta de navegação que liste somente itens já disponíveis na sidebar do contexto atual.
+- [x] Preservar rotas, grupos, guardas, dados e permissões, incluindo a navegação móvel.
+- [x] Validar teclado, foco, navegação, testes, tipagem, build e artefatos ZIP/HTML saneados.
