@@ -1334,3 +1334,10 @@
 - [x] Definir regra local que aceite data aberta e bloqueie apenas fim anterior ao início.
 - [x] Exibir feedback acessível e impedir somente o vínculo localmente inválido.
 - [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Cadastro de Loteamentos: validação local de Quadra
+
+- [x] Auditar o campo de número da Quadra e o contrato server-side vigente.
+- [x] Definir validação local para número inteiro entre 1 e 999, sem substituir o servidor.
+- [x] Exibir feedback acessível e impedir somente a mutação localmente inválida.
+- [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.

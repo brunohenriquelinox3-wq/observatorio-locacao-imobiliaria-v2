@@ -2,6 +2,7 @@ import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem
 import { useAuth } from "@/_core/hooks/useAuth";
 import { retainAuthorizedSelection } from "@/lib/contextSelectionReset";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
+import { validateSubdivisionBlockNumber } from "@/lib/subdivisionBlockNumberValidation";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { subdivisionOperationalValue } from "@/lib/subdivisionOperationalOverview";
 import { summarizeOpaqueCoBuyerAttachmentCoverage } from "@/lib/subdivisionCoBuyerCoverage";
@@ -75,6 +76,7 @@ export default function SubdivisionFoundation() {
   const [workingPhase, setWorkingPhase] = useState<keyof typeof workingPhases>("preliminary_reference");
   const [selectedDevelopmentId, setSelectedDevelopmentId] = useState("");
   const [blockNumber, setBlockNumber] = useState(1);
+  const [blockNumberError, setBlockNumberError] = useState("");
   const [internalRoleDevelopmentId, setInternalRoleDevelopmentId] = useState("");
   const [internalRoleId, setInternalRoleId] = useState("");
   const [buyerClientRoleId, setBuyerClientRoleId] = useState("");
@@ -105,6 +107,9 @@ export default function SubdivisionFoundation() {
   useEffect(() => {
     if (!selectedOrganizationId) setSelectedOrganizationId(initialAuthorizedSubdivisionContextId(authorizedContextsQuery.data));
   }, [selectedOrganizationId, authorizedContextsQuery.data]);
+  useEffect(() => {
+    if (blockNumberError) setBlockNumberError("");
+  }, [blockNumber]);
   const context = useMemo(() => ({ organizationId: selectedOrganizationContext?.organizationId ?? "", module: "loteadora" as const, purposeCode: selectedOrganizationContext?.purposeCode ?? "" }), [selectedOrganizationContext]);
   const isContextReady = isDomainContextReady(context);
   const isWorkspaceReady = isAuthenticated && isContextReady;
@@ -209,7 +214,13 @@ export default function SubdivisionFoundation() {
   function createBlock(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!selectedDevelopmentId) return;
-    createBlockMutation.mutate({ ...context, correlationId: crypto.randomUUID(), developmentId: selectedDevelopmentId, blockNumber });
+    const validation = validateSubdivisionBlockNumber(blockNumber);
+    if (!validation.valid) {
+      setBlockNumberError(validation.message);
+      return;
+    }
+    setBlockNumberError("");
+    createBlockMutation.mutate({ ...context, correlationId: crypto.randomUUID(), developmentId: selectedDevelopmentId, blockNumber: validation.value });
   }
 
   async function uploadPrivateAttachment(event: React.FormEvent<HTMLFormElement>) {
@@ -292,6 +303,7 @@ export default function SubdivisionFoundation() {
         <section id="subdivision-inventory" className="subdivision-foundation-workspace" aria-labelledby="subdivision-block-title">
           <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">04 · QUADRA MATRIZ</p><h2 id="subdivision-block-title">Quadra N é a matriz — os lotes continuam fora deste corte.</h2></div><p>Selecione um loteamento retornado pelo contexto e registre somente o número da Quadra. Nenhum lote, mapa, estoque, valor ou disponibilidade é criado.</p></div>
           <div className="subdivision-foundation-workspace__grid">
+            {blockNumberError && <p role="alert" className="subdivision-foundation-inline-error">{blockNumberError}</p>}
             <form className="subdivision-foundation-card" onSubmit={createBlock}><div className="subdivision-foundation-card__title"><Layers3 size={19} /><h3>Nova Quadra matriz</h3></div><p>A nomenclatura apresentada será “Quadra N”. A numeração é única no loteamento e não admite nome livre.</p><label htmlFor="subdivision-block-development">Loteamento em rascunho</label><select id="subdivision-block-development" value={selectedDevelopmentId} onChange={(event) => setSelectedDevelopmentId(event.target.value)} disabled={!isWorkspaceReady || !developmentsQuery.data?.length}><option value="">Selecione um loteamento autorizado</option>{developmentsQuery.data?.map((development) => <option value={development.developmentId} key={development.developmentId}>{development.internalReference}</option>)}</select><label htmlFor="subdivision-block-number">Número da Quadra</label><input id="subdivision-block-number" type="number" min={1} max={999} value={blockNumber} onChange={(event) => setBlockNumber(Number(event.target.value))} disabled={!isWorkspaceReady || !selectedDevelopmentId} required /><button type="submit" disabled={!isWorkspaceReady || !selectedDevelopmentId || createBlockMutation.isPending}>{createBlockMutation.isPending ? "Registrando Quadra" : "Registrar Quadra em rascunho"}</button></form>
             <aside className="subdivision-foundation-limits" aria-label="Limites do cadastro de Quadras"><Layers3 size={20} /><div><h3>Limite da matriz</h3><p>A Quadra organiza a futura relação com os lotes. O máximo de 100 lotes por Quadra será tratado somente no setor separado de Estoque/Mapa de Lotes, com regras próprias.</p></div></aside>
           </div>
