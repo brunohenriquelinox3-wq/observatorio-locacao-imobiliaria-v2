@@ -1,17 +1,22 @@
 import DashboardLayout, { type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
+import { assetOperationalValue } from "@/lib/assetOperationalOverview";
+import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { trpc } from "@/lib/trpc";
 import { Building2, CircleAlert, Compass, House, Layers3, Link2, ShieldCheck, SlidersHorizontal, UsersRound, Workflow } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../asset-foundation.css";
 
 const navigationItems: DashboardNavigationItem[] = [
   { icon: Compass, label: "Central de plataforma", path: "/administracao" },
+  { icon: ShieldCheck, label: "Painel ADM", path: "/adm" },
   { icon: UsersRound, label: "Núcleo de cadastros", path: "/cadastro-base" },
   { icon: House, label: "Ativos urbanos", path: "/ativos-urbanos" },
+  { icon: Layers3, label: "Loteadora", path: "/loteadora" },
   { icon: Workflow, label: "Vendas Urbanas", path: "/vendas-urbanas" },
+  { icon: House, label: "Locação", path: "/locacao" },
 ];
 
 const assetKinds = {
@@ -21,9 +26,8 @@ const assetKinds = {
 
 export default function AssetFoundation() {
   const { isAuthenticated } = useAuth();
-  const [organizationId, setOrganizationId] = useState("");
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState("");
   const [module, setModule] = useState<"vendas_urbanas" | "locacao">("vendas_urbanas");
-  const [purposeCode, setPurposeCode] = useState("CADASTRO_INICIAL");
   const [assetKind, setAssetKind] = useState<keyof typeof assetKinds>("apartment");
   const [referenceLabel, setReferenceLabel] = useState("");
   const [internalReference, setInternalReference] = useState("");
@@ -34,10 +38,23 @@ export default function AssetFoundation() {
   const [moduleState, setModuleState] = useState<"draft" | "preparing" | "eligible" | "blocked" | "withdrawn">("draft");
   const [reasonCode, setReasonCode] = useState("");
 
-  const context = useMemo(() => ({ organizationId: organizationId.trim(), module, purposeCode: purposeCode.trim().toUpperCase() }), [organizationId, module, purposeCode]);
+  const authorizedContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery({ module }, { enabled: isAuthenticated, retry: false });
+  const selectedOrganizationContext = resolveAuthorizedSubdivisionContext(selectedOrganizationId, authorizedContextsQuery.data);
+  useEffect(() => {
+    if (selectedOrganizationId && !selectedOrganizationContext) setSelectedOrganizationId("");
+    if (!selectedOrganizationId) setSelectedOrganizationId(initialAuthorizedSubdivisionContextId(authorizedContextsQuery.data));
+  }, [selectedOrganizationId, selectedOrganizationContext, authorizedContextsQuery.data]);
+  const context = useMemo(() => ({ organizationId: selectedOrganizationContext?.organizationId ?? "", module, purposeCode: selectedOrganizationContext?.purposeCode ?? "" }), [module, selectedOrganizationContext]);
   const isContextReady = isDomainContextReady(context);
   const queryEnabled = isAuthenticated && isContextReady;
   const assetsQuery = trpc.assetFoundation.listDraftUrbanAssets.useQuery(context, { enabled: queryEnabled, retry: false });
+  const partyRelationCount = assetsQuery.data?.reduce((total, asset) => total + asset.partyRelationCount, 0);
+  const eligibleCount = assetsQuery.data?.filter((asset) => asset.moduleState === "eligible").length;
+  const operationalSectors = [
+    { code: "01", title: "Inventário de Ativos", value: assetOperationalValue({ contextReady: queryEnabled, loading: assetsQuery.isLoading, count: assetsQuery.data?.length, pendingLabel: "Aguardando leitura" }), description: "Referências de trabalho não são anúncio, endereço ou prova registral.", target: "#asset-inventory" },
+    { code: "02", title: "Vínculos de Party", value: assetOperationalValue({ contextReady: queryEnabled, loading: assetsQuery.isLoading, count: partyRelationCount, pendingLabel: "Aguardando leitura" }), description: "Alegação de titularidade e gestão continuam distintas de mandato ou contrato.", target: "#asset-relations" },
+    { code: "03", title: "Prontidão", value: assetOperationalValue({ contextReady: queryEnabled, loading: assetsQuery.isLoading, count: eligibleCount, pendingLabel: "Aguardando leitura" }), description: "Elegibilidade é uma etapa interna e não publica, reserva, vende ou loca o ativo.", target: "#asset-readiness" },
+  ];
   const createMutation = trpc.assetFoundation.createDraftUrbanAsset.useMutation({
     onSuccess() { setReferenceLabel(""); setInternalReference(""); toast.success("Ativo em rascunho criado", { description: "Nenhum endereço, preço, contrato, anúncio ou dado financeiro foi incluído." }); void assetsQuery.refetch(); },
     onError() { toast.error("Ativo não criado", { description: "O servidor exige identidade, grant ativo, contexto e campos válidos sem revelar registros externos." }); },
@@ -72,39 +89,41 @@ export default function AssetFoundation() {
           <div className="asset-foundation-hero__rule"><ShieldCheck size={18} /><span>Estado contextual<br /><b>sem endereço, anúncio ou efeito financeiro</b></span></div>
         </header>
 
+        <section className="asset-foundation-overview" aria-labelledby="asset-overview-title"><div className="asset-foundation-overview__heading"><div><p className="asset-foundation-eyebrow">ATIVOS URBANOS · VISÃO DE INVENTÁRIO</p><h2 id="asset-overview-title">Trate cada ativo como uma referência de trabalho, não como uma promessa comercial.</h2></div><p>Os indicadores usam somente a leitura autorizada do módulo escolhido. Estados vazios não revelam imóveis, proprietários ou atividade de outros contextos.</p></div><nav className="asset-foundation-overview__grid" aria-label="Setores operacionais de Ativos Urbanos">{operationalSectors.map((sector) => <a key={sector.code} href={sector.target}><span>{sector.code}</span><strong>{sector.title}</strong><b>{sector.value}</b><small>{sector.description}</small><em>Ver setor</em></a>)}</nav></section>
+
         <section className="asset-foundation-context" aria-labelledby="asset-context-title">
-          <div className="asset-foundation-heading"><div><p className="asset-foundation-eyebrow">01 · CONTEXTO</p><h2 id="asset-context-title">O mesmo ativo pode ter trabalho distinto em cada módulo.</h2></div><p>Organização, módulo e finalidade são parâmetros obrigatórios. A consulta não usa a tela, o nome ou o identificador do ativo para inferir autorização.</p></div>
+          <div className="asset-foundation-heading"><div><p className="asset-foundation-eyebrow">01 · CONTEXTO</p><h2 id="asset-context-title">O mesmo ativo pode ter trabalho distinto em cada módulo.</h2></div><p>O contexto é devolvido por policy para a identidade atual. A seleção visual não substitui a verificação de membership, grant, vigência e finalidade no servidor.</p></div>
           <div className="asset-foundation-context__fields">
-            <label htmlFor="asset-organization"><Building2 size={14} /> ID da organização<input id="asset-organization" value={organizationId} onChange={(event) => setOrganizationId(event.target.value)} placeholder="UUID da organização autorizada" /></label>
+            <label htmlFor="asset-organization"><Building2 size={14} /> Organização autorizada<select id="asset-organization" value={selectedOrganizationId} onChange={(event) => setSelectedOrganizationId(event.target.value)} disabled={!isAuthenticated || authorizedContextsQuery.isLoading}><option value="">{authorizedContextsQuery.isLoading ? "Carregando contextos autorizados" : "Selecione uma organização autorizada"}</option>{authorizedContextsQuery.data?.map((organization) => <option key={organization.organizationId} value={organization.organizationId}>{organization.organizationLabel}</option>)}</select></label>
             <label htmlFor="asset-module"><Layers3 size={14} /> Módulo<select id="asset-module" value={module} onChange={(event) => setModule(event.target.value as typeof module)}><option value="vendas_urbanas">Vendas Urbanas</option><option value="locacao">Locação</option></select></label>
-            <label htmlFor="asset-purpose"><ShieldCheck size={14} /> Finalidade<input id="asset-purpose" value={purposeCode} onChange={(event) => setPurposeCode(event.target.value.toUpperCase())} placeholder="CADASTRO_INICIAL" /></label>
+            <label htmlFor="asset-purpose"><ShieldCheck size={14} /> Finalidade<input id="asset-purpose" value={context.purposeCode || "—"} readOnly aria-readonly="true" /></label>
           </div>
-          <div className={`asset-foundation-context__status ${isContextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} /><span>{isContextReady ? "Contexto sintaticamente válido. O servidor confirmará identidade, membership, grant, vigência, módulo e finalidade antes de qualquer leitura ou rascunho." : "Informe organização, módulo e finalidade válidos para liberar as ações de rascunho."}</span></div>
+          <div className={`asset-foundation-context__status ${isContextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} /><span>{isContextReady ? "Contexto autorizado selecionado. O servidor confirmará identidade, membership, grant, vigência, módulo e finalidade antes de qualquer leitura ou rascunho." : authorizedContextsQuery.isError ? "O contexto não foi liberado. A interface não revela organizações ou escopos externos." : "Selecione uma organização autorizada para o módulo antes de liberar as ações de rascunho."}</span></div>
         </section>
 
-        <section className="asset-foundation-workspace" aria-labelledby="asset-workspace-title">
+        <section id="asset-inventory" className="asset-foundation-workspace" aria-labelledby="asset-workspace-title">
           <div className="asset-foundation-heading"><div><p className="asset-foundation-eyebrow">02 · ATIVO E RELAÇÕES</p><h2 id="asset-workspace-title">Cadastre a menor unidade útil e mantenha as relações separadas.</h2></div><p>A interface não coleta endereço, geolocalização, matrícula, mídia, preço, comissão, anúncio, reserva, contrato ou pagamento.</p></div>
           <div className="asset-foundation-grid">
             <form className="asset-foundation-card" onSubmit={createAsset}>
               <div className="asset-foundation-card__title"><House size={19} /><h3>Ativo em rascunho</h3></div><p>Use uma referência de trabalho e um código interno. Nenhum desses dados é tratado como prova registral ou comercial.</p>
-              <label htmlFor="asset-kind">Tipo de ativo</label><select id="asset-kind" value={assetKind} onChange={(event) => setAssetKind(event.target.value as keyof typeof assetKinds)} disabled={!isContextReady}>{Object.entries(assetKinds).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
-              <label htmlFor="asset-reference-label">Referência de trabalho</label><input id="asset-reference-label" value={referenceLabel} onChange={(event) => setReferenceLabel(event.target.value)} placeholder="Ex.: Unidade em rascunho" disabled={!isContextReady} required minLength={2} maxLength={160} />
-              <label htmlFor="asset-internal-reference">Código interno</label><input id="asset-internal-reference" value={internalReference} onChange={(event) => setInternalReference(event.target.value.toUpperCase())} placeholder="EX.: VU-001" disabled={!isContextReady} required minLength={2} maxLength={64} />
-              <button type="submit" disabled={!isContextReady || createMutation.isPending}>{createMutation.isPending ? "Criando rascunho" : "Criar ativo em rascunho"}</button>
+              <label htmlFor="asset-kind">Tipo de ativo</label><select id="asset-kind" value={assetKind} onChange={(event) => setAssetKind(event.target.value as keyof typeof assetKinds)} disabled={!queryEnabled}>{Object.entries(assetKinds).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
+              <label htmlFor="asset-reference-label">Referência de trabalho</label><input id="asset-reference-label" value={referenceLabel} onChange={(event) => setReferenceLabel(event.target.value)} placeholder="Ex.: Unidade em rascunho" disabled={!queryEnabled} required minLength={2} maxLength={160} />
+              <label htmlFor="asset-internal-reference">Código interno</label><input id="asset-internal-reference" value={internalReference} onChange={(event) => setInternalReference(event.target.value.toUpperCase())} placeholder="EX.: VU-001" disabled={!queryEnabled} required minLength={2} maxLength={64} />
+              <button type="submit" disabled={!queryEnabled || createMutation.isPending}>{createMutation.isPending ? "Criando rascunho" : "Criar ativo em rascunho"}</button>
             </form>
-            <form className="asset-foundation-card" onSubmit={attachParty}>
+            <form id="asset-relations" className="asset-foundation-card" onSubmit={attachParty}>
               <div className="asset-foundation-card__title"><Link2 size={19} /><h3>Relacionar Party</h3></div><p>Declare titularidade alegada ou autoridade de gestão sem concluir propriedade, representação ou contrato.</p>
-              <label htmlFor="relation-asset-id">ID do ativo</label><input id="relation-asset-id" value={relationAssetId} onChange={(event) => setRelationAssetId(event.target.value)} placeholder="UUID do ativo em rascunho" disabled={!isContextReady} required />
-              <label htmlFor="relation-party-id">ID da Party</label><input id="relation-party-id" value={relationPartyId} onChange={(event) => setRelationPartyId(event.target.value)} placeholder="UUID da Party em rascunho" disabled={!isContextReady} required />
-              <label htmlFor="relation-kind">Relação</label><select id="relation-kind" value={relationKind} onChange={(event) => setRelationKind(event.target.value as typeof relationKind)} disabled={!isContextReady}><option value="ownership_claim">Titularidade alegada</option><option value="management_authority">Autoridade de gestão</option></select>
-              <button type="submit" disabled={!isContextReady || relationMutation.isPending}>{relationMutation.isPending ? "Relacionando" : "Adicionar relação"}</button>
+              <label htmlFor="relation-asset-id">ID do ativo</label><input id="relation-asset-id" value={relationAssetId} onChange={(event) => setRelationAssetId(event.target.value)} placeholder="UUID do ativo em rascunho" disabled={!queryEnabled} required />
+              <label htmlFor="relation-party-id">ID da Party</label><input id="relation-party-id" value={relationPartyId} onChange={(event) => setRelationPartyId(event.target.value)} placeholder="UUID da Party em rascunho" disabled={!queryEnabled} required />
+              <label htmlFor="relation-kind">Relação</label><select id="relation-kind" value={relationKind} onChange={(event) => setRelationKind(event.target.value as typeof relationKind)} disabled={!queryEnabled}><option value="ownership_claim">Titularidade alegada</option><option value="management_authority">Autoridade de gestão</option></select>
+              <button type="submit" disabled={!queryEnabled || relationMutation.isPending}>{relationMutation.isPending ? "Relacionando" : "Adicionar relação"}</button>
             </form>
-            <form className="asset-foundation-card" onSubmit={changeState}>
+            <form id="asset-readiness" className="asset-foundation-card" onSubmit={changeState}>
               <div className="asset-foundation-card__title"><SlidersHorizontal size={19} /><h3>Estado no módulo</h3></div><p>O estado de trabalho vale apenas para o módulo atual. Ele não altera outro módulo nem libera uma ação externa.</p>
-              <label htmlFor="state-asset-id">ID do ativo</label><input id="state-asset-id" value={stateAssetId} onChange={(event) => setStateAssetId(event.target.value)} placeholder="UUID do ativo em rascunho" disabled={!isContextReady} required />
-              <label htmlFor="module-state">Estado</label><select id="module-state" value={moduleState} onChange={(event) => setModuleState(event.target.value as typeof moduleState)} disabled={!isContextReady}><option value="draft">Rascunho</option><option value="preparing">Em preparação</option><option value="eligible">Elegível para próxima análise</option><option value="blocked">Bloqueado</option><option value="withdrawn">Retirado</option></select>
-              {moduleState === "blocked" && <><label htmlFor="state-reason">Motivo em código</label><input id="state-reason" value={reasonCode} onChange={(event) => setReasonCode(event.target.value.toUpperCase())} placeholder="EX.: PENDENCIA_DOCUMENTAL" disabled={!isContextReady} required /></>}
-              <button type="submit" disabled={!isContextReady || stateMutation.isPending}>{stateMutation.isPending ? "Atualizando estado" : "Atualizar estado"}</button>
+              <label htmlFor="state-asset-id">ID do ativo</label><input id="state-asset-id" value={stateAssetId} onChange={(event) => setStateAssetId(event.target.value)} placeholder="UUID do ativo em rascunho" disabled={!queryEnabled} required />
+              <label htmlFor="module-state">Estado</label><select id="module-state" value={moduleState} onChange={(event) => setModuleState(event.target.value as typeof moduleState)} disabled={!queryEnabled}><option value="draft">Rascunho</option><option value="preparing">Em preparação</option><option value="eligible">Elegível para próxima análise</option><option value="blocked">Bloqueado</option><option value="withdrawn">Retirado</option></select>
+              {moduleState === "blocked" && <><label htmlFor="state-reason">Motivo em código</label><input id="state-reason" value={reasonCode} onChange={(event) => setReasonCode(event.target.value.toUpperCase())} placeholder="EX.: PENDENCIA_DOCUMENTAL" disabled={!queryEnabled} required /></>}
+              <button type="submit" disabled={!queryEnabled || stateMutation.isPending}>{stateMutation.isPending ? "Atualizando estado" : "Atualizar estado"}</button>
             </form>
           </div>
         </section>

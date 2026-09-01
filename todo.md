@@ -1091,3 +1091,11 @@
 - [x] Criar uma visão inicial com setores de Party, papel temporal e atributos permitidos separados, usando somente leituras autorizadas ou estados vazios honestos.
 - [x] Manter os formulários de rascunho sob acesso explícito, sem cadastrar pessoas, empresas, documentos, contatos, contratos ou financeiro.
 - [x] Validar responsividade, acessibilidade, isolamento de dados e empacotar ZIP/HTML saneados.
+
+## Experiência Ativos Urbanos: inventário sem dados de negócio
+
+- [x] Auditar a entrada de Ativos Urbanos para reduzir a aparência de formulário técnico e ordenar o inventário de trabalho.
+- [x] Substituir o UUID manual por um seletor de contexto autorizado para Vendas Urbanas e Locação.
+- [x] Criar uma visão inicial com setores de Ativo, Vínculo de Proprietário e Prontidão separados, usando somente leituras autorizadas ou estados vazios honestos.
+- [x] Manter os formulários de rascunho sob acesso explícito, sem cadastrar imóveis, endereços, proprietários, documentos, anúncios, contratos ou financeiro.
+- [x] Validar responsividade, acessibilidade, isolamento de dados e empacotar ZIP/HTML saneados.
