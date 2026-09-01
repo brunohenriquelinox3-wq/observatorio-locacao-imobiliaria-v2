@@ -49,6 +49,8 @@
 
 .urban-pipeline-hero__rule b { color: #fff; }
 
+.urban-pipeline-overview { margin-top: 20px; padding: clamp(22px, 3vw, 36px); border: 1px solid rgba(23, 59, 77, .18); background: #edf4ed; }.urban-pipeline-overview__heading { display: grid; grid-template-columns: minmax(0, 1fr) minmax(250px, .58fr); gap: 28px; margin-bottom: 22px; }.urban-pipeline-overview__heading h2 { max-width: 750px; margin: 7px 0 0; color: #173b4d; font: 600 clamp(27px, 3.3vw, 45px)/1.02 "Fraunces", Georgia, serif; letter-spacing: -.045em; }.urban-pipeline-overview__heading > p { margin: 0; color: #61757a; font: 400 13px/1.58 "DM Sans", sans-serif; }.urban-pipeline-overview__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }.urban-pipeline-overview__grid a { display: grid; gap: 8px; min-height: 185px; padding: 17px; border: 1px solid #c7d6ca; background: #fffdf8; color: #173b4d; text-decoration: none; transition: transform 160ms cubic-bezier(.23,1,.32,1), box-shadow 160ms cubic-bezier(.23,1,.32,1); }.urban-pipeline-overview__grid a:hover { transform: translateY(-2px); box-shadow: 5px 5px 0 #c9d9ce; }.urban-pipeline-overview__grid a:focus-visible { outline: 3px solid #e29b78; outline-offset: 2px; }.urban-pipeline-overview__grid span { color: #a74d2c; font: 700 10px/1 "DM Sans", sans-serif; letter-spacing: .12em; }.urban-pipeline-overview__grid strong { font: 600 20px/1.06 "Fraunces", Georgia, serif; }.urban-pipeline-overview__grid b { color: #307161; font: 700 10px/1.35 "DM Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase; }.urban-pipeline-overview__grid small { color: #61757a; font: 400 12px/1.48 "DM Sans", sans-serif; }.urban-pipeline-overview__grid em { margin-top: auto; color: #173b4d; font: 700 10px/1 "DM Sans", sans-serif; font-style: normal; letter-spacing: .08em; text-transform: uppercase; }
+
 .urban-pipeline-context,
 .urban-pipeline-workspace,
 .urban-pipeline-link,
@@ -281,11 +283,13 @@
 
 @media (max-width: 980px) {
   .urban-pipeline-hero,
-  .urban-pipeline-heading { display: grid; grid-template-columns: 1fr; }
+  .urban-pipeline-heading,
+  .urban-pipeline-overview__heading { display: grid; grid-template-columns: 1fr; }
   .urban-pipeline-context__fields,
   .urban-pipeline-grid,
   .urban-pipeline-link__grid,
   .urban-pipeline-list__rows { grid-template-columns: 1fr; }
+  .urban-pipeline-overview__grid { grid-template-columns: 1fr; }
   .urban-pipeline-card { min-height: 0; }
   .urban-pipeline-card > p { min-height: 0; }
   .urban-pipeline-search__options { grid-template-columns: 1fr; }
