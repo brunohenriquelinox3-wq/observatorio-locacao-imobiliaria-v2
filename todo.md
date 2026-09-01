@@ -1012,3 +1012,10 @@
 - [x] Corrigir a interface para diferenciar papel de plataforma ativo de organizações, memberships e grants delegados ainda inexistentes.
 - [x] Corrigir os textos auxiliares de bootstrap para não declarar alçada pendente quando o papel SUPER ADM de plataforma estiver ativo.
 - [x] Validar com fixtures sintéticas, empacotar e preservar a projeção sem alterar privilégios reais.
+
+## Administração: primeira organização BHL Imóveis
+
+- [x] Confirmar o gate de SUPER ADM de plataforma, correlação e idempotência antes do provisionamento.
+- [x] Provisionar a organização BHL Imóveis pelo comando administrativo governado, sem membership, grant ou módulo adicional.
+- [x] Corrigir o rótulo da fundação que ainda declara comandos bloqueados apesar de o SUPER ADM ativo poder executar comandos controlados.
+- [x] Verificar a resposta minimizada, registrar o resultado e preservar o marco com ZIP e HTML saneados.

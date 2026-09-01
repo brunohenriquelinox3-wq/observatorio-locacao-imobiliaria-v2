@@ -189,7 +189,7 @@ export default function PlatformAdmin() {
       : readiness?.commandMode === "blocked"
         ? "Fundação conectada · comandos bloqueados"
         : readiness?.commandMode === "ready_for_controlled_commands"
-          ? "Principal ativo · comandos restritos"
+          ? principalPresentation.activeFoundationStatus
           : "Estado indisponível";
   const identityStatus = identityQuery.isLoading
     ? "Verificando identidade"

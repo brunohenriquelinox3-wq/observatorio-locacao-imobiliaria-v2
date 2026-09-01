@@ -5,6 +5,7 @@ describe("platform principal presentation", () => {
   it("distingue o SUPER ADM ativo de grants delegados", () => {
     const result = getPlatformPrincipalPresentation({ identityState: "active", commandMode: "ready_for_controlled_commands", platformRole: "platform_super_admin" });
     expect(result.isPlatformSuperAdmin).toBe(true);
+    expect(result.activeFoundationStatus).toBe("SUPER ADM de plataforma ativo · comandos controlados");
     expect(result.identityStatus).toContain("SUPER ADM de plataforma ativo");
     expect(result.bootstrapCardLabel).toBe("Bootstrap inicial concluído");
   });
@@ -12,6 +13,7 @@ describe("platform principal presentation", () => {
   it("não presume SUPER ADM apenas por identidade conectada", () => {
     const result = getPlatformPrincipalPresentation({ identityState: "active", commandMode: "ready_for_controlled_commands", platformRole: "platform_support_operator" });
     expect(result.isPlatformSuperAdmin).toBe(false);
+    expect(result.activeFoundationStatus).toBe("Principal de plataforma ativo · comandos controlados");
     expect(result.identityStatus).not.toContain("SUPER ADM de plataforma ativo");
   });
 });

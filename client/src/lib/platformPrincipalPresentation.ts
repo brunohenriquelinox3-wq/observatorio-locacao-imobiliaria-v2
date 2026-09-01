@@ -12,6 +12,7 @@ export function getPlatformPrincipalPresentation(state: PrincipalState) {
   if (isPlatformSuperAdmin) {
     return {
       isPlatformSuperAdmin,
+      activeFoundationStatus: "SUPER ADM de plataforma ativo · comandos controlados",
       identityStatus: "SUPER ADM de plataforma ativo · alçadas delegadas pendentes",
       activationHeadline: "SUPER ADM de plataforma ativo; organizações e grants seguem governados",
       bootstrapCardLabel: "Bootstrap inicial concluído",
@@ -21,6 +22,7 @@ export function getPlatformPrincipalPresentation(state: PrincipalState) {
 
   return {
     isPlatformSuperAdmin,
+    activeFoundationStatus: "Principal de plataforma ativo · comandos controlados",
     identityStatus: "Identidade Supabase conectada · alçada pendente",
     activationHeadline: "Bootstrap pendente e necessário antes da ativação",
     bootstrapCardLabel: "Preparar principal inicial",
