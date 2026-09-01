@@ -6,7 +6,7 @@ import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionCont
 import { rentalAgendaSelectionLabel, rentalAssetSelectionLabel, rentalIntakeSelectionLabel, rentalPartySelectionLabel } from "@/lib/rentalContextSelection";
 import { rentalOperationalValue } from "@/lib/rentalOperationalOverview";
 import { trpc } from "@/lib/trpc";
-import { CalendarClock, CircleAlert, ClipboardCheck, Compass, FileCheck2, House, Link2, Search, ShieldCheck, Tag, UsersRound, Workflow } from "lucide-react";
+import { CalendarClock, CircleAlert, ClipboardCheck, Compass, FileCheck2, House, Layers3, Link2, Search, ShieldCheck, Tag, UsersRound, Workflow } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../rental-pipeline.css";
@@ -16,6 +16,7 @@ const navigationItems: DashboardNavigationItem[] = [
   { icon: ShieldCheck, label: "Painel ADM", path: "/adm" },
   { icon: UsersRound, label: "Núcleo de cadastros", path: "/cadastro-base" },
   { icon: House, label: "Ativos urbanos", path: "/ativos-urbanos" },
+  { icon: Layers3, label: "Loteadora", path: "/loteadora" },
   { icon: Workflow, label: "Vendas Urbanas", path: "/vendas-urbanas" },
   { icon: CalendarClock, label: "Locação", path: "/locacao" },
 ];

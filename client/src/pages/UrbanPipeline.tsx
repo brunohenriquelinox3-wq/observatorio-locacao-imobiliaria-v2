@@ -6,7 +6,7 @@ import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionCont
 import { urbanAgendaSelectionLabel, urbanAssetSelectionLabel, urbanLeadSelectionLabel, urbanPartySelectionLabel } from "@/lib/urbanContextSelection";
 import { urbanOperationalValue } from "@/lib/urbanOperationalOverview";
 import { trpc } from "@/lib/trpc";
-import { CalendarClock, CircleAlert, Compass, House, Link2, Search, ShieldCheck, Tag, UserRoundPlus, UsersRound, Workflow } from "lucide-react";
+import { CalendarClock, CircleAlert, Compass, House, Layers3, Link2, Search, ShieldCheck, Tag, UserRoundPlus, UsersRound, Workflow } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../urban-pipeline.css";
@@ -16,6 +16,7 @@ const navigationItems: DashboardNavigationItem[] = [
   { icon: ShieldCheck, label: "Painel ADM", path: "/adm" },
   { icon: UsersRound, label: "Núcleo de cadastros", path: "/cadastro-base" },
   { icon: House, label: "Ativos urbanos", path: "/ativos-urbanos" },
+  { icon: Layers3, label: "Loteadora", path: "/loteadora" },
   { icon: Workflow, label: "Vendas Urbanas", path: "/vendas-urbanas" },
   { icon: CalendarClock, label: "Locação", path: "/locacao" },
 ];

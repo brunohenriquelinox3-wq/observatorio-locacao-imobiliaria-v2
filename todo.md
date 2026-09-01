@@ -1216,3 +1216,15 @@
 - [x] Auditar a consistência das rotas disponíveis nas colunas operacionais.
 - [x] Adicionar o atalho de Locação à navegação da Loteadora sem alterar guardas de rota ou permissões.
 - [x] Validar navegação, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Navegação cruzada entre Vendas Urbanas e Locação
+
+- [x] Auditar a consistência dos atalhos disponíveis nas duas colunas operacionais.
+- [x] Confirmar que Vendas Urbanas e Locação já possuem atalhos cruzados, sem alteração desnecessária de guardas de rota ou permissões.
+- [x] Validar a consistência por leitura de código e manter a validação integral no próximo corte material.
+
+## Padronização de navegação lateral entre superfícies operacionais
+
+- [x] Auditar os atalhos laterais de Cadastros, Ativos, Estoque e Loteadora.
+- [x] Completar os atalhos ausentes da Loteadora em Vendas Urbanas e Locação, sem alterar guardas de rota ou alçadas.
+- [x] Validar navegação, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.
