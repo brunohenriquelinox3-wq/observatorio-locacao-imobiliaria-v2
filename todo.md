@@ -1260,3 +1260,9 @@
 - [x] Auditar os textos assistivos em inglês na navegação lateral compartilhada.
 - [x] Localizar rótulos e descrições assistivas sem alterar interações, rotas, guardas ou permissões.
 - [x] Validar acessibilidade, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Navegação móvel: fechamento após escolha de rota
+
+- [x] Auditar o comportamento atual da sidebar em dispositivos móveis após a escolha de uma rota.
+- [x] Fechar apenas o menu móvel após a navegação, preservando caminho, foco, grupos, guardas e permissões.
+- [x] Validar navegação móvel, acessibilidade, testes, tipagem, build e artefatos ZIP/HTML saneados.

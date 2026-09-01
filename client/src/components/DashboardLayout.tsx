@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
+import { shouldCloseMobileNavigationAfterRouteChange } from "@/lib/dashboardNavigationBehavior";
 import { groupDashboardNavigation } from "@/lib/dashboardNavigationGroups";
 import { getDashboardProfilePresentation } from "@/lib/dashboardProfilePresentation";
 import { ArrowUpRight, Compass, LayoutDashboard, LockKeyhole, LogOut, PanelLeft, Users, type LucideIcon } from "lucide-react";
@@ -173,7 +174,7 @@ function DashboardLayoutContent({
 }: DashboardLayoutContentProps) {
   const { logout } = useAuth();
   const [location, setLocation] = useLocation();
-  const { state, toggleSidebar } = useSidebar();
+  const { state, toggleSidebar, setOpenMobile } = useSidebar();
   const isCollapsed = state === "collapsed";
   const [isResizing, setIsResizing] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -181,6 +182,13 @@ function DashboardLayoutContent({
   const navigationGroups = groupDashboardNavigation(navigationItems);
   const isMobile = useIsMobile();
   const profilePresentation = getDashboardProfilePresentation();
+
+  const navigateTo = (path: string) => {
+    setLocation(path);
+    if (shouldCloseMobileNavigationAfterRouteChange(isMobile)) {
+      setOpenMobile(false);
+    }
+  };
 
   useEffect(() => {
     if (isCollapsed) {
@@ -260,7 +268,7 @@ function DashboardLayoutContent({
                           <SidebarMenuButton
                             isActive={isActive}
                             aria-current={isActive ? "page" : undefined}
-                            onClick={() => setLocation(item.path)}
+                            onClick={() => navigateTo(item.path)}
                             tooltip={item.label}
                             className="h-10 transition-all font-normal"
                           >
