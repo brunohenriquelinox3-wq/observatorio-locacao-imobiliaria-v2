@@ -2,17 +2,7 @@
  * Caderno de Campo Urbano: investigação territorial em papel mineral,
  * azul cadastral e argila de decisão. Cada interação revela contexto útil.
  */
-import { useState } from "react";
-import {
-  Area,
-  AreaChart,
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { lazy, Suspense, useState } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -24,40 +14,17 @@ import {
   Compass,
   FileKey2,
   Landmark,
-  MapPinned,
   ShieldCheck,
   SlidersHorizontal,
   Target,
 } from "lucide-react";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/components/ui/chart";
+import HomeMarketCharts from "./HomeMarketCharts";
 
 const logo = "/manus-storage/logo-bussola-lote_8c3a6907.png";
 const hero = "/manus-storage/hero-observatorio-locacao_7da3ef2a.jpg";
 const journey = "/manus-storage/jornada-demanda_78f475a0.jpg";
 
-const trend = [
-  { periodo: "2022", valor: 16.55 }, { periodo: "2023", valor: 16.16 },
-  { periodo: "2024", valor: 13.5 }, { periodo: "2025", valor: 9.44 }, { periodo: "Jul/26*", valor: 9.28 },
-];
-const rentals = [{ ano: "2016", valor: 12.2 }, { ano: "2025", valor: 18.9 }];
-const cities = [
-  { cidade: "Aracaju", alta: 25.78, preco: 36.9, yield: 6.67 },
-  { cidade: "Teresina", alta: 19.16, preco: 32.45, yield: 6.32 },
-  { cidade: "Fortaleza", alta: 16.27, preco: 41.66, yield: 4.94 },
-  { cidade: "Brasília", alta: 14.8, preco: 54.56, yield: 6.45 },
-  { cidade: "Natal", alta: 14.6, preco: 44.26, yield: 7.85 },
-  { cidade: "Rio de Janeiro", alta: 13.52, preco: 60.8, yield: 6.29 },
-];
-const configs = {
-  trend: { valor: { label: "Variação em 12 meses", color: "#C65A35" } },
-  rentals: { valor: { label: "Domicílios alugados", color: "#173B4D" } },
-  cities: { alta: { label: "Variação em 12 meses", color: "#C65A35" } },
-} satisfies Record<string, ChartConfig>;
+const LazyHomeMarketCharts = lazy(() => import("./HomeMarketCharts"));
 
 const steps = [
   { n: "01", title: "Interesse", time: "60–90 segundos", icon: Target, purpose: "Captar demanda e viabilizar uma primeira resposta útil.", fields: ["Cidade e até três bairros", "Data de mudança", "Orçamento mensal total", "Tipo, quartos e contato"], avoid: "CPF, RG, comprovantes, renda detalhada e dados de fiador." },
@@ -78,7 +45,6 @@ export default function Home() {
   const [stepIndex, setStepIndex] = useState(0);
   const [cityName, setCityName] = useState("Aracaju");
   const [audience, setAudience] = useState<"imobiliarias" | "loteadoras">("imobiliarias");
-  const selected = cities.find(item => item.cidade === cityName) || cities[0];
   const form = steps[stepIndex]; const FormIcon = form.icon; const segment = audiences[audience];
 
   return <div className="site-shell">
@@ -100,15 +66,9 @@ export default function Home() {
         <div className="hero-image"><img src={hero} alt="Vista aérea editorial de um bairro residencial brasileiro com camadas cartográficas" /><div className="image-shade" /><div className="hero-note"><Compass className="h-4 w-4" /><b>SINAL DE MERCADO</b><strong>Quase um em cada quatro domicílios brasileiros é alugado.</strong><p>A expansão pede ferramentas que capturem intenção antes que ela se perca.</p></div><span className="coordinate">23° 33′ S · 46° 38′ W</span></div>
       </section>
 
-      <section id="mercado" className="content-section">
-        <div className="section-head"><aside><Eyebrow>01 · LEITURA DE MERCADO</Eyebrow><p>Um mercado nacional, mas com sinais locais muito diferentes.</p></aside><div><h2>O aluguel se expandiu em volume e valor. O produto precisa responder por território.</h2><p>O parque alugado cresceu, mas preço pedido, yield e velocidade de alta variam por cidade e tipologia. Por isso, procura deve ser organizada por localização, custo total e momento de mudança.</p></div></div>
-        <div className="market-grid">
-          <article className="paper-card chart-card wide"><span className="kicker">RITMO DE PREÇOS</span><h3>O aluguel desacelerou, mas segue acima da inflação.</h3><div className="metric-chip">+9,28% em 12 meses</div><ChartContainer config={configs.trend} className="chart"><AreaChart data={trend} margin={{ top: 16, right: 6, left: -20 }}><defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#C65A35" stopOpacity=".35"/><stop offset="1" stopColor="#C65A35" stopOpacity=".02"/></linearGradient></defs><CartesianGrid vertical={false} strokeDasharray="4 4"/><XAxis dataKey="periodo" tickLine={false} axisLine={false}/><YAxis tickLine={false} axisLine={false} tickFormatter={v => `${v}%`}/><ChartTooltip content={<ChartTooltipContent formatter={v => `${Number(v).toFixed(2).replace(".", ",")}%`}/>} /><Area dataKey="valor" type="monotone" stroke="#C65A35" strokeWidth={3} fill="url(#area)"/></AreaChart></ChartContainer><p className="source-note">Variação acumulada em 12 meses. *Jul/26 encerra em julho. <Source href="https://imoveis.grupoolx.com.br/uploads/fipezap_202607_residencial_locacao_25996d7baf.pdf">FipeZAP</Source></p></article>
-          <article className="paper-card chart-card"><span className="kicker">BASE DO MERCADO</span><h3>O estoque de domicílios alugados cresceu 54,1% desde 2016.</h3><ChartContainer config={configs.rentals} className="chart short"><BarChart data={rentals} margin={{ top: 18, right: 2, left: -22 }} barSize={60}><CartesianGrid vertical={false} strokeDasharray="4 4"/><XAxis dataKey="ano" tickLine={false} axisLine={false}/><YAxis tickLine={false} axisLine={false} tickFormatter={v => `${v} mi`}/><ChartTooltip content={<ChartTooltipContent formatter={v => `${Number(v).toFixed(1).replace(".", ",")} milhões`}/>} /><Bar dataKey="valor" fill="#173B4D"/></BarChart></ChartContainer><p className="source-note">Domicílios particulares permanentes alugados. <Source href="https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/46449-domicilios-alugados-cresceram-mais-de-50-desde-2016">IBGE / PNAD</Source></p></article>
-          <article className="paper-card chart-card wide"><div className="card-head"><div><span className="kicker">RADAR TERRITORIAL</span><h3>A alta não é uniforme: recortes locais mudam a prioridade comercial.</h3></div><label>CIDADE <select value={cityName} onChange={e => setCityName(e.target.value)}>{cities.map(city => <option key={city.cidade}>{city.cidade}</option>)}</select></label></div><ChartContainer config={configs.cities} className="chart"><BarChart data={cities} layout="vertical" margin={{ top: 0, right: 8, left: 10 }} barSize={16}><CartesianGrid horizontal={false} strokeDasharray="4 4"/><XAxis type="number" tickLine={false} axisLine={false} tickFormatter={v => `${v}%`}/><YAxis type="category" dataKey="cidade" width={102} tickLine={false} axisLine={false}/><ChartTooltip content={<ChartTooltipContent formatter={v => `${Number(v).toFixed(2).replace(".", ",")}%`}/>} /><Bar dataKey="alta">{cities.map(city => <Cell key={city.cidade} fill={city.cidade === cityName ? "#C65A35" : "#DCA989"}/>)}</Bar></BarChart></ChartContainer><p className="source-note">Capitais com maior variação em 12 meses até julho de 2026. Fonte: FipeZAP.</p></article>
-          <article className="city-read"><MapPinned className="h-6 w-6"/><span>LEITURA DE {selected.cidade.toUpperCase()}</span><strong>+{selected.alta.toFixed(2).replace(".", ",")}%</strong><p>variação do preço pedido em 12 meses</p><div><b>R$ {selected.preco.toFixed(2).replace(".", ",")}</b><small>por m²</small><b>{selected.yield.toFixed(2).replace(".", ",")}%</b><small>yield a.a.</small></div></article>
-        </div>
-      </section>
+      <Suspense fallback={<section id="mercado" className="content-section" aria-live="polite"><div className="section-head"><aside><Eyebrow>01 · LEITURA DE MERCADO</Eyebrow></aside><div><h2>Carregando a leitura de mercado.</h2><p>Os gráficos serão exibidos em seguida, sem bloquear a abertura do estudo.</p></div></div></section>}>
+        <LazyHomeMarketCharts cityName={cityName} onCityChange={setCityName} />
+      </Suspense>
 
       <section id="cadastro" className="cadastro-section"><div className="content-section"><div className="section-head"><aside><Eyebrow>02 · CADASTRO ROBUSTO</Eyebrow><p>O melhor cadastro não é o mais longo. É o que pede a evidência certa na etapa certa.</p></aside><div><h2>Quatro camadas. Uma decisão por vez.</h2><p>O formulário público inicia a conversa em menos de 90 segundos. Documentação só é pedida quando existe imóvel, proposta e finalidade definida.</p></div></div><div className="form-board"><div className="step-list">{steps.map((item, index) => { const Icon = item.icon; return <button key={item.n} aria-pressed={stepIndex === index} onClick={() => setStepIndex(index)} className={stepIndex === index ? "active" : ""}><code>{item.n}</code><Icon className="h-5 w-5"/><span><b>{item.title}</b><small>{item.time}</small></span><ChevronRight className="h-4 w-4"/></button>; })}</div><article className="form-detail"><div className="detail-top"><div><span className="kicker">CAMADA {form.n} · {form.time}</span><h3><FormIcon className="h-8 w-8" />{form.title}</h3></div><span className="privacy"><ShieldCheck className="h-4 w-4"/> finalidade visível</span></div><p className="purpose">{form.purpose}</p><div className="collect-grid"><div><span>COLETAR AGORA</span><ul>{form.fields.map(field => <li key={field}><Check className="h-4 w-4"/>{field}</li>)}</ul></div><div className="avoid"><span><CircleAlert className="h-4 w-4"/> NÃO COLETAR AINDA</span><p>{form.avoid}</p></div></div><div className="detail-foot">LGPD: finalidade, adequação, necessidade e transparência. <Source href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm">Consultar lei</Source></div></article></div></div></section>
 

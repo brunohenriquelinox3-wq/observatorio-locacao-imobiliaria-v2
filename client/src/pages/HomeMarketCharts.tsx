@@ -1,0 +1,25 @@
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { MapPinned } from "lucide-react";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, XAxis, YAxis } from "recharts";
+import { marketChartConfigs, marketCities, marketTrend, rentedHouseholds, resolveMarketCity } from "./homeMarketData";
+
+type HomeMarketChartsProps = {
+  cityName: string;
+  onCityChange: (cityName: string) => void;
+};
+
+export default function HomeMarketCharts({ cityName, onCityChange }: HomeMarketChartsProps) {
+  const selected = resolveMarketCity(cityName);
+
+  return (
+    <section id="mercado" className="content-section">
+      <div className="section-head"><aside><span className="eyebrow">01 · LEITURA DE MERCADO</span><p>Um mercado nacional, mas com sinais locais muito diferentes.</p></aside><div><h2>O aluguel se expandiu em volume e valor. O produto precisa responder por território.</h2><p>O parque alugado cresceu, mas preço pedido, yield e velocidade de alta variam por cidade e tipologia. Por isso, procura deve ser organizada por localização, custo total e momento de mudança.</p></div></div>
+      <div className="market-grid">
+        <article className="paper-card chart-card wide"><span className="kicker">RITMO DE PREÇOS</span><h3>O aluguel desacelerou, mas segue acima da inflação.</h3><div className="metric-chip">+9,28% em 12 meses</div><ChartContainer config={marketChartConfigs.trend} className="chart"><AreaChart data={marketTrend} margin={{ top: 16, right: 6, left: -20 }}><defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#C65A35" stopOpacity=".35"/><stop offset="1" stopColor="#C65A35" stopOpacity=".02"/></linearGradient></defs><CartesianGrid vertical={false} strokeDasharray="4 4"/><XAxis dataKey="periodo" tickLine={false} axisLine={false}/><YAxis tickLine={false} axisLine={false} tickFormatter={value => `${value}%`}/><ChartTooltip content={<ChartTooltipContent formatter={value => `${Number(value).toFixed(2).replace(".", ",")}%`}/>} /><Area dataKey="valor" type="monotone" stroke="#C65A35" strokeWidth={3} fill="url(#area)"/></AreaChart></ChartContainer><p className="source-note">Variação acumulada em 12 meses. *Jul/26 encerra em julho. <a className="source-link" href="https://imoveis.grupoolx.com.br/uploads/fipezap_202607_residencial_locacao_25996d7baf.pdf" target="_blank" rel="noreferrer">FipeZAP</a></p></article>
+        <article className="paper-card chart-card"><span className="kicker">BASE DO MERCADO</span><h3>O estoque de domicílios alugados cresceu 54,1% desde 2016.</h3><ChartContainer config={marketChartConfigs.rentals} className="chart short"><BarChart data={rentedHouseholds} margin={{ top: 18, right: 2, left: -22 }} barSize={60}><CartesianGrid vertical={false} strokeDasharray="4 4"/><XAxis dataKey="ano" tickLine={false} axisLine={false}/><YAxis tickLine={false} axisLine={false} tickFormatter={value => `${value} mi`}/><ChartTooltip content={<ChartTooltipContent formatter={value => `${Number(value).toFixed(1).replace(".", ",")} milhões`}/>} /><Bar dataKey="valor" fill="#173B4D"/></BarChart></ChartContainer><p className="source-note">Domicílios particulares permanentes alugados. <a className="source-link" href="https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/46449-domicilios-alugados-cresceram-mais-de-50-desde-2016" target="_blank" rel="noreferrer">IBGE / PNAD</a></p></article>
+        <article className="paper-card chart-card wide"><div className="card-head"><div><span className="kicker">RADAR TERRITORIAL</span><h3>A alta não é uniforme: recortes locais mudam a prioridade comercial.</h3></div><label>CIDADE <select value={cityName} onChange={event => onCityChange(event.target.value)}>{marketCities.map(city => <option key={city.cidade}>{city.cidade}</option>)}</select></label></div><ChartContainer config={marketChartConfigs.cities} className="chart"><BarChart data={marketCities} layout="vertical" margin={{ top: 0, right: 8, left: 10 }} barSize={16}><CartesianGrid horizontal={false} strokeDasharray="4 4"/><XAxis type="number" tickLine={false} axisLine={false} tickFormatter={value => `${value}%`}/><YAxis type="category" dataKey="cidade" width={102} tickLine={false} axisLine={false}/><ChartTooltip content={<ChartTooltipContent formatter={value => `${Number(value).toFixed(2).replace(".", ",")}%`}/>} /><Bar dataKey="alta">{marketCities.map(city => <Cell key={city.cidade} fill={city.cidade === cityName ? "#C65A35" : "#DCA989"}/>)}</Bar></BarChart></ChartContainer><p className="source-note">Capitais com maior variação em 12 meses até julho de 2026. Fonte: FipeZAP.</p></article>
+        <article className="city-read"><MapPinned className="h-6 w-6"/><span>LEITURA DE {selected.cidade.toUpperCase()}</span><strong>+{selected.alta.toFixed(2).replace(".", ",")}%</strong><p>variação do preço pedido em 12 meses</p><div><b>R$ {selected.preco.toFixed(2).replace(".", ",")}</b><small>por m²</small><b>{selected.yield.toFixed(2).replace(".", ",")}%</b><small>yield a.a.</small></div></article>
+      </div>
+    </section>
+  );
+}

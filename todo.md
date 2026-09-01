@@ -1266,3 +1266,17 @@
 - [x] Auditar o comportamento atual da sidebar em dispositivos móveis após a escolha de uma rota.
 - [x] Fechar apenas o menu móvel após a navegação, preservando caminho, foco, grupos, guardas e permissões.
 - [x] Validar navegação móvel, acessibilidade, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Painel ADM: orientação de primeiros passos operacionais
+
+- [x] Auditar o painel ADM e os estados agregados retornados pelo contexto autorizado.
+- [x] Confirmar orientação de início existente que não inventa indicadores, registros ou permissões.
+- [x] Confirmar próximos passos claros para Loteadora, Vendas Urbanas e Locação sem criar dados de negócio.
+- [x] Validar a orientação existente por leitura de código e manter a validação integral no próximo corte material.
+
+## Desempenho: redução do carregamento inicial com evidência
+
+- [x] Medir o bundle inicial e identificar os módulos responsáveis pelo peso comprovado.
+- [x] Isolar somente recursos não críticos em carregamento sob demanda, sem reduzir conteúdo ou segurança.
+- [x] Remedir e manter a mudança após redução de 31,47% no JavaScript inicial em gzip.
+- [x] Validar interface, testes, tipagem, build e artefatos ZIP/HTML saneados.
