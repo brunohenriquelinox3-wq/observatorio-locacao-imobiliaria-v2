@@ -1,6 +1,7 @@
 import DashboardLayout, { type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { domainPartySelectionLabel } from "@/lib/domainPartySelection";
+import { validateDraftPartyRolePeriod } from "@/lib/domainPartyRolePeriodValidation";
 import { validateDraftPartyDisplayName } from "@/lib/domainPartyValidation";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { domainOperationalValue } from "@/lib/domainOperationalOverview";
@@ -38,6 +39,7 @@ export default function DomainFoundation() {
   const [role, setRole] = useState("lead");
   const [roleBeginsAt, setRoleBeginsAt] = useState("");
   const [roleEndsAt, setRoleEndsAt] = useState("");
+  const [rolePeriodValidationMessage, setRolePeriodValidationMessage] = useState("");
 
   const authorizedContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery({ module }, { enabled: isAuthenticated, retry: false });
   const selectedOrganizationContext = resolveAuthorizedSubdivisionContext(selectedOrganizationId, authorizedContextsQuery.data);
@@ -76,6 +78,7 @@ export default function DomainFoundation() {
       setRolePartyId("");
       setRoleBeginsAt("");
       setRoleEndsAt("");
+      setRolePeriodValidationMessage("");
       toast.success("Papel temporal adicionado", { description: "O papel não concede login, portal, representação ou autoridade financeira." });
       void partiesQuery.refetch();
     },
@@ -111,6 +114,12 @@ export default function DomainFoundation() {
       toast.message("Contexto incompleto", { description: "Nenhum papel pode ser atribuído sem organização, módulo e finalidade explícitos." });
       return;
     }
+    const rolePeriodValidation = validateDraftPartyRolePeriod(roleBeginsAt, roleEndsAt);
+    if (!rolePeriodValidation.valid) {
+      setRolePeriodValidationMessage(rolePeriodValidation.message);
+      return;
+    }
+    setRolePeriodValidationMessage("");
     assignRoleMutation.mutate({
       ...context,
       correlationId: crypto.randomUUID(),
@@ -182,9 +191,10 @@ export default function DomainFoundation() {
                 <option value="lead">Lead</option><option value="client">Cliente</option><option value="buyer">Comprador</option><option value="seller">Vendedor</option><option value="owner">Proprietário</option><option value="tenant">Locatário</option><option value="guarantor">Garantidor</option><option value="representative">Representante</option><option value="broker">Corretor</option><option value="provider">Prestador</option><option value="shareholder">Sócio</option><option value="partner">Parceiro</option><option value="land_contributor">Cedente de terra</option>
               </select>
               <label htmlFor="party-role-start">Início <span>opcional</span></label>
-              <input id="party-role-start" type="datetime-local" value={roleBeginsAt} onChange={(event) => setRoleBeginsAt(event.target.value)} disabled={!contextEnabled} />
+              <input id="party-role-start" type="datetime-local" value={roleBeginsAt} onChange={(event) => { setRoleBeginsAt(event.target.value); if (rolePeriodValidationMessage) setRolePeriodValidationMessage(""); }} disabled={!contextEnabled} aria-invalid={rolePeriodValidationMessage ? "true" : undefined} aria-describedby={rolePeriodValidationMessage ? "party-role-period-validation" : undefined} />
               <label htmlFor="party-role-end">Fim <span>opcional</span></label>
-              <input id="party-role-end" type="datetime-local" value={roleEndsAt} onChange={(event) => setRoleEndsAt(event.target.value)} disabled={!contextEnabled} />
+              <input id="party-role-end" type="datetime-local" value={roleEndsAt} onChange={(event) => { setRoleEndsAt(event.target.value); if (rolePeriodValidationMessage) setRolePeriodValidationMessage(""); }} disabled={!contextEnabled} aria-invalid={rolePeriodValidationMessage ? "true" : undefined} aria-describedby={rolePeriodValidationMessage ? "party-role-period-validation" : undefined} />
+              {rolePeriodValidationMessage && <p id="party-role-period-validation" className="domain-foundation-card__note is-error" role="alert">{rolePeriodValidationMessage}</p>}
               <button type="submit" disabled={!contextEnabled || assignRoleMutation.isPending}>{assignRoleMutation.isPending ? "Atribuindo papel" : "Adicionar papel em rascunho"}</button>
             </form>
 

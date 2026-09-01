@@ -1327,3 +1327,10 @@
 - [x] Definir regras locais proporcionais ao rascunho, sem substituir validação do servidor.
 - [x] Exibir mensagens acessíveis e impedir somente a mutação localmente inválida.
 - [x] Validar comportamento, testes, tipagem, build, responsividade e artefatos ZIP/HTML saneados.
+
+## Núcleo de Cadastros: validação de vigência de papel temporal
+
+- [x] Auditar campos de início e fim de vigência e a validação server-side existente.
+- [x] Definir regra local que aceite data aberta e bloqueie apenas fim anterior ao início.
+- [x] Exibir feedback acessível e impedir somente o vínculo localmente inválido.
+- [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
