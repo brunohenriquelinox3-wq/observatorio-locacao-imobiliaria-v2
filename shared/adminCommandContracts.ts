@@ -50,6 +50,13 @@ export const activateSelfOrganizationAdminInputSchema = z
   })
   .strict();
 
+export const activateOrganizationInputSchema = z
+  .object({
+    organizationId: uuid,
+    correlationId,
+  })
+  .strict();
+
 export const suspendMembershipInputSchema = z
   .object({
     membershipId: uuid,
@@ -74,6 +81,7 @@ export const administrativeRequestMetaSchema = z
 export type ProvisionOrganizationInput = z.infer<typeof provisionOrganizationInputSchema>;
 export type GrantMembershipInput = z.infer<typeof grantMembershipInputSchema>;
 export type ActivateSelfOrganizationAdminInput = z.infer<typeof activateSelfOrganizationAdminInputSchema>;
+export type ActivateOrganizationInput = z.infer<typeof activateOrganizationInputSchema>;
 export type SuspendMembershipInput = z.infer<typeof suspendMembershipInputSchema>;
 export type RevokeMembershipInput = z.infer<typeof revokeMembershipInputSchema>;
 export type BootstrapPlatformPrincipalInput = z.infer<typeof bootstrapPlatformPrincipalInputSchema>;

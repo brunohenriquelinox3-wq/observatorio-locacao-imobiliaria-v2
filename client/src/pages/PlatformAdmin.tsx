@@ -99,6 +99,7 @@ export default function PlatformAdmin() {
   const [membershipModules, setMembershipModules] = useState<Array<"platform" | "loteadora" | "vendas_urbanas" | "locacao">>([]);
   const [membershipExpiration, setMembershipExpiration] = useState("");
   const [selfAdministrationOrganizationId, setSelfAdministrationOrganizationId] = useState("");
+  const [organizationActivationId, setOrganizationActivationId] = useState("");
   const [membershipAction, setMembershipAction] = useState<"suspend" | "revoke">("suspend");
   const [membershipId, setMembershipId] = useState("");
   const [membershipReason, setMembershipReason] = useState("");
@@ -110,6 +111,10 @@ export default function PlatformAdmin() {
   const canLoadAdministrativeData = canLoadAdministrativeState(isAuthenticated, user?.role) || commandStatusQuery.data?.commandMode === "ready_for_controlled_commands";
   const readinessQuery = trpc.foundation.readiness.useQuery(undefined, { retry: false, enabled: canLoadAdministrativeData });
   const selfAdministrationTargetsQuery = trpc.administration.listSelfAdministrationOrganizationTargets.useQuery(undefined, {
+    retry: false,
+    enabled: canLoadAdministrativeData && commandStatusQuery.data?.platformRole === "platform_super_admin",
+  });
+  const activatableOrganizationsQuery = trpc.administration.listActivatableOrganizations.useQuery(undefined, {
     retry: false,
     enabled: canLoadAdministrativeData && commandStatusQuery.data?.platformRole === "platform_super_admin",
   });
@@ -173,6 +178,16 @@ export default function PlatformAdmin() {
       toast.error("ADM organizacional não ativado", {
         description: "O servidor exige SUPER ADM ativo, MFA TOTP recente, recuperação verificada e uma organização elegível sem membership anterior.",
       });
+    },
+  });
+  const activateOrganizationMutation = trpc.administration.activateOrganization.useMutation({
+    onSuccess() {
+      toast.success("Organização ativada", { description: "A organização está ativa; a membership ADM e os escopos já aprovados foram preservados sem ampliação adicional." });
+      setOrganizationActivationId("");
+      void Promise.all([readinessQuery.refetch(), activatableOrganizationsQuery.refetch()]);
+    },
+    onError() {
+      toast.error("Ativação não concluída", { description: "O servidor exige SUPER ADM ativo, MFA TOTP recente e uma membership ADM ativa na organização em rascunho." });
     },
   });
   const suspendMembershipMutation = trpc.administration.suspendMembership.useMutation({
@@ -402,6 +417,18 @@ export default function PlatformAdmin() {
     activateSelfOrganizationAdmin();
   }
 
+  function activateOrganization() {
+    if (!consoleState.isCommandFormAvailable) {
+      toast.message(consoleState.title, { description: consoleState.description });
+      return;
+    }
+    if (!organizationActivationId) {
+      toast.error("Selecione a organização", { description: "A ativação só pode atuar em uma organização em rascunho com membership ADM ativa." });
+      return;
+    }
+    activateOrganizationMutation.mutate({ organizationId: organizationActivationId, correlationId: crypto.randomUUID() });
+  }
+
   function submitOrganization(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!consoleState.isCommandFormAvailable) return explainConsoleGate(event);
@@ -476,6 +503,25 @@ export default function PlatformAdmin() {
                 </select>
                 <button type="button" onClick={activateSelfOrganizationAdmin} disabled={!selfAdministrationOrganizationId || activateSelfOrganizationAdminMutation.isPending}>
                   {activateSelfOrganizationAdminMutation.isPending ? "Ativando ADM" : "Ativar pacote completo"}
+                </button>
+              </div>
+            )}
+            {principalPresentation.isPlatformSuperAdmin && (
+              <div className="platform-admin-session__activation">
+                <label htmlFor="organization-activation-target">Ativar organização</label>
+                <select
+                  id="organization-activation-target"
+                  value={organizationActivationId}
+                  onChange={(event) => setOrganizationActivationId(event.target.value)}
+                  disabled={activatableOrganizationsQuery.isLoading || activateOrganizationMutation.isPending}
+                >
+                  <option value="">Selecione a organização</option>
+                  {activatableOrganizationsQuery.data?.map((organization) => (
+                    <option key={organization.organizationId} value={organization.organizationId}>{organization.organizationLabel} · rascunho</option>
+                  ))}
+                </select>
+                <button type="button" onClick={activateOrganization} disabled={!organizationActivationId || activateOrganizationMutation.isPending}>
+                  {activateOrganizationMutation.isPending ? "Ativando organização" : "Ativar organização"}
                 </button>
               </div>
             )}

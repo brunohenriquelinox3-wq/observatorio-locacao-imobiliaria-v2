@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  activateOrganizationInputSchema,
   activateSelfOrganizationAdminInputSchema,
   bootstrapPlatformPrincipalInputSchema,
   grantMembershipInputSchema,
@@ -44,6 +45,11 @@ describe("admin command contracts", () => {
     }).scopeSelector.modules).toEqual(["loteadora", "vendas_urbanas", "locacao"]);
     expect(activateSelfOrganizationAdminInputSchema.parse({ organizationId: id, correlationId })).toEqual({ organizationId: id, correlationId });
     expect(activateSelfOrganizationAdminInputSchema.safeParse({ organizationId: id, correlationId, subjectId: id }).success).toBe(false);
+  });
+
+  it("keeps organization activation actor-bound and free of scope or identity fields", () => {
+    expect(activateOrganizationInputSchema.parse({ organizationId: id, correlationId })).toEqual({ organizationId: id, correlationId });
+    expect(activateOrganizationInputSchema.safeParse({ organizationId: id, correlationId, state: "active", subjectId: id }).success).toBe(false);
   });
 
   it("uses a Supabase subject identifier, never a hardcoded email, for bootstrap", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { activatePendingPlatformPrincipal, activateSelfOrganizationAdmin, bootstrapCurrentSubject, getAdministrativeSubjectStatus, listSelfAdministrationOrganizationTargets } from "./adminCommands";
+import { activateOrganization, activatePendingPlatformPrincipal, activateSelfOrganizationAdmin, bootstrapCurrentSubject, getAdministrativeSubjectStatus, listActivatableOrganizations, listSelfAdministrationOrganizationTargets } from "./adminCommands";
 
 const subjectId = "550e8400-e29b-41d4-a716-446655440000";
 const correlationId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
@@ -115,5 +115,29 @@ describe("admin command service", () => {
       organizationState: "draft",
     }]);
     expect(client.rpc).toHaveBeenCalledWith("platform_list_self_admin_organizations", { p_actor_user_id: subjectId });
+  });
+
+  it("lists only draft organizations with the caller's active ADM membership for activation", async () => {
+    const client = clientWithPrincipal({ state: "active", role: "platform_super_admin", mfa_verified_at: "2026-09-01T16:00:00.000Z" });
+    client.rpc.mockResolvedValue({ data: [{ organization_id: organizationId, organization_label: "Organização sintética", organization_state: "draft" }], error: null });
+
+    await expect(listActivatableOrganizations(subjectId, client)).resolves.toEqual([{
+      organizationId,
+      organizationLabel: "Organização sintética",
+      organizationState: "draft",
+    }]);
+    expect(client.rpc).toHaveBeenCalledWith("platform_list_activatable_organizations", { p_actor_user_id: subjectId });
+  });
+
+  it("activates an eligible organization only through the dedicated actor-bound RPC", async () => {
+    const client = clientWithPrincipal({ state: "active", role: "platform_super_admin", mfa_verified_at: "2026-09-01T16:00:00.000Z" });
+    client.rpc.mockResolvedValue({ data: organizationId, error: null });
+
+    await expect(activateOrganization(subjectId, { organizationId, correlationId }, client)).resolves.toEqual({ organizationId, state: "active" });
+    expect(client.rpc).toHaveBeenCalledWith("platform_activate_organization", {
+      p_actor_user_id: subjectId,
+      p_organization_id: organizationId,
+      p_correlation_id: correlationId,
+    });
   });
 });

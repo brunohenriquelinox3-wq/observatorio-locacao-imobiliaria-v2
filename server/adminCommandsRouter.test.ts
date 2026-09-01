@@ -10,6 +10,7 @@ vi.mock("./foundationReadiness", () => ({
 }));
 
 vi.mock("./adminCommands", () => ({
+  activateOrganization: vi.fn(),
   bootstrapCurrentSubject: vi.fn(async (currentSubjectId: string | null) => {
     if (!currentSubjectId) {
       throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ADMIN_COMMAND_PRECONDITIONS_UNMET" });
@@ -25,6 +26,7 @@ vi.mock("./adminCommands", () => ({
     commandMode: "ready_for_controlled_commands",
     platformRole: "platform_super_admin",
   })),
+  listActivatableOrganizations: vi.fn(),
   listSelfAdministrationOrganizationTargets: vi.fn(),
   provisionOrganization: vi.fn(),
   revokeMembership: vi.fn(),
@@ -87,6 +89,15 @@ describe("administration command router", () => {
   it("requires a verified recovery channel in the server MFA attestation before active self-administration", async () => {
     await expect(
       appRouter.createCaller(createContext("user", subjectId)).administration.activateSelfOrganizationAdmin({
+        organizationId: subjectId,
+        correlationId,
+      }),
+    ).rejects.toMatchObject({ code: "PRECONDITION_FAILED" });
+  });
+
+  it("requires the same server MFA attestation before activating an organization", async () => {
+    await expect(
+      appRouter.createCaller(createContext("user", subjectId)).administration.activateOrganization({
         organizationId: subjectId,
         correlationId,
       }),

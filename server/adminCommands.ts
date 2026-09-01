@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
+  ActivateOrganizationInput,
   ActivateSelfOrganizationAdminInput,
   GrantMembershipInput,
   ProvisionOrganizationInput,
@@ -198,6 +199,36 @@ export async function activateSelfOrganizationAdmin(
     client,
   );
   return { membershipId, state: "active", moduleCount: 3 };
+}
+
+export async function listActivatableOrganizations(
+  subjectId: string | null,
+  client: AdminClient = getSupabaseAdminClient(),
+): Promise<SelfAdministrationOrganizationTarget[]> {
+  const actorId = await requireActivePlatformPrincipal(subjectId, client);
+  const { data, error } = await client.rpc("platform_list_activatable_organizations", { p_actor_user_id: actorId });
+  if (error || !Array.isArray(data)) throw configurationError();
+
+  return data.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const record = item as Record<string, unknown>;
+    if (typeof record.organization_id !== "string" || typeof record.organization_label !== "string" || record.organization_state !== "draft") return [];
+    return [{ organizationId: record.organization_id, organizationLabel: record.organization_label, organizationState: "draft" }];
+  });
+}
+
+export async function activateOrganization(
+  subjectId: string | null,
+  input: ActivateOrganizationInput,
+  client: AdminClient = getSupabaseAdminClient(),
+): Promise<{ organizationId: string; state: "active" }> {
+  const actorId = await requireActivePlatformPrincipal(subjectId, client);
+  const organizationId = await callUuidRpc(
+    "platform_activate_organization",
+    { p_actor_user_id: actorId, p_organization_id: input.organizationId, p_correlation_id: input.correlationId },
+    client,
+  );
+  return { organizationId, state: "active" };
 }
 
 export async function suspendMembership(

@@ -976,7 +976,7 @@
 
 - [x] Solicitar o canal de recuperação para a identidade conectada, sem conceder Super Admin, organização, membership ou grant.
 - [x] Confirmar a recuperação fora do chat, sem expor senha, token, código ou URL de callback. **Confirmado em 01 de setembro de 2026:** alteração de senha concluída pela rota protegida, seguida de nova conexão e MFA.
-- [ ] Manter a solicitação explícita de alçada pendente de confirmação e de política server-side.
+- [x] Manter a solicitação explícita de alçada pendente de confirmação e de política server-side. **Encerrado:** a revisão A43 confirmou que o principal ativo já tinha papel SUPER ADM de plataforma; não foi criada concessão duplicada.
 
 ## Identidade administrativa: recuperação com rota segura
 
@@ -1032,3 +1032,9 @@
 - [x] Impedir que uma leitura inicial tardia substitua o token Supabase reforçado após a verificação TOTP.
 - [x] Criar a membership `organization_admin` da BHL Imóveis para a identidade SUPER ADM, com correlação, escopo explícito e sem grant temporário separado.
 - [x] Verificar a resposta minimizada, testar os gates aplicáveis e preservar o marco com ZIP e HTML saneados.
+
+## Administração: ativação controlada da organização BHL Imóveis
+
+- [x] Confirmar o comando governado de ativação, a idempotência e a preservação dos escopos já aprovados.
+- [x] Ativar a organização BHL Imóveis sem alterar a membership ADM, grants, financeiro ou acessos de terceiros.
+- [x] Verificar o estado minimizado, testar os gates aplicáveis e preservar o marco com ZIP e HTML saneados.

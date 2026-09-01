@@ -25,3 +25,11 @@ Após a confirmação declarada de MFA, uma nova tentativa controlada continuou 
 ## Ativação concluída após prova atualizada
 
 Depois de uma nova verificação TOTP na própria central e da correção da sincronização de sessão, o comando de autoatribuição foi aceito pelo servidor. A mesma identidade SUPER ADM passou a ter uma membership organizacional ativa com três escopos iniciais: Loteadora, Vendas Urbanas e Locação. A confirmação devolveu apenas o estado agregado necessário; não foram exibidos identificadores completos, tokens, códigos, documentos, dados financeiros, contratos, pagamentos ou acessos de terceiros.
+
+## Pré-condição de ativação organizacional
+
+A central exibiu somente a organização autorizada ainda em rascunho no seletor de ativação. A sessão da mesma identidade indicou MFA verificado nesta sessão. O comando disponível limita a transição a rascunho para ativo e não modifica membership, grants, dados financeiros, contratos, pagamentos, integrações externas ou acessos de terceiros.
+
+## Ativação organizacional concluída
+
+O comando de ativação foi aceito pelo servidor após a seleção explícita da organização autorizada e a confirmação TOTP recente. A organização deixou de aparecer na lista de itens em rascunho elegíveis para ativação, e o ledger agregado registrou somente um novo evento administrativo. A membership ADM existente e os três escopos previamente aprovados foram preservados; não foram criados grants adicionais, dados financeiros, contratos, pagamentos, integrações externas ou acessos de terceiros.
