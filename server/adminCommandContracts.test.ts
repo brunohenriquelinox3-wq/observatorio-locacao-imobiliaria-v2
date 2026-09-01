@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  activateSelfOrganizationAdminInputSchema,
   bootstrapPlatformPrincipalInputSchema,
   grantMembershipInputSchema,
   provisionOrganizationInputSchema,
@@ -30,6 +31,19 @@ describe("admin command contracts", () => {
         email: "not-accepted@example.com",
       }),
     ).toThrow();
+  });
+
+  it("accepts Loteadora in an explicit organization scope and keeps self-activation input minimal", () => {
+    expect(grantMembershipInputSchema.parse({
+      organizationId: id,
+      subjectId: id,
+      role: "organization_admin",
+      scopeSelector: { modules: ["loteadora", "vendas_urbanas", "locacao"] },
+      purposeCode: "cadastro_inicial",
+      correlationId,
+    }).scopeSelector.modules).toEqual(["loteadora", "vendas_urbanas", "locacao"]);
+    expect(activateSelfOrganizationAdminInputSchema.parse({ organizationId: id, correlationId })).toEqual({ organizationId: id, correlationId });
+    expect(activateSelfOrganizationAdminInputSchema.safeParse({ organizationId: id, correlationId, subjectId: id }).success).toBe(false);
   });
 
   it("uses a Supabase subject identifier, never a hardcoded email, for bootstrap", () => {

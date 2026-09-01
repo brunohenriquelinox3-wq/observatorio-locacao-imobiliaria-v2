@@ -1019,3 +1019,16 @@
 - [x] Provisionar a organização BHL Imóveis pelo comando administrativo governado, sem membership, grant ou módulo adicional.
 - [x] Corrigir o rótulo da fundação que ainda declara comandos bloqueados apesar de o SUPER ADM ativo poder executar comandos controlados.
 - [x] Verificar a resposta minimizada, registrar o resultado e preservar o marco com ZIP e HTML saneados.
+
+## Administração: primeira membership de ADM da BHL Imóveis
+
+- [x] Ampliar o contrato e a interface para incluir Loteadora ao pacote completo de escopo organizacional.
+- [x] Registrar o pacote completo autorizado para Loteadora, Vendas Urbanas e Locação, com finalidade explícita para a mesma identidade SUPER ADM.
+- [x] Implementar a autoatribuição governada que cria membership e grant ativos juntos somente para o próprio SUPER ADM, pois a delegação genérica cria pendências sem acesso efetivo.
+- [x] Tornar o acionamento de ADM completo acessível no estado administrativo, sem expor IDs ou exigir preenchimento manual de dados técnicos.
+- [x] Restabelecer a sessão autenticada antes de executar a autoatribuição de ADM completo autorizada.
+- [x] Corrigir a propagação do subject Supabase após renovação de sessão, mantendo os gates de SUPER ADM e MFA recentes no servidor.
+- [x] Evitar que a espera pela sessão inicial impeça a renderização da central quando o provedor estiver lento ou indisponível.
+- [x] Impedir que uma leitura inicial tardia substitua o token Supabase reforçado após a verificação TOTP.
+- [x] Criar a membership `organization_admin` da BHL Imóveis para a identidade SUPER ADM, com correlação, escopo explícito e sem grant temporário separado.
+- [x] Verificar a resposta minimizada, testar os gates aplicáveis e preservar o marco com ZIP e HTML saneados.

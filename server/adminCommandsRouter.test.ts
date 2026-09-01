@@ -17,12 +17,15 @@ vi.mock("./adminCommands", () => ({
     return { principalId: currentSubjectId, state: "pending_activation" };
   }),
   delegateMembership: vi.fn(),
+  activateSelfOrganizationAdmin: vi.fn(),
   getAdministrativeSubjectStatus: vi.fn(async () => ({
-    identityState: "principal_absent",
-    mfaVerified: false,
-    bootstrapAction: "available",
-    commandMode: "bootstrap_pending",
+    identityState: "active",
+    mfaVerified: true,
+    bootstrapAction: "unavailable",
+    commandMode: "ready_for_controlled_commands",
+    platformRole: "platform_super_admin",
   })),
+  listSelfAdministrationOrganizationTargets: vi.fn(),
   provisionOrganization: vi.fn(),
   revokeMembership: vi.fn(),
   suspendMembership: vi.fn(),
@@ -79,5 +82,14 @@ describe("administration command router", () => {
     await expect(
       appRouter.createCaller(createContext("user", subjectId)).administration.bootstrap({ correlationId }),
     ).resolves.toEqual({ principalId: subjectId, state: "pending_activation" });
+  });
+
+  it("requires a verified recovery channel in the server MFA attestation before active self-administration", async () => {
+    await expect(
+      appRouter.createCaller(createContext("user", subjectId)).administration.activateSelfOrganizationAdmin({
+        organizationId: subjectId,
+        correlationId,
+      }),
+    ).rejects.toMatchObject({ code: "PRECONDITION_FAILED" });
   });
 });

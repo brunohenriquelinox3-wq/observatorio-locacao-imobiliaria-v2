@@ -18,7 +18,7 @@ export const platformRoleSchema = z.enum([
 
 export const scopeSelectorSchema = z
   .object({
-    modules: z.array(z.enum(["platform", "vendas_urbanas", "locacao"])).min(1).max(3),
+    modules: z.array(z.enum(["platform", "loteadora", "vendas_urbanas", "locacao"])).min(1).max(4),
     resourceIds: z.array(uuid).max(20).optional(),
   })
   .strict();
@@ -39,6 +39,13 @@ export const grantMembershipInputSchema = z
     scopeSelector: scopeSelectorSchema,
     purposeCode: z.string().trim().regex(/^[a-z][a-z0-9_]{2,95}$/),
     expiresAt: z.string().datetime({ offset: true }).optional(),
+    correlationId,
+  })
+  .strict();
+
+export const activateSelfOrganizationAdminInputSchema = z
+  .object({
+    organizationId: uuid,
     correlationId,
   })
   .strict();
@@ -66,6 +73,7 @@ export const administrativeRequestMetaSchema = z
 
 export type ProvisionOrganizationInput = z.infer<typeof provisionOrganizationInputSchema>;
 export type GrantMembershipInput = z.infer<typeof grantMembershipInputSchema>;
+export type ActivateSelfOrganizationAdminInput = z.infer<typeof activateSelfOrganizationAdminInputSchema>;
 export type SuspendMembershipInput = z.infer<typeof suspendMembershipInputSchema>;
 export type RevokeMembershipInput = z.infer<typeof revokeMembershipInputSchema>;
 export type BootstrapPlatformPrincipalInput = z.infer<typeof bootstrapPlatformPrincipalInputSchema>;

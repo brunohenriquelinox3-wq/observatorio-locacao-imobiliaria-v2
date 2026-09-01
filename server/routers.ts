@@ -6,16 +6,19 @@ import { systemRouter } from "./_core/systemRouter";
 import { bootstrapOwnerProcedure, platformActiveProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { getFoundationReadiness } from "./foundationReadiness";
 import {
+  activateSelfOrganizationAdmin,
   bootstrapCurrentSubject,
   activatePendingPlatformPrincipal,
   delegateMembership,
   getAdministrativeSubjectStatus,
+  listSelfAdministrationOrganizationTargets,
   provisionOrganization,
   revokeMembership,
   suspendMembership,
 } from "./adminCommands";
 import { attestSupabaseMfa } from "./supabaseIdentity";
 import {
+  activateSelfOrganizationAdminInputSchema,
   administrativeRequestMetaSchema,
   grantMembershipInputSchema,
   provisionOrganizationInputSchema,
@@ -187,6 +190,17 @@ export const appRouter = router({
     delegateMembership: platformActiveProcedure
       .input(grantMembershipInputSchema)
       .mutation(({ ctx, input }) => delegateMembership(ctx.supabaseSubjectId, input)),
+    listSelfAdministrationOrganizationTargets: platformActiveProcedure
+      .query(({ ctx }) => listSelfAdministrationOrganizationTargets(ctx.supabaseSubjectId)),
+    activateSelfOrganizationAdmin: platformActiveProcedure
+      .input(activateSelfOrganizationAdminInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
+        if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2" || attestation.method !== "totp" || !attestation.verifiedRecoveryChannel) {
+          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ADMIN_COMMAND_PRECONDITIONS_UNMET" });
+        }
+        return activateSelfOrganizationAdmin(ctx.supabaseSubjectId, input);
+      }),
     suspendMembership: platformActiveProcedure
       .input(suspendMembershipInputSchema)
       .mutation(({ ctx, input }) => suspendMembership(ctx.supabaseSubjectId, input)),

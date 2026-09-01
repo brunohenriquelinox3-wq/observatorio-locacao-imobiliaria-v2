@@ -7,9 +7,13 @@ import superjson from "superjson";
 import App from "./App";
 import { startLogin } from "./const";
 import { getSupabaseBrowserClient } from "./lib/supabaseBrowser";
+import { createSupabaseSessionBridge } from "./lib/supabaseSessionBridge";
 import "./index.css";
 
 const queryClient = new QueryClient();
+const supabaseSessionBridge = createSupabaseSessionBridge(getSupabaseBrowserClient(), () => {
+  void queryClient.invalidateQueries();
+});
 
 const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (!(error instanceof TRPCClientError)) return;
@@ -63,13 +67,9 @@ const trpcClient = trpc.createClient({
           // sessionStorage unavailable
         }
 
-        try {
-          const { data } = await getSupabaseBrowserClient()?.auth.getSession() ?? { data: { session: null } };
-          if (data.session?.access_token) {
-            headers["X-Supabase-Access-Token"] = data.session.access_token;
-          }
-        } catch {
-          // Supabase session unavailable; protected server procedures still fail closed.
+        const accessToken = await supabaseSessionBridge.getAccessToken();
+        if (accessToken) {
+          headers["X-Supabase-Access-Token"] = accessToken;
         }
         return headers;
       },
@@ -83,10 +83,16 @@ const trpcClient = trpc.createClient({
   ],
 });
 
-createRoot(document.getElementById("root")!).render(
-  <QueryClientProvider client={queryClient}>
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <App />
-    </trpc.Provider>
-  </QueryClientProvider>
-);
+function mountApplication() {
+  // A ponte ainda aguarda a sessão antes de assinar cada requisição tRPC. A UI,
+  // porém, não deve permanecer em branco se o provedor estiver lento.
+  createRoot(document.getElementById("root")!).render(
+    <QueryClientProvider client={queryClient}>
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+        <App />
+      </trpc.Provider>
+    </QueryClientProvider>,
+  );
+}
+
+mountApplication();

@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { activatePendingPlatformPrincipal, bootstrapCurrentSubject, getAdministrativeSubjectStatus } from "./adminCommands";
+import { activatePendingPlatformPrincipal, activateSelfOrganizationAdmin, bootstrapCurrentSubject, getAdministrativeSubjectStatus, listSelfAdministrationOrganizationTargets } from "./adminCommands";
 
 const subjectId = "550e8400-e29b-41d4-a716-446655440000";
 const correlationId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
+const organizationId = "7ba7b810-9dad-11d1-80b4-00c04fd430c8";
 
 function clientWithPrincipal(data: unknown) {
   const query = { select: vi.fn(), eq: vi.fn(), maybeSingle: vi.fn() };
@@ -86,5 +87,33 @@ describe("admin command service", () => {
   it("rejects activation when the server does not have a complete attestation", async () => {
     const client = clientWithPrincipal({ state: "pending_activation", mfa_verified_at: null });
     await expect(activatePendingPlatformPrincipal(null, correlationId, client)).rejects.toMatchObject({ code: "PRECONDITION_FAILED" });
+  });
+
+  it("activates a self-admin membership only through the dedicated actor-bound RPC", async () => {
+    const client = clientWithPrincipal({ state: "active", role: "platform_super_admin", mfa_verified_at: "2026-09-01T16:00:00.000Z" });
+    client.rpc.mockResolvedValue({ data: organizationId, error: null });
+
+    await expect(activateSelfOrganizationAdmin(subjectId, { organizationId, correlationId }, client)).resolves.toEqual({
+      membershipId: organizationId,
+      state: "active",
+      moduleCount: 3,
+    });
+    expect(client.rpc).toHaveBeenCalledWith("platform_activate_self_organization_admin", {
+      p_actor_user_id: subjectId,
+      p_organization_id: organizationId,
+      p_correlation_id: correlationId,
+    });
+  });
+
+  it("returns only eligible organization labels to the current SUPER ADM", async () => {
+    const client = clientWithPrincipal({ state: "active", role: "platform_super_admin", mfa_verified_at: "2026-09-01T16:00:00.000Z" });
+    client.rpc.mockResolvedValue({ data: [{ organization_id: organizationId, organization_label: "Organização sintética", organization_state: "draft" }], error: null });
+
+    await expect(listSelfAdministrationOrganizationTargets(subjectId, client)).resolves.toEqual([{
+      organizationId,
+      organizationLabel: "Organização sintética",
+      organizationState: "draft",
+    }]);
+    expect(client.rpc).toHaveBeenCalledWith("platform_list_self_admin_organizations", { p_actor_user_id: subjectId });
   });
 });

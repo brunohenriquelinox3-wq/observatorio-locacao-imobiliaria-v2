@@ -96,8 +96,9 @@ export default function PlatformAdmin() {
   const [membershipSubjectId, setMembershipSubjectId] = useState("");
   const [membershipRole, setMembershipRole] = useState("organization_admin");
   const [membershipPurposeCode, setMembershipPurposeCode] = useState("");
-  const [membershipModules, setMembershipModules] = useState<Array<"platform" | "vendas_urbanas" | "locacao">>([]);
+  const [membershipModules, setMembershipModules] = useState<Array<"platform" | "loteadora" | "vendas_urbanas" | "locacao">>([]);
   const [membershipExpiration, setMembershipExpiration] = useState("");
+  const [selfAdministrationOrganizationId, setSelfAdministrationOrganizationId] = useState("");
   const [membershipAction, setMembershipAction] = useState<"suspend" | "revoke">("suspend");
   const [membershipId, setMembershipId] = useState("");
   const [membershipReason, setMembershipReason] = useState("");
@@ -108,6 +109,10 @@ export default function PlatformAdmin() {
   const commandStatusQuery = trpc.foundation.commandStatus.useQuery(undefined, { retry: false, enabled: canLoadBootstrapStatus });
   const canLoadAdministrativeData = canLoadAdministrativeState(isAuthenticated, user?.role) || commandStatusQuery.data?.commandMode === "ready_for_controlled_commands";
   const readinessQuery = trpc.foundation.readiness.useQuery(undefined, { retry: false, enabled: canLoadAdministrativeData });
+  const selfAdministrationTargetsQuery = trpc.administration.listSelfAdministrationOrganizationTargets.useQuery(undefined, {
+    retry: false,
+    enabled: canLoadAdministrativeData && commandStatusQuery.data?.platformRole === "platform_super_admin",
+  });
   const bootstrapMutation = trpc.administration.bootstrap.useMutation({
     onSuccess() {
       toast.success("Principal criado como pendência de ativação", {
@@ -156,6 +161,20 @@ export default function PlatformAdmin() {
       toast.error("Delegação não concluída", { description: "Confirme os identificadores, o escopo e a política. Nenhuma alçada foi ampliada." });
     },
   });
+  const activateSelfOrganizationAdminMutation = trpc.administration.activateSelfOrganizationAdmin.useMutation({
+    onSuccess() {
+      toast.success("ADM organizacional ativado", {
+        description: "A mesma identidade SUPER ADM recebeu uma membership ativa e três escopos iniciais: Loteadora, Vendas Urbanas e Locação.",
+      });
+      setSelfAdministrationOrganizationId("");
+      void Promise.all([readinessQuery.refetch(), selfAdministrationTargetsQuery.refetch()]);
+    },
+    onError() {
+      toast.error("ADM organizacional não ativado", {
+        description: "O servidor exige SUPER ADM ativo, MFA TOTP recente, recuperação verificada e uma organização elegível sem membership anterior.",
+      });
+    },
+  });
   const suspendMembershipMutation = trpc.administration.suspendMembership.useMutation({
     onSuccess() {
       toast.success("Suspensão registrada", { description: "A transição foi controlada pelo servidor e associada a uma correlação." });
@@ -182,13 +201,13 @@ export default function PlatformAdmin() {
     if (readinessQuery.isError || value === undefined) return "Indisponível";
     return String(value);
   };
-  const foundationStatus = readinessQuery.isLoading
+  const foundationStatus = commandStatusQuery.isLoading
     ? "Carregando fundação"
-    : readinessQuery.isError
+    : commandStatusQuery.isError
       ? "Leitura indisponível"
-      : readiness?.commandMode === "blocked"
+      : commandStatusQuery.data?.commandMode === "blocked"
         ? "Fundação conectada · comandos bloqueados"
-        : readiness?.commandMode === "ready_for_controlled_commands"
+        : commandStatusQuery.data?.commandMode === "ready_for_controlled_commands"
           ? principalPresentation.activeFoundationStatus
           : "Estado indisponível";
   const identityStatus = identityQuery.isLoading
@@ -207,6 +226,10 @@ export default function PlatformAdmin() {
   const consoleState = deriveAdministrativeConsoleState(commandStatusQuery.data);
 
   function executeCommand(command: PlatformCommand) {
+    if (command === "grantMembership" && principalPresentation.isPlatformSuperAdmin) {
+      document.getElementById("self-administration-organization")?.focus();
+      return;
+    }
     if (command === "activateBootstrap" && canPrepareBootstrap) {
       bootstrapMutation.mutate({ correlationId: crypto.randomUUID() });
       return;
@@ -355,8 +378,28 @@ export default function PlatformAdmin() {
     toast.message(consoleState.title, { description: consoleState.description });
   }
 
-  function toggleMembershipModule(module: "platform" | "vendas_urbanas" | "locacao") {
+  function toggleMembershipModule(module: "platform" | "loteadora" | "vendas_urbanas" | "locacao") {
     setMembershipModules((current) => current.includes(module) ? current.filter((item) => item !== module) : [...current, module]);
+  }
+
+  function activateSelfOrganizationAdmin() {
+    if (!consoleState.isCommandFormAvailable) {
+      toast.message(consoleState.title, { description: consoleState.description });
+      return;
+    }
+    if (!selfAdministrationOrganizationId) {
+      toast.error("Selecione a organização", { description: "A autoatribuição só pode atuar em uma organização elegível escolhida explicitamente." });
+      return;
+    }
+    activateSelfOrganizationAdminMutation.mutate({
+      organizationId: selfAdministrationOrganizationId,
+      correlationId: crypto.randomUUID(),
+    });
+  }
+
+  function submitSelfOrganizationAdmin(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    activateSelfOrganizationAdmin();
   }
 
   function submitOrganization(event: React.FormEvent<HTMLFormElement>) {
@@ -415,6 +458,27 @@ export default function PlatformAdmin() {
             <div><ShieldCheck size={18} /><span>ESTADO DA FUNDAÇÃO</span></div>
             <strong>{foundationStatus}</strong>
             <p>{principalPresentation.isPlatformSuperAdmin ? "O papel de plataforma está ativo. Organizações, memberships e grants delegados continuam exigindo policy, escopo e correlação." : `${identityStatus}. O acesso privilegiado depende de convite, MFA, recuperação e alçada vigente.`}</p>
+            {principalPresentation.isPlatformSuperAdmin && (
+              <div className="platform-admin-session__activation">
+                <label htmlFor="hero-self-administration-organization">Ativar ADM completo</label>
+                <select
+                  id="hero-self-administration-organization"
+                  value={selfAdministrationOrganizationId}
+                  onChange={(event) => setSelfAdministrationOrganizationId(event.target.value)}
+                  disabled={selfAdministrationTargetsQuery.isLoading || activateSelfOrganizationAdminMutation.isPending}
+                >
+                  <option value="">Selecione a organização</option>
+                  {selfAdministrationTargetsQuery.data?.map((organization) => (
+                    <option key={organization.organizationId} value={organization.organizationId}>
+                      {organization.organizationLabel} · {organization.organizationState === "draft" ? "rascunho" : "ativa"}
+                    </option>
+                  ))}
+                </select>
+                <button type="button" onClick={activateSelfOrganizationAdmin} disabled={!selfAdministrationOrganizationId || activateSelfOrganizationAdminMutation.isPending}>
+                  {activateSelfOrganizationAdminMutation.isPending ? "Ativando ADM" : "Ativar pacote completo"}
+                </button>
+              </div>
+            )}
           </aside>
         </header>
 
@@ -577,15 +641,15 @@ export default function PlatformAdmin() {
                     <span>0{index + 1}</span>
                     <Icon size={21} />
                   </div>
-                  <h3>{isCompletedBootstrap ? principalPresentation.bootstrapCardLabel : state.label}</h3>
-                  <p>{isCompletedBootstrap ? principalPresentation.bootstrapCardReason : state.reason}</p>
-                  <small>{requirement}</small>
+                  <h3>{isCompletedBootstrap ? principalPresentation.bootstrapCardLabel : command === "grantMembership" && principalPresentation.isPlatformSuperAdmin ? "Ativar ADM completo" : state.label}</h3>
+                  <p>{isCompletedBootstrap ? principalPresentation.bootstrapCardReason : command === "grantMembership" && principalPresentation.isPlatformSuperAdmin ? "Abre a autoatribuição do ADM da organização para a mesma identidade SUPER ADM, com escopos explícitos e MFA no servidor." : state.reason}</p>
+                  <small>{command === "grantMembership" && principalPresentation.isPlatformSuperAdmin ? "Loteadora · Vendas Urbanas · Locação · MFA recente" : requirement}</small>
                   <button
                     type="button"
                     onClick={() => executeCommand(command)}
                     disabled={isCompletedBootstrap || (command === "activateBootstrap" && bootstrapMutation.isPending)}
                   >
-                    {isCompletedBootstrap ? "Concluído" : command === "activateBootstrap" && canPrepareBootstrap ? "Preparar pendência" : command === "activateBootstrap" && canActivateBootstrap ? "Pedir ativação" : "Ver bloqueio"} <ArrowUpRight size={15} />
+                    {isCompletedBootstrap ? "Concluído" : command === "grantMembership" && principalPresentation.isPlatformSuperAdmin ? "Abrir ativação" : command === "activateBootstrap" && canPrepareBootstrap ? "Preparar pendência" : command === "activateBootstrap" && canActivateBootstrap ? "Pedir ativação" : "Ver bloqueio"} <ArrowUpRight size={15} />
                   </button>
                 </article>
               );
@@ -602,6 +666,30 @@ export default function PlatformAdmin() {
             <p className="platform-admin-muted">{consoleState.title}: {consoleState.description}</p>
           </div>
           <div className="platform-admin-console__grid" aria-disabled={!consoleState.isCommandFormAvailable}>
+            <form onSubmit={submitSelfOrganizationAdmin} className="platform-admin-console__form">
+              <div className="platform-admin-console__form-title"><UsersRound size={18} /><h3>Ativar ADM completo</h3></div>
+              <p>Somente para a própria identidade SUPER ADM, com membership ativa e escopos iniciais em Loteadora, Vendas Urbanas e Locação.</p>
+              <label htmlFor="self-administration-organization">Organização elegível</label>
+              <select
+                id="self-administration-organization"
+                value={selfAdministrationOrganizationId}
+                onChange={(event) => setSelfAdministrationOrganizationId(event.target.value)}
+                disabled={!consoleState.isCommandFormAvailable || selfAdministrationTargetsQuery.isLoading || activateSelfOrganizationAdminMutation.isPending}
+                required
+              >
+                <option value="">Selecione uma organização</option>
+                {selfAdministrationTargetsQuery.data?.map((organization) => (
+                  <option key={organization.organizationId} value={organization.organizationId}>
+                    {organization.organizationLabel} · {organization.organizationState === "draft" ? "rascunho" : "ativa"}
+                  </option>
+                ))}
+              </select>
+              <p className="platform-admin-muted">Finalidade fixa: CADASTRO_INICIAL. Nenhum financeiro, contrato, pagamento ou acesso de terceiro é criado.</p>
+              <button type="submit" disabled={!consoleState.isCommandFormAvailable || !selfAdministrationOrganizationId || activateSelfOrganizationAdminMutation.isPending}>
+                {activateSelfOrganizationAdminMutation.isPending ? "Ativando ADM" : "Ativar pacote completo"} <ArrowUpRight size={15} />
+              </button>
+            </form>
+
             <form onSubmit={submitOrganization} className="platform-admin-console__form">
               <div className="platform-admin-console__form-title"><Building2 size={18} /><h3>Nova organização</h3></div>
               <p>Cria somente uma organização em rascunho quando a política do servidor permitir.</p>
@@ -629,8 +717,8 @@ export default function PlatformAdmin() {
               <input id="membership-purpose" value={membershipPurposeCode} onChange={(event) => setMembershipPurposeCode(event.target.value)} disabled={!consoleState.isCommandFormAvailable} required />
               <fieldset className="platform-admin-console__scope">
                 <legend>Módulos no escopo</legend>
-                {(["platform", "vendas_urbanas", "locacao"] as const).map((module) => (
-                  <label key={module}><input type="checkbox" checked={membershipModules.includes(module)} onChange={() => toggleMembershipModule(module)} disabled={!consoleState.isCommandFormAvailable} /> {module === "platform" ? "Plataforma" : module === "vendas_urbanas" ? "Vendas Urbanas" : "Locação"}</label>
+                {(["platform", "loteadora", "vendas_urbanas", "locacao"] as const).map((module) => (
+                  <label key={module}><input type="checkbox" checked={membershipModules.includes(module)} onChange={() => toggleMembershipModule(module)} disabled={!consoleState.isCommandFormAvailable} /> {module === "platform" ? "Plataforma" : module === "loteadora" ? "Loteadora" : module === "vendas_urbanas" ? "Vendas Urbanas" : "Locação"}</label>
                 ))}
               </fieldset>
               <label htmlFor="membership-expiration">Vigência <span>opcional</span></label>
