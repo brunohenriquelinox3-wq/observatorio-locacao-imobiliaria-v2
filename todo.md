@@ -1076,3 +1076,10 @@
 - [x] Criar uma visão inicial com progresso operacional, setores de Lead, Agenda, Ativos e Perfil de Busca separados e estados vazios honestos.
 - [x] Manter os formulários de rascunho sob acesso explícito, sem cadastrar clientes, imóveis, propostas, reservas, contratos ou financeiro.
 - [x] Validar responsividade, acessibilidade, isolamento de dados e empacotar ZIP/HTML saneados.
+
+## Experiência Locação: jornada operacional sem dados de negócio
+
+- [x] Auditar a entrada de Locação para reduzir a aparência de formulário técnico e ordenar as jornadas de administração e locação.
+- [x] Criar uma visão inicial com progresso operacional, triagem, agenda, ativos e perfil de busca separados e estados vazios honestos.
+- [x] Manter os formulários de rascunho sob acesso explícito, sem cadastrar clientes, imóveis, contratos, garantias, cobranças ou financeiro.
+- [x] Validar responsividade, acessibilidade, isolamento de dados e empacotar ZIP/HTML saneados.

@@ -2,6 +2,7 @@ import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
+import { rentalOperationalValue } from "@/lib/rentalOperationalOverview";
 import { trpc } from "@/lib/trpc";
 import { CalendarClock, CircleAlert, ClipboardCheck, Compass, FileCheck2, House, Link2, Search, ShieldCheck, Tag, UsersRound, Workflow } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -124,6 +125,13 @@ export default function RentalPipeline() {
   const tenantSearchProfilesQuery = trpc.rentalPipeline.listDraftTenantSearchProfiles.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const managementDeclaredScopesQuery = trpc.rentalPipeline.listDraftManagementDeclaredScopes.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const agendaClassificationsQuery = trpc.rentalPipeline.listDraftAgendaClassifications.useQuery(context, { enabled: isWorkspaceReady, retry: false });
+  const operationalSectors = [
+    { code: "01", title: "Triagem Inicial", value: rentalOperationalValue({ contextReady: isWorkspaceReady, loading: intakesQuery.isLoading, count: intakesQuery.data?.length, pendingLabel: "Aguardando leitura" }), description: "Separe interesse de administração e de locação antes de qualquer contratação.", target: "#rental-triage" },
+    { code: "02", title: "Agenda Interna", value: rentalOperationalValue({ contextReady: isWorkspaceReady, loading: agendaClassificationsQuery.isLoading, count: agendaClassificationsQuery.data?.length, pendingLabel: "Aguardando leitura" }), description: "Registros internos não disparam contato, convite ou confirmação externa.", target: "#rental-triage" },
+    { code: "03", title: "Perfil de Busca", value: rentalOperationalValue({ contextReady: isWorkspaceReady, loading: tenantSearchProfilesQuery.isLoading, count: tenantSearchProfilesQuery.data?.length, pendingLabel: "Aguardando leitura" }), description: "Preferências de locatário em código não recomendam imóvel automaticamente.", target: "#rental-search" },
+    { code: "04", title: "Ativos em Gestão", value: rentalOperationalValue({ contextReady: isWorkspaceReady, loading: managementAssetLinksQuery.isLoading, count: managementAssetLinksQuery.data?.length, pendingLabel: "Aguardando leitura" }), description: "O vínculo de gestão não prova mandato, exclusividade ou disponibilidade.", target: "#rental-assets" },
+    { code: "05", title: "Escopo Declarado", value: rentalOperationalValue({ contextReady: isWorkspaceReady, loading: managementDeclaredScopesQuery.isLoading, count: managementDeclaredScopesQuery.data?.length, pendingLabel: "Aguardando leitura" }), description: "A intenção de serviço continua distinta de mandato, contrato ou cobrança.", target: "#rental-scope" },
+  ];
   const utils = trpc.useUtils();
 
   const createMutation = trpc.rentalPipeline.createDraftIntake.useMutation({
@@ -231,6 +239,8 @@ export default function RentalPipeline() {
           <div className="rental-pipeline-hero__rule"><ShieldCheck size={18} /><span>Rascunho contextual<br /><b>sem contrato, garantia ou financeiro</b></span></div>
         </header>
 
+        <section className="rental-pipeline-overview" aria-labelledby="rental-overview-title"><div className="rental-pipeline-overview__heading"><div><p className="rental-pipeline-eyebrow">PAINEL LOCAÇÃO · VISÃO DE TRABALHO</p><h2 id="rental-overview-title">Duas jornadas, uma operação organizada e nenhum compromisso antecipado.</h2></div><p>Os indicadores usam somente leituras devolvidas pelo contexto autorizado. Estados vazios não representam imóveis, contratos ou pessoas e não revelam atividade externa.</p></div><nav className="rental-pipeline-overview__grid" aria-label="Setores operacionais de Locação">{operationalSectors.map((sector) => <a key={sector.code} href={sector.target}><span>{sector.code}</span><strong>{sector.title}</strong><b>{sector.value}</b><small>{sector.description}</small><em>Ver setor</em></a>)}</nav></section>
+
         <section className="rental-pipeline-context" aria-labelledby="rental-context-title">
           <div className="rental-pipeline-heading"><div><p className="rental-pipeline-eyebrow">01 · CONTEXTO</p><h2 id="rental-context-title">A Locação não herda permissões de outra área.</h2></div><p>Organização, módulo e finalidade são enviados ao servidor a cada operação. O módulo é fixo em Locação, mas a autorização continua dependente de identidade, membership, grant e vigência.</p></div>
           <div className="rental-pipeline-context__fields">
@@ -241,7 +251,7 @@ export default function RentalPipeline() {
           <div className={`rental-pipeline-context__status ${isContextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} /><span>{isContextReady ? "Contexto autorizado selecionado. O servidor ainda confirmará identidade, membership, grant, vigência, módulo e finalidade antes de qualquer leitura ou rascunho." : authorizedContextsQuery.isError ? "O contexto não foi liberado. A interface não revela organizações ou escopos externos." : "Selecione um contexto autorizado para liberar as ações de rascunho."}</span></div>
         </section>
 
-        <section className="rental-pipeline-workspace" aria-labelledby="rental-workspace-title">
+        <section id="rental-triage" className="rental-pipeline-workspace" aria-labelledby="rental-workspace-title">
           <div className="rental-pipeline-heading"><div><p className="rental-pipeline-eyebrow">02 · TRIAGEM INTERNA</p><h2 id="rental-workspace-title">Entrada, etapa e agenda formam um registro de trabalho mínimo.</h2></div><p>Não há dados de contato, endereço detalhado, análise de crédito, garantia, documentos, contratos, boletos, cobranças, repasses, portais ou integrações de calendário.</p></div>
           <div className="rental-pipeline-grid">
             <form className="rental-pipeline-card" onSubmit={createIntake}>
@@ -269,7 +279,7 @@ export default function RentalPipeline() {
           </div>
         </section>
 
-        <section className="rental-pipeline-search" aria-labelledby="rental-tenant-search-title">
+        <section id="rental-search" className="rental-pipeline-search" aria-labelledby="rental-tenant-search-title">
           <div className="rental-pipeline-heading"><div><p className="rental-pipeline-eyebrow">02B · PERFIL DE BUSCA</p><h2 id="rental-tenant-search-title">Estruture a busca somente para interesse de locatário.</h2></div><p>O perfil registra tipos de ativo, janela declarada de ocupação e código operacional. Ele não usa endereço, CEP, geolocalização, preço, renda, contato, documento, análise ou garantia.</p></div>
           <div className="rental-pipeline-search__grid">
             <form className="rental-pipeline-card rental-pipeline-search__card" onSubmit={upsertTenantSearchProfile}>
@@ -290,7 +300,7 @@ export default function RentalPipeline() {
           {isWorkspaceReady && tenantSearchProfilesQuery.data && tenantSearchProfilesQuery.data.length > 0 && <div className="rental-pipeline-list__rows">{tenantSearchProfilesQuery.data.map((profile) => <article key={profile.profileId}><span>Perfil de locatário</span><h3>{profile.preferenceCode}</h3><p><b>{occupancyTimings[profile.occupancyTiming]}</b> · {profile.acceptedAssetKinds.map((kind) => assetKinds[kind]).join(", ")} · registro interno em {new Date(profile.createdAt).toLocaleString("pt-BR")}</p><code>{profile.intakeId} · {profile.profileId}</code></article>)}</div>}
         </section>
 
-        <section className="rental-pipeline-link" aria-labelledby="rental-management-asset-title">
+        <section id="rental-assets" className="rental-pipeline-link" aria-labelledby="rental-management-asset-title">
           <div className="rental-pipeline-heading"><div><p className="rental-pipeline-eyebrow">02A · ATIVO DECLARADO</p><h2 id="rental-management-asset-title">Vincule um ativo somente ao interesse de administração.</h2></div><p>O servidor nega a jornada de locatário e exige que o ativo esteja em rascunho para Locação. O vínculo não torna o imóvel disponível nem confirma qualquer direito.</p></div>
           <div className="rental-pipeline-link__grid">
             <form className="rental-pipeline-card" onSubmit={linkManagementAsset}>
@@ -309,7 +319,7 @@ export default function RentalPipeline() {
           {isWorkspaceReady && managementAssetLinksQuery.data && managementAssetLinksQuery.data.length > 0 && <div className="rental-pipeline-list__rows">{managementAssetLinksQuery.data.map((link) => <article key={link.linkId}><span>Ativo em rascunho</span><h3>{link.assetReferenceLabel}</h3><p><b>{link.assetKind}</b> · código {link.assetInternalReference} · vínculo interno em {new Date(link.linkedAt).toLocaleString("pt-BR")}</p><code>{link.intakeId} · {link.assetId}</code></article>)}</div>}
         </section>
 
-        <section className="rental-pipeline-scope" aria-labelledby="rental-management-scope-title">
+        <section id="rental-scope" className="rental-pipeline-scope" aria-labelledby="rental-management-scope-title">
           <div className="rental-pipeline-heading"><div><p className="rental-pipeline-eyebrow">02C · ESCOPO DECLARADO</p><h2 id="rental-management-scope-title">Registre a intenção de serviço, não uma autorização.</h2></div><p>O escopo pertence apenas à entrada de administração e funciona como referência para revisão humana. Ele não estabelece mandato, exclusividade, gestão, anúncio, disponibilidade, preço ou cobrança.</p></div>
           <div className="rental-pipeline-scope__grid">
             <form className="rental-pipeline-card rental-pipeline-scope__card" onSubmit={upsertManagementDeclaredScope}>
