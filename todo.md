@@ -1083,3 +1083,11 @@
 - [x] Criar uma visão inicial com progresso operacional, triagem, agenda, ativos e perfil de busca separados e estados vazios honestos.
 - [x] Manter os formulários de rascunho sob acesso explícito, sem cadastrar clientes, imóveis, contratos, garantias, cobranças ou financeiro.
 - [x] Validar responsividade, acessibilidade, isolamento de dados e empacotar ZIP/HTML saneados.
+
+## Experiência Núcleo de Cadastros: Parties e papéis sem dados reais
+
+- [x] Auditar a entrada do Núcleo de Cadastros para reduzir a aparência de formulário técnico e organizar a jornada de Parties e papéis internos.
+- [x] Substituir o UUID manual por um seletor de contexto autorizado para os módulos Loteadora, Vendas Urbanas e Locação.
+- [x] Criar uma visão inicial com setores de Party, papel temporal e atributos permitidos separados, usando somente leituras autorizadas ou estados vazios honestos.
+- [x] Manter os formulários de rascunho sob acesso explícito, sem cadastrar pessoas, empresas, documentos, contatos, contratos ou financeiro.
+- [x] Validar responsividade, acessibilidade, isolamento de dados e empacotar ZIP/HTML saneados.
