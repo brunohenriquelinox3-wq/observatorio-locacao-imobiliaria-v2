@@ -1314,3 +1314,9 @@
 - [x] Definir filtragem visual que não conceda acesso nem substitua a autorização server-side.
 - [x] Integrar a disponibilidade de módulos à sidebar e à paleta, preservando rotas de Plataforma e ADM.
 - [x] Validar filtros, falhas seguras, navegação, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Privacidade de sessão: identidade não persistida no navegador
+
+- [x] Auditar o espelhamento local de perfil autenticado e suas dependências no cliente.
+- [x] Remover qualquer persistência desnecessária de identidade sem alterar sessão, logout, navegação, guardas ou autorização.
+- [x] Validar sessão, privacidade, testes, tipagem, build e artefatos ZIP/HTML saneados.

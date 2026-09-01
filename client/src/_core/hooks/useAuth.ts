@@ -1,4 +1,5 @@
 import { startLogin } from "@/const";
+import { clearLegacyAuthIdentityMirror } from "@/lib/authIdentityStorage";
 import { trpc } from "@/lib/trpc";
 import { TRPCClientError } from "@trpc/client";
 import { useCallback, useEffect, useMemo } from "react";
@@ -27,6 +28,11 @@ export function useAuth(options?: UseAuthOptions) {
     },
   });
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    clearLegacyAuthIdentityMirror(window.localStorage);
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       await logoutMutation.mutateAsync();
@@ -51,10 +57,6 @@ export function useAuth(options?: UseAuthOptions) {
   }, [logoutMutation, utils]);
 
   const state = useMemo(() => {
-    localStorage.setItem(
-      "manus-runtime-user-info",
-      JSON.stringify(meQuery.data)
-    );
     return {
       user: meQuery.data ?? null,
       loading: meQuery.isLoading || logoutMutation.isPending,
