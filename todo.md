@@ -1118,3 +1118,12 @@
 - [x] Criar uma visão inicial com setores de Quadras, Lotes, Mapa e Disponibilidade separados, usando somente leituras autorizadas ou estados vazios honestos.
 - [x] Manter os formulários de rascunho sob acesso explícito, sem cadastrar loteamentos, quadras, lotes, reservas, vendas, contratos ou financeiro.
 - [x] Validar responsividade, acessibilidade, isolamento de dados e empacotar ZIP/HTML saneados.
+
+## Experiência SUPER ADM: governança sem mudança de alçada
+
+- [x] Auditar a central SUPER ADM para reduzir a aparência de console técnico e distinguir plataforma, organização e módulos.
+- [x] Criar uma visão executiva de governança com indicadores agregados e comandos controlados organizados por etapa.
+- [x] Manter operações materiais sob ações explícitas, sem alterar alçadas, memberships, grants, organizações, financeiro ou dados de negócio.
+- [x] Corrigir a sobreposição do controle condicional de ativação no resumo lateral da central SUPER ADM.
+- [x] Atualizar a mensagem do cartão de criação de organização para refletir o comando governado já disponível.
+- [x] Validar responsividade, clareza de alçadas, isolamento de dados e empacotar ZIP/HTML saneados.

@@ -82,6 +82,14 @@
 .platform-admin-session div { display: flex; align-items: center; gap: 8px; color: #dca989; font: 700 10px/1.2 "DM Sans", sans-serif; letter-spacing: .12em; }
 .platform-admin-session strong { display: block; margin: 15px 0 6px; font-family: "Fraunces", serif; font-size: 24px; }
 .platform-admin-session p { margin: 0; color: rgba(248, 244, 234, .68); font-size: 13px; line-height: 1.55; }
+.platform-admin-session { min-width: 0; }
+.platform-admin-session .platform-admin-session__activation { display: grid; gap: 7px; margin-top: 16px; padding-top: 15px; border-top: 1px solid rgba(245,241,231,.22); }
+.platform-admin-session__activation label { color: #dca989; font: 700 9px/1.2 "DM Sans", sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.platform-admin-session__activation select { width: 100%; min-width: 0; min-height: 34px; padding: 7px 8px; border: 1px solid rgba(245,241,231,.34); background: rgba(5,31,43,.34); color: #f8f4ea; font: 500 11px/1.2 "DM Sans", sans-serif; }
+.platform-admin-session__activation button { width: 100%; min-height: 34px; padding: 7px 8px; border: 1px solid #dca989; background: transparent; color: #f8f4ea; font: 700 9px/1.25 "DM Sans", sans-serif; letter-spacing: .05em; text-transform: uppercase; white-space: normal; cursor: pointer; }
+.platform-admin-session__activation button:hover { background: #dca989; color: var(--admin-ink); }
+.platform-admin-session__activation button:disabled { cursor: not-allowed; opacity: .58; }
+.platform-admin-governance { margin-top: 22px; padding: 34px; border: 1px solid var(--admin-line); background: #edf4ed; }.platform-admin-governance__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin-top: 25px; border: 1px solid rgba(23,59,77,.16); background: rgba(23,59,77,.16); }.platform-admin-governance__grid article { display: grid; gap: 8px; min-height: 175px; padding: 19px; background: #fffdf7; }.platform-admin-governance__grid span { color: var(--admin-clay); font: 700 10px/1 "DM Sans", sans-serif; letter-spacing: .12em; }.platform-admin-governance__grid strong { color: var(--admin-ink); font: 600 20px/1.1 "Fraunces", Georgia, serif; }.platform-admin-governance__grid b { color: #306b5d; font: 700 11px/1.35 "DM Sans", sans-serif; letter-spacing: .07em; text-transform: uppercase; }.platform-admin-governance__grid p { margin: 0; color: #607176; font: 12px/1.5 "DM Sans", sans-serif; }.platform-admin-governance__route { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px 20px; margin-top: 16px; padding-top: 17px; border-top: 1px solid var(--admin-line); }.platform-admin-governance__route span { color: var(--admin-olive); font: 700 10px/1.2 "DM Sans", sans-serif; letter-spacing: .1em; }.platform-admin-governance__route a { display:inline-flex; align-items:center; gap:7px; color:var(--admin-ink); font:700 12px/1 "DM Sans",sans-serif; text-decoration:none; }.platform-admin-governance__route a:focus-visible { outline:2px solid var(--admin-clay); outline-offset:4px; }.platform-admin-governance__route small { grid-column: 1 / -1; color:#627276; font:12px/1.45 "DM Sans",sans-serif; }
 
 .platform-admin-identity {
   display: grid;
@@ -221,6 +229,7 @@
   .platform-admin-command-card:nth-child(-n+2) { border-bottom: 1px solid var(--admin-line); }
   .platform-admin-focus-card { grid-template-columns: 60px 1fr; }
   .platform-admin-evidence { grid-column: 2; }
+  .platform-admin-governance__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 720px) {
@@ -228,7 +237,10 @@
   .platform-admin-hero { grid-template-columns: 1fr; gap: 24px; padding: 34px 26px; }
   .platform-admin-hero__mark { width: 58px; height: 58px; }
   .platform-admin-session { grid-column: auto; border-left: 0; border-top: 1px solid rgba(245,241,231,.32); padding: 18px 0 0; }
+  .platform-admin-session__activation { max-width: 360px; }
   .platform-admin-metrics { grid-template-columns: repeat(2, 1fr); }
+  .platform-admin-governance { padding: 24px 20px; }
+  .platform-admin-governance__grid { grid-template-columns: 1fr; }
   .platform-admin-metrics article:nth-child(2) { border-right: 0; }
   .platform-admin-metrics article:nth-child(-n+2) { border-bottom: 1px solid var(--admin-line); }
   .platform-admin-board { grid-template-columns: 1fr; }

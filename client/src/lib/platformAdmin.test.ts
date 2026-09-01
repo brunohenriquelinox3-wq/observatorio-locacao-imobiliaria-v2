@@ -25,6 +25,10 @@ describe("platform admin foundation", () => {
     });
   });
 
+  it("descreve o provisionamento como um comando governado já disponível", () => {
+    expect(getPlatformCommandState("provisionOrganization").reason).toContain("comando governado está disponível");
+  });
+
   it("does not call protected administrative endpoints before the session and local admin gate are present", () => {
     expect(canLoadIdentityState(false)).toBe(false);
     expect(canLoadIdentityState(true)).toBe(true);

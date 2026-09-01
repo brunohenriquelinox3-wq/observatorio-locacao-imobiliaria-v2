@@ -17,7 +17,7 @@ const foundationCommandStates: Record<PlatformCommand, PlatformCommandState> = {
   provisionOrganization: {
     enabled: false,
     label: "Criar organização",
-    reason: "O comando transacional ainda não foi implantado; a fundação permanece em modo de leitura segura.",
+    reason: "O comando governado está disponível no console transacional e continua exigindo MFA recente, correlação, idempotência e policy no servidor.",
   },
   grantMembership: {
     enabled: false,

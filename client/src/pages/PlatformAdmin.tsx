@@ -31,10 +31,15 @@ import { deriveAdministrativeConsoleState } from "@/lib/adminConsole";
 import { getPlatformBootstrapPresentation } from "@/lib/platformBootstrapPresentation";
 import { getPlatformIdentityPresentation } from "@/lib/platformIdentityPresentation";
 import { getPlatformPrincipalPresentation } from "@/lib/platformPrincipalPresentation";
+import { getPlatformGovernanceOverview } from "@/lib/platformGovernanceOverview";
 import "../platform-admin.css";
 
 const navigationItems: DashboardNavigationItem[] = [
   { icon: ShieldCheck, label: "Central de Plataforma", path: "/administracao" },
+  { icon: UserRoundCog, label: "Painel ADM", path: "/adm" },
+  { icon: Building2, label: "Loteadora", path: "/loteadora" },
+  { icon: UsersRound, label: "Vendas Urbanas", path: "/vendas-urbanas" },
+  { icon: Clock3, label: "Locação", path: "/locacao" },
 ];
 
 const commandCards: Array<{
@@ -241,6 +246,12 @@ export default function PlatformAdmin() {
     platformRole: commandStatusQuery.data?.platformRole,
   });
   const consoleState = deriveAdministrativeConsoleState(commandStatusQuery.data);
+  const governanceOverview = getPlatformGovernanceOverview({
+    isPlatformSuperAdmin: principalPresentation.isPlatformSuperAdmin,
+    organizations: readiness?.counts.organizations,
+    principals: readiness?.counts.principals,
+    grants: readiness?.counts.grants,
+  });
 
   function executeCommand(command: PlatformCommand) {
     if (command === "grantMembership" && principalPresentation.isPlatformSuperAdmin) {
@@ -494,7 +505,7 @@ export default function PlatformAdmin() {
             <div><ShieldCheck size={18} /><span>ESTADO DA FUNDAÇÃO</span></div>
             <strong>{foundationStatus}</strong>
             <p>{principalPresentation.isPlatformSuperAdmin ? "O papel de plataforma está ativo. Organizações, memberships e grants delegados continuam exigindo policy, escopo e correlação." : `${identityStatus}. O acesso privilegiado depende de convite, MFA, recuperação e alçada vigente.`}</p>
-            {principalPresentation.isPlatformSuperAdmin && (
+            {principalPresentation.isPlatformSuperAdmin && selfAdministrationTargetsQuery.data && selfAdministrationTargetsQuery.data.length > 0 && (
               <div className="platform-admin-session__activation">
                 <label htmlFor="hero-self-administration-organization">Ativar ADM completo</label>
                 <select
@@ -515,7 +526,7 @@ export default function PlatformAdmin() {
                 </button>
               </div>
             )}
-            {principalPresentation.isPlatformSuperAdmin && (
+            {principalPresentation.isPlatformSuperAdmin && activatableOrganizationsQuery.data && activatableOrganizationsQuery.data.length > 0 && (
               <div className="platform-admin-session__activation">
                 <label htmlFor="organization-activation-target">Ativar organização</label>
                 <select
@@ -536,6 +547,17 @@ export default function PlatformAdmin() {
             )}
           </aside>
         </header>
+
+        <section className="platform-admin-governance" aria-labelledby="governance-title">
+          <div className="platform-admin-section-heading">
+            <div><p className="platform-admin-eyebrow">MAPA DE GOVERNANÇA · SUPER ADM ACIMA DO ADM</p><h2 id="governance-title">Uma hierarquia visível antes de qualquer decisão operacional.</h2></div>
+            <p className="platform-admin-muted">A plataforma governa; a organização opera; o módulo limita o trabalho. Nenhuma camada substitui a outra.</p>
+          </div>
+          <div className="platform-admin-governance__grid">
+            {governanceOverview.map((item) => <article key={item.code}><span>{item.code}</span><strong>{item.title}</strong><b>{item.value}</b><p>{item.detail}</p></article>)}
+          </div>
+          <div className="platform-admin-governance__route"><span>PRÓXIMA LEITURA OPERACIONAL</span><a href="/adm">Abrir Painel ADM <ArrowUpRight size={15} /></a><small>O painel ADM organiza as frentes liberadas sem receber alçada automática.</small></div>
+        </section>
 
         <section className="platform-admin-identity" aria-labelledby="identity-title">
           <div>
@@ -682,10 +704,10 @@ export default function PlatformAdmin() {
         <section className="platform-admin-commands" aria-labelledby="platform-commands-title">
           <div className="platform-admin-section-heading">
             <div>
-              <p className="platform-admin-eyebrow">COMANDOS SENSÍVEIS · MODO DE ENSAIO</p>
-              <h2 id="platform-commands-title">Cada comando já sabe por que ainda deve permanecer bloqueado.</h2>
+              <p className="platform-admin-eyebrow">COMANDOS GOVERNADOS · AÇÃO EXPLÍCITA</p>
+              <h2 id="platform-commands-title">Cada mudança material continua limitada por pré-requisito, policy e correlação.</h2>
             </div>
-            <p className="platform-admin-muted">O botão explica o pré-requisito; a futura RPC será a autoridade que permitirá ou negará.</p>
+            <p className="platform-admin-muted">A interface apresenta o caminho; o servidor permanece a única autoridade que permite ou nega o comando.</p>
           </div>
 
           <div className="platform-admin-command-grid">
