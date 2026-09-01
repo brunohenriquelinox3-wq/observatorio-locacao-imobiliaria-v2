@@ -9,7 +9,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { attachmentIntentSelectionLabel, buyerClientSelectionLabel, saleDraftSelectionLabel } from "@/lib/subdivisionDraftSelection";
 import { subdivisionPartyRoleSelectionLabel } from "@/lib/subdivisionPartyRoleSelection";
 import { trpc } from "@/lib/trpc";
-import { Building2, CircleAlert, Compass, FileStack, House, LandPlot, Layers3, ShieldCheck, UsersRound, Workflow } from "lucide-react";
+import { Building2, CalendarClock, CircleAlert, Compass, FileStack, House, LandPlot, Layers3, ShieldCheck, UsersRound, Workflow } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import "../subdivision-foundation.css";
@@ -21,6 +21,7 @@ const navigationItems: DashboardNavigationItem[] = [
   { icon: House, label: "Ativos urbanos", path: "/ativos-urbanos" },
   { icon: LandPlot, label: "Loteadora", path: "/loteadora" },
   { icon: Workflow, label: "Vendas Urbanas", path: "/vendas-urbanas" },
+  { icon: CalendarClock, label: "Locação", path: "/locacao" },
 ];
 
 const workingPhases = {

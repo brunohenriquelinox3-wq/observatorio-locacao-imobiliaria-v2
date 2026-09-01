@@ -1203,3 +1203,16 @@
 - [x] Criar descrições operacionais a partir de dados já devolvidos pelo contexto autorizado.
 - [x] Remover identificadores técnicos visíveis sem reduzir a clareza da referência de trabalho.
 - [x] Validar privacidade, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Vendas Urbanas e Locação: listagens sem identificadores técnicos expostos
+
+- [x] Auditar todas as listagens de Vendas Urbanas e Locação que ainda renderizam identificadores técnicos; nenhuma referência visível remanescente foi encontrada.
+- [x] Confirmar que as descrições operacionais existentes usam apenas dados já devolvidos pelo contexto autorizado.
+- [x] Confirmar que não há identificadores técnicos visíveis a remover, sem alteração desnecessária de interface.
+- [x] Validar a ausência de referências técnicas visíveis por varredura de código e manter a validação integral no próximo corte material.
+
+## Navegação da Loteadora: retorno direto para Locação
+
+- [x] Auditar a consistência das rotas disponíveis nas colunas operacionais.
+- [x] Adicionar o atalho de Locação à navegação da Loteadora sem alterar guardas de rota ou permissões.
+- [x] Validar navegação, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.
