@@ -27,4 +27,14 @@ describe("A8 rental pipeline migration", () => {
     expect(readMigration).toContain("revoke all on function public.rental_list_draft_intakes");
     expect(readMigration).toContain("to service_role");
   });
+
+  it("keeps the agenda selector read contextual, minimized and exclusive to the service role", () => {
+    const agendaMigration = readFileSync(resolve(import.meta.dirname, "../supabase/migrations/20260901210000_list_draft_rental_agendas_a66.sql"), "utf8");
+    expect(agendaMigration).toContain("rental_list_draft_agendas");
+    expect(agendaMigration).toContain("private.require_rental_pipeline_authority");
+    expect(agendaMigration).toContain("security definer set search_path = ''");
+    expect(agendaMigration).toContain("from public, anon, authenticated");
+    expect(agendaMigration).toContain("to service_role");
+    expect(agendaMigration).not.toMatch(/\b(reason_code|price|guarantee|contract|collection|payment|transfer)\b/i);
+  });
 });

@@ -91,6 +91,7 @@ import {
 import {
   createDraftRentalAgenda,
   createDraftRentalIntake,
+  listDraftRentalAgendas,
   listDraftRentalIntakes,
   transitionDraftRentalIntake,
 } from "./rentalPipeline";
@@ -311,6 +312,9 @@ export const appRouter = router({
     createDraftAgenda: protectedProcedure
       .input(draftRentalAgendaInputSchema)
       .mutation(({ ctx, input }) => createDraftRentalAgenda(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftAgendas: protectedProcedure
+      .input(rentalOperatingContextSchema)
+      .query(({ ctx, input }) => listDraftRentalAgendas(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftManagementAssetLinks: protectedProcedure
       .input(rentalOperatingContextSchema)
       .query(({ ctx, input }) => listDraftRentalManagementAssetLinks(ctx.supabaseSubjectId ?? undefined, input)),

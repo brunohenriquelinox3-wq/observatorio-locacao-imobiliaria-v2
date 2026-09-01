@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createDraftRentalAgenda, createDraftRentalIntake, listDraftRentalIntakes, transitionDraftRentalIntake } from "./rentalPipeline";
+import { createDraftRentalAgenda, createDraftRentalIntake, listDraftRentalAgendas, listDraftRentalIntakes, transitionDraftRentalIntake } from "./rentalPipeline";
 
 const subjectId = "550e8400-e29b-41d4-a716-446655440000";
 const organizationId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
@@ -20,6 +20,12 @@ describe("rental pipeline server boundary", () => {
     rpc.mockResolvedValueOnce({ data: [{ intake_id: intakeId, party_label: "Parte de teste", journey_kind: "management_interest", source_code: "OPERADOR", stage: "agenda_pending", next_agenda_for: "2026-08-28T14:00:00+00:00", next_agenda_state: "scheduled" }], error: null });
     await expect(listDraftRentalIntakes(subjectId, context, client)).resolves.toEqual([{ intakeId, partyLabel: "Parte de teste", journeyKind: "management_interest", sourceCode: "OPERADOR", stage: "agenda_pending", nextAgendaFor: "2026-08-28T14:00:00+00:00", nextAgendaState: "scheduled" }]);
     expect(rpc).toHaveBeenLastCalledWith("rental_list_draft_intakes", expect.objectContaining({ p_actor_user_id: subjectId, p_module: "locacao" }));
+  });
+
+  it("reads minimized rental agenda rows through contextual RPC", async () => {
+    rpc.mockResolvedValueOnce({ data: [{ agenda_id: correlationId, intake_id: intakeId, intake_label: "Parte de teste", journey_kind: "tenant_interest", scheduled_for: "2026-08-28T14:00:00+00:00", state: "scheduled", reason_code: "must-not-pass" }], error: null });
+    await expect(listDraftRentalAgendas(subjectId, context, client)).resolves.toEqual([{ agendaId: correlationId, intakeId, intakeLabel: "Parte de teste", journeyKind: "tenant_interest", scheduledFor: "2026-08-28T14:00:00+00:00", state: "scheduled" }]);
+    expect(rpc).toHaveBeenLastCalledWith("rental_list_draft_agendas", expect.objectContaining({ p_actor_user_id: subjectId, p_module: "locacao" }));
   });
 
   it("uses protected RPCs for intake, stage and agenda commands", async () => {

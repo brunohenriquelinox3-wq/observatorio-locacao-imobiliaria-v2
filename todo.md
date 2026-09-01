@@ -1174,3 +1174,11 @@
 - [x] Substituir IDs técnicos por seletores contextuais com rótulos operacionais e estados de carregamento, vazio e erro.
 - [x] Manter lead, vínculo de ativo, perfil de busca, agenda e classificação em rascunho, sem preço, reserva, proposta, contrato, financeiro ou integrações externas.
 - [x] Validar isolamento, privacidade, responsividade, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Locação: seleções contextuais de Party, Jornada, Ativo e Agenda
+
+- [x] Auditar referências técnicas de Party, Jornada, Ativo e Agenda expostas nos formulários e listagens operacionais.
+- [x] Reutilizar leituras minimizadas de Party, Entrada e Ativo e criar a leitura minimizada de Agenda no contexto autorizado, sem enumerar registros de outras organizações.
+- [x] Substituir IDs técnicos por seletores contextuais com rótulos operacionais e estados de carregamento, vazio e erro.
+- [x] Manter triagem, vínculo de ativo, escopo declarado, perfil de busca, agenda e classificação em rascunho, sem preço, garantia, contrato, cobrança, pagamento, repasse ou integrações externas.
+- [x] Validar isolamento, privacidade, responsividade, tipagem, build e artefatos ZIP/HTML saneados.
