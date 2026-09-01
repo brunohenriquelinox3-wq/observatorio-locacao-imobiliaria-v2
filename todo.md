@@ -1099,3 +1099,9 @@
 - [x] Criar uma visão inicial com setores de Ativo, Vínculo de Proprietário e Prontidão separados, usando somente leituras autorizadas ou estados vazios honestos.
 - [x] Manter os formulários de rascunho sob acesso explícito, sem cadastrar imóveis, endereços, proprietários, documentos, anúncios, contratos ou financeiro.
 - [x] Validar responsividade, acessibilidade, isolamento de dados e empacotar ZIP/HTML saneados.
+
+## Privacidade do layout administrativo compartilhado
+
+- [x] Auditar a projeção de perfil no layout lateral para identificar nome e e-mail desnecessários.
+- [x] Exibir uma identidade minimizada no layout compartilhado sem alterar sessão, autenticação ou rotas.
+- [x] Validar a ausência de PII desnecessária, empacotar ZIP/HTML saneados e preservar o marco.
