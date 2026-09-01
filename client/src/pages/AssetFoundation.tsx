@@ -1,5 +1,7 @@
 import DashboardLayout, { type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { assetContextSelectionLabel } from "@/lib/assetContextSelection";
+import { domainPartySelectionLabel } from "@/lib/domainPartySelection";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { assetOperationalValue } from "@/lib/assetOperationalOverview";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
@@ -48,6 +50,18 @@ export default function AssetFoundation() {
   const isContextReady = isDomainContextReady(context);
   const queryEnabled = isAuthenticated && isContextReady;
   const assetsQuery = trpc.assetFoundation.listDraftUrbanAssets.useQuery(context, { enabled: queryEnabled, retry: false });
+  const partiesQuery = trpc.domainFoundation.listDraftParties.useQuery(context, { enabled: queryEnabled, retry: false });
+  useEffect(() => {
+    if (Array.isArray(assetsQuery.data)) {
+      if (relationAssetId && !assetsQuery.data.some((asset) => asset.assetId === relationAssetId)) setRelationAssetId("");
+      if (stateAssetId && !assetsQuery.data.some((asset) => asset.assetId === stateAssetId)) setStateAssetId("");
+    }
+  }, [assetsQuery.data, relationAssetId, stateAssetId]);
+  useEffect(() => {
+    if (relationPartyId && Array.isArray(partiesQuery.data) && !partiesQuery.data.some((party) => party.partyId === relationPartyId)) {
+      setRelationPartyId("");
+    }
+  }, [partiesQuery.data, relationPartyId]);
   const partyRelationCount = assetsQuery.data?.reduce((total, asset) => total + asset.partyRelationCount, 0);
   const eligibleCount = assetsQuery.data?.filter((asset) => asset.moduleState === "eligible").length;
   const operationalSectors = [
@@ -74,11 +88,11 @@ export default function AssetFoundation() {
   }
   function attachParty(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    relationMutation.mutate({ ...context, correlationId: crypto.randomUUID(), assetId: relationAssetId.trim(), partyId: relationPartyId.trim(), relation: relationKind });
+    relationMutation.mutate({ ...context, correlationId: crypto.randomUUID(), assetId: relationAssetId, partyId: relationPartyId, relation: relationKind });
   }
   function changeState(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    stateMutation.mutate({ ...context, correlationId: crypto.randomUUID(), assetId: stateAssetId.trim(), state: moduleState, reasonCode: moduleState === "blocked" ? reasonCode.trim().toUpperCase() : undefined });
+    stateMutation.mutate({ ...context, correlationId: crypto.randomUUID(), assetId: stateAssetId, state: moduleState, reasonCode: moduleState === "blocked" ? reasonCode.trim().toUpperCase() : undefined });
   }
 
   return (
@@ -113,14 +127,16 @@ export default function AssetFoundation() {
             </form>
             <form id="asset-relations" className="asset-foundation-card" onSubmit={attachParty}>
               <div className="asset-foundation-card__title"><Link2 size={19} /><h3>Relacionar Party</h3></div><p>Declare titularidade alegada ou autoridade de gestão sem concluir propriedade, representação ou contrato.</p>
-              <label htmlFor="relation-asset-id">ID do ativo</label><input id="relation-asset-id" value={relationAssetId} onChange={(event) => setRelationAssetId(event.target.value)} placeholder="UUID do ativo em rascunho" disabled={!queryEnabled} required />
-              <label htmlFor="relation-party-id">ID da Party</label><input id="relation-party-id" value={relationPartyId} onChange={(event) => setRelationPartyId(event.target.value)} placeholder="UUID da Party em rascunho" disabled={!queryEnabled} required />
+              <label htmlFor="relation-asset-id">Ativo autorizado</label><select id="relation-asset-id" value={relationAssetId} onChange={(event) => setRelationAssetId(event.target.value)} disabled={!queryEnabled || assetsQuery.isLoading} required aria-describedby="asset-relation-selection-note"><option value="">{!queryEnabled ? "Defina um contexto autorizado" : assetsQuery.isLoading ? "Carregando ativos autorizados" : assetsQuery.isError ? "Leitura de ativos não liberada" : assetsQuery.data?.length ? "Selecione um ativo autorizado" : "Nenhum ativo em rascunho neste contexto"}</option>{assetsQuery.data?.map((asset) => <option key={asset.assetId} value={asset.assetId}>{assetContextSelectionLabel(asset)}</option>)}</select>
+              <label htmlFor="relation-party-id">Party autorizada</label><select id="relation-party-id" value={relationPartyId} onChange={(event) => setRelationPartyId(event.target.value)} disabled={!queryEnabled || partiesQuery.isLoading} required aria-describedby="asset-relation-selection-note"><option value="">{!queryEnabled ? "Defina um contexto autorizado" : partiesQuery.isLoading ? "Carregando Parties autorizadas" : partiesQuery.isError ? "Leitura de Parties não liberada" : partiesQuery.data?.length ? "Selecione uma Party autorizada" : "Nenhuma Party em rascunho neste contexto"}</option>{partiesQuery.data?.map((party) => <option key={party.partyId} value={party.partyId}>{domainPartySelectionLabel(party)}</option>)}</select>
+              <p id="asset-relation-selection-note" className="asset-foundation-card__note">As opções são devolvidas apenas para o contexto atual. A seleção não autoriza o vínculo: o servidor confere ambos os registros novamente.</p>
               <label htmlFor="relation-kind">Relação</label><select id="relation-kind" value={relationKind} onChange={(event) => setRelationKind(event.target.value as typeof relationKind)} disabled={!queryEnabled}><option value="ownership_claim">Titularidade alegada</option><option value="management_authority">Autoridade de gestão</option></select>
               <button type="submit" disabled={!queryEnabled || relationMutation.isPending}>{relationMutation.isPending ? "Relacionando" : "Adicionar relação"}</button>
             </form>
             <form id="asset-readiness" className="asset-foundation-card" onSubmit={changeState}>
               <div className="asset-foundation-card__title"><SlidersHorizontal size={19} /><h3>Estado no módulo</h3></div><p>O estado de trabalho vale apenas para o módulo atual. Ele não altera outro módulo nem libera uma ação externa.</p>
-              <label htmlFor="state-asset-id">ID do ativo</label><input id="state-asset-id" value={stateAssetId} onChange={(event) => setStateAssetId(event.target.value)} placeholder="UUID do ativo em rascunho" disabled={!queryEnabled} required />
+              <label htmlFor="state-asset-id">Ativo autorizado</label><select id="state-asset-id" value={stateAssetId} onChange={(event) => setStateAssetId(event.target.value)} disabled={!queryEnabled || assetsQuery.isLoading} required aria-describedby="asset-state-selection-note"><option value="">{!queryEnabled ? "Defina um contexto autorizado" : assetsQuery.isLoading ? "Carregando ativos autorizados" : assetsQuery.isError ? "Leitura de ativos não liberada" : assetsQuery.data?.length ? "Selecione um ativo autorizado" : "Nenhum ativo em rascunho neste contexto"}</option>{assetsQuery.data?.map((asset) => <option key={asset.assetId} value={asset.assetId}>{assetContextSelectionLabel(asset)}</option>)}</select>
+              <p id="asset-state-selection-note" className="asset-foundation-card__note">O estado pertence somente ao módulo e ao contexto atuais. Ele não publica, reserva, vende, loca ou contrata o ativo.</p>
               <label htmlFor="module-state">Estado</label><select id="module-state" value={moduleState} onChange={(event) => setModuleState(event.target.value as typeof moduleState)} disabled={!queryEnabled}><option value="draft">Rascunho</option><option value="preparing">Em preparação</option><option value="eligible">Elegível para próxima análise</option><option value="blocked">Bloqueado</option><option value="withdrawn">Retirado</option></select>
               {moduleState === "blocked" && <><label htmlFor="state-reason">Motivo em código</label><input id="state-reason" value={reasonCode} onChange={(event) => setReasonCode(event.target.value.toUpperCase())} placeholder="EX.: PENDENCIA_DOCUMENTAL" disabled={!queryEnabled} required /></>}
               <button type="submit" disabled={!queryEnabled || stateMutation.isPending}>{stateMutation.isPending ? "Atualizando estado" : "Atualizar estado"}</button>
@@ -134,7 +150,7 @@ export default function AssetFoundation() {
           {isContextReady && assetsQuery.isLoading && <div className="asset-foundation-empty"><span className="asset-foundation-spinner" aria-hidden="true" /><p>Confirmando o contexto antes de solicitar a leitura autorizada.</p></div>}
           {isContextReady && assetsQuery.isError && <div className="asset-foundation-empty is-error"><CircleAlert size={18} /><p>A leitura não foi liberada. Revise identidade, membership, grant, vigência, módulo e finalidade sem tentar inferir outros ativos.</p></div>}
           {isContextReady && assetsQuery.data?.length === 0 && <div className="asset-foundation-empty"><House size={18} /><p>Nenhum ativo em rascunho foi devolvido para este contexto. A resposta não revela dados de outros contextos.</p></div>}
-          {isContextReady && assetsQuery.data && assetsQuery.data.length > 0 && <div className="asset-foundation-list__rows">{assetsQuery.data.map((asset) => <article key={asset.assetId}><span>{assetKinds[asset.kind as keyof typeof assetKinds] ?? "Ativo urbano"}</span><h3>{asset.referenceLabel}</h3><p><b>{asset.moduleState}</b> · {asset.partyRelationCount} relação(ões) contextual(is) · {asset.stateReasonPresent ? "motivo de bloqueio registrado" : "sem motivo de bloqueio exposto"}</p><code>{asset.internalReference} · {asset.assetId}</code></article>)}</div>}
+          {isContextReady && assetsQuery.data && assetsQuery.data.length > 0 && <div className="asset-foundation-list__rows">{assetsQuery.data.map((asset) => <article key={asset.assetId}><span>{assetKinds[asset.kind as keyof typeof assetKinds] ?? "Ativo urbano"}</span><h3>{asset.referenceLabel}</h3><p><b>{asset.moduleState}</b> · {asset.partyRelationCount} relação(ões) contextual(is) · {asset.stateReasonPresent ? "motivo de bloqueio registrado" : "sem motivo de bloqueio exposto"}</p><code>{asset.internalReference}</code></article>)}</div>}
         </section>
       </div>
     </DashboardLayout>

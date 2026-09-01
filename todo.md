@@ -1134,3 +1134,11 @@
 - [x] Reutilizar a leitura minimizada de Parties autorizadas por contexto já validada no servidor, sem enumerar organizações, documentos ou dados de terceiros.
 - [x] Substituir a referência técnica por seleção contextual acessível, preservando estado vazio e sem criar Parties ou vínculos reais.
 - [x] Validar isolamento, permitir/negar, responsividade, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Ativos Urbanos: seleções contextuais sem identificadores técnicos
+
+- [x] Auditar campos e listagens de Ativos Urbanos que ainda expõem ou exigem IDs técnicos.
+- [x] Reutilizar leituras minimizadas de ativos e Parties do mesmo contexto autorizado, sem dados de terceiros.
+- [x] Substituir seleções técnicas de ativo e Party por controles acessíveis com estado vazio, erro e carregamento explícitos.
+- [x] Remover IDs técnicos das listagens operacionais, preservando referência de trabalho e código interno não sensível.
+- [x] Validar isolamento, permitir/negar, responsividade, tipagem, build e artefatos ZIP/HTML saneados.
