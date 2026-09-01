@@ -1157,3 +1157,12 @@
 - [x] Substituir a digitação de ID por seletores contextuais com estado vazio, erro e carregamento explícitos.
 - [x] Manter a vedação de valores, percentuais, cálculos, contratos, cobrança, pagamentos, repasses e integrações externas.
 - [x] Validar isolamento, permitir/negar, responsividade, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Loteadora: Anexos Privados e Rascunhos com rótulos contextuais
+
+- [x] Auditar seletores e listagens de anexos e rascunhos que ainda expõem referências técnicas.
+- [x] Corrigir a ambiguidade de colunas nas funções de leitura minimizada de clientes, anexos e rascunhos já existentes.
+- [x] Criar rótulos contextuais para cliente comprador, intenção privada e rascunho interno, sem URLs, chaves ou documentos.
+- [x] Substituir IDs visíveis por rótulos operacionais com estado vazio, erro e carregamento explícitos.
+- [x] Manter anexo privado, venda, reserva, proposta, contrato, cobrança, valores, percentuais, pagamentos e repasses fora deste corte.
+- [x] Validar isolamento, privacidade, responsividade, tipagem, build e artefatos ZIP/HTML saneados.
