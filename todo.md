@@ -1234,3 +1234,10 @@
 - [x] Auditar a ordem dos atalhos nas superfícies operacionais em relação à hierarquia definida.
 - [x] Reordenar os atalhos para SUPER ADM → ADM → Loteadora → Vendas Urbanas → Locação, mantendo Cadastros e Ativos como fundações posteriores.
 - [x] Validar coerência da hierarquia, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Navegação lateral: agrupamento funcional
+
+- [x] Auditar a capacidade do layout compartilhado de agrupar itens de navegação.
+- [x] Criar grupos visuais acessíveis para Plataforma, Operação e Fundações.
+- [x] Preservar ordem de colunas, rotas, guardas e permissões em todas as superfícies operacionais.
+- [x] Validar navegação, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.
