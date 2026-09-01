@@ -1,6 +1,7 @@
 import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
+import { retainAuthorizedSelection } from "@/lib/contextSelectionReset";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { rentalAgendaSelectionLabel, rentalAssetSelectionLabel, rentalIntakeSelectionLabel, rentalPartySelectionLabel } from "@/lib/rentalContextSelection";
 import { rentalOperationalValue } from "@/lib/rentalOperationalOverview";
@@ -129,6 +130,16 @@ export default function RentalPipeline() {
   const partiesQuery = trpc.domainFoundation.listDraftParties.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const assetsQuery = trpc.assetFoundation.listDraftUrbanAssets.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const agendasQuery = trpc.rentalPipeline.listDraftAgendas.useQuery(context, { enabled: isWorkspaceReady, retry: false });
+  useEffect(() => {
+    setPartyId((value) => retainAuthorizedSelection(value, partiesQuery.data, (party) => party.partyId));
+    setStageIntakeId((value) => retainAuthorizedSelection(value, intakesQuery.data, (intake) => intake.intakeId));
+    setAgendaIntakeId((value) => retainAuthorizedSelection(value, intakesQuery.data, (intake) => intake.intakeId));
+    setTenantProfileIntakeId((value) => retainAuthorizedSelection(value, intakesQuery.data?.filter((intake) => intake.journeyKind === "tenant_interest"), (intake) => intake.intakeId));
+    setManagementIntakeId((value) => retainAuthorizedSelection(value, intakesQuery.data?.filter((intake) => intake.journeyKind === "management_interest"), (intake) => intake.intakeId));
+    setManagementScopeIntakeId((value) => retainAuthorizedSelection(value, intakesQuery.data?.filter((intake) => intake.journeyKind === "management_interest"), (intake) => intake.intakeId));
+    setManagementAssetId((value) => retainAuthorizedSelection(value, assetsQuery.data, (asset) => asset.assetId));
+    setClassificationAgendaId((value) => retainAuthorizedSelection(value, agendasQuery.data?.filter((agenda) => ["scheduled", "rescheduled"].includes(agenda.state)), (agenda) => agenda.agendaId));
+  }, [agendasQuery.data, assetsQuery.data, intakesQuery.data, partiesQuery.data]);
   const operationalSectors = [
     { code: "01", title: "Triagem Inicial", value: rentalOperationalValue({ contextReady: isWorkspaceReady, loading: intakesQuery.isLoading, count: intakesQuery.data?.length, pendingLabel: "Aguardando leitura" }), description: "Separe interesse de administração e de locação antes de qualquer contratação.", target: "#rental-triage" },
     { code: "02", title: "Agenda Interna", value: rentalOperationalValue({ contextReady: isWorkspaceReady, loading: agendaClassificationsQuery.isLoading, count: agendaClassificationsQuery.data?.length, pendingLabel: "Aguardando leitura" }), description: "Registros internos não disparam contato, convite ou confirmação externa.", target: "#rental-triage" },

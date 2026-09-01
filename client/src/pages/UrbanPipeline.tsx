@@ -1,6 +1,7 @@
 import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
+import { retainAuthorizedSelection } from "@/lib/contextSelectionReset";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { urbanAgendaSelectionLabel, urbanAssetSelectionLabel, urbanLeadSelectionLabel, urbanPartySelectionLabel } from "@/lib/urbanContextSelection";
 import { urbanOperationalValue } from "@/lib/urbanOperationalOverview";
@@ -80,6 +81,15 @@ export default function UrbanPipeline() {
   const partiesQuery = trpc.domainFoundation.listDraftParties.useQuery(context, { enabled, retry: false });
   const assetsQuery = trpc.assetFoundation.listDraftUrbanAssets.useQuery(context, { enabled, retry: false });
   const agendasQuery = trpc.urbanPipeline.listDraftAgendas.useQuery(context, { enabled, retry: false });
+  useEffect(() => {
+    setPartyId((value) => retainAuthorizedSelection(value, partiesQuery.data, (party) => party.partyId));
+    setStageLeadId((value) => retainAuthorizedSelection(value, leadsQuery.data, (lead) => lead.leadId));
+    setAgendaLeadId((value) => retainAuthorizedSelection(value, leadsQuery.data, (lead) => lead.leadId));
+    setAssetLinkLeadId((value) => retainAuthorizedSelection(value, leadsQuery.data?.filter((lead) => lead.interestKind === "urban_asset"), (lead) => lead.leadId));
+    setAssetLinkAssetId((value) => retainAuthorizedSelection(value, assetsQuery.data, (asset) => asset.assetId));
+    setSearchProfileLeadId((value) => retainAuthorizedSelection(value, leadsQuery.data?.filter((lead) => lead.interestKind === "search_profile"), (lead) => lead.leadId));
+    setClassificationAgendaId((value) => retainAuthorizedSelection(value, agendasQuery.data?.filter((agenda) => ["scheduled", "rescheduled"].includes(agenda.state)), (agenda) => agenda.agendaId));
+  }, [agendasQuery.data, assetsQuery.data, leadsQuery.data, partiesQuery.data]);
   const operationalSectors = [
     { code: "01", title: "Leads e Qualificação", value: urbanOperationalValue({ contextReady: enabled, loading: leadsQuery.isLoading, count: leadsQuery.data?.length, pendingLabel: "Aguardando leitura" }), description: "A entrada qualifica interesse antes de proposta, reserva ou contrato.", target: "#urban-leads" },
     { code: "02", title: "Agenda Interna", value: urbanOperationalValue({ contextReady: enabled, loading: agendaClassificationsQuery.isLoading, count: agendaClassificationsQuery.data?.length, pendingLabel: "Aguardando leitura" }), description: "Compromissos internos não enviam convite nem confirmam visita.", target: "#urban-agenda" },

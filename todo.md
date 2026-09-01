@@ -1182,3 +1182,10 @@
 - [x] Substituir IDs técnicos por seletores contextuais com rótulos operacionais e estados de carregamento, vazio e erro.
 - [x] Manter triagem, vínculo de ativo, escopo declarado, perfil de busca, agenda e classificação em rascunho, sem preço, garantia, contrato, cobrança, pagamento, repasse ou integrações externas.
 - [x] Validar isolamento, privacidade, responsividade, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Resiliência de seleções contextuais após mudança de contexto
+
+- [x] Auditar os seletores dependentes de Party, Lead, Entrada, Ativo e Agenda em Vendas Urbanas e Locação.
+- [x] Criar regra reutilizável para limpar somente uma referência local que não exista mais na leitura autorizada atual.
+- [x] Aplicar a limpeza local sem enviar mutação, sem inferir registros externos e sem alterar alçadas, dados ou policies.
+- [x] Validar a regra com testes unitários, tipagem, build e artefatos ZIP/HTML saneados.
