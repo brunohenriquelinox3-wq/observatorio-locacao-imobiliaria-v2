@@ -1149,3 +1149,11 @@
 - [x] Reutilizar leituras minimizadas de Loteamentos, Quadras e Lotes do contexto Loteadora autorizado, sem enumerar loteamentos ou estoques externos.
 - [x] Substituir referências técnicas por seletores operacionais com estado vazio, erro e carregamento explícitos.
 - [x] Validar isolamento, permitir/negar, responsividade, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Loteadora: Sócios, Parceiros e Clientes por seleção contextual
+
+- [x] Auditar os vínculos de papel interno e cliente comprador que ainda exigem ou exibem IDs técnicos.
+- [x] Criar rótulos não sensíveis para papéis internos e clientes compradores já retornados no contexto autorizado.
+- [x] Substituir a digitação de ID por seletores contextuais com estado vazio, erro e carregamento explícitos.
+- [x] Manter a vedação de valores, percentuais, cálculos, contratos, cobrança, pagamentos, repasses e integrações externas.
+- [x] Validar isolamento, permitir/negar, responsividade, tipagem, build e artefatos ZIP/HTML saneados.

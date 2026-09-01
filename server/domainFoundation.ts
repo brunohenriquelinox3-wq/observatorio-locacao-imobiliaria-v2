@@ -19,6 +19,15 @@ export type DraftPartySummary = {
   roleCount: number;
 };
 
+export type DraftPartyRoleSummary = {
+  partyRoleAssignmentId: string;
+  partyId: string;
+  displayName: string;
+  role: string;
+  startsAt: string;
+  endsAt: string | null;
+};
+
 function requireSubject(subjectId: string | undefined): string {
   if (!subjectId) throw new Error("DOMAIN_IDENTITY_REQUIRED");
   return subjectId;
@@ -51,6 +60,31 @@ export async function listDraftParties(
     displayName: String(row.display_name),
     sourceKind: row.source_kind === "import_preview" ? "import_preview" : "operator_declaration",
     roleCount: Number(row.role_count ?? 0),
+  }));
+}
+
+export async function listDraftPartyRoles(
+  subjectId: string | undefined,
+  rawContext: DomainContext,
+  client: RpcClient = getSupabaseAdminClient(),
+): Promise<DraftPartyRoleSummary[]> {
+  const actorUserId = requireSubject(subjectId);
+  const context = domainContextSchema.parse(rawContext);
+  const { data, error } = await client.rpc("domain_list_draft_party_roles", {
+    p_actor_user_id: actorUserId,
+    p_organization_id: context.organizationId,
+    p_module: context.module,
+    p_purpose_code: context.purposeCode,
+  });
+  if (error || !Array.isArray(data)) throw new Error("DOMAIN_ROLE_READ_DENIED");
+
+  return data.map((row) => ({
+    partyRoleAssignmentId: String(row.party_role_assignment_id),
+    partyId: String(row.party_id),
+    displayName: String(row.display_name),
+    role: String(row.role),
+    startsAt: String(row.starts_at),
+    endsAt: row.ends_at ? String(row.ends_at) : null,
   }));
 }
 

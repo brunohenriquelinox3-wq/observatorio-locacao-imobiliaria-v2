@@ -37,6 +37,7 @@ import {
   assignDraftPartyRole,
   createDraftParty,
   listDraftParties,
+  listDraftPartyRoles,
 } from "./domainFoundation";
 import {
   attachDraftAssetParty,
@@ -234,6 +235,9 @@ export const appRouter = router({
     listDraftParties: protectedProcedure
       .input(domainContextSchema)
       .query(({ ctx, input }) => listDraftParties(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftPartyRoles: protectedProcedure
+      .input(domainContextSchema)
+      .query(({ ctx, input }) => listDraftPartyRoles(ctx.supabaseSubjectId ?? undefined, input)),
     createDraftParty: protectedProcedure
       .input(draftPartyInputSchema)
       .mutation(({ ctx, input }) => createDraftParty(ctx.supabaseSubjectId ?? undefined, input)),

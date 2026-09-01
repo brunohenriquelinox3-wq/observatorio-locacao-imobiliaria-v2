@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { assignDraftPartyRole, createDraftParty, listDraftParties } from "./domainFoundation";
+import { assignDraftPartyRole, createDraftParty, listDraftParties, listDraftPartyRoles } from "./domainFoundation";
 
 const subjectId = "550e8400-e29b-41d4-a716-446655440000";
 const organizationId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
@@ -22,6 +22,12 @@ describe("canonical domain foundation server boundary", () => {
     rpc.mockResolvedValueOnce({ data: partyId, error: null });
     await expect(createDraftParty(subjectId, { organizationId, module: "locacao", purposeCode: "CADASTRO_INICIAL", correlationId, kind: "individual", displayName: "Parte de teste", sourceKind: "operator_declaration" }, client)).resolves.toEqual({ partyId });
     expect(rpc).toHaveBeenLastCalledWith("domain_create_draft_party", expect.objectContaining({ p_actor_user_id: subjectId, p_organization_id: organizationId, p_module: "locacao" }));
+  });
+
+  it("lists temporary roles only through the contextual server RPC", async () => {
+    rpc.mockResolvedValueOnce({ data: [{ party_role_assignment_id: "9ba7b810-9dad-11d1-80b4-00c04fd430c8", party_id: partyId, display_name: "Parte de teste", role: "partner", starts_at: "2026-08-27T00:00:00.000Z", ends_at: null }], error: null });
+    await expect(listDraftPartyRoles(subjectId, { organizationId, module: "loteadora", purposeCode: "CADASTRO_INICIAL" }, client)).resolves.toEqual([{ partyRoleAssignmentId: "9ba7b810-9dad-11d1-80b4-00c04fd430c8", partyId, displayName: "Parte de teste", role: "partner", startsAt: "2026-08-27T00:00:00.000Z", endsAt: null }]);
+    expect(rpc).toHaveBeenLastCalledWith("domain_list_draft_party_roles", expect.objectContaining({ p_actor_user_id: subjectId, p_module: "loteadora", p_purpose_code: "CADASTRO_INICIAL" }));
   });
 
   it("passes role assignment only through the contextual RPC and preserves temporal fields", async () => {
