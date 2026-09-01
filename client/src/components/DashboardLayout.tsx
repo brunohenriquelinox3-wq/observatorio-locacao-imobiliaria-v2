@@ -28,6 +28,7 @@ import { shouldCloseMobileNavigationAfterRouteChange } from "@/lib/dashboardNavi
 import { dashboardMainContentId, dashboardSkipLinkLabel } from "@/lib/dashboardAccessibility";
 import { groupDashboardNavigation } from "@/lib/dashboardNavigationGroups";
 import { getDashboardProfilePresentation } from "@/lib/dashboardProfilePresentation";
+import { getSidebarWidthAfterKeyboardCommand } from "@/lib/dashboardSidebarResize";
 import { ArrowUpRight, Compass, LayoutDashboard, LockKeyhole, LogOut, PanelLeft, Users, type LucideIcon } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -191,6 +192,22 @@ function DashboardLayoutContent({
     }
   };
 
+  const handleResizeKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (isCollapsed) return;
+
+    const nextWidth = getSidebarWidthAfterKeyboardCommand({
+      currentWidth: sidebarRef.current?.getBoundingClientRect().width ?? DEFAULT_WIDTH,
+      key: event.key,
+      minWidth: MIN_WIDTH,
+      maxWidth: MAX_WIDTH,
+    });
+
+    if (nextWidth === null) return;
+
+    event.preventDefault();
+    setSidebarWidth(nextWidth);
+  };
+
   useEffect(() => {
     if (isCollapsed) {
       setIsResizing(false);
@@ -322,11 +339,20 @@ function DashboardLayoutContent({
           </SidebarFooter>
         </Sidebar>
         <div
-          className={`absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-primary/20 transition-colors ${isCollapsed ? "hidden" : ""}`}
+          className={`absolute top-0 right-0 h-full w-1 cursor-col-resize transition-colors hover:bg-primary/20 focus:w-2 focus:bg-primary/30 focus:outline-none ${isCollapsed || isMobile ? "hidden" : ""}`}
           onMouseDown={() => {
             if (isCollapsed) return;
             setIsResizing(true);
           }}
+          onKeyDown={handleResizeKeyDown}
+          role="separator"
+          aria-label="Ajustar largura da navegação"
+          aria-orientation="vertical"
+          aria-valuemin={MIN_WIDTH}
+          aria-valuemax={MAX_WIDTH}
+          aria-valuenow={Math.round(sidebarRef.current?.getBoundingClientRect().width ?? DEFAULT_WIDTH)}
+          aria-valuetext={`${Math.round(sidebarRef.current?.getBoundingClientRect().width ?? DEFAULT_WIDTH)} pixels`}
+          tabIndex={isCollapsed || isMobile ? -1 : 0}
           style={{ zIndex: 50 }}
         />
       </div>

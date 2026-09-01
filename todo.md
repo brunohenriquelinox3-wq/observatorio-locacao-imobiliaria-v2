@@ -1293,3 +1293,10 @@
 - [x] Auditar a estrutura semântica atual do layout compartilhado.
 - [x] Adicionar atalho acessível para o conteúdo principal sem alterar rotas, grupos, dados ou permissões.
 - [x] Validar acessibilidade, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Navegação lateral: ajuste de largura acessível por teclado
+
+- [x] Auditar o controle atual de redimensionamento da navegação lateral.
+- [x] Definir ajuste por teclas com limites de largura e sem alterar a interação por mouse.
+- [x] Implementar o controle sem mudar rotas, dados, sessões, guardas ou permissões.
+- [x] Validar acessibilidade, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.
