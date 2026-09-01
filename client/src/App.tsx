@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import VendasUrbanas from "./pages/VendasUrbanas";
 import CrmStrategy from "./pages/CrmStrategy";
 import PlatformAdmin from "./pages/PlatformAdmin";
+import OrganizationAdmin from "./pages/OrganizationAdmin";
 import DomainFoundation from "./pages/DomainFoundation";
 import AssetFoundation from "./pages/AssetFoundation";
 import UrbanPipeline from "./pages/UrbanPipeline";
@@ -37,6 +38,7 @@ function Router() {
       <Route path={"/vendas"} component={VendasUrbanas} />
       <Route path={"/crm"} component={CrmStrategy} />
       <Route path={"/administracao"} component={PlatformAdmin} />
+      <Route path={"/adm"} component={OrganizationAdmin} />
       <Route path={"/cadastro-base"} component={DomainFoundation} />
       <Route path={"/ativos-urbanos"} component={AssetFoundation} />
       <Route path={"/vendas-urbanas"} component={UrbanPipeline} />

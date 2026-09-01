@@ -1,14 +1,16 @@
 import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
+import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { trpc } from "@/lib/trpc";
-import { Building2, CalendarClock, CircleAlert, Compass, House, Link2, Search, ShieldCheck, Tag, UserRoundPlus, UsersRound, Workflow } from "lucide-react";
-import { useMemo, useState } from "react";
+import { CalendarClock, CircleAlert, Compass, House, Link2, Search, ShieldCheck, Tag, UserRoundPlus, UsersRound, Workflow } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../urban-pipeline.css";
 
 const navigationItems: DashboardNavigationItem[] = [
   { icon: Compass, label: "Central de plataforma", path: "/administracao" },
+  { icon: ShieldCheck, label: "Painel ADM", path: "/adm" },
   { icon: UsersRound, label: "Núcleo de cadastros", path: "/cadastro-base" },
   { icon: House, label: "Ativos urbanos", path: "/ativos-urbanos" },
   { icon: Workflow, label: "Vendas Urbanas", path: "/vendas-urbanas" },
@@ -39,8 +41,7 @@ const urbanAccessGate: DashboardAccessGate = {
 
 export default function UrbanPipeline() {
   const { isAuthenticated } = useAuth();
-  const [organizationId, setOrganizationId] = useState("");
-  const [purposeCode, setPurposeCode] = useState("CADASTRO_INICIAL");
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState("");
   const [partyId, setPartyId] = useState("");
   const [sourceCode, setSourceCode] = useState("OPERADOR");
   const [interestKind, setInterestKind] = useState<"urban_asset" | "search_profile" | "unspecified">("search_profile");
@@ -61,7 +62,13 @@ export default function UrbanPipeline() {
   const [agendaClassification, setAgendaClassification] = useState<keyof typeof agendaClassificationLabels>("lead_review");
   const [agendaInternalCode, setAgendaInternalCode] = useState("");
 
-  const context = useMemo(() => ({ organizationId: organizationId.trim(), module: "vendas_urbanas" as const, purposeCode: purposeCode.trim().toUpperCase() }), [organizationId, purposeCode]);
+  const authorizedContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "vendas_urbanas" }, { enabled: isAuthenticated, retry: false });
+  const selectedOrganizationContext = resolveAuthorizedSubdivisionContext(selectedOrganizationId, authorizedContextsQuery.data);
+  useEffect(() => {
+    if (selectedOrganizationId && !selectedOrganizationContext) setSelectedOrganizationId("");
+    if (!selectedOrganizationId) setSelectedOrganizationId(initialAuthorizedSubdivisionContextId(authorizedContextsQuery.data));
+  }, [selectedOrganizationId, selectedOrganizationContext, authorizedContextsQuery.data]);
+  const context = useMemo(() => ({ organizationId: selectedOrganizationContext?.organizationId ?? "", module: "vendas_urbanas" as const, purposeCode: selectedOrganizationContext?.purposeCode ?? "" }), [selectedOrganizationContext]);
   const contextReady = isDomainContextReady(context);
   const enabled = isAuthenticated && contextReady;
   const leadsQuery = trpc.urbanPipeline.listDraftLeads.useQuery(context, { enabled, retry: false });
@@ -141,7 +148,7 @@ export default function UrbanPipeline() {
       <div className="urban-pipeline-page">
         <header className="urban-pipeline-hero"><div><p className="urban-pipeline-eyebrow">VENDAS URBANAS · INTERESSE ANTES DA PROPOSTA</p><h1>Qualifique o próximo passo, não uma suposição.</h1><p>Este corte registra interesse, etapa, agenda classificada, vínculo interno e perfil de busca. Ele não oferta preço, reserva ativo, envia comunicação, aprova comprador, gera contrato ou cria consequência financeira.</p></div><div className="urban-pipeline-hero__rule"><ShieldCheck size={18} /><span>Funil em rascunho<br /><b>sem automação ou efeito externo</b></span></div></header>
 
-        <section className="urban-pipeline-context" aria-labelledby="urban-context-title"><div className="urban-pipeline-heading"><div><p className="urban-pipeline-eyebrow">01 · CONTEXTO</p><h2 id="urban-context-title">Vendas Urbanas é um módulo explícito.</h2></div><p>O contexto exige organização e finalidade; o módulo permanece fixo para impedir que esta jornada seja criada por Locação.</p></div><div className="urban-pipeline-context__fields"><label htmlFor="urban-organization"><Building2 size={14} /> ID da organização<input id="urban-organization" value={organizationId} onChange={(event) => setOrganizationId(event.target.value)} placeholder="UUID da organização autorizada" /></label><label htmlFor="urban-purpose"><ShieldCheck size={14} /> Finalidade<input id="urban-purpose" value={purposeCode} onChange={(event) => setPurposeCode(event.target.value.toUpperCase())} placeholder="CADASTRO_INICIAL" /></label></div><div className={`urban-pipeline-context__status ${contextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} /><span>{contextReady ? "Contexto sintaticamente válido. O servidor ainda verifica identidade, membership, grant, vigência, módulo e finalidade." : "Informe organização e finalidade válidas. Sem contexto não há consulta, lead, transição ou agenda."}</span></div></section>
+        <section className="urban-pipeline-context" aria-labelledby="urban-context-title"><div className="urban-pipeline-heading"><div><p className="urban-pipeline-eyebrow">01 · CONTEXTO</p><h2 id="urban-context-title">Vendas Urbanas é um módulo explícito.</h2></div><p>O contexto autorizado seleciona organização e finalidade sem exigir UUID manual. O módulo permanece fixo para impedir que esta jornada seja criada por Locação.</p></div><div className="urban-pipeline-context__fields"><label htmlFor="urban-organization"><ShieldCheck size={14} /> Organização autorizada<select id="urban-organization" value={selectedOrganizationId} onChange={(event) => setSelectedOrganizationId(event.target.value)} disabled={!isAuthenticated || authorizedContextsQuery.isLoading}><option value="">{authorizedContextsQuery.isLoading ? "Carregando contextos autorizados" : "Selecione uma organização autorizada"}</option>{authorizedContextsQuery.data?.map((organization) => <option key={organization.organizationId} value={organization.organizationId}>{organization.organizationLabel}</option>)}</select></label><label htmlFor="urban-purpose"><ShieldCheck size={14} /> Finalidade<input id="urban-purpose" value={context.purposeCode || "—"} readOnly aria-readonly="true" /></label></div><div className={`urban-pipeline-context__status ${contextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} /><span>{contextReady ? "Contexto autorizado selecionado. O servidor ainda verifica identidade, membership, grant, vigência, módulo e finalidade." : authorizedContextsQuery.isError ? "O contexto não foi liberado. A interface não revela organizações ou escopos externos." : "Selecione um contexto autorizado para liberar consulta, lead, transição ou agenda."}</span></div></section>
 
         <section className="urban-pipeline-workspace" aria-labelledby="urban-workspace-title"><div className="urban-pipeline-heading"><div><p className="urban-pipeline-eyebrow">02 · ORIGEM, ETAPA E AGENDA</p><h2 id="urban-workspace-title">Cada ação produz um fato limitado.</h2></div><p>Party, lead, etapa e agenda são objetos separados. Nenhum formulário captura contatos, documentos, renda, score, ativo específico, preço ou nota livre.</p></div><div className="urban-pipeline-grid">
           <form className="urban-pipeline-card" onSubmit={createLead}><div className="urban-pipeline-card__title"><UserRoundPlus size={19} /><h3>Lead de entrada</h3></div><p>Conecte uma Party em rascunho a uma origem codificada e a um interesse declarado.</p><label htmlFor="urban-party">ID da Party</label><input id="urban-party" value={partyId} onChange={(event) => setPartyId(event.target.value)} placeholder="UUID da Party em rascunho" disabled={!enabled} required /><label htmlFor="urban-source">Origem em código</label><input id="urban-source" value={sourceCode} onChange={(event) => setSourceCode(event.target.value.toUpperCase())} placeholder="EX.: OPERADOR" disabled={!enabled} required /><label htmlFor="urban-interest">Interesse declarado</label><select id="urban-interest" value={interestKind} onChange={(event) => setInterestKind(event.target.value as typeof interestKind)} disabled={!enabled}><option value="search_profile">Perfil de busca</option><option value="urban_asset">Ativo urbano</option><option value="unspecified">Não especificado</option></select><button type="submit" disabled={!enabled || createLeadMutation.isPending}>{createLeadMutation.isPending ? "Criando lead" : "Criar lead em rascunho"}</button></form>

@@ -1,14 +1,16 @@
 import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
+import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { trpc } from "@/lib/trpc";
-import { Building2, CalendarClock, CircleAlert, ClipboardCheck, Compass, FileCheck2, House, Link2, Search, ShieldCheck, Tag, UsersRound, Workflow } from "lucide-react";
-import { useMemo, useState } from "react";
+import { CalendarClock, CircleAlert, ClipboardCheck, Compass, FileCheck2, House, Link2, Search, ShieldCheck, Tag, UsersRound, Workflow } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../rental-pipeline.css";
 
 const navigationItems: DashboardNavigationItem[] = [
   { icon: Compass, label: "Central de plataforma", path: "/administracao" },
+  { icon: ShieldCheck, label: "Painel ADM", path: "/adm" },
   { icon: UsersRound, label: "Núcleo de cadastros", path: "/cadastro-base" },
   { icon: House, label: "Ativos urbanos", path: "/ativos-urbanos" },
   { icon: Workflow, label: "Vendas Urbanas", path: "/vendas-urbanas" },
@@ -84,8 +86,7 @@ function toIsoDate(value: string): string {
 
 export default function RentalPipeline() {
   const { isAuthenticated } = useAuth();
-  const [organizationId, setOrganizationId] = useState("");
-  const [purposeCode, setPurposeCode] = useState("CADASTRO_INICIAL");
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState("");
   const [partyId, setPartyId] = useState("");
   const [journeyKind, setJourneyKind] = useState<keyof typeof journeys>("management_interest");
   const [sourceCode, setSourceCode] = useState("");
@@ -109,7 +110,13 @@ export default function RentalPipeline() {
   const [agendaClassification, setAgendaClassification] = useState<keyof typeof agendaClassifications>("intake_review");
   const [agendaInternalCode, setAgendaInternalCode] = useState("");
 
-  const context = useMemo(() => ({ organizationId: organizationId.trim(), module: "locacao" as const, purposeCode: purposeCode.trim().toUpperCase() }), [organizationId, purposeCode]);
+  const authorizedContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "locacao" }, { enabled: isAuthenticated, retry: false });
+  const selectedOrganizationContext = resolveAuthorizedSubdivisionContext(selectedOrganizationId, authorizedContextsQuery.data);
+  useEffect(() => {
+    if (selectedOrganizationId && !selectedOrganizationContext) setSelectedOrganizationId("");
+    if (!selectedOrganizationId) setSelectedOrganizationId(initialAuthorizedSubdivisionContextId(authorizedContextsQuery.data));
+  }, [selectedOrganizationId, selectedOrganizationContext, authorizedContextsQuery.data]);
+  const context = useMemo(() => ({ organizationId: selectedOrganizationContext?.organizationId ?? "", module: "locacao" as const, purposeCode: selectedOrganizationContext?.purposeCode ?? "" }), [selectedOrganizationContext]);
   const isContextReady = isDomainContextReady(context);
   const isWorkspaceReady = isAuthenticated && isContextReady;
   const intakesQuery = trpc.rentalPipeline.listDraftIntakes.useQuery(context, { enabled: isWorkspaceReady, retry: false });
@@ -227,11 +234,11 @@ export default function RentalPipeline() {
         <section className="rental-pipeline-context" aria-labelledby="rental-context-title">
           <div className="rental-pipeline-heading"><div><p className="rental-pipeline-eyebrow">01 · CONTEXTO</p><h2 id="rental-context-title">A Locação não herda permissões de outra área.</h2></div><p>Organização, módulo e finalidade são enviados ao servidor a cada operação. O módulo é fixo em Locação, mas a autorização continua dependente de identidade, membership, grant e vigência.</p></div>
           <div className="rental-pipeline-context__fields">
-            <label htmlFor="rental-organization"><Building2 size={14} /> ID da organização<input id="rental-organization" value={organizationId} onChange={(event) => setOrganizationId(event.target.value)} placeholder="UUID da organização autorizada" /></label>
+            <label htmlFor="rental-organization"><ShieldCheck size={14} /> Organização autorizada<select id="rental-organization" value={selectedOrganizationId} onChange={(event) => setSelectedOrganizationId(event.target.value)} disabled={!isAuthenticated || authorizedContextsQuery.isLoading}><option value="">{authorizedContextsQuery.isLoading ? "Carregando contextos autorizados" : "Selecione uma organização autorizada"}</option>{authorizedContextsQuery.data?.map((organization) => <option key={organization.organizationId} value={organization.organizationId}>{organization.organizationLabel}</option>)}</select></label>
             <label htmlFor="rental-module"><House size={14} /> Módulo<input id="rental-module" value="Locação" readOnly aria-readonly="true" /></label>
-            <label htmlFor="rental-purpose"><ShieldCheck size={14} /> Finalidade<input id="rental-purpose" value={purposeCode} onChange={(event) => setPurposeCode(event.target.value.toUpperCase())} placeholder="CADASTRO_INICIAL" /></label>
+            <label htmlFor="rental-purpose"><ShieldCheck size={14} /> Finalidade<input id="rental-purpose" value={context.purposeCode || "—"} readOnly aria-readonly="true" /></label>
           </div>
-          <div className={`rental-pipeline-context__status ${isContextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} /><span>{isContextReady ? "Contexto sintaticamente válido. O servidor confirmará identidade, membership, grant, vigência, módulo e finalidade antes de qualquer leitura ou rascunho." : "Informe organização e finalidade válidas para liberar as ações de rascunho."}</span></div>
+          <div className={`rental-pipeline-context__status ${isContextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} /><span>{isContextReady ? "Contexto autorizado selecionado. O servidor ainda confirmará identidade, membership, grant, vigência, módulo e finalidade antes de qualquer leitura ou rascunho." : authorizedContextsQuery.isError ? "O contexto não foi liberado. A interface não revela organizações ou escopos externos." : "Selecione um contexto autorizado para liberar as ações de rascunho."}</span></div>
         </section>
 
         <section className="rental-pipeline-workspace" aria-labelledby="rental-workspace-title">

@@ -16,6 +16,13 @@ describe("authorized organization contexts", () => {
     expect(rpc).toHaveBeenCalledWith("organization_list_authorized_contexts", { p_actor_user_id: "subject-1", p_module: "loteadora" });
   });
 
+  it("accepts the other authorized operating modules without adding a wildcard", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: [], error: null });
+    await expect(listAuthorizedOrganizationContexts("subject-1", { module: "vendas_urbanas" }, { rpc } as never)).resolves.toEqual([]);
+    await expect(listAuthorizedOrganizationContexts("subject-1", { module: "locacao" }, { rpc } as never)).resolves.toEqual([]);
+    await expect(listAuthorizedOrganizationContexts("subject-1", { module: "platform" }, { rpc } as never)).rejects.toThrow();
+  });
+
   it("fails closed when the RPC denies the read", async () => {
     const rpc = vi.fn().mockResolvedValue({ data: null, error: { message: "denied" } });
     await expect(listAuthorizedOrganizationContexts("subject-1", { module: "loteadora" }, { rpc } as never)).rejects.toThrow("ORGANIZATION_CONTEXT_READ_DENIED");

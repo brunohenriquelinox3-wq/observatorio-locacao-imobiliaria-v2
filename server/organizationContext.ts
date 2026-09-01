@@ -5,7 +5,7 @@ import { getSupabaseAdminClient } from "./supabase";
 type RpcClient = Pick<SupabaseClient, "rpc">;
 
 export const authorizedOrganizationContextInputSchema = z.object({
-  module: z.literal("loteadora"),
+  module: z.enum(["loteadora", "vendas_urbanas", "locacao"]),
 }).strict();
 
 export type AuthorizedOrganizationContext = {

@@ -1051,3 +1051,14 @@
 - [x] Revisar campos de identidade exibidos na central para remover pré-preenchimento desnecessário de e-mail.
 - [x] Manter campos de credencial vazios por padrão e ocultar a conexão manual quando a identidade da sessão já estiver vinculada.
 - [x] Validar a projeção sem PII, empacotar ZIP/HTML saneados e preservar o marco.
+
+## Experiência ADM: evolução do CRM sem dados de negócio
+
+- [x] Auditar a experiência atual das rotas administrativas e dos módulos liberados para identificar lacunas de navegação, hierarquia e estados vazios.
+- [x] Ampliar a leitura minimizada de contexto para Loteadora, Vendas Urbanas e Locação sem enumerar organizações ou escopos externos.
+- [x] Construir uma central ADM orientada a operações com visão segura de Loteadora, Vendas Urbanas e Locação.
+- [x] Criar a rota ADM com cartões de módulo, estado vazio honesto e atalhos sem dados de negócio.
+- [x] Substituir o UUID manual de Vendas Urbanas por um seletor de organização autorizado e finalidade somente leitura.
+- [x] Substituir o UUID manual de Locação por um seletor de organização autorizado e finalidade somente leitura.
+- [x] Integrar atalhos contextuais e estados vazios orientativos sem criar loteamentos, clientes, imóveis, contratos ou dados financeiros.
+- [x] Validar responsividade, acessibilidade, proteção de dados e clareza de papel antes de empacotar ZIP/HTML saneados.
