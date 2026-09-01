@@ -1307,3 +1307,10 @@
 - [x] Criar uma paleta de navegação que liste somente itens já disponíveis na sidebar do contexto atual.
 - [x] Preservar rotas, grupos, guardas, dados e permissões, incluindo a navegação móvel.
 - [x] Validar teclado, foco, navegação, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Navegação: módulos visíveis somente no contexto autorizado
+
+- [x] Auditar os itens de navegação e as leituras de contexto autorizado já disponíveis.
+- [x] Definir filtragem visual que não conceda acesso nem substitua a autorização server-side.
+- [x] Integrar a disponibilidade de módulos à sidebar e à paleta, preservando rotas de Plataforma e ADM.
+- [x] Validar filtros, falhas seguras, navegação, testes, tipagem, build e artefatos ZIP/HTML saneados.

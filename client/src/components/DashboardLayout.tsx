@@ -33,12 +33,14 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
+import { filterNavigationByAuthorizedModules } from "@/lib/dashboardAuthorizedNavigation";
 import { shouldCloseMobileNavigationAfterRouteChange } from "@/lib/dashboardNavigationBehavior";
 import { dashboardMainContentId, dashboardSkipLinkLabel } from "@/lib/dashboardAccessibility";
 import { groupDashboardNavigation } from "@/lib/dashboardNavigationGroups";
 import { isNavigationPaletteShortcut } from "@/lib/dashboardNavigationPalette";
 import { getDashboardProfilePresentation } from "@/lib/dashboardProfilePresentation";
 import { getSidebarWidthAfterKeyboardCommand } from "@/lib/dashboardSidebarResize";
+import { trpc } from "@/lib/trpc";
 import { ArrowUpRight, Compass, LayoutDashboard, LockKeyhole, LogOut, PanelLeft, Search, Users, type LucideIcon } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -191,10 +193,33 @@ function DashboardLayoutContent({
   const [isResizing, setIsResizing] = useState(false);
   const [isNavigationPaletteOpen, setIsNavigationPaletteOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const activeMenuItem = navigationItems.find(item => item.path === location);
-  const navigationGroups = groupDashboardNavigation(navigationItems);
   const isMobile = useIsMobile();
   const profilePresentation = getDashboardProfilePresentation();
+  const moduleQueryOptions = { retry: false, refetchOnWindowFocus: false };
+  const loteadoraContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery(
+    { module: "loteadora" },
+    moduleQueryOptions,
+  );
+  const urbanSalesContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery(
+    { module: "vendas_urbanas" },
+    moduleQueryOptions,
+  );
+  const rentalContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery(
+    { module: "locacao" },
+    moduleQueryOptions,
+  );
+  const visibleNavigationItems = filterNavigationByAuthorizedModules({
+    items: navigationItems,
+    isAvailabilityResolved:
+      loteadoraContextsQuery.isSuccess && urbanSalesContextsQuery.isSuccess && rentalContextsQuery.isSuccess,
+    authorizedModules: {
+      loteadora: Boolean(loteadoraContextsQuery.data?.length),
+      vendas_urbanas: Boolean(urbanSalesContextsQuery.data?.length),
+      locacao: Boolean(rentalContextsQuery.data?.length),
+    },
+  });
+  const activeMenuItem = visibleNavigationItems.find(item => item.path === location);
+  const navigationGroups = groupDashboardNavigation(visibleNavigationItems);
 
   const navigateTo = (path: string) => {
     setLocation(path);
