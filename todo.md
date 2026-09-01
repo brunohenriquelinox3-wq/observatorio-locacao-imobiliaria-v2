@@ -1000,14 +1000,15 @@
 
 ## Administração: solicitação controlada de SUPER ADM
 
-- [ ] Examinar a política de grant e os pré-requisitos de SUPER ADM sem conceder alçada.
-- [ ] Modelar uma solicitação de alçada auditável, correlacionada e restrita à identidade administrativa validada.
-- [ ] Implementar a solicitação protegida e uma projeção minimizada sem concessão automática.
-- [ ] Validar, empacotar e preservar o corte sem executar a concessão final.
-- [ ] Manter a concessão final de SUPER ADM sujeita a confirmação independente do usuário.
+- [x] Examinar a política de grant e os pré-requisitos de SUPER ADM sem conceder alçada. **Concluído:** a ativação já atribuiu o papel de plataforma `platform_super_admin` ao principal ativo.
+- [x] Modelar uma solicitação de alçada auditável, correlacionada e restrita à identidade administrativa validada. **Encerrado sem implementação:** criar uma solicitação para um papel já ativo seria redundante e aumentaria o risco de inconsistência.
+- [x] Implementar a solicitação protegida e uma projeção minimizada sem concessão automática. **Encerrado sem implementação:** foi priorizada a projeção minimizada do papel já ativo, sem criar grant ou novo fluxo de alçada.
+- [x] Validar, empacotar e preservar o corte sem executar a concessão final. **Concluído:** a confirmação de papel, testes, build e artefatos foram verificados sem execução de concessão adicional.
+- [x] Manter a concessão final de SUPER ADM sujeita a confirmação independente do usuário. **Concluído:** nenhuma concessão adicional será criada enquanto o papel atual permanecer ativo; qualquer mudança futura exigirá solicitação material separada.
 
 ## Administração: distinção entre SUPER ADM de plataforma e grants delegados
 
 - [x] Registrar que o principal já ativado possui papel SUPER ADM de plataforma, sem criar concessão duplicada.
 - [x] Corrigir a interface para diferenciar papel de plataforma ativo de organizações, memberships e grants delegados ainda inexistentes.
+- [x] Corrigir os textos auxiliares de bootstrap para não declarar alçada pendente quando o papel SUPER ADM de plataforma estiver ativo.
 - [x] Validar com fixtures sintéticas, empacotar e preservar a projeção sem alterar privilégios reais.

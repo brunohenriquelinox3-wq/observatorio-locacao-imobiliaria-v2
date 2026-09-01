@@ -7,15 +7,24 @@ export type BootstrapPresentation = {
   ledgerPrincipalText: string;
 };
 
-export function getPlatformBootstrapPresentation(input: { identityState?: string; bootstrapAction?: string; mfaVerified: boolean }): BootstrapPresentation {
+export function getPlatformBootstrapPresentation(input: { identityState?: string; bootstrapAction?: string; mfaVerified: boolean; platformRole?: string | null }): BootstrapPresentation {
   if (input.identityState === "active") {
+    const isPlatformSuperAdmin = input.platformRole === "platform_super_admin";
     return {
-      headline: "Principal de plataforma ativo; alçadas continuam indisponíveis",
+      headline: isPlatformSuperAdmin
+        ? "SUPER ADM de plataforma ativo; delegações continuam governadas"
+        : "Principal de plataforma ativo; delegações continuam governadas",
       actionLabel: "Bootstrap inicial concluído",
       actionDisabled: true,
-      heroText: "O principal de plataforma foi ativado com controles; organizações, memberships, grants e comandos continuam sujeitos a policy, correlação e alçada explícita.",
-      principalMetricText: "Principal inicial ativo; nenhuma alçada foi concedida.",
-      ledgerPrincipalText: "Principal de plataforma ativo; aguarda alçada explícita.",
+      heroText: isPlatformSuperAdmin
+        ? "O papel SUPER ADM de plataforma foi ativado com controles. Organizações, memberships, grants e comandos delegados continuam sujeitos a policy, correlação, escopo e vigência."
+        : "O principal de plataforma foi ativado com controles; organizações, memberships, grants e comandos delegados continuam sujeitos a policy, correlação, escopo e vigência.",
+      principalMetricText: isPlatformSuperAdmin
+        ? "SUPER ADM de plataforma ativo; grants delegados seguem separados."
+        : "Principal de plataforma ativo; grants delegados seguem separados.",
+      ledgerPrincipalText: isPlatformSuperAdmin
+        ? "SUPER ADM de plataforma ativo; nenhuma concessão duplicada é necessária."
+        : "Principal de plataforma ativo; delegações continuam separadas.",
     };
   }
 

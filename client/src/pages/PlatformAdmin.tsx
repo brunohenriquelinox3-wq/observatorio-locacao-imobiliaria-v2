@@ -202,6 +202,7 @@ export default function PlatformAdmin() {
     identityState: commandStatusQuery.data?.identityState,
     bootstrapAction: commandStatusQuery.data?.bootstrapAction,
     mfaVerified,
+    platformRole: commandStatusQuery.data?.platformRole,
   });
   const consoleState = deriveAdministrativeConsoleState(commandStatusQuery.data);
 
