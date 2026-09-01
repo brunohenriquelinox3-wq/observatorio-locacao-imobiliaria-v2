@@ -1196,3 +1196,10 @@
 - [x] Reaproveitar a regra de limpeza local somente contra leituras já autorizadas e concluídas.
 - [x] Limpar referências locais obsoletas sem mutação, inferência externa, alteração de alçadas, dados ou policies.
 - [x] Validar isolamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Loteadora: listagens sem identificadores técnicos expostos
+
+- [x] Auditar todas as listagens da Loteadora que ainda renderizam identificadores técnicos.
+- [x] Criar descrições operacionais a partir de dados já devolvidos pelo contexto autorizado.
+- [x] Remover identificadores técnicos visíveis sem reduzir a clareza da referência de trabalho.
+- [x] Validar privacidade, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.
