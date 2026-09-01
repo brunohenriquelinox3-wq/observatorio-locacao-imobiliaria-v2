@@ -1320,3 +1320,10 @@
 - [x] Auditar o espelhamento local de perfil autenticado e suas dependências no cliente.
 - [x] Remover qualquer persistência desnecessária de identidade sem alterar sessão, logout, navegação, guardas ou autorização.
 - [x] Validar sessão, privacidade, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Núcleo de Cadastros: validação local de Party
+
+- [x] Auditar o formulário de Party e as validações server-side vigentes.
+- [x] Definir regras locais proporcionais ao rascunho, sem substituir validação do servidor.
+- [x] Exibir mensagens acessíveis e impedir somente a mutação localmente inválida.
+- [x] Validar comportamento, testes, tipagem, build, responsividade e artefatos ZIP/HTML saneados.

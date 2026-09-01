@@ -1,6 +1,7 @@
 import DashboardLayout, { type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { domainPartySelectionLabel } from "@/lib/domainPartySelection";
+import { validateDraftPartyDisplayName } from "@/lib/domainPartyValidation";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { domainOperationalValue } from "@/lib/domainOperationalOverview";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
@@ -32,6 +33,7 @@ export default function DomainFoundation() {
   const [module, setModule] = useState<"vendas_urbanas" | "locacao" | "loteadora">("vendas_urbanas");
   const [partyKind, setPartyKind] = useState<"individual" | "legal_entity">("individual");
   const [displayName, setDisplayName] = useState("");
+  const [displayNameValidationMessage, setDisplayNameValidationMessage] = useState("");
   const [rolePartyId, setRolePartyId] = useState("");
   const [role, setRole] = useState("lead");
   const [roleBeginsAt, setRoleBeginsAt] = useState("");
@@ -61,6 +63,7 @@ export default function DomainFoundation() {
   const createPartyMutation = trpc.domainFoundation.createDraftParty.useMutation({
     onSuccess() {
       setDisplayName("");
+      setDisplayNameValidationMessage("");
       toast.success("Rascunho de Party criado", { description: "Nenhum documento, contato, dado fiscal, contrato ou alçada foi incluído." });
       void partiesQuery.refetch();
     },
@@ -87,11 +90,17 @@ export default function DomainFoundation() {
       toast.message("Contexto incompleto", { description: "Informe organização, módulo e finalidade antes de iniciar qualquer rascunho." });
       return;
     }
+    const displayNameValidation = validateDraftPartyDisplayName(displayName);
+    if (!displayNameValidation.valid) {
+      setDisplayNameValidationMessage(displayNameValidation.message);
+      return;
+    }
+    setDisplayNameValidationMessage("");
     createPartyMutation.mutate({
       ...context,
       correlationId: crypto.randomUUID(),
       kind: partyKind,
-      displayName,
+      displayName: displayNameValidation.normalizedValue,
       sourceKind: "operator_declaration",
     });
   }
@@ -154,7 +163,8 @@ export default function DomainFoundation() {
               <label htmlFor="party-kind">Tipo</label>
               <select id="party-kind" value={partyKind} onChange={(event) => setPartyKind(event.target.value as typeof partyKind)} disabled={!contextEnabled}><option value="individual">Pessoa física</option><option value="legal_entity">Pessoa jurídica</option></select>
               <label htmlFor="party-display-name">Nome de exibição</label>
-              <input id="party-display-name" value={displayName} onChange={(event) => setDisplayName(event.target.value)} placeholder="Nome necessário ao rascunho" disabled={!contextEnabled} required minLength={2} maxLength={160} />
+              <input id="party-display-name" value={displayName} onChange={(event) => { setDisplayName(event.target.value); if (displayNameValidationMessage) setDisplayNameValidationMessage(""); }} placeholder="Nome necessário ao rascunho" disabled={!contextEnabled} required minLength={2} maxLength={160} aria-invalid={displayNameValidationMessage ? "true" : undefined} aria-describedby={displayNameValidationMessage ? "party-display-name-validation" : undefined} />
+              {displayNameValidationMessage && <p id="party-display-name-validation" className="domain-foundation-card__note is-error" role="alert">{displayNameValidationMessage}</p>}
               <button type="submit" disabled={!contextEnabled || createPartyMutation.isPending}>{createPartyMutation.isPending ? "Criando rascunho" : "Criar Party em rascunho"}</button>
             </form>
 
