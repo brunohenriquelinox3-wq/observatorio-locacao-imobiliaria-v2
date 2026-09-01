@@ -22,6 +22,14 @@ export type DraftUrbanLeadSummary = {
   nextAgendaState: "scheduled" | "rescheduled" | null;
 };
 
+export type DraftUrbanAgendaSummary = {
+  agendaId: string;
+  leadId: string;
+  leadLabel: string;
+  scheduledFor: string;
+  state: "scheduled" | "rescheduled" | "cancelled" | "occurred" | "not_held";
+};
+
 function requireSubject(subjectId: string | undefined): string {
   if (!subjectId) throw new Error("URBAN_IDENTITY_REQUIRED");
   return subjectId;
@@ -86,4 +94,28 @@ export async function createDraftUrbanAgenda(subjectId: string | undefined, rawI
     p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode,
     p_lead_id: input.leadId, p_scheduled_for: input.scheduledFor, p_state: input.state, p_reason_code: input.reasonCode ?? null, p_correlation_id: input.correlationId,
   }) };
+}
+
+export async function listDraftUrbanAgendas(
+  subjectId: string | undefined,
+  rawContext: unknown,
+  client: RpcClient = getSupabaseAdminClient(),
+): Promise<DraftUrbanAgendaSummary[]> {
+  const actorUserId = requireSubject(subjectId);
+  const context = urbanSalesContextSchema.parse(rawContext);
+  const { data, error } = await client.rpc("urban_list_draft_agendas", {
+    p_actor_user_id: actorUserId,
+    p_organization_id: context.organizationId,
+    p_module: context.module,
+    p_purpose_code: context.purposeCode,
+  });
+  if (error || !Array.isArray(data)) throw new Error("URBAN_READ_DENIED");
+  return data.map((row) => ({
+    agendaId: String(row.agenda_id),
+    leadId: String(row.lead_id),
+    leadLabel: String(row.lead_label),
+    scheduledFor: String(row.scheduled_for),
+    state: ["scheduled", "rescheduled", "cancelled", "occurred", "not_held"].includes(String(row.state))
+      ? String(row.state) as DraftUrbanAgendaSummary["state"] : "scheduled",
+  }));
 }

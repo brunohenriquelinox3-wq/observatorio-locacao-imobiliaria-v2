@@ -62,6 +62,7 @@ import {
 import {
   createDraftUrbanAgenda,
   createDraftUrbanLead,
+  listDraftUrbanAgendas,
   listDraftUrbanLeads,
   transitionDraftUrbanLead,
 } from "./urbanPipeline";
@@ -274,6 +275,9 @@ export const appRouter = router({
     createDraftAgenda: protectedProcedure
       .input(draftUrbanAgendaInputSchema)
       .mutation(({ ctx, input }) => createDraftUrbanAgenda(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftAgendas: protectedProcedure
+      .input(urbanSalesContextSchema)
+      .query(({ ctx, input }) => listDraftUrbanAgendas(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftLeadAssetLinks: protectedProcedure
       .input(urbanSalesContextSchema)
       .query(({ ctx, input }) => listDraftUrbanLeadAssetLinks(ctx.supabaseSubjectId ?? undefined, input)),

@@ -1166,3 +1166,11 @@
 - [x] Substituir IDs visíveis por rótulos operacionais com estado vazio, erro e carregamento explícitos.
 - [x] Manter anexo privado, venda, reserva, proposta, contrato, cobrança, valores, percentuais, pagamentos e repasses fora deste corte.
 - [x] Validar isolamento, privacidade, responsividade, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Vendas Urbanas: seleções contextuais de Party, Lead, Ativo e Agenda
+
+- [x] Auditar referências técnicas de Party, Lead, Ativo e Agenda expostas nos formulários e listagens operacionais.
+- [x] Reutilizar leituras minimizadas de Party, Lead e Ativo e criar a leitura minimizada de Agenda no contexto autorizado, sem enumerar registros de outras organizações.
+- [x] Substituir IDs técnicos por seletores contextuais com rótulos operacionais e estados de carregamento, vazio e erro.
+- [x] Manter lead, vínculo de ativo, perfil de busca, agenda e classificação em rascunho, sem preço, reserva, proposta, contrato, financeiro ou integrações externas.
+- [x] Validar isolamento, privacidade, responsividade, tipagem, build e artefatos ZIP/HTML saneados.

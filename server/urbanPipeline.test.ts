@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createDraftUrbanAgenda, createDraftUrbanLead, listDraftUrbanLeads, transitionDraftUrbanLead } from "./urbanPipeline";
+import { createDraftUrbanAgenda, createDraftUrbanLead, listDraftUrbanAgendas, listDraftUrbanLeads, transitionDraftUrbanLead } from "./urbanPipeline";
 
 const subjectId = "550e8400-e29b-41d4-a716-446655440000";
 const organizationId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
@@ -20,6 +20,12 @@ describe("urban pipeline server boundary", () => {
     rpc.mockResolvedValueOnce({ data: [{ lead_id: leadId, party_label: "Parte de teste", source_code: "OPERADOR", interest_kind: "search_profile", stage: "agenda_pending", next_agenda_for: "2026-08-28T14:00:00+00:00", next_agenda_state: "scheduled" }], error: null });
     await expect(listDraftUrbanLeads(subjectId, context, client)).resolves.toEqual([{ leadId, partyLabel: "Parte de teste", sourceCode: "OPERADOR", interestKind: "search_profile", stage: "agenda_pending", nextAgendaFor: "2026-08-28T14:00:00+00:00", nextAgendaState: "scheduled" }]);
     expect(rpc).toHaveBeenLastCalledWith("urban_list_draft_leads", expect.objectContaining({ p_actor_user_id: subjectId, p_module: "vendas_urbanas" }));
+  });
+
+  it("reads minimized agenda rows only through a contextual sales RPC", async () => {
+    rpc.mockResolvedValueOnce({ data: [{ agenda_id: correlationId, lead_id: leadId, lead_label: "Parte de teste", scheduled_for: "2026-08-28T14:00:00+00:00", state: "scheduled", reason_code: "must-not-pass" }], error: null });
+    await expect(listDraftUrbanAgendas(subjectId, context, client)).resolves.toEqual([{ agendaId: correlationId, leadId, leadLabel: "Parte de teste", scheduledFor: "2026-08-28T14:00:00+00:00", state: "scheduled" }]);
+    expect(rpc).toHaveBeenLastCalledWith("urban_list_draft_agendas", expect.objectContaining({ p_actor_user_id: subjectId, p_module: "vendas_urbanas" }));
   });
 
   it("uses protected RPCs for lead, stage and agenda commands", async () => {

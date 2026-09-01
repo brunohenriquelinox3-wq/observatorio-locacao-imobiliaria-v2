@@ -32,4 +32,14 @@ describe("A7 urban pipeline migration", () => {
     expect(sql).toContain("to service_role");
     expect(sql).not.toMatch(/\b(price|proposal|reservation|contract|payment|commission)\b/i);
   });
+
+  it("keeps the agenda selector read contextual, minimized and server-only", async () => {
+    const sql = await readFile(resolve(import.meta.dirname, "../supabase/migrations/20260901204500_list_draft_urban_agendas_a65.sql"), "utf8");
+    expect(sql).toContain("urban_list_draft_agendas");
+    expect(sql).toContain("private.require_urban_pipeline_authority");
+    expect(sql).toContain("security definer set search_path = ''");
+    expect(sql).toContain("from public, anon, authenticated");
+    expect(sql).toContain("to service_role");
+    expect(sql).not.toMatch(/\b(reason_code|price|proposal|reservation|contract|payment|commission)\b/i);
+  });
 });
