@@ -28,6 +28,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { validateIdentitySubmission, type IdentityFormMode } from "@/lib/identityRegistration";
 import { genericRecoveryNotice, toMfaQrImageSource, validateTotpCode } from "@/lib/identityMfa";
 import { deriveAdministrativeConsoleState } from "@/lib/adminConsole";
+import { getPlatformBootstrapPresentation } from "@/lib/platformBootstrapPresentation";
 import "../platform-admin.css";
 
 const navigationItems: DashboardNavigationItem[] = [
@@ -185,7 +186,9 @@ export default function PlatformAdmin() {
       ? "Leitura indisponível"
       : readiness?.commandMode === "blocked"
         ? "Fundação conectada · comandos bloqueados"
-        : "Estado indisponível";
+        : readiness?.commandMode === "ready_for_controlled_commands"
+          ? "Principal ativo · comandos restritos"
+          : "Estado indisponível";
   const identityStatus = identityQuery.isLoading
     ? "Verificando identidade"
     : identityQuery.data?.state === "connected"
@@ -193,6 +196,11 @@ export default function PlatformAdmin() {
       : "Identidade Supabase ainda não conectada";
   const canPrepareBootstrap = commandStatusQuery.data?.bootstrapAction === "available";
   const canActivateBootstrap = commandStatusQuery.data?.identityState === "pending_activation" && mfaVerified;
+  const bootstrapPresentation = getPlatformBootstrapPresentation({
+    identityState: commandStatusQuery.data?.identityState,
+    bootstrapAction: commandStatusQuery.data?.bootstrapAction,
+    mfaVerified,
+  });
   const consoleState = deriveAdministrativeConsoleState(commandStatusQuery.data);
 
   function executeCommand(command: PlatformCommand) {
@@ -397,7 +405,7 @@ export default function PlatformAdmin() {
             <h1>Administração não é atalho. É uma fronteira que precisa provar cada permissão.</h1>
             <p>
               Primeira superfície do Super Admin: pronta para orientar, negar com clareza e revelar evidências;
-              ainda sem comandos ativos, dados de locatárias ou bootstrap executado.
+              {bootstrapPresentation.heroText}
             </p>
           </div>
           <aside className="platform-admin-session" aria-label="Estado atual da sessão">
@@ -490,9 +498,9 @@ export default function PlatformAdmin() {
             <p>O botão não interpreta código, JWT ou papel. Ele pede ao servidor que confirme AAL2, TOTP recente, identidade pendente e canal de recuperação verificado no mesmo comando.</p>
           </div>
           <div className="platform-admin-activation__action">
-            <strong>{canActivateBootstrap ? "Pronto para pedir atestação" : commandStatusQuery.data?.identityState === "pending_activation" ? "MFA precisa ser verificado nesta sessão" : "Bootstrap pendente é necessário antes da ativação"}</strong>
-            <button type="button" onClick={() => executeCommand("activateBootstrap")} disabled={!canPrepareBootstrap && (!canActivateBootstrap || activateBootstrapMutation.isPending)}>
-              {bootstrapMutation.isPending ? "Preparando bootstrap" : activateBootstrapMutation.isPending ? "Atestando e ativando" : canPrepareBootstrap ? "Preparar bootstrap" : canActivateBootstrap ? "Pedir ativação controlada" : "Ver requisito"}
+            <strong>{bootstrapPresentation.headline}</strong>
+            <button type="button" onClick={() => executeCommand("activateBootstrap")} disabled={bootstrapPresentation.actionDisabled || bootstrapMutation.isPending || activateBootstrapMutation.isPending}>
+              {bootstrapMutation.isPending ? "Preparando bootstrap" : activateBootstrapMutation.isPending ? "Atestando e ativando" : bootstrapPresentation.actionLabel}
               <ArrowUpRight size={15} />
             </button>
           </div>
@@ -500,7 +508,7 @@ export default function PlatformAdmin() {
 
         <section className="platform-admin-metrics" aria-label="Indicadores da central de plataforma">
           <article><span>ORGANIZAÇÕES</span><strong>{metricValue(readiness?.counts.organizations)}</strong><p>Leitura agregada; provisionamento permanece bloqueado.</p></article>
-          <article><span>PRINCIPALS ATIVOS</span><strong>{metricValue(readiness?.counts.principals)}</strong><p>Bootstrap ainda exige controles adicionais.</p></article>
+          <article><span>PRINCIPALS ATIVOS</span><strong>{metricValue(readiness?.counts.principals)}</strong><p>{bootstrapPresentation.principalMetricText}</p></article>
           <article><span>GRANTS TEMPORÁRIOS</span><strong>{metricValue(readiness?.counts.grants)}</strong><p>Leitura de alçada sem expor escopo individual.</p></article>
           <article><span>EVENTOS ADMIN</span><strong>{metricValue(readiness?.counts.auditEvents)}</strong><p>Audit log aguarda RPC controlada.</p></article>
         </section>
@@ -650,7 +658,7 @@ export default function PlatformAdmin() {
           </div>
           <div className="platform-admin-ledger__rows">
             <div><Activity size={17} /><span>Organizações provisionadas</span><b>Sem registros</b><em>Aguarda `provision_organization`</em></div>
-            <div><UserRoundCog size={17} /><span>Princípios de plataforma</span><b>Sem registros</b><em>Aguarda bootstrap governado</em></div>
+            <div><UserRoundCog size={17} /><span>Princípios de plataforma</span><b>{readiness?.counts.principals ? `${readiness.counts.principals} ativo(s)` : "Sem registros"}</b><em>{bootstrapPresentation.ledgerPrincipalText}</em></div>
             <div><Clock3 size={17} /><span>Grants e suporte temporário</span><b>Sem registros</b><em>Aguarda alçada e case JIT</em></div>
             <div><AlertTriangle size={17} /><span>Eventos de auditoria</span><b>Sem registros</b><em>Aguarda comandos transacionais</em></div>
           </div>

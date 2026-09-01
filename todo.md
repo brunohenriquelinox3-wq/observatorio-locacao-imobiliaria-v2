@@ -965,3 +965,9 @@
 - [x] Corrigir a propagação de sessão ou a atestação para exigir MFA TOTP real no servidor, sem rebaixar o gate.
 - [x] Validar com fixtures sintéticas a negação sem token, com AAL insuficiente e com subject divergente.
 - [x] Empacotar e preservar a correção sem executar bootstrap real.
+
+## Administração: projeção após bootstrap concluído
+
+- [x] Registrar a ativação confirmada do principal sem marcar Super Admin, organização, membership ou grant.
+- [x] Corrigir o texto visual que ainda indica bootstrap pendente após a ativação.
+- [x] Validar a projeção administrativa com fixture sintética e preservar a correção sem alterar alçadas.

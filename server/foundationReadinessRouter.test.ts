@@ -10,6 +10,13 @@ vi.mock("./foundationReadiness", () => ({
   })),
 }));
 
+vi.mock("./adminCommands", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("./adminCommands")>()),
+  getAdministrativeSubjectStatus: vi.fn(async (subjectId: string) => ({
+    commandMode: subjectId === "active-subject" ? "ready_for_controlled_commands" : "blocked",
+  })),
+}));
+
 import { appRouter } from "./routers";
 
 function createContext(role: "admin" | "user"): TrpcContext {
@@ -28,7 +35,7 @@ function createContext(role: "admin" | "user"): TrpcContext {
     },
     req: {} as TrpcContext["req"],
     res: {} as TrpcContext["res"],
-    supabaseSubjectId: null,
+    supabaseSubjectId: role === "admin" ? "active-subject" : "blocked-subject",
   };
 }
 
