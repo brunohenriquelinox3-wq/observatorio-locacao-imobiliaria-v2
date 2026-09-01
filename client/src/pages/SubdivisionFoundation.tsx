@@ -1,5 +1,6 @@
 import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { retainAuthorizedSelection } from "@/lib/contextSelectionReset";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { subdivisionOperationalValue } from "@/lib/subdivisionOperationalOverview";
@@ -128,9 +129,42 @@ export default function SubdivisionFoundation() {
   const eligibleInternalPartyRoles = partyRolesQuery.data?.filter((assignment) => ["shareholder", "partner", "land_contributor"].includes(assignment.role)) ?? [];
   const eligibleBuyerPartyRoles = partyRolesQuery.data?.filter((assignment) => ["client", "buyer"].includes(assignment.role)) ?? [];
   useEffect(() => {
-    if (internalRoleId && Array.isArray(partyRolesQuery.data) && !eligibleInternalPartyRoles.some((assignment) => assignment.partyRoleAssignmentId === internalRoleId)) setInternalRoleId("");
-    if (buyerClientRoleId && Array.isArray(partyRolesQuery.data) && !eligibleBuyerPartyRoles.some((assignment) => assignment.partyRoleAssignmentId === buyerClientRoleId)) setBuyerClientRoleId("");
-  }, [buyerClientRoleId, eligibleBuyerPartyRoles, eligibleInternalPartyRoles, internalRoleId, partyRolesQuery.data]);
+    setSelectedDevelopmentId((value) => retainAuthorizedSelection(value, developmentsQuery.data, (development) => development.developmentId));
+    setInternalRoleDevelopmentId((value) => retainAuthorizedSelection(value, developmentsQuery.data, (development) => development.developmentId));
+    setSaleDevelopmentId((value) => retainAuthorizedSelection(value, developmentsQuery.data, (development) => development.developmentId));
+    setEconomicRuleSetDevelopmentId((value) => retainAuthorizedSelection(value, developmentsQuery.data, (development) => development.developmentId));
+  }, [developmentsQuery.data]);
+  useEffect(() => {
+    setInternalRoleId((value) => retainAuthorizedSelection(value, partyRolesQuery.data === undefined ? undefined : eligibleInternalPartyRoles, (assignment) => assignment.partyRoleAssignmentId));
+    setBuyerClientRoleId((value) => retainAuthorizedSelection(value, partyRolesQuery.data === undefined ? undefined : eligibleBuyerPartyRoles, (assignment) => assignment.partyRoleAssignmentId));
+  }, [eligibleBuyerPartyRoles, eligibleInternalPartyRoles, partyRolesQuery.data]);
+  useEffect(() => {
+    setBuyerClientIdForAttachment((value) => retainAuthorizedSelection(value, buyerClientsQuery.data, (client) => client.buyerClientId));
+    setSaleBuyerClientId((value) => retainAuthorizedSelection(value, buyerClientsQuery.data, (client) => client.buyerClientId));
+    setCoBuyerClientId((value) => retainAuthorizedSelection(value, buyerClientsQuery.data, (client) => client.buyerClientId));
+  }, [buyerClientsQuery.data]);
+  useEffect(() => {
+    setAttachmentIntentIdForUpload((value) => retainAuthorizedSelection(value, attachmentIntentsQuery.data === undefined ? undefined : uploadableAttachmentIntents, (intent) => intent.attachmentIntentId));
+  }, [attachmentIntentsQuery.data, uploadableAttachmentIntents]);
+  useEffect(() => {
+    setSaleBlockId((value) => saleDevelopmentId ? retainAuthorizedSelection(value, saleBlocksQuery.data, (block) => block.blockId) : "");
+  }, [saleBlocksQuery.data, saleDevelopmentId]);
+  useEffect(() => {
+    setSaleLotId((value) => saleBlockId ? retainAuthorizedSelection(value, saleLotsQuery.data, (lot) => lot.lotId) : "");
+  }, [saleBlockId, saleLotsQuery.data]);
+  useEffect(() => {
+    setSaleDraftIdForWorkState((value) => retainAuthorizedSelection(value, saleDraftsQuery.data, (draft) => draft.saleDraftId));
+    setSaleDraftIdForCoBuyer((value) => retainAuthorizedSelection(value, saleDraftsQuery.data, (draft) => draft.saleDraftId));
+  }, [saleDraftsQuery.data]);
+  useEffect(() => {
+    setEconomicRuleComponentRuleSetId((value) => retainAuthorizedSelection(value, economicRuleSetsQuery.data, (ruleSet) => ruleSet.economicRuleSetId));
+  }, [economicRuleSetsQuery.data]);
+  useEffect(() => {
+    setEconomicRuleComponentIdForRoleReference((value) => retainAuthorizedSelection(value, economicRuleComponentsQuery.data, (component) => component.economicRuleComponentId));
+  }, [economicRuleComponentsQuery.data]);
+  useEffect(() => {
+    setInternalPartyRoleLinkIdForReference((value) => retainAuthorizedSelection(value, internalPartyRolesQuery.data, (link) => link.linkId));
+  }, [internalPartyRolesQuery.data]);
   const operationalSectors = [
     { code: "01", title: "Cadastro de Loteamentos", value: subdivisionOperationalValue({ contextReady: isWorkspaceReady, loading: developmentsQuery.isLoading, count: developmentsQuery.data?.length, pendingLabel: "Aguardando leitura" }), description: "A matriz cadastral começa por uma referência interna em rascunho.", target: "#subdivision-development" },
     { code: "02", title: "Estoque e Mapa de Lotes", value: subdivisionOperationalValue({ contextReady: isWorkspaceReady, loading: blocksQuery.isLoading, count: undefined, pendingLabel: developmentsQuery.data?.length ? "Aguardando Quadra" : "Aguardando loteamento" }), description: "Quadras são a matriz; lote, mapa e estoque permanecem em setor separado.", target: "#subdivision-inventory" },

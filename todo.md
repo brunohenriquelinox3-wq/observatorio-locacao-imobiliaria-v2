@@ -1189,3 +1189,10 @@
 - [x] Criar regra reutilizável para limpar somente uma referência local que não exista mais na leitura autorizada atual.
 - [x] Aplicar a limpeza local sem enviar mutação, sem inferir registros externos e sem alterar alçadas, dados ou policies.
 - [x] Validar a regra com testes unitários, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Resiliência contextual em Cadastros, Ativos e Loteadora
+
+- [x] Auditar seletores dependentes de Party, papel, ativo, loteamento, quadra, lote, cliente e rascunho nos módulos restantes.
+- [x] Reaproveitar a regra de limpeza local somente contra leituras já autorizadas e concluídas.
+- [x] Limpar referências locais obsoletas sem mutação, inferência externa, alteração de alçadas, dados ou policies.
+- [x] Validar isolamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
