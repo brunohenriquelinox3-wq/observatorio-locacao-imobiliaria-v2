@@ -29,6 +29,7 @@ import { validateIdentitySubmission, type IdentityFormMode } from "@/lib/identit
 import { genericRecoveryNotice, toMfaQrImageSource, validateTotpCode } from "@/lib/identityMfa";
 import { deriveAdministrativeConsoleState } from "@/lib/adminConsole";
 import { getPlatformBootstrapPresentation } from "@/lib/platformBootstrapPresentation";
+import { getPlatformIdentityPresentation } from "@/lib/platformIdentityPresentation";
 import { getPlatformPrincipalPresentation } from "@/lib/platformPrincipalPresentation";
 import "../platform-admin.css";
 
@@ -230,6 +231,7 @@ export default function PlatformAdmin() {
     : identityQuery.data?.state === "connected"
       ? principalPresentation.identityStatus
       : "Identidade Supabase ainda não conectada";
+  const identityPresentation = getPlatformIdentityPresentation(identityQuery.data?.state);
   const canPrepareBootstrap = commandStatusQuery.data?.bootstrapAction === "available";
   const canActivateBootstrap = commandStatusQuery.data?.identityState === "pending_activation" && mfaVerified;
   const bootstrapPresentation = getPlatformBootstrapPresentation({
@@ -370,13 +372,20 @@ export default function PlatformAdmin() {
 
   async function requestRecovery() {
     const client = getSupabaseBrowserClient();
-    if (!client || !/^\S+@\S+\.\S+$/.test(identityEmail.trim())) {
-      toast.error("Informe o e-mail da identidade para solicitar recuperação.");
+    if (!client) {
+      toast.error("Não foi possível processar a solicitação", { description: "A identidade precisa estar conectada nesta sessão." });
       return;
     }
     setIsRequestingRecovery(true);
     try {
-      const { error } = await client.auth.resetPasswordForEmail(identityEmail.trim(), {
+      let recoveryEmail = identityEmail.trim();
+      if (!recoveryEmail) {
+        const { data, error } = await client.auth.getUser();
+        if (error) throw error;
+        recoveryEmail = data.user?.email?.trim() ?? "";
+      }
+      if (!/^\S+@\S+\.\S+$/.test(recoveryEmail)) throw new Error("IDENTITY_EMAIL_UNAVAILABLE");
+      const { error } = await client.auth.resetPasswordForEmail(recoveryEmail, {
         redirectTo: `${window.location.origin}/ativar-conta`,
       });
       if (error) throw error;
@@ -531,13 +540,15 @@ export default function PlatformAdmin() {
         <section className="platform-admin-identity" aria-labelledby="identity-title">
           <div>
             <p className="platform-admin-eyebrow">IDENTIDADE DE FUNDAÇÃO · ETAPA CONTROLADA</p>
-            <h2 id="identity-title">Conecte a identidade que poderá iniciar o bootstrap, sem ganhar privilégio automático.</h2>
-            <p>
-              A conexão só consulta o provedor; o cadastro é uma ação manual explícita. Nenhuma opção envia convite,
-              atribui papel administrativo ou ativa alçada por e-mail.
-            </p>
+            <h2 id="identity-title">{identityPresentation.title}</h2>
+            <p>{identityPresentation.description}</p>
           </div>
-          <form onSubmit={connectSupabaseIdentity} className="platform-admin-identity__form">
+          {identityPresentation.isConnected ? (
+            <div className="platform-admin-identity__connected" aria-live="polite">
+              <ShieldCheck size={18} />
+              <span>Identidade conectada. Nenhum e-mail, senha ou identificador é exibido nesta área.</span>
+            </div>
+          ) : <form onSubmit={connectSupabaseIdentity} className="platform-admin-identity__form">
             <fieldset className="platform-admin-identity__mode">
               <legend>Modo de identidade</legend>
               <label><input type="radio" name="identity-mode" checked={identityFormMode === "sign_in"} onChange={() => setIdentityFormMode("sign_in")} /> Conectar</label>
@@ -577,7 +588,7 @@ export default function PlatformAdmin() {
             <button type="submit" disabled={isConnectingIdentity}>
               {isConnectingIdentity ? "Confirmando identidade" : identityFormMode === "sign_in" ? "Conectar identidade" : "Criar identidade"} <ArrowUpRight size={15} />
             </button>
-          </form>
+          </form>}
         </section>
 
         <section className="platform-admin-security" aria-labelledby="mfa-title">

@@ -1045,3 +1045,9 @@
 - [x] Criar uma leitura minimizada de contextos Loteadora autorizados para a identidade atual, sem expor UUIDs ou escopos de terceiros.
 - [x] Implementar o acesso inicial ao módulo Loteadora com contexto organizacional autorizado, sem inserir dados de negócio reais.
 - [x] Validar o acesso contextual, empacotar ZIP/HTML saneados e preservar o marco.
+
+## Administração: redução de exposição de identidade
+
+- [x] Revisar campos de identidade exibidos na central para remover pré-preenchimento desnecessário de e-mail.
+- [x] Manter campos de credencial vazios por padrão e ocultar a conexão manual quando a identidade da sessão já estiver vinculada.
+- [x] Validar a projeção sem PII, empacotar ZIP/HTML saneados e preservar o marco.
