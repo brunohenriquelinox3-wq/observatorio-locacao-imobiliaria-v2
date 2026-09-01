@@ -1111,3 +1111,10 @@
 - [x] Registrar a linha de base do bundle inicial e a meta de redução por carregamento sob demanda.
 - [x] Aplicar carregamento sob demanda nas rotas internas sem alterar autenticação, contexto ou fallback de rota.
 - [x] Comparar o bundle antes/depois, validar as rotas e empacotar ZIP/HTML saneados somente se houver ganho mensurável.
+
+## Estoque e Mapa de Lotes: jornada operacional sem dados de negócio
+
+- [x] Auditar a entrada do setor de Estoque e Mapa de Lotes para reduzir a aparência de formulário técnico e respeitar a separação do Cadastro de Loteamentos.
+- [x] Criar uma visão inicial com setores de Quadras, Lotes, Mapa e Disponibilidade separados, usando somente leituras autorizadas ou estados vazios honestos.
+- [x] Manter os formulários de rascunho sob acesso explícito, sem cadastrar loteamentos, quadras, lotes, reservas, vendas, contratos ou financeiro.
+- [x] Validar responsividade, acessibilidade, isolamento de dados e empacotar ZIP/HTML saneados.
