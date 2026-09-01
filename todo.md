@@ -1142,3 +1142,10 @@
 - [x] Substituir seleções técnicas de ativo e Party por controles acessíveis com estado vazio, erro e carregamento explícitos.
 - [x] Remover IDs técnicos das listagens operacionais, preservando referência de trabalho e código interno não sensível.
 - [x] Validar isolamento, permitir/negar, responsividade, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Estoque e Mapa de Lotes: seleções contextuais de Quadra e Lote
+
+- [x] Auditar os controles de estruturação e histórico que ainda exigem referência técnica de Quadra ou Lote.
+- [x] Reutilizar leituras minimizadas de Loteamentos, Quadras e Lotes do contexto Loteadora autorizado, sem enumerar loteamentos ou estoques externos.
+- [x] Substituir referências técnicas por seletores operacionais com estado vazio, erro e carregamento explícitos.
+- [x] Validar isolamento, permitir/negar, responsividade, tipagem, build e artefatos ZIP/HTML saneados.
