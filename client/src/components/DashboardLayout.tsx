@@ -259,6 +259,7 @@ function DashboardLayoutContent({
                         <SidebarMenuItem key={item.path}>
                           <SidebarMenuButton
                             isActive={isActive}
+                            aria-current={isActive ? "page" : undefined}
                             onClick={() => setLocation(item.path)}
                             tooltip={item.label}
                             className="h-10 transition-all font-normal"

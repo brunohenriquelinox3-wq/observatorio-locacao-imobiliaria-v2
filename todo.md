@@ -1241,3 +1241,9 @@
 - [x] Criar grupos visuais acessíveis para Plataforma, Operação e Fundações.
 - [x] Preservar ordem de colunas, rotas, guardas e permissões em todas as superfícies operacionais.
 - [x] Validar navegação, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Navegação lateral: indicação semântica de rota ativa
+
+- [x] Auditar a semântica dos controles de navegação agrupados.
+- [x] Indicar programaticamente a rota ativa sem alterar caminhos, guardas ou permissões.
+- [x] Validar acessibilidade, navegação, testes, tipagem, build e artefatos ZIP/HTML saneados.
