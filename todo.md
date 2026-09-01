@@ -1127,3 +1127,10 @@
 - [x] Corrigir a sobreposição do controle condicional de ativação no resumo lateral da central SUPER ADM.
 - [x] Atualizar a mensagem do cartão de criação de organização para refletir o comando governado já disponível.
 - [x] Validar responsividade, clareza de alçadas, isolamento de dados e empacotar ZIP/HTML saneados.
+
+## Núcleo de Cadastros: seleção contextual de Parties sem identificadores técnicos
+
+- [x] Auditar os formulários de Party e papéis temporais para localizar referências técnicas expostas na jornada operacional.
+- [x] Reutilizar a leitura minimizada de Parties autorizadas por contexto já validada no servidor, sem enumerar organizações, documentos ou dados de terceiros.
+- [x] Substituir a referência técnica por seleção contextual acessível, preservando estado vazio e sem criar Parties ou vínculos reais.
+- [x] Validar isolamento, permitir/negar, responsividade, tipagem, build e artefatos ZIP/HTML saneados.

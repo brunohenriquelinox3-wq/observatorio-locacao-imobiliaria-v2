@@ -1,5 +1,6 @@
 import DashboardLayout, { type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { domainPartySelectionLabel } from "@/lib/domainPartySelection";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { domainOperationalValue } from "@/lib/domainOperationalOverview";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
@@ -46,6 +47,11 @@ export default function DomainFoundation() {
   const isContextReady = isDomainContextReady(context);
   const contextEnabled = isAuthenticated && isContextReady;
   const partiesQuery = trpc.domainFoundation.listDraftParties.useQuery(context, { enabled: contextEnabled, retry: false });
+  useEffect(() => {
+    if (rolePartyId && Array.isArray(partiesQuery.data) && !partiesQuery.data.some((party) => party.partyId === rolePartyId)) {
+      setRolePartyId("");
+    }
+  }, [partiesQuery.data, rolePartyId]);
   const roleCount = partiesQuery.data?.reduce((total, party) => total + party.roleCount, 0);
   const operationalSectors = [
     { code: "01", title: "Parties", value: domainOperationalValue({ contextReady: contextEnabled, loading: partiesQuery.isLoading, count: partiesQuery.data?.length, pendingLabel: "Aguardando leitura" }), description: "A base mínima separa pessoa, empresa e identidade de acesso.", target: "#domain-parties" },
@@ -155,8 +161,12 @@ export default function DomainFoundation() {
             <form id="domain-roles" className="domain-foundation-card" onSubmit={assignRole}>
               <div className="domain-foundation-card__title"><UsersRound size={19} /><h3>Adicionar papel temporal</h3></div>
               <p>Relacione uma Party existente ao módulo, sem duplicar cadastro ou conceder autoridade.</p>
-              <label htmlFor="party-role-id">ID da Party</label>
-              <input id="party-role-id" value={rolePartyId} onChange={(event) => setRolePartyId(event.target.value)} placeholder="UUID da Party em rascunho" disabled={!contextEnabled} required />
+              <label htmlFor="party-role-id">Party autorizada</label>
+              <select id="party-role-id" value={rolePartyId} onChange={(event) => setRolePartyId(event.target.value)} disabled={!contextEnabled || partiesQuery.isLoading} required aria-describedby="party-role-selection-note">
+                <option value="">{!contextEnabled ? "Defina um contexto autorizado" : partiesQuery.isLoading ? "Carregando Parties autorizadas" : partiesQuery.isError ? "Leitura de Parties não liberada" : partiesQuery.data?.length ? "Selecione uma Party autorizada" : "Nenhuma Party em rascunho neste contexto"}</option>
+                {partiesQuery.data?.map((party) => <option key={party.partyId} value={party.partyId}>{domainPartySelectionLabel(party)}</option>)}
+              </select>
+              <p id="party-role-selection-note" className="domain-foundation-card__note">A seleção utiliza somente Parties devolvidas pelo contexto atual. O identificador técnico não é exibido e o servidor valida o vínculo novamente.</p>
               <label htmlFor="party-role">Papel</label>
               <select id="party-role" value={role} onChange={(event) => setRole(event.target.value)} disabled={!contextEnabled}>
                 <option value="lead">Lead</option><option value="client">Cliente</option><option value="buyer">Comprador</option><option value="seller">Vendedor</option><option value="owner">Proprietário</option><option value="tenant">Locatário</option><option value="guarantor">Garantidor</option><option value="representative">Representante</option><option value="broker">Corretor</option><option value="provider">Prestador</option><option value="shareholder">Sócio</option><option value="partner">Parceiro</option><option value="land_contributor">Cedente de terra</option>
@@ -183,7 +193,7 @@ export default function DomainFoundation() {
           {isContextReady && partiesQuery.isError && <div className="domain-foundation-empty is-error"><CircleAlert size={18} /><p>A leitura não foi liberada. Confirme identidade, membership, grant, módulo, finalidade e vigência sem tentar inferir registros.</p></div>}
           {isContextReady && partiesQuery.data?.length === 0 && <div className="domain-foundation-empty"><UsersRound size={18} /><p>Nenhuma Party em rascunho foi devolvida para este contexto. Isso não informa sobre outros contextos, organizações ou dados.</p></div>}
           {isContextReady && partiesQuery.data && partiesQuery.data.length > 0 && <div className="domain-foundation-list__rows">
-            {partiesQuery.data.map((party) => <article key={party.partyId}><span>{party.kind === "individual" ? "PESSOA FÍSICA" : "PESSOA JURÍDICA"}</span><h3>{party.displayName}</h3><p>Origem: {party.sourceKind === "operator_declaration" ? "declaração do operador" : "prévia de importação"} · Papéis no módulo: {party.roleCount}</p><code>{party.partyId}</code></article>)}
+            {partiesQuery.data.map((party) => <article key={party.partyId}><span>{party.kind === "individual" ? "PESSOA FÍSICA" : "PESSOA JURÍDICA"}</span><h3>{party.displayName}</h3><p>Origem: {party.sourceKind === "operator_declaration" ? "declaração do operador" : "prévia de importação"} · Papéis no módulo: {party.roleCount}</p></article>)}
           </div>}
         </section>
       </div>

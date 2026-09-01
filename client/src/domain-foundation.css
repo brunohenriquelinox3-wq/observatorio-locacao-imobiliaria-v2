@@ -21,6 +21,7 @@
 .domain-foundation-card__title { display: flex; gap: 9px; align-items: center; color: #a74d2c; }
 .domain-foundation-card h3, .domain-foundation-guardrail h3 { margin: 0; color: #173b4d; font: 600 22px/1.05 "Fraunces", Georgia, serif; letter-spacing: -.02em; }
 .domain-foundation-card > p { min-height: 55px; margin: 1px 0 6px; color: #62747b; font: 400 12px/1.5 "DM Sans", sans-serif; }
+.domain-foundation-card__note { min-height: 0 !important; margin: 0 !important; padding: 9px 10px; border-left: 2px solid #7a8a6c; background: #f3f6ed; color: #4d625e !important; font-size: 11px !important; line-height: 1.5 !important; }
 .domain-foundation-card label span { color: #75868b; font-weight: 500; letter-spacing: 0; text-transform: none; }
 .domain-foundation-card button { display: inline-flex; justify-content: center; align-items: center; min-height: 42px; margin-top: 6px; border: 0; background: #173b4d; color: #fffdf8; font: 700 10px/1 "DM Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
 .domain-foundation-card button:disabled, .domain-foundation-card input:disabled, .domain-foundation-card select:disabled { cursor: not-allowed; opacity: .55; }
