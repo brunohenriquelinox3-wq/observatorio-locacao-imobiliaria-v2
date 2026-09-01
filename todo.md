@@ -1247,3 +1247,16 @@
 - [x] Auditar a semântica dos controles de navegação agrupados.
 - [x] Indicar programaticamente a rota ativa sem alterar caminhos, guardas ou permissões.
 - [x] Validar acessibilidade, navegação, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Contexto operacional: autoseleção segura quando houver uma única opção
+
+- [x] Auditar os seletores de contexto das superfícies operacionais.
+- [x] Confirmar regra pura existente que seleciona somente a única opção já autorizada e não escolhe nada em caso de múltiplas opções.
+- [x] Confirmar que a regra atua somente no estado local, sem criar alçada, mutação, dado, bypass de policy ou troca automática de escolha explícita.
+- [x] Confirmar cobertura existente para cenários único, múltiplo e referência não autorizada; manter a validação integral no próximo corte material.
+
+## Navegação lateral: rótulos assistivos em português
+
+- [x] Auditar os textos assistivos em inglês na navegação lateral compartilhada.
+- [x] Localizar rótulos e descrições assistivas sem alterar interações, rotas, guardas ou permissões.
+- [x] Validar acessibilidade, testes, tipagem, build e artefatos ZIP/HTML saneados.
