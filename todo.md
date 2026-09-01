@@ -1062,3 +1062,10 @@
 - [x] Substituir o UUID manual de Locação por um seletor de organização autorizado e finalidade somente leitura.
 - [x] Integrar atalhos contextuais e estados vazios orientativos sem criar loteamentos, clientes, imóveis, contratos ou dados financeiros.
 - [x] Validar responsividade, acessibilidade, proteção de dados e clareza de papel antes de empacotar ZIP/HTML saneados.
+
+## Experiência Loteadora: jornada operacional sem dados de negócio
+
+- [x] Auditar a entrada Loteadora atual para reduzir a aparência de formulário técnico e ordenar os setores de trabalho.
+- [x] Criar uma visão inicial com progresso operacional, setores de Loteamento e Estoque/Mapa de Lotes separados e estados vazios honestos.
+- [x] Manter os formulários de rascunho sob acesso explícito, sem cadastrar loteamentos, quadras, lotes, clientes, contratos ou financeiro.
+- [x] Validar responsividade, acessibilidade, isolamento de dados e empacotar ZIP/HTML saneados.
