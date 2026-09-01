@@ -29,6 +29,7 @@ import { validateIdentitySubmission, type IdentityFormMode } from "@/lib/identit
 import { genericRecoveryNotice, toMfaQrImageSource, validateTotpCode } from "@/lib/identityMfa";
 import { deriveAdministrativeConsoleState } from "@/lib/adminConsole";
 import { getPlatformBootstrapPresentation } from "@/lib/platformBootstrapPresentation";
+import { getPlatformPrincipalPresentation } from "@/lib/platformPrincipalPresentation";
 import "../platform-admin.css";
 
 const navigationItems: DashboardNavigationItem[] = [
@@ -175,6 +176,7 @@ export default function PlatformAdmin() {
   });
   const selectedFocus = focusPanels[focus];
   const readiness = readinessQuery.data;
+  const principalPresentation = getPlatformPrincipalPresentation(commandStatusQuery.data ?? {});
   const metricValue = (value: number | undefined) => {
     if (readinessQuery.isLoading) return "—";
     if (readinessQuery.isError || value === undefined) return "Indisponível";
@@ -192,7 +194,7 @@ export default function PlatformAdmin() {
   const identityStatus = identityQuery.isLoading
     ? "Verificando identidade"
     : identityQuery.data?.state === "connected"
-      ? "Identidade Supabase conectada · alçada pendente"
+      ? principalPresentation.identityStatus
       : "Identidade Supabase ainda não conectada";
   const canPrepareBootstrap = commandStatusQuery.data?.bootstrapAction === "available";
   const canActivateBootstrap = commandStatusQuery.data?.identityState === "pending_activation" && mfaVerified;
@@ -411,7 +413,7 @@ export default function PlatformAdmin() {
           <aside className="platform-admin-session" aria-label="Estado atual da sessão">
             <div><ShieldCheck size={18} /><span>ESTADO DA FUNDAÇÃO</span></div>
             <strong>{foundationStatus}</strong>
-            <p>{identityStatus}. O acesso privilegiado depende de convite, MFA, recuperação e alçada vigente.</p>
+            <p>{principalPresentation.isPlatformSuperAdmin ? "O papel de plataforma está ativo. Organizações, memberships e grants delegados continuam exigindo policy, escopo e correlação." : `${identityStatus}. O acesso privilegiado depende de convite, MFA, recuperação e alçada vigente.`}</p>
           </aside>
         </header>
 
@@ -498,7 +500,7 @@ export default function PlatformAdmin() {
             <p>O botão não interpreta código, JWT ou papel. Ele pede ao servidor que confirme AAL2, TOTP recente, identidade pendente e canal de recuperação verificado no mesmo comando.</p>
           </div>
           <div className="platform-admin-activation__action">
-            <strong>{bootstrapPresentation.headline}</strong>
+            <strong>{principalPresentation.isPlatformSuperAdmin ? principalPresentation.activationHeadline : bootstrapPresentation.headline}</strong>
             <button type="button" onClick={() => executeCommand("activateBootstrap")} disabled={bootstrapPresentation.actionDisabled || bootstrapMutation.isPending || activateBootstrapMutation.isPending}>
               {bootstrapMutation.isPending ? "Preparando bootstrap" : activateBootstrapMutation.isPending ? "Atestando e ativando" : bootstrapPresentation.actionLabel}
               <ArrowUpRight size={15} />
@@ -567,21 +569,22 @@ export default function PlatformAdmin() {
           <div className="platform-admin-command-grid">
             {commandCards.map(({ command, icon: Icon, requirement }, index) => {
               const state = getPlatformCommandState(command);
+              const isCompletedBootstrap = command === "activateBootstrap" && principalPresentation.isPlatformSuperAdmin;
               return (
                 <article key={command} className="platform-admin-command-card">
                   <div className="platform-admin-command-card__top">
                     <span>0{index + 1}</span>
                     <Icon size={21} />
                   </div>
-                  <h3>{state.label}</h3>
-                  <p>{state.reason}</p>
+                  <h3>{isCompletedBootstrap ? principalPresentation.bootstrapCardLabel : state.label}</h3>
+                  <p>{isCompletedBootstrap ? principalPresentation.bootstrapCardReason : state.reason}</p>
                   <small>{requirement}</small>
                   <button
                     type="button"
                     onClick={() => executeCommand(command)}
-                    disabled={command === "activateBootstrap" && bootstrapMutation.isPending}
+                    disabled={isCompletedBootstrap || (command === "activateBootstrap" && bootstrapMutation.isPending)}
                   >
-                    {command === "activateBootstrap" && canPrepareBootstrap ? "Preparar pendência" : command === "activateBootstrap" && canActivateBootstrap ? "Pedir ativação" : "Ver bloqueio"} <ArrowUpRight size={15} />
+                    {isCompletedBootstrap ? "Concluído" : command === "activateBootstrap" && canPrepareBootstrap ? "Preparar pendência" : command === "activateBootstrap" && canActivateBootstrap ? "Pedir ativação" : "Ver bloqueio"} <ArrowUpRight size={15} />
                   </button>
                 </article>
               );
@@ -657,10 +660,10 @@ export default function PlatformAdmin() {
             <div><p className="platform-admin-eyebrow">LEDGER DE PRONTIDÃO</p><h2>O painel começa com a ausência comprovada, não com números inventados.</h2></div>
           </div>
           <div className="platform-admin-ledger__rows">
-            <div><Activity size={17} /><span>Organizações provisionadas</span><b>Sem registros</b><em>Aguarda `provision_organization`</em></div>
+            <div><Activity size={17} /><span>Organizações cadastradas</span><b>{readiness?.counts.organizations ? `${readiness.counts.organizations} registro(s)` : "Sem registros"}</b><em>Leitura agregada; o provisionamento continua protegido.</em></div>
             <div><UserRoundCog size={17} /><span>Princípios de plataforma</span><b>{readiness?.counts.principals ? `${readiness.counts.principals} ativo(s)` : "Sem registros"}</b><em>{bootstrapPresentation.ledgerPrincipalText}</em></div>
-            <div><Clock3 size={17} /><span>Grants e suporte temporário</span><b>Sem registros</b><em>Aguarda alçada e case JIT</em></div>
-            <div><AlertTriangle size={17} /><span>Eventos de auditoria</span><b>Sem registros</b><em>Aguarda comandos transacionais</em></div>
+            <div><Clock3 size={17} /><span>Grants e suporte temporário</span><b>{readiness?.counts.grants ? `${readiness.counts.grants} registro(s)` : "Sem registros"}</b><em>Delegações exigem escopo, finalidade, vigência e policy.</em></div>
+            <div><AlertTriangle size={17} /><span>Eventos de auditoria</span><b>{readiness?.counts.auditEvents ? `${readiness.counts.auditEvents} registro(s)` : "Sem registros"}</b><em>Contagem agregada; eventos permanecem redigidos.</em></div>
           </div>
         </section>
 

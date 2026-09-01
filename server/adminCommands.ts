@@ -16,6 +16,7 @@ export type AdministrativeSubjectStatus = {
   mfaVerified: boolean;
   bootstrapAction: "unavailable" | "available" | "completed";
   commandMode: "blocked" | "bootstrap_pending" | "ready_for_controlled_commands";
+  platformRole?: "platform_super_admin" | "platform_security_admin" | "platform_support_operator";
 };
 
 function configurationError(): TRPCError {
@@ -42,7 +43,7 @@ export async function getAdministrativeSubjectStatus(
 
   const { data, error } = await client
     .from("platform_principals")
-    .select("state,mfa_verified_at")
+    .select("state,role,mfa_verified_at")
     .eq("user_id", subjectId)
     .maybeSingle();
   if (error) throw configurationError();
@@ -59,6 +60,7 @@ export async function getAdministrativeSubjectStatus(
     mfaVerified,
     bootstrapAction: identityState === "pending_activation" ? "completed" : "unavailable",
     commandMode: active ? "ready_for_controlled_commands" : "blocked",
+    platformRole: data.role as AdministrativeSubjectStatus["platformRole"],
   };
 }
 

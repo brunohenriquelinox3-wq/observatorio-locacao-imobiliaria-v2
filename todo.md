@@ -934,7 +934,7 @@
 
 - [x] Corrigir no Supabase o redirecionamento do convite administrativo para o endereço público real do CRM, sem usar localhost. **Confirmado em 28 de agosto de 2026:** Site URL e Redirect URL foram configuradas no endereço público de prévia.
 - [x] Revogar o convite com token temporário exposto e redirecionamento incorreto, e reemitir convite novo pelo painel do Supabase. **Confirmado em 28 de agosto de 2026:** o primeiro convite foi revogado e um novo convite foi emitido.
-- [ ] Confirmar o aceite, a criação de senha fora do chat e a ativação de MFA antes de iniciar o bootstrap protegido.
+- [x] Confirmar o aceite, a criação de senha fora do chat e a ativação de MFA antes de iniciar o bootstrap protegido. **Confirmado em 01 de setembro de 2026:** identidade conectada e MFA verificado em sessão reforçada.
 - [x] Revogar o segundo convite cuja sessão temporária apareceu em captura e reemitir convite somente após a correção de ativação estar preservada. **Confirmado em 28 de agosto de 2026:** o convite reemitido foi aceito pela rota de ativação segura.
 - [x] Conectar a identidade Supabase na Administração sem conceder Super Admin, organização, membership ou grant. **Confirmado em 28 de agosto de 2026:** a interface informou identidade conectada e alçada pendente.
 
@@ -974,8 +974,8 @@
 
 ## Identidade administrativa: canal de recuperação
 
-- [ ] Solicitar o canal de recuperação para a identidade conectada, sem conceder Super Admin, organização, membership ou grant.
-- [ ] Confirmar a recuperação fora do chat, sem expor senha, token, código ou URL de callback.
+- [x] Solicitar o canal de recuperação para a identidade conectada, sem conceder Super Admin, organização, membership ou grant.
+- [x] Confirmar a recuperação fora do chat, sem expor senha, token, código ou URL de callback. **Confirmado em 01 de setembro de 2026:** alteração de senha concluída pela rota protegida, seguida de nova conexão e MFA.
 - [ ] Manter a solicitação explícita de alçada pendente de confirmação e de política server-side.
 
 ## Identidade administrativa: recuperação com rota segura
@@ -997,3 +997,17 @@
 - [x] Implementar desafio e verificação TOTP na rota de recuperação sem registrar códigos ou enfraquecer MFA.
 - [x] Validar com fixtures sintéticas a negação de AAL1, a elevação a AAL2 e a alteração de senha somente após MFA.
 - [x] Empacotar e preservar a correção sem alterar senha, MFA ou alçada reais.
+
+## Administração: solicitação controlada de SUPER ADM
+
+- [ ] Examinar a política de grant e os pré-requisitos de SUPER ADM sem conceder alçada.
+- [ ] Modelar uma solicitação de alçada auditável, correlacionada e restrita à identidade administrativa validada.
+- [ ] Implementar a solicitação protegida e uma projeção minimizada sem concessão automática.
+- [ ] Validar, empacotar e preservar o corte sem executar a concessão final.
+- [ ] Manter a concessão final de SUPER ADM sujeita a confirmação independente do usuário.
+
+## Administração: distinção entre SUPER ADM de plataforma e grants delegados
+
+- [x] Registrar que o principal já ativado possui papel SUPER ADM de plataforma, sem criar concessão duplicada.
+- [x] Corrigir a interface para diferenciar papel de plataforma ativo de organizações, memberships e grants delegados ainda inexistentes.
+- [x] Validar com fixtures sintéticas, empacotar e preservar a projeção sem alterar privilégios reais.

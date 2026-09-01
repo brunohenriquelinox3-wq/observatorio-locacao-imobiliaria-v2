@@ -45,6 +45,24 @@ describe("admin command service", () => {
     });
   });
 
+  it("returns only the active caller platform role needed to project the Super Admin state", async () => {
+    const client = clientWithPrincipal({
+      state: "active",
+      role: "platform_super_admin",
+      mfa_verified_at: "2026-08-28T00:00:00.000Z",
+    });
+
+    await expect(getAdministrativeSubjectStatus(subjectId, client)).resolves.toEqual({
+      identityState: "active",
+      mfaVerified: true,
+      bootstrapAction: "unavailable",
+      commandMode: "ready_for_controlled_commands",
+      platformRole: "platform_super_admin",
+    });
+    expect(client.from).toHaveBeenCalledWith("platform_principals");
+    expect(client.from.mock.results[0]?.value.select).toHaveBeenCalledWith("state,role,mfa_verified_at");
+  });
+
   it("activates only a pending principal with server-attested MFA and verified recovery", async () => {
     const client = clientWithPrincipal({ state: "pending_activation", mfa_verified_at: null });
     client.rpc.mockResolvedValue({ data: subjectId, error: null });
