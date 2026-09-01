@@ -971,3 +971,15 @@
 - [x] Registrar a ativação confirmada do principal sem marcar Super Admin, organização, membership ou grant.
 - [x] Corrigir o texto visual que ainda indica bootstrap pendente após a ativação.
 - [x] Validar a projeção administrativa com fixture sintética e preservar a correção sem alterar alçadas.
+
+## Identidade administrativa: canal de recuperação
+
+- [ ] Solicitar o canal de recuperação para a identidade conectada, sem conceder Super Admin, organização, membership ou grant.
+- [ ] Confirmar a recuperação fora do chat, sem expor senha, token, código ou URL de callback.
+- [ ] Manter a solicitação explícita de alçada pendente de confirmação e de política server-side.
+
+## Identidade administrativa: recuperação com rota segura
+
+- [x] Examinar o redirecionamento de recuperação sem abrir ou reutilizar link, token, senha ou código real.
+- [x] Garantir que recuperação e convite usem rota isolada que remova fragmentos de sessão da URL.
+- [x] Validar com fixture sintética, empacotar e preservar a correção sem alterar senha ou alçada reais.

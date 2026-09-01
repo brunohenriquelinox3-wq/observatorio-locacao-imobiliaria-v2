@@ -15,11 +15,11 @@ import RentalPipeline from "./pages/RentalPipeline";
 import SubdivisionFoundation from "./pages/SubdivisionFoundation";
 import LotInventory from "./pages/LotInventory";
 import AccountActivation from "./pages/AccountActivation";
-import { activationPathForInvite } from "./lib/supabaseInvitationActivation";
+import { activationPathForPasswordFlow } from "./lib/supabaseInvitationActivation";
 import { useEffect } from "react";
 
 function Router() {
-  const invitationActivationPath = typeof window === "undefined" ? null : activationPathForInvite(window.location.hash);
+  const invitationActivationPath = typeof window === "undefined" ? null : activationPathForPasswordFlow(window.location.hash);
   useEffect(() => {
     if (invitationActivationPath && window.location.pathname !== "/ativar-conta") {
       window.location.replace(invitationActivationPath);

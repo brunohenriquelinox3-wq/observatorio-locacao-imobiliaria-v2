@@ -1,8 +1,11 @@
-export function isSupabaseInviteFragment(hash: string): boolean {
+export type SupabasePasswordFlow = "invite" | "recovery";
+
+export function supabasePasswordFlowFromFragment(hash: string): SupabasePasswordFlow | null {
   const params = new URLSearchParams(hash.startsWith("#") ? hash.slice(1) : hash);
-  return params.get("type") === "invite" && Boolean(params.get("access_token"));
+  const type = params.get("type");
+  return Boolean(params.get("access_token")) && (type === "invite" || type === "recovery") ? type : null;
 }
 
-export function activationPathForInvite(hash: string): string | null {
-  return isSupabaseInviteFragment(hash) ? `/ativar-conta${hash}` : null;
+export function activationPathForPasswordFlow(hash: string): string | null {
+  return supabasePasswordFlowFromFragment(hash) ? `/ativar-conta${hash}` : null;
 }

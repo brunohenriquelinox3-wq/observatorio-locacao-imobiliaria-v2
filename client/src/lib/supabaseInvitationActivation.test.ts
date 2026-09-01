@@ -1,14 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { activationPathForInvite, isSupabaseInviteFragment } from "./supabaseInvitationActivation";
+import { activationPathForPasswordFlow, supabasePasswordFlowFromFragment } from "./supabaseInvitationActivation";
 
-describe("Supabase invitation activation", () => {
-  it("moves only an invitation fragment to the isolated activation route", () => {
+describe("Supabase password-flow activation", () => {
+  it("moves an invitation fragment to the isolated activation route", () => {
     const fragment = "#access_token=test-token&type=invite&expires_in=3600";
-    expect(isSupabaseInviteFragment(fragment)).toBe(true);
-    expect(activationPathForInvite(fragment)).toBe(`/ativar-conta${fragment}`);
+    expect(supabasePasswordFlowFromFragment(fragment)).toBe("invite");
+    expect(activationPathForPasswordFlow(fragment)).toBe(`/ativar-conta${fragment}`);
   });
 
-  it("does not redirect a non-invitation fragment", () => {
-    expect(activationPathForInvite("#access_token=test-token&type=recovery")).toBeNull();
+  it("moves a recovery fragment to the same isolated route", () => {
+    const fragment = "#access_token=test-token&type=recovery";
+    expect(supabasePasswordFlowFromFragment(fragment)).toBe("recovery");
+    expect(activationPathForPasswordFlow(fragment)).toBe(`/ativar-conta${fragment}`);
+  });
+
+  it("does not redirect a non-password session fragment", () => {
+    expect(activationPathForPasswordFlow("#access_token=test-token&type=magiclink")).toBeNull();
   });
 });
