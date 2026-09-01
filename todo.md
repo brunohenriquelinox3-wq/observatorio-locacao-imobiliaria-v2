@@ -1105,3 +1105,9 @@
 - [x] Auditar a projeção de perfil no layout lateral para identificar nome e e-mail desnecessários.
 - [x] Exibir uma identidade minimizada no layout compartilhado sem alterar sessão, autenticação ou rotas.
 - [x] Validar a ausência de PII desnecessária, empacotar ZIP/HTML saneados e preservar o marco.
+
+## Performance: carregamento inicial do CRM
+
+- [x] Registrar a linha de base do bundle inicial e a meta de redução por carregamento sob demanda.
+- [x] Aplicar carregamento sob demanda nas rotas internas sem alterar autenticação, contexto ou fallback de rota.
+- [x] Comparar o bundle antes/depois, validar as rotas e empacotar ZIP/HTML saneados somente se houver ganho mensurável.

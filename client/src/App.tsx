@@ -5,19 +5,24 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
-import VendasUrbanas from "./pages/VendasUrbanas";
-import CrmStrategy from "./pages/CrmStrategy";
-import PlatformAdmin from "./pages/PlatformAdmin";
-import OrganizationAdmin from "./pages/OrganizationAdmin";
-import DomainFoundation from "./pages/DomainFoundation";
-import AssetFoundation from "./pages/AssetFoundation";
-import UrbanPipeline from "./pages/UrbanPipeline";
-import RentalPipeline from "./pages/RentalPipeline";
-import SubdivisionFoundation from "./pages/SubdivisionFoundation";
-import LotInventory from "./pages/LotInventory";
-import AccountActivation from "./pages/AccountActivation";
 import { activationPathForPasswordFlow } from "./lib/supabaseInvitationActivation";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
+
+const VendasUrbanas = lazy(() => import("./pages/VendasUrbanas"));
+const CrmStrategy = lazy(() => import("./pages/CrmStrategy"));
+const PlatformAdmin = lazy(() => import("./pages/PlatformAdmin"));
+const OrganizationAdmin = lazy(() => import("./pages/OrganizationAdmin"));
+const DomainFoundation = lazy(() => import("./pages/DomainFoundation"));
+const AssetFoundation = lazy(() => import("./pages/AssetFoundation"));
+const UrbanPipeline = lazy(() => import("./pages/UrbanPipeline"));
+const RentalPipeline = lazy(() => import("./pages/RentalPipeline"));
+const SubdivisionFoundation = lazy(() => import("./pages/SubdivisionFoundation"));
+const LotInventory = lazy(() => import("./pages/LotInventory"));
+const AccountActivation = lazy(() => import("./pages/AccountActivation"));
+
+function RouteLoading() {
+  return <main className="min-h-screen bg-[#f7f4eb] px-6 py-16 text-[#173b4d]"><p role="status" className="mx-auto max-w-xl font-mono text-xs font-semibold tracking-[.12em]">CARREGANDO ÁREA PROTEGIDA</p></main>;
+}
 
 function Router() {
   const invitationActivationPath = typeof window === "undefined" ? null : activationPathForPasswordFlow(window.location.hash);
@@ -32,25 +37,23 @@ function Router() {
   }
 
   // make sure to consider if you need authentication for certain routes
-  return (
-    <Switch>
-      <Route path={"/ativar-conta"} component={AccountActivation} />
-      <Route path={"/vendas"} component={VendasUrbanas} />
-      <Route path={"/crm"} component={CrmStrategy} />
-      <Route path={"/administracao"} component={PlatformAdmin} />
-      <Route path={"/adm"} component={OrganizationAdmin} />
-      <Route path={"/cadastro-base"} component={DomainFoundation} />
-      <Route path={"/ativos-urbanos"} component={AssetFoundation} />
-      <Route path={"/vendas-urbanas"} component={UrbanPipeline} />
-      <Route path={"/locacao"} component={RentalPipeline} />
-      <Route path={"/loteadora"} component={SubdivisionFoundation} />
-      <Route path={"/estoque-lotes"} component={LotInventory} />
-      <Route path={"/404"} component={NotFound} />
-      <Route path={"/"} component={Home} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
-  );
+  return <Suspense fallback={<RouteLoading />}><Switch>
+    <Route path={"/ativar-conta"} component={AccountActivation} />
+    <Route path={"/vendas"} component={VendasUrbanas} />
+    <Route path={"/crm"} component={CrmStrategy} />
+    <Route path={"/administracao"} component={PlatformAdmin} />
+    <Route path={"/adm"} component={OrganizationAdmin} />
+    <Route path={"/cadastro-base"} component={DomainFoundation} />
+    <Route path={"/ativos-urbanos"} component={AssetFoundation} />
+    <Route path={"/vendas-urbanas"} component={UrbanPipeline} />
+    <Route path={"/locacao"} component={RentalPipeline} />
+    <Route path={"/loteadora"} component={SubdivisionFoundation} />
+    <Route path={"/estoque-lotes"} component={LotInventory} />
+    <Route path={"/404"} component={NotFound} />
+    <Route path={"/"} component={Home} />
+    {/* Final fallback route */}
+    <Route component={NotFound} />
+  </Switch></Suspense>;
 }
 
 // NOTE: About Theme
