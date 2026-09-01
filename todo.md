@@ -1038,3 +1038,10 @@
 - [x] Confirmar o comando governado de ativação, a idempotência e a preservação dos escopos já aprovados.
 - [x] Ativar a organização BHL Imóveis sem alterar a membership ADM, grants, financeiro ou acessos de terceiros.
 - [x] Verificar o estado minimizado, testar os gates aplicáveis e preservar o marco com ZIP e HTML saneados.
+
+## Loteadora: primeiro acesso contextual após ativação organizacional
+
+- [x] Revisar as superfícies Loteadora existentes e o contexto de organização exigido pelas APIs.
+- [x] Criar uma leitura minimizada de contextos Loteadora autorizados para a identidade atual, sem expor UUIDs ou escopos de terceiros.
+- [x] Implementar o acesso inicial ao módulo Loteadora com contexto organizacional autorizado, sem inserir dados de negócio reais.
+- [x] Validar o acesso contextual, empacotar ZIP/HTML saneados e preservar o marco.

@@ -146,6 +146,7 @@ import { addSubdivisionSaleDraftCoBuyer, listSubdivisionSaleDraftCoBuyers } from
 import { createSubdivisionEconomicRuleSet, listSubdivisionEconomicRuleSets } from "./subdivisionEconomicRuleSet";
 import { createSubdivisionEconomicRuleComponent, listSubdivisionEconomicRuleComponents } from "./subdivisionEconomicRuleComponent";
 import { addSubdivisionEconomicRuleComponentRoleReference, listSubdivisionEconomicRuleComponentRoleReferences } from "./subdivisionEconomicRuleComponentRoleReference";
+import { authorizedOrganizationContextInputSchema, listAuthorizedOrganizationContexts } from "./organizationContext";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -221,6 +222,12 @@ export const appRouter = router({
     revokeMembership: platformActiveProcedure
       .input(revokeMembershipInputSchema)
       .mutation(({ ctx, input }) => revokeMembership(ctx.supabaseSubjectId, input)),
+  }),
+
+  organizationContext: router({
+    listAuthorizedForModule: protectedProcedure
+      .input(authorizedOrganizationContextInputSchema)
+      .query(({ ctx, input }) => listAuthorizedOrganizationContexts(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   domainFoundation: router({

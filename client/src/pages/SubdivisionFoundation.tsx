@@ -1,11 +1,12 @@
 import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
+import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { summarizeOpaqueCoBuyerAttachmentCoverage } from "@/lib/subdivisionCoBuyerCoverage";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { trpc } from "@/lib/trpc";
 import { Building2, CircleAlert, Compass, FileStack, House, LandPlot, Layers3, ShieldCheck, UsersRound, Workflow } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import "../subdivision-foundation.css";
 
@@ -63,8 +64,7 @@ const subdivisionAccessGate: DashboardAccessGate = {
 
 export default function SubdivisionFoundation() {
   const { isAuthenticated } = useAuth();
-  const [organizationId, setOrganizationId] = useState("");
-  const [purposeCode, setPurposeCode] = useState("CADASTRO_INICIAL");
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState("");
   const [internalReference, setInternalReference] = useState("");
   const [workingPhase, setWorkingPhase] = useState<keyof typeof workingPhases>("preliminary_reference");
   const [selectedDevelopmentId, setSelectedDevelopmentId] = useState("");
@@ -94,7 +94,12 @@ export default function SubdivisionFoundation() {
   const [internalPartyRoleLinkIdForReference, setInternalPartyRoleLinkIdForReference] = useState("");
   const attachmentInputRef = useRef<HTMLInputElement>(null);
 
-  const context = useMemo(() => ({ organizationId: organizationId.trim(), module: "loteadora" as const, purposeCode: purposeCode.trim().toUpperCase() }), [organizationId, purposeCode]);
+  const authorizedContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "loteadora" }, { enabled: isAuthenticated, retry: false });
+  const selectedOrganizationContext = resolveAuthorizedSubdivisionContext(selectedOrganizationId, authorizedContextsQuery.data);
+  useEffect(() => {
+    if (!selectedOrganizationId) setSelectedOrganizationId(initialAuthorizedSubdivisionContextId(authorizedContextsQuery.data));
+  }, [selectedOrganizationId, authorizedContextsQuery.data]);
+  const context = useMemo(() => ({ organizationId: selectedOrganizationContext?.organizationId ?? "", module: "loteadora" as const, purposeCode: selectedOrganizationContext?.purposeCode ?? "" }), [selectedOrganizationContext]);
   const isContextReady = isDomainContextReady(context);
   const isWorkspaceReady = isAuthenticated && isContextReady;
   const developmentsQuery = trpc.subdivisionFoundation.listDraftDevelopments.useQuery(context, { enabled: isWorkspaceReady, retry: false });
@@ -201,8 +206,8 @@ export default function SubdivisionFoundation() {
 
         <section className="subdivision-foundation-context" aria-labelledby="subdivision-context-title">
           <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">01 · CONTEXTO</p><h2 id="subdivision-context-title">Loteadora é um módulo explícito e sem alçada implícita.</h2></div><p>Organização, módulo e finalidade acompanham cada chamada. O módulo está fixado como Loteadora, mas ainda depende de identidade, membership, grant, vigência e policy no servidor.</p></div>
-          <div className="subdivision-foundation-context__fields"><label htmlFor="subdivision-organization"><Building2 size={14} /> ID da organização<input id="subdivision-organization" value={organizationId} onChange={(event) => setOrganizationId(event.target.value)} placeholder="UUID da organização autorizada" /></label><label htmlFor="subdivision-module"><LandPlot size={14} /> Módulo<input id="subdivision-module" value="Loteadora" readOnly aria-readonly="true" /></label><label htmlFor="subdivision-purpose"><ShieldCheck size={14} /> Finalidade<input id="subdivision-purpose" value={purposeCode} onChange={(event) => setPurposeCode(event.target.value.toUpperCase())} placeholder="CADASTRO_INICIAL" /></label></div>
-          <div className={`subdivision-foundation-context__status ${isContextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} /><span>{isContextReady ? "Contexto sintaticamente válido. O servidor ainda verificará identidade, membership, grant, vigência, módulo e finalidade antes de qualquer leitura ou rascunho." : "Informe organização e finalidade válidas para liberar ações de rascunho."}</span></div>
+          <div className="subdivision-foundation-context__fields"><label htmlFor="subdivision-organization"><Building2 size={14} /> Organização autorizada<select id="subdivision-organization" value={selectedOrganizationId} onChange={(event) => setSelectedOrganizationId(event.target.value)} disabled={!isAuthenticated || authorizedContextsQuery.isLoading}><option value="">{authorizedContextsQuery.isLoading ? "Carregando contextos autorizados" : "Selecione uma organização autorizada"}</option>{authorizedContextsQuery.data?.map((organization) => <option key={organization.organizationId} value={organization.organizationId}>{organization.organizationLabel}</option>)}</select></label><label htmlFor="subdivision-module"><LandPlot size={14} /> Módulo<input id="subdivision-module" value="Loteadora" readOnly aria-readonly="true" /></label><label htmlFor="subdivision-purpose"><ShieldCheck size={14} /> Finalidade<input id="subdivision-purpose" value={context.purposeCode || "—"} readOnly aria-readonly="true" /></label></div>
+          <div className={`subdivision-foundation-context__status ${isContextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} /><span>{isContextReady ? "Contexto autorizado selecionado. O servidor ainda verificará identidade, membership, grant, vigência, módulo e finalidade antes de qualquer leitura ou rascunho." : authorizedContextsQuery.isError ? "O contexto não foi liberado. O sistema não revela organizações ou escopos externos." : "Selecione um contexto Loteadora devolvido pela política para liberar ações de rascunho."}</span></div>
         </section>
 
         <section className="subdivision-foundation-workspace" aria-labelledby="subdivision-workspace-title">
