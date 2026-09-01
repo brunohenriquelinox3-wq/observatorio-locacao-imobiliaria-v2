@@ -336,7 +336,7 @@ export default function PlatformAdmin() {
     setIsRequestingRecovery(true);
     try {
       const { error } = await client.auth.resetPasswordForEmail(identityEmail.trim(), {
-        redirectTo: `${window.location.origin}/administracao`,
+        redirectTo: `${window.location.origin}/ativar-conta`,
       });
       if (error) throw error;
       toast.message("Solicitação processada", { description: genericRecoveryNotice });

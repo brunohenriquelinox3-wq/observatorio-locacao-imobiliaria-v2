@@ -983,3 +983,17 @@
 - [x] Examinar o redirecionamento de recuperação sem abrir ou reutilizar link, token, senha ou código real.
 - [x] Garantir que recuperação e convite usem rota isolada que remova fragmentos de sessão da URL.
 - [x] Validar com fixture sintética, empacotar e preservar a correção sem alterar senha ou alçada reais.
+
+## Identidade administrativa: falha na conclusão de recuperação
+
+- [x] Examinar a falha de alteração de senha após recuperação válida sem reutilizar senha, token, link ou código real.
+- [x] Preservar o tipo de fluxo de recuperação após limpar a URL e manter sessão temporária válida até o envio da nova senha.
+- [x] Validar com fixtures sintéticas a atualização de senha, a falha segura e a limpeza de URL sem alçada automática.
+- [x] Empacotar e preservar a correção sem alterar senha, MFA ou alçada reais.
+
+## Identidade administrativa: recuperação com MFA obrigatório
+
+- [x] Delimitar a elevação TOTP obrigatória antes de alteração de senha em sessão de recuperação AAL1.
+- [x] Implementar desafio e verificação TOTP na rota de recuperação sem registrar códigos ou enfraquecer MFA.
+- [x] Validar com fixtures sintéticas a negação de AAL1, a elevação a AAL2 e a alteração de senha somente após MFA.
+- [x] Empacotar e preservar a correção sem alterar senha, MFA ou alçada reais.
