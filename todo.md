@@ -1280,3 +1280,16 @@
 - [x] Isolar somente recursos não críticos em carregamento sob demanda, sem reduzir conteúdo ou segurança.
 - [x] Remedir e manter a mudança após redução de 31,47% no JavaScript inicial em gzip.
 - [x] Validar interface, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Contexto operacional: estados de carregamento, vazio e erro
+
+- [x] Auditar os estados de contexto existentes nas superfícies operacionais.
+- [x] Confirmar feedback contextual existente que não revela dados ou organizações não autorizadas.
+- [x] Confirmar estados acessíveis de carregamento, vazio e erro sem mudança de rotas, dados, policies ou alçadas.
+- [x] Validar a cobertura existente por leitura de código e manter a validação integral no próximo corte material.
+
+## Navegação lateral: atalho de teclado para conteúdo principal
+
+- [x] Auditar a estrutura semântica atual do layout compartilhado.
+- [x] Adicionar atalho acessível para o conteúdo principal sem alterar rotas, grupos, dados ou permissões.
+- [x] Validar acessibilidade, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.

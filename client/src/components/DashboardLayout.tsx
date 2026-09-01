@@ -25,6 +25,7 @@ import {
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
 import { shouldCloseMobileNavigationAfterRouteChange } from "@/lib/dashboardNavigationBehavior";
+import { dashboardMainContentId, dashboardSkipLinkLabel } from "@/lib/dashboardAccessibility";
 import { groupDashboardNavigation } from "@/lib/dashboardNavigationGroups";
 import { getDashboardProfilePresentation } from "@/lib/dashboardProfilePresentation";
 import { ArrowUpRight, Compass, LayoutDashboard, LockKeyhole, LogOut, PanelLeft, Users, type LucideIcon } from "lucide-react";
@@ -228,6 +229,9 @@ function DashboardLayoutContent({
 
   return (
     <>
+      <a href={`#${dashboardMainContentId}`} className="sr-only fixed left-4 top-4 z-[100] rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-lg focus:not-sr-only focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+        {dashboardSkipLinkLabel}
+      </a>
       <div className="relative" ref={sidebarRef}>
         <Sidebar
           collapsible="icon"
@@ -342,7 +346,7 @@ function DashboardLayoutContent({
             </div>
           </div>
         )}
-        <main className="flex-1 p-4">{children}</main>
+        <main id={dashboardMainContentId} tabIndex={-1} className="flex-1 p-4">{children}</main>
       </SidebarInset>
     </>
   );
