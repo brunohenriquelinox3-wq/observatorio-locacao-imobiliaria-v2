@@ -14,11 +14,11 @@ import "../asset-foundation.css";
 const navigationItems: DashboardNavigationItem[] = [
   { icon: Compass, label: "Central de plataforma", path: "/administracao" },
   { icon: ShieldCheck, label: "Painel ADM", path: "/adm" },
-  { icon: UsersRound, label: "Núcleo de cadastros", path: "/cadastro-base" },
-  { icon: House, label: "Ativos urbanos", path: "/ativos-urbanos" },
   { icon: Layers3, label: "Loteadora", path: "/loteadora" },
   { icon: Workflow, label: "Vendas Urbanas", path: "/vendas-urbanas" },
   { icon: House, label: "Locação", path: "/locacao" },
+  { icon: UsersRound, label: "Núcleo de cadastros", path: "/cadastro-base" },
+  { icon: House, label: "Ativos urbanos", path: "/ativos-urbanos" },
 ];
 
 const assetKinds = {

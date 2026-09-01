@@ -1228,3 +1228,9 @@
 - [x] Auditar os atalhos laterais de Cadastros, Ativos, Estoque e Loteadora.
 - [x] Completar os atalhos ausentes da Loteadora em Vendas Urbanas e Locação, sem alterar guardas de rota ou alçadas.
 - [x] Validar navegação, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Hierarquia de colunas refletida na navegação lateral
+
+- [x] Auditar a ordem dos atalhos nas superfícies operacionais em relação à hierarquia definida.
+- [x] Reordenar os atalhos para SUPER ADM → ADM → Loteadora → Vendas Urbanas → Locação, mantendo Cadastros e Ativos como fundações posteriores.
+- [x] Validar coerência da hierarquia, responsividade, testes, tipagem, build e artefatos ZIP/HTML saneados.

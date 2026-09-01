@@ -5,7 +5,7 @@ import { draftBlockSelectionLabel, draftDevelopmentSelectionLabel, draftLotSelec
 import { lotInventoryOperationalValue } from "@/lib/lotInventoryOperationalOverview";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { trpc } from "@/lib/trpc";
-import { ArrowUpRight, Boxes, CircleAlert, Compass, Grid2X2, House, LandPlot, Map, ShieldCheck, Workflow } from "lucide-react";
+import { ArrowUpRight, Boxes, CircleAlert, Compass, Grid2X2, House, LandPlot, Map, ShieldCheck, UsersRound, Workflow } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../lot-inventory.css";
@@ -17,6 +17,8 @@ const navigationItems: DashboardNavigationItem[] = [
   { icon: Map, label: "Estoque/Mapa de Lotes", path: "/estoque-lotes" },
   { icon: Workflow, label: "Vendas Urbanas", path: "/vendas-urbanas" },
   { icon: House, label: "Locação", path: "/locacao" },
+  { icon: UsersRound, label: "Núcleo de cadastros", path: "/cadastro-base" },
+  { icon: House, label: "Ativos urbanos", path: "/ativos-urbanos" },
 ];
 
 const accessGate: DashboardAccessGate = {
