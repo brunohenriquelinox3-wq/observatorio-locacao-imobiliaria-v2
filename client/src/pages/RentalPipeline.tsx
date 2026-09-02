@@ -4,6 +4,7 @@ import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { retainAuthorizedSelection } from "@/lib/contextSelectionReset";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { rentalAgendaSelectionLabel, rentalAssetSelectionLabel, rentalIntakeSelectionLabel, rentalPartySelectionLabel } from "@/lib/rentalContextSelection";
+import { validateRentalAgendaInternalCode } from "@/lib/rentalAgendaInternalCodeValidation";
 import { rentalOperationalValue } from "@/lib/rentalOperationalOverview";
 import { trpc } from "@/lib/trpc";
 import { CalendarClock, CircleAlert, ClipboardCheck, Compass, FileCheck2, House, Layers3, Link2, Search, ShieldCheck, Tag, UsersRound, Workflow } from "lucide-react";
@@ -241,7 +242,9 @@ export default function RentalPipeline() {
   }
   function upsertAgendaClassification(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    agendaClassificationMutation.mutate({ ...context, correlationId: crypto.randomUUID(), agendaId: classificationAgendaId.trim(), classification: agendaClassification, internalCode: agendaInternalCode.trim() || undefined });
+    const validation = validateRentalAgendaInternalCode(agendaInternalCode);
+    if (!validation.valid) { toast.error("Código interno inválido", { description: validation.message }); return; }
+    agendaClassificationMutation.mutate({ ...context, correlationId: crypto.randomUUID(), agendaId: classificationAgendaId.trim(), classification: agendaClassification, internalCode: validation.value });
   }
 
   return (
