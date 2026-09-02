@@ -5,6 +5,7 @@ import { retainAuthorizedSelection } from "@/lib/contextSelectionReset";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { rentalAgendaSelectionLabel, rentalAssetSelectionLabel, rentalIntakeSelectionLabel, rentalPartySelectionLabel } from "@/lib/rentalContextSelection";
 import { validateRentalAgendaInternalCode } from "@/lib/rentalAgendaInternalCodeValidation";
+import { validateRentalAgendaReason } from "@/lib/rentalAgendaReasonValidation";
 import { validateRentalManagementNoteCode } from "@/lib/rentalManagementNoteCodeValidation";
 import { validateRentalSourceCode } from "@/lib/rentalSourceCodeValidation";
 import { validateRentalStageReason } from "@/lib/rentalStageReasonValidation";
@@ -226,8 +227,10 @@ export default function RentalPipeline() {
   }
   function createAgenda(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!scheduledFor) return;
-    agendaMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: agendaIntakeId.trim(), scheduledFor: toIsoDate(scheduledFor), state: agendaState, reasonCode: ["cancelled", "not_held"].includes(agendaState) ? agendaReasonCode.trim().toUpperCase() : undefined });
+    if (!scheduledFor) { toast.message("Informe data e hora para registrar o compromisso interno."); return; }
+    const validation = validateRentalAgendaReason(agendaReasonCode, ["cancelled", "not_held"].includes(agendaState));
+    if (!validation.valid) { toast.error("Motivo em código inválido", { description: validation.message }); return; }
+    agendaMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: agendaIntakeId.trim(), scheduledFor: toIsoDate(scheduledFor), state: agendaState, reasonCode: validation.value });
   }
   function linkManagementAsset(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
