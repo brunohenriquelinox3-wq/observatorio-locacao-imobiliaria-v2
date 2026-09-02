@@ -3,6 +3,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { retainAuthorizedSelection } from "@/lib/contextSelectionReset";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { validateSubdivisionBlockNumber } from "@/lib/subdivisionBlockNumberValidation";
+import { validateSubdivisionReference } from "@/lib/subdivisionReferenceValidation";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { subdivisionOperationalValue } from "@/lib/subdivisionOperationalOverview";
 import { summarizeOpaqueCoBuyerAttachmentCoverage } from "@/lib/subdivisionCoBuyerCoverage";
@@ -73,6 +74,7 @@ export default function SubdivisionFoundation() {
   const { isAuthenticated } = useAuth();
   const [selectedOrganizationId, setSelectedOrganizationId] = useState("");
   const [internalReference, setInternalReference] = useState("");
+  const [internalReferenceError, setInternalReferenceError] = useState("");
   const [workingPhase, setWorkingPhase] = useState<keyof typeof workingPhases>("preliminary_reference");
   const [selectedDevelopmentId, setSelectedDevelopmentId] = useState("");
   const [blockNumber, setBlockNumber] = useState(1);
@@ -208,7 +210,10 @@ export default function SubdivisionFoundation() {
 
   function createDevelopment(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    createMutation.mutate({ ...context, correlationId: crypto.randomUUID(), internalReference: internalReference.trim().toUpperCase(), workingPhase });
+    const validation = validateSubdivisionReference(internalReference);
+    if (!validation.valid) { setInternalReferenceError(validation.message); return; }
+    setInternalReferenceError("");
+    createMutation.mutate({ ...context, correlationId: crypto.randomUUID(), internalReference: validation.value, workingPhase });
   }
 
   function createBlock(event: React.FormEvent<HTMLFormElement>) {
@@ -285,6 +290,7 @@ export default function SubdivisionFoundation() {
         <section id="subdivision-development" className="subdivision-foundation-workspace" aria-labelledby="subdivision-workspace-title">
           <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">02 · LOTEAMENTO EM RASCUNHO</p><h2 id="subdivision-workspace-title">A referência interna organiza o próximo trabalho humano.</h2></div><p>Não há nome comercial, endereço, matrícula, coordenada, lote, mapa, estoque, sócio, parceiro, cliente, contrato ou valor neste corte.</p></div>
           <div className="subdivision-foundation-workspace__grid">
+            {internalReferenceError && <p role="alert" className="subdivision-foundation-inline-error">{internalReferenceError}</p>}
             <form className="subdivision-foundation-card" onSubmit={createDevelopment}><div className="subdivision-foundation-card__title"><FileStack size={19} /><h3>Novo loteamento em rascunho</h3></div><p>Use apenas uma referência interna codificada e a situação atual de trabalho. A referência é única por organização.</p><label htmlFor="subdivision-reference">Referência interna</label><input id="subdivision-reference" value={internalReference} onChange={(event) => setInternalReference(event.target.value.toUpperCase())} placeholder="EX.: LT_NORTE_01" disabled={!isWorkspaceReady} required minLength={3} maxLength={80} pattern="[A-Z][A-Z0-9_]{2,79}" /><label htmlFor="subdivision-phase">Situação de trabalho</label><select id="subdivision-phase" value={workingPhase} onChange={(event) => setWorkingPhase(event.target.value as keyof typeof workingPhases)} disabled={!isWorkspaceReady}>{Object.entries(workingPhases).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select><button type="submit" disabled={!isWorkspaceReady || createMutation.isPending}>{createMutation.isPending ? "Registrando rascunho" : "Registrar loteamento em rascunho"}</button></form>
             <aside className="subdivision-foundation-limits" aria-label="Limites do cadastro-base de loteamento"><Layers3 size={20} /><div><h3>O que este corte não faz</h3><p>Ele não aprova empreendimento, não registra área, não cria lote, não reserva estoque, não identifica proprietário ou parceiro e não inicia qualquer venda, contrato, cobrança ou repasse.</p></div></aside>
           </div>

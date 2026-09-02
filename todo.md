@@ -1343,8 +1343,13 @@
 - [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
 
 ## Estoque de Lotes: validação local de Lote
-
 - [x] Auditar a entrada de número de Lote e o contrato server-side vigente.
 - [x] Definir validação local para número inteiro entre 1 e 100, sem substituir o servidor.
+- [x] Exibir feedback acessível e impedir somente a mutação localmente inválida.
+- [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Cadastro de Loteamentos: validação local da referência interna
+- [x] Auditar a referência interna do loteamento e o contrato server-side vigente.
+- [x] Definir normalização e validação local do padrão permitido, sem substituir o servidor.
 - [x] Exibir feedback acessível e impedir somente a mutação localmente inválida.
 - [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
