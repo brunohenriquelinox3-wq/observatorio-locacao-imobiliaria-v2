@@ -1450,3 +1450,8 @@
 - [x] Auditar a cadeia de sessão, identidade, membership, grant e escopo em modo de leitura.
 - [x] Identificar a causa do erro de contexto e aplicar somente a correção técnica comprovada.
 - [x] Verificar a rota afetada sem mutações, com testes, build e artefatos ZIP/HTML saneados.
+
+## Incidente: pré-condições do comando administrativo na prévia
+- [x] Auditar em modo de leitura as pré-condições de identidade, MFA e alçada do comando.
+- [x] Identificar a causa e aplicar apenas correção técnica comprovada, sem executar o comando administrativo.
+- [x] Verificar o fluxo seguro, testes, build e artefatos ZIP/HTML saneados.

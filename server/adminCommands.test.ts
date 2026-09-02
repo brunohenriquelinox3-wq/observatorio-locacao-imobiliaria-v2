@@ -5,12 +5,20 @@ const subjectId = "550e8400-e29b-41d4-a716-446655440000";
 const correlationId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const organizationId = "7ba7b810-9dad-11d1-80b4-00c04fd430c8";
 
-function clientWithPrincipal(data: unknown) {
-  const query = { select: vi.fn(), eq: vi.fn(), maybeSingle: vi.fn() };
-  query.select.mockReturnValue(query);
-  query.eq.mockReturnValue(query);
-  query.maybeSingle.mockResolvedValue({ data, error: null });
-  return { from: vi.fn().mockReturnValue(query), rpc: vi.fn() } as never;
+function clientWithPrincipal(data: unknown, subjectData: unknown = { lifecycle_state: "active" }) {
+  const makeQuery = (result: unknown) => {
+    const query = { select: vi.fn(), eq: vi.fn(), maybeSingle: vi.fn() };
+    query.select.mockReturnValue(query);
+    query.eq.mockReturnValue(query);
+    query.maybeSingle.mockResolvedValue({ data: result, error: null });
+    return query;
+  };
+  const principalQuery = makeQuery(data);
+  const subjectQuery = makeQuery(subjectData);
+  return {
+    from: vi.fn().mockImplementation((table: string) => table === "platform_principals" ? principalQuery : subjectQuery),
+    rpc: vi.fn(),
+  } as never;
 }
 
 describe("admin command service", () => {
@@ -61,7 +69,23 @@ describe("admin command service", () => {
       platformRole: "platform_super_admin",
     });
     expect(client.from).toHaveBeenCalledWith("platform_principals");
+    expect(client.from).toHaveBeenCalledWith("identity_subjects");
     expect(client.from.mock.results[0]?.value.select).toHaveBeenCalledWith("state,role,mfa_verified_at");
+    expect(client.from.mock.results[1]?.value.select).toHaveBeenCalledWith("lifecycle_state");
+  });
+
+  it("keeps commands blocked when the subject lifecycle is not active", async () => {
+    const client = clientWithPrincipal({
+      state: "active",
+      role: "platform_super_admin",
+      mfa_verified_at: "2026-08-28T00:00:00.000Z",
+    }, { lifecycle_state: "pending_activation" });
+
+    await expect(getAdministrativeSubjectStatus(subjectId, client)).resolves.toMatchObject({
+      identityState: "active",
+      mfaVerified: true,
+      commandMode: "blocked",
+    });
   });
 
   it("activates only a pending principal with server-attested MFA and verified recovery", async () => {

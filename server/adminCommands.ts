@@ -56,13 +56,26 @@ export async function getAdministrativeSubjectStatus(
     .maybeSingle();
   if (error) throw configurationError();
 
+  const { data: subject, error: subjectError } = await client
+    .from("identity_subjects")
+    .select("lifecycle_state")
+    .eq("user_id", subjectId)
+    .maybeSingle();
+  if (subjectError) throw configurationError();
+  const identityLifecycleActive = subject?.lifecycle_state === "active";
+
   if (!data) {
-    return { identityState: "principal_absent", mfaVerified: false, bootstrapAction: "available", commandMode: "bootstrap_pending" };
+    return {
+      identityState: "principal_absent",
+      mfaVerified: false,
+      bootstrapAction: identityLifecycleActive ? "available" : "unavailable",
+      commandMode: identityLifecycleActive ? "bootstrap_pending" : "blocked",
+    };
   }
 
   const identityState = data.state as Exclude<AdministrativeSubjectStatus["identityState"], "not_connected" | "principal_absent">;
   const mfaVerified = Boolean(data.mfa_verified_at);
-  const active = identityState === "active" && mfaVerified;
+  const active = identityState === "active" && mfaVerified && identityLifecycleActive;
   return {
     identityState,
     mfaVerified,
