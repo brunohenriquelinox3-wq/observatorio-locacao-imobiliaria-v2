@@ -44,6 +44,7 @@ function Router() {
     <Route path={"/administracao"} component={PlatformAdmin} />
     <Route path={"/adm"} component={OrganizationAdmin} />
     <Route path={"/cadastro-base"} component={DomainFoundation} />
+    <Route path={"/cadastros"} component={DomainFoundation} />
     <Route path={"/ativos-urbanos"} component={AssetFoundation} />
     <Route path={"/vendas-urbanas"} component={UrbanPipeline} />
     <Route path={"/locacao"} component={RentalPipeline} />

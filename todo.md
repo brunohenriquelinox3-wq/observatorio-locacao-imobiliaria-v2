@@ -1425,3 +1425,8 @@
 - [x] Definir normalização e validação local sem substituir o servidor.
 - [x] Exibir feedback acessível e impedir somente a mutação localmente inválida.
 - [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Navegação: correção da rota do Núcleo de Cadastros
+- [x] Auditar a divergência entre o caminho registrado e o item de navegação.
+- [x] Corrigir a rota sem alterar guardas, contexto autorizado ou módulos visíveis.
+- [x] Verificar navegação visual, testes, tipagem, build e artefatos ZIP/HTML saneados.
