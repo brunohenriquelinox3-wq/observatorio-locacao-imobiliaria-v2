@@ -1492,3 +1492,7 @@
 - [x] Manter SUPER ADM → ADM → Loteadora → Vendas Urbanas → Locação como hierarquia global, sem misturar setores ou conceder alçada pela interface.
 - [x] Manter setores econômicos bloqueados, sem valores, percentuais, cálculos, contratos, cobrança, pagamentos, repasses ou integrações externas até nova autorização explícita.
 - [x] Validar rotas, guardas, responsividade e artefatos saneados após a reestruturação das três colunas.
+
+## Recuperação: visualização da prévia
+- [x] Verificar o serviço da prévia e restaurar sua visualização sem alterar dados, sessão, permissões ou configurações do CRM.
+- [x] Confirmar as rotas setoriais principais após a recuperação da prévia.
