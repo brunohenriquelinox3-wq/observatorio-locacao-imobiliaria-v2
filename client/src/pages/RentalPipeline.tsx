@@ -7,6 +7,7 @@ import { rentalAgendaSelectionLabel, rentalAssetSelectionLabel, rentalIntakeSele
 import { validateRentalAgendaInternalCode } from "@/lib/rentalAgendaInternalCodeValidation";
 import { validateRentalManagementNoteCode } from "@/lib/rentalManagementNoteCodeValidation";
 import { validateRentalSourceCode } from "@/lib/rentalSourceCodeValidation";
+import { validateRentalStageReason } from "@/lib/rentalStageReasonValidation";
 import { rentalOperationalValue } from "@/lib/rentalOperationalOverview";
 import { trpc } from "@/lib/trpc";
 import { CalendarClock, CircleAlert, ClipboardCheck, Compass, FileCheck2, House, Layers3, Link2, Search, ShieldCheck, Tag, UsersRound, Workflow } from "lucide-react";
@@ -219,7 +220,9 @@ export default function RentalPipeline() {
   }
   function changeStage(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    stageMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: stageIntakeId.trim(), nextStage, reasonCode: nextStage === "closed_lost" ? stageReasonCode.trim().toUpperCase() : undefined });
+    const validation = validateRentalStageReason(stageReasonCode, nextStage === "closed_lost");
+    if (!validation.valid) { toast.error("Motivo em código inválido", { description: validation.message }); return; }
+    stageMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: stageIntakeId.trim(), nextStage, reasonCode: validation.value });
   }
   function createAgenda(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
