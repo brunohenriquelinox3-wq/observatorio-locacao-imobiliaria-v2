@@ -1445,3 +1445,8 @@
 - [x] Confirmar o link temporário expirado e preservar os limites de acesso.
 - [x] Reativar a prévia atual e verificar a rota administrativa sem executar mutações.
 - [x] Orientar o acesso pelo painel de Prévia, sem reutilizar endereços temporários antigos.
+
+## Incidente: contexto de organização e identidade na prévia
+- [x] Auditar a cadeia de sessão, identidade, membership, grant e escopo em modo de leitura.
+- [x] Identificar a causa do erro de contexto e aplicar somente a correção técnica comprovada.
+- [x] Verificar a rota afetada sem mutações, com testes, build e artefatos ZIP/HTML saneados.

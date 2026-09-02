@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 import { listAuthorizedOrganizationContexts } from "./organizationContext";
 
 describe("authorized organization contexts", () => {
-  it("rejects a missing subject before asking the database", async () => {
+  it("returns no authorized context for a missing subject without asking the database", async () => {
     const rpc = vi.fn();
-    await expect(listAuthorizedOrganizationContexts(undefined, { module: "loteadora" }, { rpc } as never)).rejects.toThrow("ORGANIZATION_CONTEXT_IDENTITY_REQUIRED");
+    await expect(listAuthorizedOrganizationContexts(undefined, { module: "loteadora" }, { rpc } as never)).resolves.toEqual([]);
     expect(rpc).not.toHaveBeenCalled();
   });
 

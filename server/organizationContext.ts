@@ -14,18 +14,17 @@ export type AuthorizedOrganizationContext = {
   purposeCode: string;
 };
 
-function requireSubject(subjectId: string | undefined): string {
-  if (!subjectId) throw new Error("ORGANIZATION_CONTEXT_IDENTITY_REQUIRED");
-  return subjectId;
-}
-
 export async function listAuthorizedOrganizationContexts(
   subjectId: string | undefined,
   rawInput: unknown,
   client: RpcClient = getSupabaseAdminClient(),
 ): Promise<AuthorizedOrganizationContext[]> {
-  const actorUserId = requireSubject(subjectId);
   const input = authorizedOrganizationContextInputSchema.parse(rawInput);
+  // Sem subject Supabase não existe contexto autorizado. Retornar vazio evita
+  // que telas de leitura emitam erro durante a reconexão de uma prévia em novo
+  // domínio, sem consultar o banco nem relaxar as políticas dos comandos.
+  if (!subjectId) return [];
+  const actorUserId = subjectId;
   const { data, error } = await client.rpc("organization_list_authorized_contexts", {
     p_actor_user_id: actorUserId,
     p_module: input.module,
