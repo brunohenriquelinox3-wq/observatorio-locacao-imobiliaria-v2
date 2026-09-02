@@ -5,6 +5,7 @@ import { retainAuthorizedSelection } from "@/lib/contextSelectionReset";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { urbanAgendaSelectionLabel, urbanAssetSelectionLabel, urbanLeadSelectionLabel, urbanPartySelectionLabel } from "@/lib/urbanContextSelection";
 import { validateUrbanAgendaInternalCode } from "@/lib/urbanAgendaInternalCodeValidation";
+import { validateUrbanAgendaReason } from "@/lib/urbanAgendaReasonValidation";
 import { validateUrbanPreferenceCode } from "@/lib/urbanPreferenceCodeValidation";
 import { validateUrbanStageReason } from "@/lib/urbanStageReasonValidation";
 import { urbanOperationalValue } from "@/lib/urbanOperationalOverview";
@@ -151,7 +152,9 @@ export default function UrbanPipeline() {
   function createAgenda(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!scheduledFor) { toast.message("Informe data e hora para registrar o compromisso interno."); return; }
-    agendaMutation.mutate({ ...context, correlationId: crypto.randomUUID(), leadId: agendaLeadId.trim(), scheduledFor: new Date(scheduledFor).toISOString(), state: agendaState, reasonCode: ["cancelled", "not_held"].includes(agendaState) ? agendaReason.trim().toUpperCase() : undefined });
+    const validation = validateUrbanAgendaReason(agendaReason, ["cancelled", "not_held"].includes(agendaState));
+    if (!validation.valid) { toast.error("Motivo em código inválido", { description: validation.message }); return; }
+    agendaMutation.mutate({ ...context, correlationId: crypto.randomUUID(), leadId: agendaLeadId.trim(), scheduledFor: new Date(scheduledFor).toISOString(), state: agendaState, reasonCode: validation.value });
   }
   function linkLeadAsset(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
