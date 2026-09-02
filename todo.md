@@ -1430,3 +1430,8 @@
 - [x] Auditar a divergência entre o caminho registrado e o item de navegação.
 - [x] Corrigir a rota sem alterar guardas, contexto autorizado ou módulos visíveis.
 - [x] Verificar navegação visual, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Navegação: cobertura de regressão das rotas principais
+- [x] Definir os caminhos administrativos e operacionais que devem permanecer registrados.
+- [x] Ampliar o teste de regressão das rotas sem alterar componentes, guardas ou autorização.
+- [x] Validar testes, tipagem, build e artefatos ZIP/HTML saneados.
