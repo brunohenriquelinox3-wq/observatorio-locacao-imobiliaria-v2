@@ -4,6 +4,7 @@ import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { retainAuthorizedSelection } from "@/lib/contextSelectionReset";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { urbanAgendaSelectionLabel, urbanAssetSelectionLabel, urbanLeadSelectionLabel, urbanPartySelectionLabel } from "@/lib/urbanContextSelection";
+import { validateUrbanAgendaInternalCode } from "@/lib/urbanAgendaInternalCodeValidation";
 import { urbanOperationalValue } from "@/lib/urbanOperationalOverview";
 import { trpc } from "@/lib/trpc";
 import { CalendarClock, CircleAlert, Compass, House, Layers3, Link2, Search, ShieldCheck, Tag, UserRoundPlus, UsersRound, Workflow } from "lucide-react";
@@ -162,7 +163,9 @@ export default function UrbanPipeline() {
   }
   function upsertAgendaClassification(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    agendaClassificationMutation.mutate({ ...context, correlationId: crypto.randomUUID(), agendaId: classificationAgendaId.trim(), classification: agendaClassification, internalCode: agendaInternalCode.trim() || undefined });
+    const validation = validateUrbanAgendaInternalCode(agendaInternalCode);
+    if (!validation.valid) { toast.error("Código interno inválido", { description: validation.message }); return; }
+    agendaClassificationMutation.mutate({ ...context, correlationId: crypto.randomUUID(), agendaId: classificationAgendaId.trim(), classification: agendaClassification, internalCode: validation.value });
   }
 
   return (
