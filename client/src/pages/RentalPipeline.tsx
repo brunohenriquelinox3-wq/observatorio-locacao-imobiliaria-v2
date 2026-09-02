@@ -5,6 +5,7 @@ import { retainAuthorizedSelection } from "@/lib/contextSelectionReset";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { rentalAgendaSelectionLabel, rentalAssetSelectionLabel, rentalIntakeSelectionLabel, rentalPartySelectionLabel } from "@/lib/rentalContextSelection";
 import { validateRentalAgendaInternalCode } from "@/lib/rentalAgendaInternalCodeValidation";
+import { validateRentalSourceCode } from "@/lib/rentalSourceCodeValidation";
 import { rentalOperationalValue } from "@/lib/rentalOperationalOverview";
 import { trpc } from "@/lib/trpc";
 import { CalendarClock, CircleAlert, ClipboardCheck, Compass, FileCheck2, House, Layers3, Link2, Search, ShieldCheck, Tag, UsersRound, Workflow } from "lucide-react";
@@ -211,7 +212,9 @@ export default function RentalPipeline() {
 
   function createIntake(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    createMutation.mutate({ ...context, correlationId: crypto.randomUUID(), partyId: partyId.trim(), journeyKind, sourceCode: sourceCode.trim().toUpperCase() });
+    const validation = validateRentalSourceCode(sourceCode);
+    if (!validation.valid) { toast.error("Origem em código inválida", { description: validation.message }); return; }
+    createMutation.mutate({ ...context, correlationId: crypto.randomUUID(), partyId: partyId.trim(), journeyKind, sourceCode: validation.value });
   }
   function changeStage(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
