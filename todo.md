@@ -1419,3 +1419,9 @@
 - [x] Definir normalização e validação local quando cancelamento ou não realização forem selecionados, sem substituir o servidor.
 - [x] Exibir feedback acessível e impedir somente a mutação localmente inválida.
 - [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Plataforma: validação local do motivo de encerramento de membership
+- [x] Auditar o motivo em código e o contrato server-side vigente.
+- [x] Definir normalização e validação local sem substituir o servidor.
+- [x] Exibir feedback acessível e impedir somente a mutação localmente inválida.
+- [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.

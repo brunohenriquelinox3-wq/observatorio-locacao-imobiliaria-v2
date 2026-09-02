@@ -30,6 +30,7 @@ import { genericRecoveryNotice, toMfaQrImageSource, validateTotpCode } from "@/l
 import { deriveAdministrativeConsoleState } from "@/lib/adminConsole";
 import { getPlatformBootstrapPresentation } from "@/lib/platformBootstrapPresentation";
 import { getPlatformIdentityPresentation } from "@/lib/platformIdentityPresentation";
+import { validateMembershipEndReason } from "@/lib/membershipEndReasonValidation";
 import { getPlatformPrincipalPresentation } from "@/lib/platformPrincipalPresentation";
 import { getPlatformGovernanceOverview } from "@/lib/platformGovernanceOverview";
 import "../platform-admin.css";
@@ -480,7 +481,9 @@ export default function PlatformAdmin() {
   function submitMembershipEnd(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!consoleState.isCommandFormAvailable) return explainConsoleGate(event);
-    const input = { membershipId, reasonCode: membershipReason, correlationId: crypto.randomUUID() };
+    const validation = validateMembershipEndReason(membershipReason);
+    if (!validation.valid) { toast.error("Motivo em código inválido", { description: validation.message }); return; }
+    const input = { membershipId, reasonCode: validation.value, correlationId: crypto.randomUUID() };
     if (membershipAction === "suspend") suspendMembershipMutation.mutate(input);
     else revokeMembershipMutation.mutate(input);
   }
