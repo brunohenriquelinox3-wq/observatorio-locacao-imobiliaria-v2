@@ -1353,3 +1353,9 @@
 - [x] Definir normalização e validação local do padrão permitido, sem substituir o servidor.
 - [x] Exibir feedback acessível e impedir somente a mutação localmente inválida.
 - [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Ativos Urbanos: validação local da referência de trabalho
+- [x] Auditar a referência de trabalho do ativo e o contrato server-side vigente.
+- [x] Definir normalização de espaços e limites locais proporcionais, sem substituir o servidor.
+- [x] Exibir feedback acessível e impedir somente a mutação localmente inválida.
+- [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.

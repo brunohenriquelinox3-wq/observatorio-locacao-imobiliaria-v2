@@ -1,6 +1,7 @@
 import DashboardLayout, { type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { assetContextSelectionLabel } from "@/lib/assetContextSelection";
+import { validateAssetReferenceLabel } from "@/lib/assetReferenceLabelValidation";
 import { domainPartySelectionLabel } from "@/lib/domainPartySelection";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { assetOperationalValue } from "@/lib/assetOperationalOverview";
@@ -32,6 +33,7 @@ export default function AssetFoundation() {
   const [module, setModule] = useState<"vendas_urbanas" | "locacao">("vendas_urbanas");
   const [assetKind, setAssetKind] = useState<keyof typeof assetKinds>("apartment");
   const [referenceLabel, setReferenceLabel] = useState("");
+  const [referenceLabelError, setReferenceLabelError] = useState("");
   const [internalReference, setInternalReference] = useState("");
   const [relationAssetId, setRelationAssetId] = useState("");
   const [relationPartyId, setRelationPartyId] = useState("");
@@ -84,7 +86,10 @@ export default function AssetFoundation() {
 
   function createAsset(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    createMutation.mutate({ ...context, correlationId: crypto.randomUUID(), kind: assetKind, referenceLabel, internalReference: internalReference.trim().toUpperCase() });
+    const validation = validateAssetReferenceLabel(referenceLabel);
+    if (!validation.valid) { setReferenceLabelError(validation.message); return; }
+    setReferenceLabelError("");
+    createMutation.mutate({ ...context, correlationId: crypto.randomUUID(), kind: assetKind, referenceLabel: validation.value, internalReference: internalReference.trim().toUpperCase() });
   }
   function attachParty(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -120,6 +125,7 @@ export default function AssetFoundation() {
           <div className="asset-foundation-grid">
             <form className="asset-foundation-card" onSubmit={createAsset}>
               <div className="asset-foundation-card__title"><House size={19} /><h3>Ativo em rascunho</h3></div><p>Use uma referência de trabalho e um código interno. Nenhum desses dados é tratado como prova registral ou comercial.</p>
+              {referenceLabelError && <p role="alert" className="asset-foundation-card__error">{referenceLabelError}</p>}
               <label htmlFor="asset-kind">Tipo de ativo</label><select id="asset-kind" value={assetKind} onChange={(event) => setAssetKind(event.target.value as keyof typeof assetKinds)} disabled={!queryEnabled}>{Object.entries(assetKinds).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
               <label htmlFor="asset-reference-label">Referência de trabalho</label><input id="asset-reference-label" value={referenceLabel} onChange={(event) => setReferenceLabel(event.target.value)} placeholder="Ex.: Unidade em rascunho" disabled={!queryEnabled} required minLength={2} maxLength={160} />
               <label htmlFor="asset-internal-reference">Código interno</label><input id="asset-internal-reference" value={internalReference} onChange={(event) => setInternalReference(event.target.value.toUpperCase())} placeholder="EX.: VU-001" disabled={!queryEnabled} required minLength={2} maxLength={64} />
