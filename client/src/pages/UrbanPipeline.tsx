@@ -5,6 +5,7 @@ import { retainAuthorizedSelection } from "@/lib/contextSelectionReset";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { urbanAgendaSelectionLabel, urbanAssetSelectionLabel, urbanLeadSelectionLabel, urbanPartySelectionLabel } from "@/lib/urbanContextSelection";
 import { validateUrbanAgendaInternalCode } from "@/lib/urbanAgendaInternalCodeValidation";
+import { validateUrbanPreferenceCode } from "@/lib/urbanPreferenceCodeValidation";
 import { urbanOperationalValue } from "@/lib/urbanOperationalOverview";
 import { trpc } from "@/lib/trpc";
 import { CalendarClock, CircleAlert, Compass, House, Layers3, Link2, Search, ShieldCheck, Tag, UserRoundPlus, UsersRound, Workflow } from "lucide-react";
@@ -159,7 +160,9 @@ export default function UrbanPipeline() {
   function upsertLeadSearchProfile(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (acceptedAssetKinds.length === 0) { toast.message("Selecione ao menos um tipo canônico de ativo para registrar a preferência."); return; }
-    searchProfileMutation.mutate({ ...context, correlationId: crypto.randomUUID(), leadId: searchProfileLeadId.trim(), acceptedAssetKinds, searchTiming, preferenceCode: preferenceCode.trim() || undefined });
+    const validation = validateUrbanPreferenceCode(preferenceCode);
+    if (!validation.valid) { toast.error("Código interno inválido", { description: validation.message }); return; }
+    searchProfileMutation.mutate({ ...context, correlationId: crypto.randomUUID(), leadId: searchProfileLeadId.trim(), acceptedAssetKinds, searchTiming, preferenceCode: validation.value });
   }
   function upsertAgendaClassification(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
