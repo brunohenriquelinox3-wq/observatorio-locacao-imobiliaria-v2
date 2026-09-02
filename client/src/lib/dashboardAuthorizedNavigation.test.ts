@@ -7,7 +7,11 @@ const items = [
   { label: "Loteadora", path: "/loteadora" },
   { label: "Estoque", path: "/estoque-lotes" },
   { label: "Vendas", path: "/vendas-urbanas" },
+  { label: "Imóveis urbanos", path: "/vendas-urbanas/imoveis-proprietarios" },
+  { label: "Agenda urbana", path: "/vendas-urbanas/agenda" },
   { label: "Locação", path: "/locacao" },
+  { label: "Imóveis de locação", path: "/locacao/imoveis-proprietarios" },
+  { label: "Agenda de locação", path: "/locacao/agenda" },
 ];
 
 describe("navegação por módulos autorizados", () => {
@@ -29,6 +33,20 @@ describe("navegação por módulos autorizados", () => {
       "/adm",
       "/loteadora",
       "/estoque-lotes",
+    ]);
+  });
+
+  it("mantém os setores de uma coluna somente quando o módulo correspondente está autorizado", () => {
+    expect(filterNavigationByAuthorizedModules({
+      items,
+      isAvailabilityResolved: true,
+      authorizedModules: { loteadora: false, vendas_urbanas: true, locacao: false },
+    }).map(item => item.path)).toEqual([
+      "/administracao",
+      "/adm",
+      "/vendas-urbanas",
+      "/vendas-urbanas/imoveis-proprietarios",
+      "/vendas-urbanas/agenda",
     ]);
   });
 });

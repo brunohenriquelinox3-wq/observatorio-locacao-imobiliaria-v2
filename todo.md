@@ -1484,3 +1484,11 @@
 - [x] Remover o tratamento visual editorial/jornalístico da jornada operacional e aplicar uma interface densa de CRM, responsiva e acessível.
 - [x] Cobrir a nova estrutura de setores e suas rotas com testes de regressão sem alterar dados nem comandos.
 - [x] Gerar e auditar os artefatos ZIP e HTML saneados do marco de correção.
+
+## Regra obrigatória: arquitetura setorial e design operacional de todas as colunas
+- [x] Mapear, ordenar e separar os setores de Vendas Urbanas conforme a arquitetura aprovada, sem uma página longa que concentre todos os fluxos.
+- [x] Mapear, ordenar e separar os setores de Locação conforme a arquitetura aprovada, sem uma página longa que concentre todos os fluxos.
+- [x] Aplicar em Vendas Urbanas e Locação o mesmo padrão de interface operacional de CRM: navegação contextual, área de setor ativo, densidade adequada, acessibilidade e responsividade.
+- [x] Manter SUPER ADM → ADM → Loteadora → Vendas Urbanas → Locação como hierarquia global, sem misturar setores ou conceder alçada pela interface.
+- [x] Manter setores econômicos bloqueados, sem valores, percentuais, cálculos, contratos, cobrança, pagamentos, repasses ou integrações externas até nova autorização explícita.
+- [x] Validar rotas, guardas, responsividade e artefatos saneados após a reestruturação das três colunas.

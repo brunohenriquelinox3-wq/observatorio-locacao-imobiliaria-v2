@@ -10,26 +10,12 @@ import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { attachmentIntentSelectionLabel, buyerClientSelectionLabel, saleDraftSelectionLabel } from "@/lib/subdivisionDraftSelection";
 import { subdivisionPartyRoleSelectionLabel } from "@/lib/subdivisionPartyRoleSelection";
 import { trpc } from "@/lib/trpc";
+import { crmNavigationItems } from "@/lib/crmNavigation";
 import { Building2, CalendarClock, CircleAlert, Compass, FileStack, House, LandPlot, Layers3, LockKeyhole, Map, ShieldCheck, UsersRound, Workflow } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 import "../subdivision-foundation.css";
-
-const navigationItems: DashboardNavigationItem[] = [
-  { icon: Compass, label: "Central de plataforma", path: "/administracao" },
-  { icon: ShieldCheck, label: "Painel ADM", path: "/adm" },
-  { icon: LandPlot, label: "Cadastro de Loteamentos", path: "/loteadora", description: "Setor 1 de Loteadora" },
-  { icon: Map, label: "Estoque/Mapa de Lotes", path: "/estoque-lotes", description: "Setor 2 de Loteadora" },
-  { icon: UsersRound, label: "Clientes Loteadora", path: "/loteadora/clientes", description: "Setor 3 de Loteadora" },
-  { icon: Building2, label: "Sócios e Parceiros", path: "/loteadora/socios-parceiros", description: "Setor 4 de Loteadora" },
-  { icon: Workflow, label: "Vendas de Lotes", path: "/loteadora/vendas", description: "Setor interno sem contrato ou financeiro" },
-  { icon: LockKeyhole, label: "Financeiro", path: "/loteadora/financeiro", disabled: true, description: "Bloqueado até autorização explícita e revisão jurídica-contábil" },
-  { icon: Workflow, label: "Vendas Urbanas", path: "/vendas-urbanas" },
-  { icon: CalendarClock, label: "Locação", path: "/locacao" },
-  { icon: UsersRound, label: "Núcleo de cadastros", path: "/cadastro-base" },
-  { icon: House, label: "Ativos urbanos", path: "/ativos-urbanos" },
-];
 
 type LoteadoraSector = "developments" | "clients" | "partners" | "sales" | "finance";
 
@@ -254,7 +240,7 @@ export default function SubdivisionFoundation() {
   }
 
   return (
-    <DashboardLayout navigationItems={navigationItems} navigationTitle="Núcleo CRM" accessGate={subdivisionAccessGate}>
+    <DashboardLayout navigationItems={crmNavigationItems} navigationTitle="Núcleo CRM" accessGate={subdivisionAccessGate}>
       <main className="subdivision-foundation-page">
         <header className="subdivision-workspace-header">
           <div>
@@ -272,7 +258,7 @@ export default function SubdivisionFoundation() {
         </section>
 
         <nav className="subdivision-sector-switcher" aria-label="Setores da coluna Loteadora">
-          {navigationItems.slice(2, 8).map((item, index) => item.disabled ? <span key={item.path} aria-disabled="true"><item.icon size={16} aria-hidden="true" /><b>{String(index + 1).padStart(2, "0")}</b>{item.label}<small>Bloqueado</small></span> : <a key={item.path} href={item.path} aria-current={item.path === location ? "page" : undefined}><item.icon size={16} aria-hidden="true" /><b>{String(index + 1).padStart(2, "0")}</b>{item.label}</a>)}
+          {crmNavigationItems.slice(2, 8).map((item, index) => item.disabled ? <span key={item.path} aria-disabled="true"><item.icon size={16} aria-hidden="true" /><b>{String(index + 1).padStart(2, "0")}</b>{item.label}<small>Bloqueado</small></span> : <a key={item.path} href={item.path} aria-current={item.path === location ? "page" : undefined}><item.icon size={16} aria-hidden="true" /><b>{String(index + 1).padStart(2, "0")}</b>{item.label}</a>)}
         </nav>
 
         {activeSector === "developments" && <>

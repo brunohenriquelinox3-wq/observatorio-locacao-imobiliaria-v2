@@ -53,6 +53,18 @@ function Router() {
     <Route path={"/loteadora/vendas"} component={SubdivisionFoundation} />
     <Route path={"/loteadora/financeiro"} component={SubdivisionFoundation} />
     <Route path={"/loteadora"} component={SubdivisionFoundation} />
+    <Route path={"/vendas-urbanas/imoveis-proprietarios"} component={UrbanPipeline} />
+    <Route path={"/vendas-urbanas/empreendimentos"} component={UrbanPipeline} />
+    <Route path={"/vendas-urbanas/agenda"} component={UrbanPipeline} />
+    <Route path={"/vendas-urbanas/perfil-busca"} component={UrbanPipeline} />
+    <Route path={"/vendas-urbanas/propostas"} component={UrbanPipeline} />
+    <Route path={"/vendas-urbanas/financeiro"} component={UrbanPipeline} />
+    <Route path={"/locacao/imoveis-proprietarios"} component={RentalPipeline} />
+    <Route path={"/locacao/perfil-busca"} component={RentalPipeline} />
+    <Route path={"/locacao/agenda"} component={RentalPipeline} />
+    <Route path={"/locacao/administracao"} component={RentalPipeline} />
+    <Route path={"/locacao/contratos"} component={RentalPipeline} />
+    <Route path={"/locacao/financeiro"} component={RentalPipeline} />
     <Route path={"/estoque-lotes"} component={LotInventory} />
     <Route path={"/404"} component={NotFound} />
     <Route path={"/"} component={Home} />

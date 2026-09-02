@@ -19,7 +19,19 @@ describe("rotas da aplicação", () => {
       "/loteadora/financeiro",
       "/estoque-lotes",
       "/vendas-urbanas",
+      "/vendas-urbanas/imoveis-proprietarios",
+      "/vendas-urbanas/empreendimentos",
+      "/vendas-urbanas/agenda",
+      "/vendas-urbanas/perfil-busca",
+      "/vendas-urbanas/propostas",
+      "/vendas-urbanas/financeiro",
       "/locacao",
+      "/locacao/imoveis-proprietarios",
+      "/locacao/perfil-busca",
+      "/locacao/agenda",
+      "/locacao/administracao",
+      "/locacao/contratos",
+      "/locacao/financeiro",
     ].forEach((path) => {
       expect(appSource).toContain(`path={"${path}"}`);
     });

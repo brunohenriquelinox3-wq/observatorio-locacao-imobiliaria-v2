@@ -5,25 +5,12 @@ import { draftBlockSelectionLabel, draftDevelopmentSelectionLabel, draftLotSelec
 import { validateLotNumber } from "@/lib/lotNumberValidation";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { trpc } from "@/lib/trpc";
+import { crmNavigationItems } from "@/lib/crmNavigation";
 import { ArrowUpRight, Boxes, CircleAlert, Compass, House, LandPlot, LockKeyhole, Map, ShieldCheck, UsersRound, Workflow } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../lot-inventory.css";
 
-const navigationItems: DashboardNavigationItem[] = [
-  { icon: Compass, label: "Central de plataforma", path: "/administracao" },
-  { icon: ShieldCheck, label: "Painel ADM", path: "/adm" },
-  { icon: LandPlot, label: "Cadastro de Loteamentos", path: "/loteadora", description: "Setor 1 de Loteadora" },
-  { icon: Map, label: "Estoque/Mapa de Lotes", path: "/estoque-lotes", description: "Setor 2 de Loteadora" },
-  { icon: UsersRound, label: "Clientes Loteadora", path: "/loteadora/clientes", description: "Setor 3 de Loteadora" },
-  { icon: UsersRound, label: "Sócios e Parceiros", path: "/loteadora/socios-parceiros", description: "Setor 4 de Loteadora" },
-  { icon: Workflow, label: "Vendas de Lotes", path: "/loteadora/vendas", description: "Setor interno sem contrato ou financeiro" },
-  { icon: LockKeyhole, label: "Financeiro", path: "/loteadora/financeiro", disabled: true, description: "Bloqueado até autorização explícita e revisão jurídica-contábil" },
-  { icon: Workflow, label: "Vendas Urbanas", path: "/vendas-urbanas" },
-  { icon: House, label: "Locação", path: "/locacao" },
-  { icon: UsersRound, label: "Núcleo de cadastros", path: "/cadastro-base" },
-  { icon: House, label: "Ativos urbanos", path: "/ativos-urbanos" },
-];
 
 const accessGate: DashboardAccessGate = {
   eyebrow: "ESTOQUE E MAPA · CONTEXTO ANTES DE LEITURA",
@@ -92,7 +79,7 @@ export default function LotInventory() {
     event.stopPropagation();
     setLotNumberError(validation.message);
   }
-  return <DashboardLayout navigationItems={navigationItems} navigationTitle="Núcleo CRM" accessGate={accessGate}><main className="lot-inventory-page" onSubmitCapture={handleLotSubmitCapture}>
+  return <DashboardLayout navigationItems={crmNavigationItems} navigationTitle="Núcleo CRM" accessGate={accessGate}><main className="lot-inventory-page" onSubmitCapture={handleLotSubmitCapture}>
     <header className="lot-inventory-hero"><div><p className="lot-inventory-eyebrow">LOTEADORA · SETOR 02</p><h1>Estoque e Mapa de Lotes</h1><p>Uma frente independente para estruturar lotes, revisar referências e preparar o mapa de trabalho com controle.</p></div><aside><ShieldCheck size={20} /><span>Escopo atual</span><b>Rascunhos internos</b><small>Sem preço, reserva, cliente, contrato ou financeiro</small></aside></header>
 
     <section className="lot-inventory-context" aria-labelledby="lot-context-title"><div><p className="lot-inventory-eyebrow">CONTEXTO AUTORIZADO</p><h2 id="lot-context-title">Escolha a organização, não um identificador técnico.</h2></div><div className="lot-inventory-context__fields"><label htmlFor="lot-organization">Organização autorizada<select id="lot-organization" value={selectedOrganizationId} onChange={(event) => setSelectedOrganizationId(event.target.value)} disabled={!isAuthenticated || authorizedContextsQuery.isLoading}><option value="">{authorizedContextsQuery.isLoading ? "Carregando contextos autorizados" : "Selecione uma organização autorizada"}</option>{authorizedContextsQuery.data?.map((organization) => <option key={organization.organizationId} value={organization.organizationId}>{organization.organizationLabel}</option>)}</select></label><label htmlFor="lot-module">Módulo<input id="lot-module" value="Loteadora" readOnly aria-readonly="true" /></label><label htmlFor="lot-purpose">Finalidade<input id="lot-purpose" value={context.purposeCode || "—"} readOnly aria-readonly="true" /></label></div><p className={`lot-inventory-context__status ${contextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} />{contextReady ? "Contexto autorizado selecionado. O servidor ainda valida identidade, membership, grant, vigência, módulo e finalidade." : authorizedContextsQuery.isError ? "O contexto não foi liberado. A interface não revela organizações ou escopos externos." : "Selecione um contexto autorizado antes de abrir os rascunhos de inventário."}</p></section>
