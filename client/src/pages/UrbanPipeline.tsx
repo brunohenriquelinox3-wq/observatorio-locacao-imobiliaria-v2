@@ -6,6 +6,7 @@ import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionCont
 import { urbanAgendaSelectionLabel, urbanAssetSelectionLabel, urbanLeadSelectionLabel, urbanPartySelectionLabel } from "@/lib/urbanContextSelection";
 import { validateUrbanAgendaInternalCode } from "@/lib/urbanAgendaInternalCodeValidation";
 import { validateUrbanPreferenceCode } from "@/lib/urbanPreferenceCodeValidation";
+import { validateUrbanStageReason } from "@/lib/urbanStageReasonValidation";
 import { urbanOperationalValue } from "@/lib/urbanOperationalOverview";
 import { trpc } from "@/lib/trpc";
 import { CalendarClock, CircleAlert, Compass, House, Layers3, Link2, Search, ShieldCheck, Tag, UserRoundPlus, UsersRound, Workflow } from "lucide-react";
@@ -143,7 +144,9 @@ export default function UrbanPipeline() {
   }
   function transitionLead(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    transitionMutation.mutate({ ...context, correlationId: crypto.randomUUID(), leadId: stageLeadId.trim(), nextStage, reasonCode: nextStage === "closed_lost" ? stageReason.trim().toUpperCase() : undefined });
+    const validation = validateUrbanStageReason(stageReason, nextStage === "closed_lost");
+    if (!validation.valid) { toast.error("Motivo em código inválido", { description: validation.message }); return; }
+    transitionMutation.mutate({ ...context, correlationId: crypto.randomUUID(), leadId: stageLeadId.trim(), nextStage, reasonCode: validation.value });
   }
   function createAgenda(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

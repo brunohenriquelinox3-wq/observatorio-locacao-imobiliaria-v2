@@ -1395,3 +1395,9 @@
 - [x] Definir normalização e validação local quando o código for informado, sem substituir o servidor.
 - [x] Exibir feedback acessível e impedir somente a mutação localmente inválida.
 - [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Vendas Urbanas: validação local do motivo de encerramento
+- [x] Auditar o motivo em código e o contrato server-side vigente.
+- [x] Definir normalização e validação local quando o encerramento sem ganho for selecionado, sem substituir o servidor.
+- [x] Exibir feedback acessível e impedir somente a mutação localmente inválida.
+- [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
