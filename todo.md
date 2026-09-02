@@ -1460,3 +1460,8 @@
 - [x] Auditar os controles visuais que antecedem comandos com atestação MFA obrigatória.
 - [x] Bloquear localmente a emissão prematura e explicar o requisito sem reduzir a verificação server-side.
 - [x] Verificar o fluxo, testes, build e artefatos ZIP/HTML saneados sem executar comando administrativo.
+
+## Ambiente demonstrativo isolado autorizado
+- [x] Criar uma única organização denominada “Ambiente Demonstrativo” exclusivamente em estado de rascunho.
+- [x] Verificar em modo de leitura que o rascunho está selecionado e não possui ativação operacional disponível.
+- [x] Preservar a criação controlada e orientar a auditoria de leitura sem ativar ou publicar o ambiente.
