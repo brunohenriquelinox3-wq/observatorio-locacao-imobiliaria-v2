@@ -1435,3 +1435,8 @@
 - [x] Definir os caminhos administrativos e operacionais que devem permanecer registrados.
 - [x] Ampliar o teste de regressão das rotas sem alterar componentes, guardas ou autorização.
 - [x] Validar testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Orientação: ambiente demonstrativo isolado
+- [x] Verificar o fluxo disponível de organização demonstrativa, sem criar ou ativar registros.
+- [x] Documentar o procedimento de acesso mínimo, dados sintéticos e limites de segurança.
+- [x] Entregar as instruções sem executar nenhuma operação material.
