@@ -1,6 +1,7 @@
 import DashboardLayout, { type DashboardNavigationItem } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { assetContextSelectionLabel } from "@/lib/assetContextSelection";
+import { validateAssetBlockReason } from "@/lib/assetBlockReasonValidation";
 import { validateAssetReferenceLabel } from "@/lib/assetReferenceLabelValidation";
 import { domainPartySelectionLabel } from "@/lib/domainPartySelection";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
@@ -97,7 +98,9 @@ export default function AssetFoundation() {
   }
   function changeState(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    stateMutation.mutate({ ...context, correlationId: crypto.randomUUID(), assetId: stateAssetId, state: moduleState, reasonCode: moduleState === "blocked" ? reasonCode.trim().toUpperCase() : undefined });
+    const validation = validateAssetBlockReason(reasonCode, moduleState === "blocked");
+    if (!validation.valid) { toast.error("Motivo em código inválido", { description: validation.message }); return; }
+    stateMutation.mutate({ ...context, correlationId: crypto.randomUUID(), assetId: stateAssetId, state: moduleState, reasonCode: validation.value });
   }
 
   return (
