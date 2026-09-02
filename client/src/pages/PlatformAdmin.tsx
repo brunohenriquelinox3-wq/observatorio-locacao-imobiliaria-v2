@@ -34,6 +34,7 @@ import { validateMembershipEndReason } from "@/lib/membershipEndReasonValidation
 import { getPlatformPrincipalPresentation } from "@/lib/platformPrincipalPresentation";
 import { getPlatformGovernanceOverview } from "@/lib/platformGovernanceOverview";
 import "../platform-admin.css";
+import { getMfaAttestedCommandState } from "@/lib/adminMfaCommandGuard";
 
 const navigationItems: DashboardNavigationItem[] = [
   { icon: ShieldCheck, label: "Central de Plataforma", path: "/administracao" },
@@ -247,6 +248,10 @@ export default function PlatformAdmin() {
     platformRole: commandStatusQuery.data?.platformRole,
   });
   const consoleState = deriveAdministrativeConsoleState(commandStatusQuery.data);
+  const mfaAttestedCommandState = getMfaAttestedCommandState({
+    consoleAvailable: consoleState.isCommandFormAvailable,
+    sessionMfaVerified: mfaVerified,
+  });
   const governanceOverview = getPlatformGovernanceOverview({
     isPlatformSuperAdmin: principalPresentation.isPlatformSuperAdmin,
     organizations: readiness?.counts.organizations,
@@ -419,8 +424,8 @@ export default function PlatformAdmin() {
   }
 
   function activateSelfOrganizationAdmin() {
-    if (!consoleState.isCommandFormAvailable) {
-      toast.message(consoleState.title, { description: consoleState.description });
+    if (!mfaAttestedCommandState.allowed) {
+      toast.message(mfaAttestedCommandState.title, { description: mfaAttestedCommandState.description });
       return;
     }
     if (!selfAdministrationOrganizationId) {
@@ -439,8 +444,8 @@ export default function PlatformAdmin() {
   }
 
   function activateOrganization() {
-    if (!consoleState.isCommandFormAvailable) {
-      toast.message(consoleState.title, { description: consoleState.description });
+    if (!mfaAttestedCommandState.allowed) {
+      toast.message(mfaAttestedCommandState.title, { description: mfaAttestedCommandState.description });
       return;
     }
     if (!organizationActivationId) {
@@ -524,7 +529,7 @@ export default function PlatformAdmin() {
                     </option>
                   ))}
                 </select>
-                <button type="button" onClick={activateSelfOrganizationAdmin} disabled={!selfAdministrationOrganizationId || activateSelfOrganizationAdminMutation.isPending}>
+                <button type="button" onClick={activateSelfOrganizationAdmin} disabled={!selfAdministrationOrganizationId || !mfaAttestedCommandState.allowed || activateSelfOrganizationAdminMutation.isPending}>
                   {activateSelfOrganizationAdminMutation.isPending ? "Ativando ADM" : "Ativar pacote completo"}
                 </button>
               </div>
@@ -543,7 +548,7 @@ export default function PlatformAdmin() {
                     <option key={organization.organizationId} value={organization.organizationId}>{organization.organizationLabel} · rascunho</option>
                   ))}
                 </select>
-                <button type="button" onClick={activateOrganization} disabled={!organizationActivationId || activateOrganizationMutation.isPending}>
+                <button type="button" onClick={activateOrganization} disabled={!organizationActivationId || !mfaAttestedCommandState.allowed || activateOrganizationMutation.isPending}>
                   {activateOrganizationMutation.isPending ? "Ativando organização" : "Ativar organização"}
                 </button>
               </div>
@@ -767,7 +772,7 @@ export default function PlatformAdmin() {
                 ))}
               </select>
               <p className="platform-admin-muted">Finalidade fixa: CADASTRO_INICIAL. Nenhum financeiro, contrato, pagamento ou acesso de terceiro é criado.</p>
-              <button type="submit" disabled={!consoleState.isCommandFormAvailable || !selfAdministrationOrganizationId || activateSelfOrganizationAdminMutation.isPending}>
+              <button type="submit" disabled={!selfAdministrationOrganizationId || !mfaAttestedCommandState.allowed || activateSelfOrganizationAdminMutation.isPending}>
                 {activateSelfOrganizationAdminMutation.isPending ? "Ativando ADM" : "Ativar pacote completo"} <ArrowUpRight size={15} />
               </button>
             </form>

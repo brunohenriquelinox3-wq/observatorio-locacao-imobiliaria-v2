@@ -1455,3 +1455,8 @@
 - [x] Auditar em modo de leitura as pré-condições de identidade, MFA e alçada do comando.
 - [x] Identificar a causa e aplicar apenas correção técnica comprovada, sem executar o comando administrativo.
 - [x] Verificar o fluxo seguro, testes, build e artefatos ZIP/HTML saneados.
+
+## Incidente: comando administrativo emitido sem MFA atestado na sessão
+- [x] Auditar os controles visuais que antecedem comandos com atestação MFA obrigatória.
+- [x] Bloquear localmente a emissão prematura e explicar o requisito sem reduzir a verificação server-side.
+- [x] Verificar o fluxo, testes, build e artefatos ZIP/HTML saneados sem executar comando administrativo.
