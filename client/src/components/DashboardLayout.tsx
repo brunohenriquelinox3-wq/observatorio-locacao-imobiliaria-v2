@@ -317,11 +317,11 @@ function DashboardLayoutContent({
               {groupIndex > 0 ? <CommandSeparator /> : null}
               <CommandGroup heading={group.label}>
                 {group.items.map(item => (
-                  <CommandItem
-                    key={item.path}
-                    value={`${group.label} ${item.label}`}
-                    disabled={item.disabled}
-                    onSelect={() => navigateFromPalette(item.path)}
+                    <CommandItem
+                      key={item.path}
+                      value={`${group.label} ${item.label}`}
+                      disabled={item.disabled}
+                      onSelect={() => !item.disabled && navigateFromPalette(item.path)}
                   >
                     <item.icon className="h-4 w-4" />
                     <span>{item.label}</span>

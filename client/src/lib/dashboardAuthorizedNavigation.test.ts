@@ -23,30 +23,49 @@ describe("navegação por módulos autorizados", () => {
     })).toEqual(items);
   });
 
-  it("oculta somente módulos sem contexto autorizado e preserva entradas de plataforma", () => {
-    expect(filterNavigationByAuthorizedModules({
+  it("mantém módulos sem contexto visíveis, porém bloqueados, e preserva entradas de plataforma", () => {
+    const navigation = filterNavigationByAuthorizedModules({
       items,
       isAvailabilityResolved: true,
       authorizedModules: { loteadora: true, vendas_urbanas: false, locacao: false },
-    }).map(item => item.path)).toEqual([
+    });
+
+    expect(navigation.map(item => item.path)).toEqual([
       "/administracao",
       "/adm",
       "/loteadora",
       "/estoque-lotes",
-    ]);
-  });
-
-  it("mantém os setores de uma coluna somente quando o módulo correspondente está autorizado", () => {
-    expect(filterNavigationByAuthorizedModules({
-      items,
-      isAvailabilityResolved: true,
-      authorizedModules: { loteadora: false, vendas_urbanas: true, locacao: false },
-    }).map(item => item.path)).toEqual([
-      "/administracao",
-      "/adm",
       "/vendas-urbanas",
       "/vendas-urbanas/imoveis-proprietarios",
       "/vendas-urbanas/agenda",
+      "/locacao",
+      "/locacao/imoveis-proprietarios",
+      "/locacao/agenda",
     ]);
+    expect(navigation.filter(item => item.path.startsWith("/vendas-urbanas") || item.path.startsWith("/locacao")).every(item => item.disabled)).toBe(true);
+    expect(navigation.filter(item => item.path.startsWith("/loteadora") || item.path === "/estoque-lotes").every(item => !item.disabled)).toBe(true);
+  });
+
+  it("mantém os setores de uma coluna somente quando o módulo correspondente está autorizado", () => {
+    const navigation = filterNavigationByAuthorizedModules({
+      items,
+      isAvailabilityResolved: true,
+      authorizedModules: { loteadora: false, vendas_urbanas: true, locacao: false },
+    });
+
+    expect(navigation.map(item => item.path)).toEqual([
+      "/administracao",
+      "/adm",
+      "/loteadora",
+      "/estoque-lotes",
+      "/vendas-urbanas",
+      "/vendas-urbanas/imoveis-proprietarios",
+      "/vendas-urbanas/agenda",
+      "/locacao",
+      "/locacao/imoveis-proprietarios",
+      "/locacao/agenda",
+    ]);
+    expect(navigation.filter(item => item.path.startsWith("/loteadora") || item.path === "/estoque-lotes" || item.path.startsWith("/locacao")).every(item => item.disabled)).toBe(true);
+    expect(navigation.filter(item => item.path.startsWith("/vendas-urbanas")).every(item => !item.disabled)).toBe(true);
   });
 });

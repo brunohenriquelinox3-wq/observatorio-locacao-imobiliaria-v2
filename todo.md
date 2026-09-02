@@ -1500,3 +1500,9 @@
 ## Recuperação: janela de visualização em branco
 - [x] Substituir a janela about:blank pela prévia atual do CRM sem interagir com dados, sessão, permissões ou formulários.
 - [x] Confirmar que a janela do ambiente mostra a coluna Loteadora e seus setores após a recuperação.
+
+## Correção: sidebar global com colunas e setores visíveis
+- [x] Corrigir a ocultação de Loteadora, Vendas Urbanas e Locação na sidebar quando não houver contexto autorizado selecionado.
+- [x] Exibir a hierarquia SUPER ADM → ADM → Loteadora → Vendas Urbanas → Locação e os setores internos na ordem aprovada.
+- [x] Aplicar estado visual bloqueado e inacessível aos setores sem alçada, sem conceder acesso ou permitir emissão de comandos pela interface.
+- [x] Cobrir a regra de visibilidade e bloqueio com testes, verificação visual desktop/mobile e artefatos saneados.

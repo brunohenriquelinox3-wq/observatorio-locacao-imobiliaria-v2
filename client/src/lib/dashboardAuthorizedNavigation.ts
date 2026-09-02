@@ -7,7 +7,7 @@ function moduleForPath(path: string): OperationalModule | undefined {
   return undefined;
 }
 
-export function filterNavigationByAuthorizedModules<T extends { path: string }>({
+export function filterNavigationByAuthorizedModules<T extends { path: string; disabled?: boolean; description?: string }>({
   items,
   isAvailabilityResolved,
   authorizedModules,
@@ -18,8 +18,16 @@ export function filterNavigationByAuthorizedModules<T extends { path: string }>(
 }): T[] {
   if (!isAvailabilityResolved) return items;
 
-  return items.filter(item => {
+  return items.map(item => {
     const module = moduleForPath(item.path);
-    return !module || authorizedModules[module];
+    if (!module || authorizedModules[module]) return item;
+
+    return {
+      ...item,
+      disabled: true,
+      description: item.description
+        ? `${item.description} · acesso indisponível nesta sessão`
+        : "Acesso indisponível nesta sessão",
+    };
   });
 }
