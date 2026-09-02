@@ -1389,3 +1389,9 @@
 - [x] Definir normalização e validação local quando o estado for bloqueado, sem substituir o servidor.
 - [x] Exibir feedback acessível e impedir somente a mutação localmente inválida.
 - [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.
+
+## Locação: validação local do código de escopo administrativo
+- [x] Auditar o código interno opcional e o contrato server-side vigente.
+- [x] Definir normalização e validação local quando o código for informado, sem substituir o servidor.
+- [x] Exibir feedback acessível e impedir somente a mutação localmente inválida.
+- [x] Validar comportamento, testes, tipagem, build e artefatos ZIP/HTML saneados.

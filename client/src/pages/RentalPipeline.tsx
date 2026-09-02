@@ -5,6 +5,7 @@ import { retainAuthorizedSelection } from "@/lib/contextSelectionReset";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { rentalAgendaSelectionLabel, rentalAssetSelectionLabel, rentalIntakeSelectionLabel, rentalPartySelectionLabel } from "@/lib/rentalContextSelection";
 import { validateRentalAgendaInternalCode } from "@/lib/rentalAgendaInternalCodeValidation";
+import { validateRentalManagementNoteCode } from "@/lib/rentalManagementNoteCodeValidation";
 import { validateRentalSourceCode } from "@/lib/rentalSourceCodeValidation";
 import { rentalOperationalValue } from "@/lib/rentalOperationalOverview";
 import { trpc } from "@/lib/trpc";
@@ -241,7 +242,9 @@ export default function RentalPipeline() {
   }
   function upsertManagementDeclaredScope(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    managementDeclaredScopeMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: managementScopeIntakeId.trim(), declaredScope, internalNoteCode: managementNoteCode.trim() || undefined });
+    const validation = validateRentalManagementNoteCode(managementNoteCode);
+    if (!validation.valid) { toast.error("Código interno inválido", { description: validation.message }); return; }
+    managementDeclaredScopeMutation.mutate({ ...context, correlationId: crypto.randomUUID(), intakeId: managementScopeIntakeId.trim(), declaredScope, internalNoteCode: validation.value });
   }
   function upsertAgendaClassification(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
