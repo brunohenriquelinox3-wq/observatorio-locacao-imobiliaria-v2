@@ -1496,3 +1496,7 @@
 ## Recuperação: visualização da prévia
 - [x] Verificar o serviço da prévia e restaurar sua visualização sem alterar dados, sessão, permissões ou configurações do CRM.
 - [x] Confirmar as rotas setoriais principais após a recuperação da prévia.
+
+## Recuperação: janela de visualização em branco
+- [x] Substituir a janela about:blank pela prévia atual do CRM sem interagir com dados, sessão, permissões ou formulários.
+- [x] Confirmar que a janela do ambiente mostra a coluna Loteadora e seus setores após a recuperação.
