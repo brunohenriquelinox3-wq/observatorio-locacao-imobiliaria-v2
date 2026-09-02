@@ -1,7 +1,7 @@
 # Arquitetura setorial obrigatória — Vendas Urbanas e Locação
 
 **Data:** 02 de setembro de 2026  
-**Status:** requisito de interface aprovado para implementação.  
+**Status:** implementado e verificado no marco A105.  
 **Limite:** esta divisão organiza navegação e superfícies já existentes. Não cria dados, contratos, cobranças, pagamentos, repasses, valores, percentuais, cálculos ou integrações.
 
 ## Regra permanente
@@ -10,18 +10,18 @@ Cada coluna deve ser uma área operacional independente, com navegação lateral
 
 | Coluna | Ordem | Setor | Situação neste marco |
 |---|---:|---|---|
-| Vendas Urbanas | 01 | Clientes e Leads | Implementação existente, a separar. |
-| Vendas Urbanas | 02 | Imóveis e Proprietários | Vínculo interno de ativo existente; cadastro completo permanece posterior. |
-| Vendas Urbanas | 03 | Empreendimentos e Construtoras | Área estrutural visível, sem formulário até modelagem própria autorizada. |
-| Vendas Urbanas | 04 | Agenda Interna | Implementação existente, a separar. |
-| Vendas Urbanas | 05 | Perfil de Busca | Implementação existente, a separar. |
+| Vendas Urbanas | 01 | Clientes e Leads | Rota independente com a implementação existente isolada. |
+| Vendas Urbanas | 02 | Imóveis e Proprietários | Rota independente; vínculo interno existente, cadastro completo permanece posterior. |
+| Vendas Urbanas | 03 | Empreendimentos e Construtoras | Área estrutural em rota própria, sem formulário até modelagem autorizada. |
+| Vendas Urbanas | 04 | Agenda Interna | Rota independente com a implementação existente isolada. |
+| Vendas Urbanas | 05 | Perfil de Busca | Rota independente com a implementação existente isolada. |
 | Vendas Urbanas | 06 | Propostas, Reservas e Contratos | Visível e bloqueado, sem comandos. |
 | Vendas Urbanas | 07 | Financeiro | Visível e bloqueado, sem dados ou comandos econômicos. |
-| Locação | 01 | Clientes e Interessados | Implementação de entrada existente, a separar. |
-| Locação | 02 | Imóveis e Proprietários | Vínculo interno de ativo existente; cadastro completo permanece posterior. |
-| Locação | 03 | Perfil de Busca | Implementação existente, a separar. |
-| Locação | 04 | Agenda Interna | Implementação existente, a separar. |
-| Locação | 05 | Administração de Locação | Escopo declarado existente, sem mandato ou contrato. |
+| Locação | 01 | Clientes e Interessados | Rota independente com a implementação de entrada isolada. |
+| Locação | 02 | Imóveis e Proprietários | Rota independente; vínculo interno existente, cadastro completo permanece posterior. |
+| Locação | 03 | Perfil de Busca | Rota independente com a implementação existente isolada. |
+| Locação | 04 | Agenda Interna | Rota independente com a implementação existente isolada. |
+| Locação | 05 | Administração de Locação | Rota independente de escopo declarado, sem mandato ou contrato. |
 | Locação | 06 | Contratos e Garantias | Visível e bloqueado, sem comandos. |
 | Locação | 07 | Financeiro | Visível e bloqueado, sem dados ou comandos econômicos. |
 
