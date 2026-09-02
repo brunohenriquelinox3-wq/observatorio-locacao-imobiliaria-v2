@@ -2,11 +2,10 @@ import DashboardLayout, { type DashboardAccessGate, type DashboardNavigationItem
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isDomainContextReady } from "@/lib/domainFoundationUi";
 import { draftBlockSelectionLabel, draftDevelopmentSelectionLabel, draftLotSelectionLabel } from "@/lib/lotInventoryContextSelection";
-import { lotInventoryOperationalValue } from "@/lib/lotInventoryOperationalOverview";
 import { validateLotNumber } from "@/lib/lotNumberValidation";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { trpc } from "@/lib/trpc";
-import { ArrowUpRight, Boxes, CircleAlert, Compass, Grid2X2, House, LandPlot, Map, ShieldCheck, UsersRound, Workflow } from "lucide-react";
+import { ArrowUpRight, Boxes, CircleAlert, Compass, House, LandPlot, LockKeyhole, Map, ShieldCheck, UsersRound, Workflow } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../lot-inventory.css";
@@ -14,8 +13,12 @@ import "../lot-inventory.css";
 const navigationItems: DashboardNavigationItem[] = [
   { icon: Compass, label: "Central de plataforma", path: "/administracao" },
   { icon: ShieldCheck, label: "Painel ADM", path: "/adm" },
-  { icon: LandPlot, label: "Loteadora", path: "/loteadora" },
-  { icon: Map, label: "Estoque/Mapa de Lotes", path: "/estoque-lotes" },
+  { icon: LandPlot, label: "Cadastro de Loteamentos", path: "/loteadora", description: "Setor 1 de Loteadora" },
+  { icon: Map, label: "Estoque/Mapa de Lotes", path: "/estoque-lotes", description: "Setor 2 de Loteadora" },
+  { icon: UsersRound, label: "Clientes Loteadora", path: "/loteadora/clientes", description: "Setor 3 de Loteadora" },
+  { icon: UsersRound, label: "Sócios e Parceiros", path: "/loteadora/socios-parceiros", description: "Setor 4 de Loteadora" },
+  { icon: Workflow, label: "Vendas de Lotes", path: "/loteadora/vendas", description: "Setor interno sem contrato ou financeiro" },
+  { icon: LockKeyhole, label: "Financeiro", path: "/loteadora/financeiro", disabled: true, description: "Bloqueado até autorização explícita e revisão jurídica-contábil" },
   { icon: Workflow, label: "Vendas Urbanas", path: "/vendas-urbanas" },
   { icon: House, label: "Locação", path: "/locacao" },
   { icon: UsersRound, label: "Núcleo de cadastros", path: "/cadastro-base" },
@@ -89,17 +92,8 @@ export default function LotInventory() {
     event.stopPropagation();
     setLotNumberError(validation.message);
   }
-  const sectors = [
-    { code: "01", title: "Quadras", value: lotInventoryOperationalValue({ contextReady, loading: false, pendingLabel: "Aguardando loteamento" }), description: "A matriz começa no Cadastro de Loteamentos e usa a convenção Quadra N.", target: "/loteadora#subdivision-inventory", icon: Grid2X2 },
-    { code: "02", title: "Lotes", value: lotInventoryOperationalValue({ contextReady, loading: lots.isLoading, count: lots.data?.length, pendingLabel: "Aguardando Quadra" }), description: "Cada Quadra comporta de Lote 1 a Lote 100, sem disponibilidade comercial.", target: "#lot-draft", icon: LandPlot },
-    { code: "03", title: "Mapa de Trabalho", value: contextReady ? "Aguardando Lotes" : "Aguardando contexto", description: "O mapa será visual e separado do cadastro; nesta etapa não existe geolocalização ou publicação.", target: "#lot-map", icon: Map },
-    { code: "04", title: "Histórico Interno", value: lotInventoryOperationalValue({ contextReady, loading: events.isLoading, count: events.data?.length, pendingLabel: "Aguardando leitura" }), description: "Mudanças de referência não demonstram reserva, venda, contrato ou financeiro.", target: "#lot-history", icon: Boxes },
-  ];
-
   return <DashboardLayout navigationItems={navigationItems} navigationTitle="Núcleo CRM" accessGate={accessGate}><main className="lot-inventory-page" onSubmitCapture={handleLotSubmitCapture}>
-    <header className="lot-inventory-hero"><div><p className="lot-inventory-eyebrow">ESTOQUE E MAPA DE LOTES · SETOR SEPARADO</p><h1>Quadras organizam. Lotes ocupam. O mapa dá contexto.</h1><p>O inventário não é uma extensão do cadastro de loteamentos: ele é uma frente própria para estruturar lotes, revisar referências e preparar a visualização de estoque com controle.</p></div><aside><ShieldCheck size={20} /><span>Sem efeito comercial</span><b>Rascunhos internos</b><small>Sem preço, reserva, cliente, contrato ou financeiro</small></aside></header>
-
-    <section className="lot-inventory-overview" aria-labelledby="lot-overview-title"><div className="lot-inventory-overview__heading"><div><p className="lot-inventory-eyebrow">VISÃO OPERACIONAL · ESTOQUE E MAPA</p><h2 id="lot-overview-title">Do loteamento à Quadra, da Quadra ao Lote.</h2></div><p>Os indicadores mostram somente leituras devolvidas pelo contexto autorizado. Estados vazios não significam estoque disponível e não expõem outro loteamento.</p></div><nav className="lot-inventory-overview__grid" aria-label="Setores de Estoque e Mapa de Lotes">{sectors.map(({ code, title, value, description, target, icon: Icon }) => <a key={code} href={target}><span>{code}</span><Icon size={18} aria-hidden="true" /><strong>{title}</strong><b>{value}</b><small>{description}</small><em>Ver setor <ArrowUpRight size={14} /></em></a>)}</nav></section>
+    <header className="lot-inventory-hero"><div><p className="lot-inventory-eyebrow">LOTEADORA · SETOR 02</p><h1>Estoque e Mapa de Lotes</h1><p>Uma frente independente para estruturar lotes, revisar referências e preparar o mapa de trabalho com controle.</p></div><aside><ShieldCheck size={20} /><span>Escopo atual</span><b>Rascunhos internos</b><small>Sem preço, reserva, cliente, contrato ou financeiro</small></aside></header>
 
     <section className="lot-inventory-context" aria-labelledby="lot-context-title"><div><p className="lot-inventory-eyebrow">CONTEXTO AUTORIZADO</p><h2 id="lot-context-title">Escolha a organização, não um identificador técnico.</h2></div><div className="lot-inventory-context__fields"><label htmlFor="lot-organization">Organização autorizada<select id="lot-organization" value={selectedOrganizationId} onChange={(event) => setSelectedOrganizationId(event.target.value)} disabled={!isAuthenticated || authorizedContextsQuery.isLoading}><option value="">{authorizedContextsQuery.isLoading ? "Carregando contextos autorizados" : "Selecione uma organização autorizada"}</option>{authorizedContextsQuery.data?.map((organization) => <option key={organization.organizationId} value={organization.organizationId}>{organization.organizationLabel}</option>)}</select></label><label htmlFor="lot-module">Módulo<input id="lot-module" value="Loteadora" readOnly aria-readonly="true" /></label><label htmlFor="lot-purpose">Finalidade<input id="lot-purpose" value={context.purposeCode || "—"} readOnly aria-readonly="true" /></label></div><p className={`lot-inventory-context__status ${contextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} />{contextReady ? "Contexto autorizado selecionado. O servidor ainda valida identidade, membership, grant, vigência, módulo e finalidade." : authorizedContextsQuery.isError ? "O contexto não foi liberado. A interface não revela organizações ou escopos externos." : "Selecione um contexto autorizado antes de abrir os rascunhos de inventário."}</p></section>
 

@@ -48,6 +48,10 @@ function Router() {
     <Route path={"/ativos-urbanos"} component={AssetFoundation} />
     <Route path={"/vendas-urbanas"} component={UrbanPipeline} />
     <Route path={"/locacao"} component={RentalPipeline} />
+    <Route path={"/loteadora/clientes"} component={SubdivisionFoundation} />
+    <Route path={"/loteadora/socios-parceiros"} component={SubdivisionFoundation} />
+    <Route path={"/loteadora/vendas"} component={SubdivisionFoundation} />
+    <Route path={"/loteadora/financeiro"} component={SubdivisionFoundation} />
     <Route path={"/loteadora"} component={SubdivisionFoundation} />
     <Route path={"/estoque-lotes"} component={LotInventory} />
     <Route path={"/404"} component={NotFound} />

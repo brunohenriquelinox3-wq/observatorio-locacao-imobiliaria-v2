@@ -1,4 +1,4 @@
-export type DashboardNavigationGroupId = "platform" | "operation" | "foundation";
+export type DashboardNavigationGroupId = "platform" | "loteadora" | "urban_sales" | "rental" | "foundation" | "operation";
 
 type NavigationItemLike = {
   path: string;
@@ -12,12 +12,18 @@ export type DashboardNavigationGroup<T extends NavigationItemLike> = {
 
 const groupDefinitions: Array<Pick<DashboardNavigationGroup<NavigationItemLike>, "id" | "label">> = [
   { id: "platform", label: "Plataforma" },
-  { id: "operation", label: "Operação" },
+  { id: "loteadora", label: "Loteadora" },
+  { id: "urban_sales", label: "Vendas Urbanas" },
+  { id: "rental", label: "Locação" },
   { id: "foundation", label: "Fundações" },
+  { id: "operation", label: "Operação" },
 ];
 
 function resolveNavigationGroup(path: string): DashboardNavigationGroupId {
   if (path === "/administracao" || path === "/adm") return "platform";
+  if (path === "/estoque-lotes" || path === "/loteadora" || path.startsWith("/loteadora/")) return "loteadora";
+  if (path === "/vendas-urbanas" || path.startsWith("/vendas-urbanas/")) return "urban_sales";
+  if (path === "/locacao" || path.startsWith("/locacao/")) return "rental";
   if (path === "/cadastro-base" || path === "/ativos-urbanos") return "foundation";
   return "operation";
 }

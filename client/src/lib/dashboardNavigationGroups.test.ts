@@ -15,8 +15,34 @@ describe("groupDashboardNavigation", () => {
 
     expect(groups.map((group) => [group.id, group.items.map((item) => item.path)])).toEqual([
       ["platform", ["/administracao", "/adm"]],
-      ["operation", ["/loteadora", "/vendas-urbanas", "/locacao"]],
+      ["loteadora", ["/loteadora"]],
+      ["urban_sales", ["/vendas-urbanas"]],
+      ["rental", ["/locacao"]],
       ["foundation", ["/cadastro-base", "/ativos-urbanos"]],
+    ]);
+  });
+
+  it("mantém os setores internos de Loteadora sob a mesma coluna", () => {
+    const groups = groupDashboardNavigation([
+      { path: "/loteadora", label: "Cadastro de Loteamentos" },
+      { path: "/estoque-lotes", label: "Estoque/Mapa de Lotes" },
+      { path: "/loteadora/clientes", label: "Clientes Loteadora" },
+      { path: "/loteadora/socios-parceiros", label: "Sócios e Parceiros" },
+      { path: "/loteadora/financeiro", label: "Financeiro" },
+    ]);
+
+    expect(groups).toEqual([
+      {
+        id: "loteadora",
+        label: "Loteadora",
+        items: [
+          { path: "/loteadora", label: "Cadastro de Loteamentos" },
+          { path: "/estoque-lotes", label: "Estoque/Mapa de Lotes" },
+          { path: "/loteadora/clientes", label: "Clientes Loteadora" },
+          { path: "/loteadora/socios-parceiros", label: "Sócios e Parceiros" },
+          { path: "/loteadora/financeiro", label: "Financeiro" },
+        ],
+      },
     ]);
   });
 

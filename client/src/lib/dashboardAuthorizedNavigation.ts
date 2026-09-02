@@ -1,11 +1,11 @@
 export type OperationalModule = "loteadora" | "vendas_urbanas" | "locacao";
 
-const moduleByPath: Record<string, OperationalModule | undefined> = {
-  "/loteadora": "loteadora",
-  "/estoque-lotes": "loteadora",
-  "/vendas-urbanas": "vendas_urbanas",
-  "/locacao": "locacao",
-};
+function moduleForPath(path: string): OperationalModule | undefined {
+  if (path === "/estoque-lotes" || path === "/loteadora" || path.startsWith("/loteadora/")) return "loteadora";
+  if (path === "/vendas-urbanas" || path.startsWith("/vendas-urbanas/")) return "vendas_urbanas";
+  if (path === "/locacao" || path.startsWith("/locacao/")) return "locacao";
+  return undefined;
+}
 
 export function filterNavigationByAuthorizedModules<T extends { path: string }>({
   items,
@@ -19,7 +19,7 @@ export function filterNavigationByAuthorizedModules<T extends { path: string }>(
   if (!isAvailabilityResolved) return items;
 
   return items.filter(item => {
-    const module = moduleByPath[item.path];
+    const module = moduleForPath(item.path);
     return !module || authorizedModules[module];
   });
 }

@@ -1465,3 +1465,22 @@
 - [x] Criar uma única organização denominada “Ambiente Demonstrativo” exclusivamente em estado de rascunho.
 - [x] Verificar em modo de leitura que o rascunho está selecionado e não possui ativação operacional disponível.
 - [x] Preservar a criação controlada e orientar a auditoria de leitura sem ativar ou publicar o ambiente.
+
+## Auditoria de leitura: módulos autorizados
+- [x] Auditar rotas e estados vazios de Loteadora sem criar dados.
+- [x] Auditar rotas e estados vazios de Vendas Urbanas sem criar dados.
+- [x] Auditar rotas e estados vazios de Locação sem criar dados.
+- [ ] Verificar filtros e saídas com um contexto já ativo e autorizado, sem criar dados.
+- [ ] Registrar defeitos comprovados e corrigir somente falhas técnicas sem executar mutações.
+
+## Auditoria controlada: login na prévia atual
+- [ ] Abrir a prévia atual para login e MFA executados diretamente pelo usuário.
+- [ ] Confirmar o contexto autorizado em modo de leitura, sem registrar dados ou executar comandos.
+- [ ] Auditar filtros e saídas das jornadas permitidas sem qualquer mutação.
+
+## Correção estrutural: coluna Loteadora
+- [x] Substituir a página única de Loteadora por setores independentes e ordenados: Cadastro de Loteamentos, Estoque/Mapa de Lotes, Clientes Loteadora, Sócios e Parceiros e Financeiro bloqueado.
+- [x] Criar uma navegação operacional contextual para Loteadora, mantendo a hierarquia SUPER ADM → ADM → módulos e os guardas de autorização existentes.
+- [x] Remover o tratamento visual editorial/jornalístico da jornada operacional e aplicar uma interface densa de CRM, responsiva e acessível.
+- [x] Cobrir a nova estrutura de setores e suas rotas com testes de regressão sem alterar dados nem comandos.
+- [x] Gerar e auditar os artefatos ZIP e HTML saneados do marco de correção.

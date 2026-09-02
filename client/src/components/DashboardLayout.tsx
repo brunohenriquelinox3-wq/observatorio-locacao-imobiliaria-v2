@@ -57,6 +57,8 @@ export type DashboardNavigationItem = {
   icon: LucideIcon;
   label: string;
   path: string;
+  disabled?: boolean;
+  description?: string;
 };
 
 export type DashboardAccessGate = {
@@ -318,6 +320,7 @@ function DashboardLayoutContent({
                   <CommandItem
                     key={item.path}
                     value={`${group.label} ${item.label}`}
+                    disabled={item.disabled}
                     onSelect={() => navigateFromPalette(item.path)}
                   >
                     <item.icon className="h-4 w-4" />
@@ -330,9 +333,19 @@ function DashboardLayoutContent({
         </CommandList>
       </CommandDialog>
       <div className="relative" ref={sidebarRef}>
-        <Sidebar
+          <Sidebar
           collapsible="icon"
-          className="border-r-0"
+          className="border-r border-[#164757] [--sidebar:#092733] [--sidebar-foreground:#ecf7f6] [--sidebar-primary:#57d8bd] [--sidebar-primary-foreground:#072530] [--sidebar-accent:#143d4a] [--sidebar-accent-foreground:#f6fffe] [--sidebar-border:#1d4b59] [--sidebar-ring:#66e1c6]"
+          style={{
+            "--sidebar": "#092733",
+            "--sidebar-foreground": "#ecf7f6",
+            "--sidebar-primary": "#57d8bd",
+            "--sidebar-primary-foreground": "#072530",
+            "--sidebar-accent": "#143d4a",
+            "--sidebar-accent-foreground": "#f6fffe",
+            "--sidebar-border": "#1d4b59",
+            "--sidebar-ring": "#66e1c6",
+          } as CSSProperties}
           disableTransition={isResizing}
         >
           <SidebarHeader className="h-16 justify-center">
@@ -378,9 +391,10 @@ function DashboardLayoutContent({
                         <SidebarMenuItem key={item.path}>
                           <SidebarMenuButton
                             isActive={isActive}
+                            disabled={item.disabled}
                             aria-current={isActive ? "page" : undefined}
-                            onClick={() => navigateTo(item.path)}
-                            tooltip={item.label}
+                            onClick={() => !item.disabled && navigateTo(item.path)}
+                            tooltip={item.description ?? item.label}
                             className="h-10 transition-all font-normal"
                           >
                             <item.icon
