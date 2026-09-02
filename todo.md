@@ -1440,3 +1440,8 @@
 - [x] Verificar o fluxo disponível de organização demonstrativa, sem criar ou ativar registros.
 - [x] Documentar o procedimento de acesso mínimo, dados sintéticos e limites de segurança.
 - [x] Entregar as instruções sem executar nenhuma operação material.
+
+## Recuperação: prévia temporária indisponível
+- [x] Confirmar o link temporário expirado e preservar os limites de acesso.
+- [x] Reativar a prévia atual e verificar a rota administrativa sem executar mutações.
+- [x] Orientar o acesso pelo painel de Prévia, sem reutilizar endereços temporários antigos.
