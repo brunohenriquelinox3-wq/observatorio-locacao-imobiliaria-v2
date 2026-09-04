@@ -1538,3 +1538,9 @@
 - [x] Manter Parties, Papéis Temporais e Atributos Protegidos separados, ordenados e legíveis, sem expor ou liberar atributos protegidos.
 - [x] Preservar as consultas, comandos, contexto, guards e falha segura existentes sem mudança de modelo ou de alçada.
 - [x] Cobrir rotas, responsividade, acessibilidade, testes e artefatos saneados após o redesenho.
+
+## Correção estrutural: Ativos Urbanos
+- [x] Substituir o hero editorial e os cartões narrativos por jornada operacional com contexto explícito e área ativa de setor.
+- [x] Separar Ativos, Relações e Estados internos em setores ordenados e legíveis, sem misturar controles na mesma tela.
+- [x] Preservar consultas, comandos, contexto, guards, falha segura e limites não financeiros sem mudar modelo ou alçada.
+- [x] Cobrir rotas, responsividade, acessibilidade, testes e artefatos saneados após o redesenho.
