@@ -1510,3 +1510,9 @@
 ## Auditoria visual: colunas e setores reorganizados
 - [x] Verificar em leitura Vendas Urbanas e Locação, incluindo ordem dos setores, rotas principais e setores bloqueados.
 - [x] Registrar lacunas comprovadas de navegação, layout ou estados de bloqueio sem interagir com dados ou comandos.
+
+## Evolução: Empreendimentos e Construtoras em Vendas Urbanas
+- [x] Substituir o bloqueio estrutural do setor por uma jornada de rascunho não financeira, sem construtora, empreendimento, torre, condomínio ou unidade reais.
+- [x] Separar o levantamento de estrutura do eventual cadastro operacional, sem preço, estoque, disponibilidade, publicação, proposta, contrato, comissão, cobrança, pagamento ou repasse.
+- [x] Cobrir a rota e os limites de não persistência com testes, revisão visual, build e artefatos saneados.
+- [x] Eliminar o aviso específico de RLS sem policy no novo recurso com uma policy explícita de negação direta, sem alterar acessos já existentes.
