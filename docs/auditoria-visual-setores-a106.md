@@ -10,7 +10,10 @@
 | `/vendas-urbanas/agenda` | Exibe somente o setor 04 Agenda Interna como ativo, mantendo os demais setores como navegação contextual. Não oferece integração externa ou comunicação. |
 | `/locacao` | Exibe os setores 01 a 05 de Locação em ordem e os setores 06 Contratos e Garantias e 07 Financeiro como bloqueados. |
 | `/locacao/financeiro` | Exibe aviso explícito de setor bloqueado; não contém valores, percentuais, cálculos, contratos, garantias, parcelas, cobrança, pagamentos, repasses ou integrações externas. |
+| `/loteadora/financeiro` | Exibe aviso explícito de setor bloqueado e exige autorização posterior com revisão jurídica-contábil; não contém valores, percentuais, cálculos, parcelas, cobrança, pagamentos, repasses, contratos ou integrações externas. |
 
 ## Conclusão
 
 As rotas verificadas mantêm a separação setorial, os estados vazios seguros e os limites econômico-operacionais. A sidebar global apresenta as colunas em ordem, sem transformar visibilidade em autorização. Não foi identificado defeito adicional de rota, navegação ou bloqueio nesta amostra visual.
+
+Não havia organização ativa devolvida à prévia no momento da auditoria. Por isso, filtros e saídas dependentes de contexto não foram acionados; a limitação foi mantida em vez de contornar identity, membership, grant, vigência ou policy.
