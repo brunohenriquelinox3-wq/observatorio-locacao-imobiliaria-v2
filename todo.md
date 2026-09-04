@@ -1530,6 +1530,22 @@
 ## Auditoria: Perfil de Busca — Vendas Urbanas com contexto
 - [x] Confirmar em modo de leitura que o perfil permanece interno e mínimo, sem endereço detalhado, preço, crédito, financiamento, proposta, reserva, contrato, cobrança ou Financeiro.
 
+## Auditoria: Agenda Interna — Vendas Urbanas com contexto
+- [x] Confirmar em modo de leitura que a agenda permanece interna e sem convite, mensagem, contato, confirmação de visita, sincronização de calendário, proposta, reserva, contrato, cobrança ou Financeiro.
+
+## Auditoria: Perfil de Busca — Locação com contexto
+- [x] Confirmar em modo de leitura que o perfil permanece interno e mínimo, sem endereço detalhado, preço, renda, crédito, garantia, proposta, reserva, contrato, cobrança ou Financeiro.
+
+## Auditoria: Agenda Interna — Locação com contexto
+- [x] Confirmar em modo de leitura que a agenda permanece interna e sem convite, mensagem, contato, confirmação de visita, sincronização de calendário, proposta, reserva, contrato, garantia, cobrança ou Financeiro.
+
+## Auditoria: Estoque e Mapa de Lotes — Loteadora com contexto
+- [x] Confirmar em modo de leitura que Quadra matriz, Lote e Mapa seguem separados, sem disponibilidade comercial, reserva, venda, cliente, proposta, contrato, preço, cobrança ou Financeiro.
+
+## Registro: caminho não canônico de Estoque e Mapa de Lotes — Loteadora
+- [x] Confirmar que o caminho manual que retornou 404 não é uma rota definida; a navegação oficial preserva o caminho canônico de inventário interno, sem alteração de contexto ou bloqueios.
+- [x] Manter a rota canônica já coberta e não adicionar alias especulativo, evitando ampliar a superfície de roteamento sem necessidade comprovada.
+
 ## Auditoria: contexto autorizado da Loteadora
 - [x] Confirmar em modo de leitura que Loteadora reconhece somente a organização autorizada após o login Supabase, sem selecionar, criar ou alterar contexto.
 - [x] Verificar que a rota preserva estados vazios e bloqueios econômicos, sem dados, comandos, contratos, valores, cobrança, pagamento, repasse ou integração externa.
