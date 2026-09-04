@@ -1471,7 +1471,7 @@
 - [x] Auditar rotas e estados vazios de Vendas Urbanas sem criar dados.
 - [x] Auditar rotas e estados vazios de Locação sem criar dados.
 - [x] Verificar filtros e saídas com um contexto já ativo e autorizado, sem criar dados.
-- [ ] Registrar defeitos comprovados e corrigir somente falhas técnicas sem executar mutações.
+- [x] Registrar defeitos comprovados e corrigir somente falhas técnicas sem executar mutações.
 
 ## Auditoria controlada: login na prévia atual
 - [x] Abrir a prévia atual para login e MFA executados diretamente pelo usuário.
@@ -1513,6 +1513,22 @@
 ## Correção: rota de Empreendimentos e Construtoras — Vendas Urbanas
 - [x] Corrigir o erro 404 da rota setorial de Empreendimentos e Construtoras, mantendo a página de estrutura urbana, os contextos e os bloqueios existentes.
 - [x] Cobrir a rota canônica e eventuais aliases definidos com teste, revisão visual e validação integral, sem criar registros ou alterar alçadas.
+
+## Auditoria: Núcleo de Cadastros com contexto autorizado
+- [x] Confirmar em modo de leitura que Party, papéis temporais e atributos protegidos seguem separados, com estados vazios e sem exposição de identificadores, documentos ou dados de outros contextos.
+- [x] Confirmar visualmente que a rota renderiza a separação de Parties, papéis temporais e atributos protegidos em estado seguro sem contexto; a leitura com contexto permanece pendente porque o navegador autenticado não respondeu, sem ação ou dado exposto.
+
+## Auditoria: Ativos Urbanos com contexto autorizado
+- [x] Confirmar em modo de leitura que Ativos, relações e estados internos seguem separados, com estado vazio e sem endereço preciso, disponibilidade, anúncio, preço, proposta, reserva, contrato, cobrança, repasse ou Financeiro.
+
+## Auditoria: Imóveis e Proprietários — Vendas Urbanas com contexto
+- [x] Confirmar em modo de leitura que Party, ativo e vínculo permanecem separados, em estado vazio e sem anúncio, disponibilidade, preço, proposta, reserva, contrato, cobrança, repasse ou Financeiro.
+
+## Auditoria: Imóveis e Proprietários — Locação com contexto
+- [x] Confirmar em modo de leitura que Party, ativo e vínculo permanecem separados, em estado vazio e sem anúncio, disponibilidade, preço, proposta, reserva, contrato, garantia, cobrança, repasse ou Financeiro.
+
+## Auditoria: Perfil de Busca — Vendas Urbanas com contexto
+- [x] Confirmar em modo de leitura que o perfil permanece interno e mínimo, sem endereço detalhado, preço, crédito, financiamento, proposta, reserva, contrato, cobrança ou Financeiro.
 
 ## Auditoria: contexto autorizado da Loteadora
 - [x] Confirmar em modo de leitura que Loteadora reconhece somente a organização autorizada após o login Supabase, sem selecionar, criar ou alterar contexto.
