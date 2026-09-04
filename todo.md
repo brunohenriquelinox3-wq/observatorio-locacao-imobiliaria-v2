@@ -1490,7 +1490,7 @@
 - [x] Adicionar jornada explícita de login Supabase no navegador, sem guardar senha no servidor, em estado global ou em logs.
 - [x] Manter a sessão da plataforma separada da sessão Supabase e impedir qualquer concessão automática de organização, membership, grant, escopo ou perfil.
 - [x] Encerrar somente a sessão Supabase mediante ação consciente, preservando a sessão da plataforma e o fail-closed quando não houver identidade Supabase válida.
-- [ ] Executar manualmente o logout local da sessão Supabase com a identidade do usuário, sem registrar ou compartilhar credenciais e sem encerrar essa sessão de modo automático.
+- [x] Executar manualmente o logout local da sessão Supabase com a identidade do usuário, sem registrar ou compartilhar credenciais e sem encerrar essa sessão de modo automático.
 - [x] Confirmar manualmente o login real e a restauração da sessão no navegador, com organização autorizada disponível para consulta em modo de leitura.
 - [x] Cobrir destino interno, erro genérico, restauração da ponte de sessão, logout local, cabeçalho de identidade e rotas com testes automatizados e revisão visual responsiva.
 - [x] Validar a alteração com suíte, tipagem, build, integridade de diff e artefatos ZIP/HTML saneados, sem inserir registros reais ou sintéticos.
@@ -1498,6 +1498,7 @@
 ## Registro: validação manual de contexto Supabase
 - [x] Confirmar, após o login realizado pelo usuário, que os seletores autorizados de Vendas Urbanas e Locação deixam de retornar lista vazia, sem exibir identificadores técnicos.
 - [x] Confirmar em modo de leitura que Locação continua com estado vazio protegido e que Financeiro permanece bloqueado, sem dados, contratos, garantias, valores, cobrança, pagamento, repasse ou integração externa.
+- [x] Confirmar que o logout local retorna a Locação ao estado sem contexto e sem consulta, preservando a sessão autenticada da plataforma.
 
 ## Auditoria: contexto autorizado da Loteadora
 - [x] Confirmar em modo de leitura que Loteadora reconhece somente a organização autorizada após o login Supabase, sem selecionar, criar ou alterar contexto.
