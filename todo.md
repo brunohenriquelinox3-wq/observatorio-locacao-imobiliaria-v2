@@ -1470,13 +1470,13 @@
 - [x] Auditar rotas e estados vazios de Loteadora sem criar dados.
 - [x] Auditar rotas e estados vazios de Vendas Urbanas sem criar dados.
 - [x] Auditar rotas e estados vazios de Locação sem criar dados.
-- [ ] Verificar filtros e saídas com um contexto já ativo e autorizado, sem criar dados.
+- [x] Verificar filtros e saídas com um contexto já ativo e autorizado, sem criar dados.
 - [ ] Registrar defeitos comprovados e corrigir somente falhas técnicas sem executar mutações.
 
 ## Auditoria controlada: login na prévia atual
-- [ ] Abrir a prévia atual para login e MFA executados diretamente pelo usuário.
-- [ ] Confirmar o contexto autorizado em modo de leitura, sem registrar dados ou executar comandos.
-- [ ] Auditar filtros e saídas das jornadas permitidas sem qualquer mutação.
+- [x] Abrir a prévia atual para login e MFA executados diretamente pelo usuário.
+- [x] Confirmar o contexto autorizado em modo de leitura, sem registrar dados ou executar comandos.
+- [x] Auditar filtros e saídas das jornadas permitidas sem qualquer mutação.
 
 ## Limitação registrada: auditoria de filtros
 - [x] Confirmar que a sessão observada não possui uma organização autorizada selecionada e manter filtros, saídas e consultas condicionados ao contexto ativo, sem tentativa de contorno.
@@ -1490,9 +1490,14 @@
 - [x] Adicionar jornada explícita de login Supabase no navegador, sem guardar senha no servidor, em estado global ou em logs.
 - [x] Manter a sessão da plataforma separada da sessão Supabase e impedir qualquer concessão automática de organização, membership, grant, escopo ou perfil.
 - [x] Encerrar somente a sessão Supabase mediante ação consciente, preservando a sessão da plataforma e o fail-closed quando não houver identidade Supabase válida.
-- [ ] Executar manualmente o login real, a restauração de sessão e o logout local com a identidade do usuário, sem registrar ou compartilhar credenciais.
+- [ ] Executar manualmente o logout local da sessão Supabase com a identidade do usuário, sem registrar ou compartilhar credenciais e sem encerrar essa sessão de modo automático.
+- [x] Confirmar manualmente o login real e a restauração da sessão no navegador, com organização autorizada disponível para consulta em modo de leitura.
 - [x] Cobrir destino interno, erro genérico, restauração da ponte de sessão, logout local, cabeçalho de identidade e rotas com testes automatizados e revisão visual responsiva.
 - [x] Validar a alteração com suíte, tipagem, build, integridade de diff e artefatos ZIP/HTML saneados, sem inserir registros reais ou sintéticos.
+
+## Registro: validação manual de contexto Supabase
+- [x] Confirmar, após o login realizado pelo usuário, que os seletores autorizados de Vendas Urbanas e Locação deixam de retornar lista vazia, sem exibir identificadores técnicos.
+- [x] Confirmar em modo de leitura que Locação continua com estado vazio protegido e que Financeiro permanece bloqueado, sem dados, contratos, garantias, valores, cobrança, pagamento, repasse ou integração externa.
 
 ## Correção estrutural: coluna Loteadora
 - [x] Substituir a página única de Loteadora por setores independentes e ordenados: Cadastro de Loteamentos, Estoque/Mapa de Lotes, Clientes Loteadora, Sócios e Parceiros e Financeiro bloqueado.
