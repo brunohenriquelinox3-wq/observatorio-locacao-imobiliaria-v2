@@ -1528,3 +1528,7 @@
 - [x] Exigir contexto, idempotência, RLS, negação direta e auditoria redigida nas associações estruturais.
 - [x] Manter bloqueados estoque, anúncios, propostas, reservas, contratos, comissões, cobrança, pagamentos, repasses e integrações externas.
 - [x] Validar integração, testes, build, revisão visual e artefatos saneados sem criar registros de negócio.
+
+## Correção: mensagem do setor Empreendimentos e Construtoras
+- [x] Corrigir o texto que ainda trata construtora e torre/bloco como fluxo futuro, mantendo unidades e comercialização explicitamente fora do escopo.
+- [x] Cobrir a mensagem atualizada com teste e verificação visual, sem alterar dados ou comandos.
