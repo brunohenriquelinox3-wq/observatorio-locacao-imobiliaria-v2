@@ -1612,3 +1612,7 @@
 ## Auditoria: Perfil de Busca — Vendas Urbanas e Locação
 - [x] Verificar que os perfis permanecem internos e mínimos, sem endereço detalhado, preço, proposta, reserva, contrato, cobrança ou financeiro.
 - [x] Validar em modo de leitura as rotas, a separação setorial e os bloqueios, sem criar ou alterar registros.
+
+## Auditoria: Agenda Interna — Vendas Urbanas e Locação
+- [x] Verificar que a agenda é interna e limitada, sem visita externa, contato, notificação, calendário integrado, proposta, contrato ou financeiro.
+- [x] Validar em modo de leitura as rotas, os estados e os bloqueios, sem criar ou alterar agendamentos.
