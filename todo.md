@@ -1486,6 +1486,14 @@
 - [x] Confirmar se a resposta vazia decorre de falha segura por identidade, membership, grant, vigência, módulo ou policy, sem criar ou alterar contexto, alçada ou registros.
 - [x] Documentar somente o diagnóstico comprovado e a próxima ação segura, sem executar comandos administrativos.
 
+## Correção: login normal Supabase para contexto autorizado
+- [x] Adicionar jornada explícita de login Supabase no navegador, sem guardar senha no servidor, em estado global ou em logs.
+- [x] Manter a sessão da plataforma separada da sessão Supabase e impedir qualquer concessão automática de organização, membership, grant, escopo ou perfil.
+- [x] Encerrar somente a sessão Supabase mediante ação consciente, preservando a sessão da plataforma e o fail-closed quando não houver identidade Supabase válida.
+- [ ] Executar manualmente o login real, a restauração de sessão e o logout local com a identidade do usuário, sem registrar ou compartilhar credenciais.
+- [x] Cobrir destino interno, erro genérico, restauração da ponte de sessão, logout local, cabeçalho de identidade e rotas com testes automatizados e revisão visual responsiva.
+- [x] Validar a alteração com suíte, tipagem, build, integridade de diff e artefatos ZIP/HTML saneados, sem inserir registros reais ou sintéticos.
+
 ## Correção estrutural: coluna Loteadora
 - [x] Substituir a página única de Loteadora por setores independentes e ordenados: Cadastro de Loteamentos, Estoque/Mapa de Lotes, Clientes Loteadora, Sócios e Parceiros e Financeiro bloqueado.
 - [x] Criar uma navegação operacional contextual para Loteadora, mantendo a hierarquia SUPER ADM → ADM → módulos e os guardas de autorização existentes.

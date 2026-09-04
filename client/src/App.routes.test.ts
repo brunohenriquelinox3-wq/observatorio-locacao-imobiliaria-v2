@@ -7,6 +7,7 @@ describe("rotas da aplicação", () => {
     const appSource = readFileSync(resolve(process.cwd(), "client/src/App.tsx"), "utf8");
 
     [
+      "/entrar",
       "/administracao",
       "/adm",
       "/cadastro-base",

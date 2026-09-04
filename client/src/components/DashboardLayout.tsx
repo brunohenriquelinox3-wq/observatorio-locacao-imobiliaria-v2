@@ -45,7 +45,7 @@ import { getDashboardProfilePresentation } from "@/lib/dashboardProfilePresentat
 import { getSidebarWidthAfterKeyboardCommand } from "@/lib/dashboardSidebarResize";
 import { crmNavigationItems } from "@/lib/crmNavigation";
 import { trpc } from "@/lib/trpc";
-import { ArrowUpRight, Building2, Compass, Landmark, LayoutDashboard, Layers3, LockKeyhole, LogOut, MapPinned, PanelLeft, Search, Users, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, Building2, Compass, KeyRound, Landmark, LayoutDashboard, Layers3, LockKeyhole, LogOut, MapPinned, PanelLeft, Search, Users, type LucideIcon } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -500,11 +500,18 @@ function DashboardLayoutContent({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
+                  onClick={() => navigateTo(`/entrar?proximo=${encodeURIComponent(location)}`)}
+                  className="cursor-pointer"
+                >
+                  <KeyRound className="mr-2 h-4 w-4" />
+                  <span>Validar contexto</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
                   onClick={logout}
                   className="cursor-pointer text-destructive focus:text-destructive"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Encerrar sessão</span>
+                  <span>Encerrar plataforma</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -19,6 +19,7 @@ const RentalPipeline = lazy(() => import("./pages/RentalPipeline"));
 const SubdivisionFoundation = lazy(() => import("./pages/SubdivisionFoundation"));
 const LotInventory = lazy(() => import("./pages/LotInventory"));
 const AccountActivation = lazy(() => import("./pages/AccountActivation"));
+const SupabaseLogin = lazy(() => import("./pages/SupabaseLogin"));
 
 function RouteLoading() {
   return <main className="min-h-screen bg-[#f7f4eb] px-6 py-16 text-[#173b4d]"><p role="status" className="mx-auto max-w-xl font-mono text-xs font-semibold tracking-[.12em]">CARREGANDO ÁREA PROTEGIDA</p></main>;
@@ -38,6 +39,7 @@ function Router() {
 
   // make sure to consider if you need authentication for certain routes
   return <Suspense fallback={<RouteLoading />}><Switch>
+    <Route path={"/entrar"} component={SupabaseLogin} />
     <Route path={"/ativar-conta"} component={AccountActivation} />
     <Route path={"/vendas"} component={VendasUrbanas} />
     <Route path={"/crm"} component={CrmStrategy} />
