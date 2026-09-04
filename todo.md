@@ -1592,3 +1592,7 @@
 ## Auditoria: Vendas de Lotes
 - [x] Verificar que a jornada mantém somente o rascunho interno entre lote e cliente, sem reserva, proposta, contrato, valor, cobrança ou financeiro.
 - [x] Validar em modo de leitura a rota, as dependências de contexto e os controles bloqueados, sem criar ou alterar registros.
+
+## Auditoria: Estoque/Mapa de Lotes
+- [x] Verificar a nomenclatura Quadra matriz → Lote e o limite de até 100 lotes por Quadra, sem liberar estoque comercial ou disponibilidade.
+- [x] Validar em modo de leitura a rota, o mapa, os estados internos e os bloqueios, sem criar ou alterar inventário.
