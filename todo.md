@@ -1604,3 +1604,7 @@
 ## Auditoria: Clientes e Leads — Vendas Urbanas
 - [x] Verificar que a jornada mantém captação e organização interna em rascunho, sem proposta, reserva, contrato, comissão, cobrança ou financeiro.
 - [x] Validar em modo de leitura a rota, a separação setorial e os bloqueios, sem criar ou alterar registros.
+
+## Auditoria: Imóveis e Proprietários — Vendas Urbanas e Locação
+- [x] Verificar que as duas jornadas preservam Party, ativo e vínculo em rascunho, sem anúncio, preço, proposta, reserva, contrato, cobrança ou financeiro.
+- [x] Validar em modo de leitura as rotas, a separação setorial e os bloqueios, sem criar ou alterar registros.
