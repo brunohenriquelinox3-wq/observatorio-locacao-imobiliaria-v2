@@ -1542,6 +1542,15 @@
 ## Auditoria: Estoque e Mapa de Lotes — Loteadora com contexto
 - [x] Confirmar em modo de leitura que Quadra matriz, Lote e Mapa seguem separados, sem disponibilidade comercial, reserva, venda, cliente, proposta, contrato, preço, cobrança ou Financeiro.
 
+## Auditoria: Clientes e Leads — Vendas Urbanas com contexto
+- [x] Confirmar em modo de leitura que Party, lead, origem, etapa e agenda permanecem separados em rascunho, sem proposta, reserva, contrato, ativo específico, preço, comissão, cobrança ou Financeiro.
+
+## Auditoria: Clientes e Interessados — Locação com contexto
+- [x] Confirmar em modo de leitura que Party, entrada, origem, jornada e etapa permanecem separados em rascunho, sem garantia, cadastro de locação, proposta, contrato, cobrança, pagamento ou Financeiro.
+
+## Auditoria: Clientes Loteadora com contexto
+- [x] Confirmar em modo de leitura que o setor reutiliza Party canônica e papel temporal, sem dossiê, anexos, venda, reserva, contrato, cobrança, pagamento, repasse ou Financeiro.
+
 ## Registro: caminho não canônico de Estoque e Mapa de Lotes — Loteadora
 - [x] Confirmar que o caminho manual que retornou 404 não é uma rota definida; a navegação oficial preserva o caminho canônico de inventário interno, sem alteração de contexto ou bloqueios.
 - [x] Manter a rota canônica já coberta e não adicionar alias especulativo, evitando ampliar a superfície de roteamento sem necessidade comprovada.
