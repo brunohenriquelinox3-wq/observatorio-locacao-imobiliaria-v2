@@ -1499,6 +1499,7 @@
 - [x] Confirmar, após o login realizado pelo usuário, que os seletores autorizados de Vendas Urbanas e Locação deixam de retornar lista vazia, sem exibir identificadores técnicos.
 - [x] Confirmar em modo de leitura que Locação continua com estado vazio protegido e que Financeiro permanece bloqueado, sem dados, contratos, garantias, valores, cobrança, pagamento, repasse ou integração externa.
 - [x] Confirmar que o logout local retorna a Locação ao estado sem contexto e sem consulta, preservando a sessão autenticada da plataforma.
+- [x] Confirmar visualmente que seletores e comandos de rascunho voltam a estado inativo sem contexto, sem expor existência de registros ou permitir mutação.
 
 ## Auditoria: contexto autorizado da Loteadora
 - [x] Confirmar em modo de leitura que Loteadora reconhece somente a organização autorizada após o login Supabase, sem selecionar, criar ou alterar contexto.
