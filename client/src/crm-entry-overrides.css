@@ -3,3 +3,14 @@
   padding: 0;
   background: transparent;
 }
+
+@media (min-width: 761px) and (max-width: 1020px) {
+  .crm-entry__header {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .crm-entry__header-status {
+    grid-column: 2;
+    max-width: none;
+  }
+}

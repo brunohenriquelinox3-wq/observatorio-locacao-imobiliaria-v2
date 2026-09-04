@@ -26,4 +26,9 @@ describe("entrada operacional do CRM", () => {
     expect(overrides).toContain("padding: 0");
     expect(overrides).toContain("background: transparent");
   });
+  it("evita a compressão do cabeçalho entre os breakpoints móvel e desktop", () => {
+    expect(overrides).toContain("@media (min-width: 761px) and (max-width: 1020px)");
+    expect(overrides).toContain("grid-template-columns: 52px minmax(0, 1fr)");
+    expect(overrides).toContain("grid-column: 2");
+  });
 });

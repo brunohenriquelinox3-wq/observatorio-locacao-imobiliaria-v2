@@ -1773,3 +1773,5 @@
 ## Revisão visual: superfícies operacionais sem contexto
 - [x] Verificar as rotas principais em desktop e móvel para identificar somente quebras comprovadas de navegação, hierarquia, contraste, sobreposição, rolagem ou responsividade, sem criar dados ou acionar comandos.
 - [x] Corrigir a legibilidade do rótulo nos controles desabilitados de abertura de coluna, preservando o bloqueio por ausência de contexto e a distinção visual de estado inativo.
+- [x] Complementar a verificação segura das rotas operacionais representativas em tablet e tela ampla, sem contexto, dados ou comandos.
+- [x] Corrigir o cabeçalho da entrada operacional na faixa de tablet, onde a grade de três colunas comprime título e descrição, sem alterar conteúdo, navegação ou controles de segurança.
