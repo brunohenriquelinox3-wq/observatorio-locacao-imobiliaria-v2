@@ -3,6 +3,8 @@
  * A página trata preço como sinal e dossiê como evidência, com a mesma estética
  * editorial-cartográfica do observatório de locação.
  */
+import "../vendas.css";
+import "../vendas-review.css";
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, XAxis, YAxis } from "recharts";
 import {

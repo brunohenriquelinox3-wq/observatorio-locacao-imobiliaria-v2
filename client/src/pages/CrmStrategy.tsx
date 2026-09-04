@@ -3,6 +3,7 @@
  * Estilo desta página: dossiê editorial-cartográfico em papel mineral, azul cadastral, argila para decisão e verde para governança.
  * A interface traduz estudo em arquitetura de produto, evidência, plataforma governada e operação contínua.
  */
+import "../crm.css";
 import { useState } from "react";
 import "../finance.css";
 import "../admin.css";

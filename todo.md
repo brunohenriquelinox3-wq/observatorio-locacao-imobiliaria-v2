@@ -1568,3 +1568,8 @@
 - [x] Manter SUPER ADM e ADM no topo da hierarquia e não conceder contexto, membership, grant, escopo ou alçada pelo item de navegação.
 - [x] Exibir setores sem alçada como bloqueados e inacessíveis, sem ocultar sua existência nem executar consultas ou comandos indevidos.
 - [x] Cobrir ordem, bloqueio, teclado, responsividade, testes e artefatos saneados após a atualização da sidebar.
+
+## Desempenho: bundle inicial da navegação setorial
+- [x] Identificar a origem mensurada do bundle inicial de aproximadamente 1,02 MB sem minificação adicional e da folha principal de aproximadamente 242 KB.
+- [x] Aplicar somente uma otimização de carregamento com ganho mensurável, preservando navegação, autorização e funcionalidade.
+- [x] Remedir o bundle, registrar a comparação, validar regressões e gerar artefatos saneados somente se o ganho for comprovado.
