@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { crmNavigationItems } from "./lib/crmNavigation";
 
 describe("rotas da aplicação", () => {
   it("mantém os caminhos administrativos e operacionais principais registrados", () => {
@@ -36,6 +37,14 @@ describe("rotas da aplicação", () => {
       "/locacao/contratos",
       "/locacao/financeiro",
     ].forEach((path) => {
+      expect(appSource).toContain(`path={"${path}"}`);
+    });
+  });
+
+  it("registra cada caminho canônico exposto na navegação", () => {
+    const appSource = readFileSync(resolve(process.cwd(), "client/src/App.tsx"), "utf8");
+
+    crmNavigationItems.forEach(({ path }) => {
       expect(appSource).toContain(`path={"${path}"}`);
     });
   });
