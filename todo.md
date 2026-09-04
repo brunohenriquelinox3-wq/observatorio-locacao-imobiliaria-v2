@@ -1596,3 +1596,7 @@
 ## Auditoria: Estoque/Mapa de Lotes
 - [x] Verificar a nomenclatura Quadra matriz → Lote e o limite de até 100 lotes por Quadra, sem liberar estoque comercial ou disponibilidade.
 - [x] Validar em modo de leitura a rota, o mapa, os estados internos e os bloqueios, sem criar ou alterar inventário.
+
+## Auditoria: Cadastro de Loteamentos
+- [x] Verificar o loteamento em rascunho, a referência interna e a Quadra matriz, sem localização, área, matrícula, lote, mapa, estoque, venda ou financeiro.
+- [x] Validar em modo de leitura a rota, a nomenclatura e os bloqueios, sem criar ou alterar registros.
