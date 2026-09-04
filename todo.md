@@ -1512,6 +1512,9 @@
 ## Auditoria: Propostas, Reservas e Contratos bloqueado — Vendas Urbanas com contexto
 - [x] Confirmar em modo de leitura que o alias resolve o Setor 06 bloqueado mesmo com contexto autorizado, sem proposta, reserva, contrato, assinatura, preço, cobrança, pagamento, repasse ou integração externa.
 
+## Auditoria: Contratos e Garantias bloqueado — Locação com contexto
+- [x] Confirmar em modo de leitura que a rota permanece bloqueada mesmo com contexto autorizado e não expõe contrato, garantia, assinatura, preço, cobrança, pagamento, repasse ou integração externa.
+
 ## Correção estrutural: coluna Loteadora
 - [x] Substituir a página única de Loteadora por setores independentes e ordenados: Cadastro de Loteamentos, Estoque/Mapa de Lotes, Clientes Loteadora, Sócios e Parceiros e Financeiro bloqueado.
 - [x] Criar uma navegação operacional contextual para Loteadora, mantendo a hierarquia SUPER ADM → ADM → módulos e os guardas de autorização existentes.
