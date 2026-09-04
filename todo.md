@@ -1620,3 +1620,6 @@
 ## Auditoria: Administração de Locação
 - [x] Verificar que a jornada organiza somente o interesse de administração em rascunho, sem mandato, exclusividade, contrato, cobrança, portal ou financeiro.
 - [x] Validar em modo de leitura a rota, os estados e os bloqueios, sem criar ou alterar registros.
+
+## Auditoria: Financeiro bloqueado — Vendas Urbanas
+- [x] Confirmar em modo de leitura que a rota Financeiro permanece bloqueada e não expõe valores, cálculos, cobrança, pagamento, repasse, contrato ou integração externa.
