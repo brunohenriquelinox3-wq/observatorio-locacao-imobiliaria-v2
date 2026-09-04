@@ -1506,3 +1506,7 @@
 - [x] Exibir a hierarquia SUPER ADM → ADM → Loteadora → Vendas Urbanas → Locação e os setores internos na ordem aprovada.
 - [x] Aplicar estado visual bloqueado e inacessível aos setores sem alçada, sem conceder acesso ou permitir emissão de comandos pela interface.
 - [x] Cobrir a regra de visibilidade e bloqueio com testes, verificação visual desktop/mobile e artefatos saneados.
+
+## Auditoria visual: colunas e setores reorganizados
+- [x] Verificar em leitura Vendas Urbanas e Locação, incluindo ordem dos setores, rotas principais e setores bloqueados.
+- [x] Registrar lacunas comprovadas de navegação, layout ou estados de bloqueio sem interagir com dados ou comandos.
