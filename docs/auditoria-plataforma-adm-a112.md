@@ -15,3 +15,7 @@ O Painel ADM preserva corretamente seus estados sem contexto, os três módulos 
 ## Revisão pós-correção
 
 O Painel ADM redesenhado passou a mostrar uma barra operacional compacta, a subordinação explícita ao SUPER ADM, três regras de funcionamento e a grade ordenada **Loteadora → Vendas Urbanas → Locação**. Cada frente sem contexto continua visível e marcada como bloqueada. A inspeção não acionou qualquer contexto, formulário, comando ou mudança de alçada.
+
+## Central de Plataforma pós-correção
+
+A Central de Plataforma recebeu tratamento operacional equivalente: barra de status compacta, grade de governança, blocos administrativos com bordas e estados legíveis e tipografia de aplicação. A revisão em leitura confirmou que os formulários de identidade, MFA e console continuam presentes, porém nenhum controle foi tocado. A hierarquia SUPER ADM → ADM e os comandos governados permanecem explícitos.
