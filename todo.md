@@ -1600,3 +1600,7 @@
 ## Auditoria: Cadastro de Loteamentos
 - [x] Verificar o loteamento em rascunho, a referência interna e a Quadra matriz, sem localização, área, matrícula, lote, mapa, estoque, venda ou financeiro.
 - [x] Validar em modo de leitura a rota, a nomenclatura e os bloqueios, sem criar ou alterar registros.
+
+## Auditoria: Clientes e Leads — Vendas Urbanas
+- [x] Verificar que a jornada mantém captação e organização interna em rascunho, sem proposta, reserva, contrato, comissão, cobrança ou financeiro.
+- [x] Validar em modo de leitura a rota, a separação setorial e os bloqueios, sem criar ou alterar registros.
