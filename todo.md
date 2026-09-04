@@ -1504,6 +1504,9 @@
 ## Auditoria: Vendas Urbanas pós-logout de contexto
 - [x] Confirmar em modo de leitura que Vendas Urbanas retorna ao seletor vazio, à ausência de consultas e a controles de rascunho inativos após o logout local Supabase.
 
+## Auditoria: Loteadora pós-logout de contexto
+- [x] Confirmar em modo de leitura que Loteadora retorna ao seletor vazio, à ausência de consultas e a controles de rascunho inativos após o logout local Supabase.
+
 ## Auditoria: contexto autorizado da Loteadora
 - [x] Confirmar em modo de leitura que Loteadora reconhece somente a organização autorizada após o login Supabase, sem selecionar, criar ou alterar contexto.
 - [x] Verificar que a rota preserva estados vazios e bloqueios econômicos, sem dados, comandos, contratos, valores, cobrança, pagamento, repasse ou integração externa.
