@@ -1608,3 +1608,7 @@
 ## Auditoria: Imóveis e Proprietários — Vendas Urbanas e Locação
 - [x] Verificar que as duas jornadas preservam Party, ativo e vínculo em rascunho, sem anúncio, preço, proposta, reserva, contrato, cobrança ou financeiro.
 - [x] Validar em modo de leitura as rotas, a separação setorial e os bloqueios, sem criar ou alterar registros.
+
+## Auditoria: Perfil de Busca — Vendas Urbanas e Locação
+- [x] Verificar que os perfis permanecem internos e mínimos, sem endereço detalhado, preço, proposta, reserva, contrato, cobrança ou financeiro.
+- [x] Validar em modo de leitura as rotas, a separação setorial e os bloqueios, sem criar ou alterar registros.
