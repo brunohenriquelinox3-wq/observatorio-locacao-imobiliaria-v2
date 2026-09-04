@@ -1532,3 +1532,9 @@
 ## Correção: mensagem do setor Empreendimentos e Construtoras
 - [x] Corrigir o texto que ainda trata construtora e torre/bloco como fluxo futuro, mantendo unidades e comercialização explicitamente fora do escopo.
 - [x] Cobrir a mensagem atualizada com teste e verificação visual, sem alterar dados ou comandos.
+
+## Correção estrutural: Núcleo de Cadastros
+- [x] Substituir o hero editorial e os cartões narrativos da base cadastral por uma jornada operacional de CRM com navegação contextual e área ativa de setor.
+- [x] Manter Parties, Papéis Temporais e Atributos Protegidos separados, ordenados e legíveis, sem expor ou liberar atributos protegidos.
+- [x] Preservar as consultas, comandos, contexto, guards e falha segura existentes sem mudança de modelo ou de alçada.
+- [x] Cobrir rotas, responsividade, acessibilidade, testes e artefatos saneados após o redesenho.
