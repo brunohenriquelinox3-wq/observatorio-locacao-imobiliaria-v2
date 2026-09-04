@@ -22,6 +22,7 @@ describe("rotas da aplicação", () => {
       "/vendas-urbanas",
       "/vendas-urbanas/imoveis-proprietarios",
       "/vendas-urbanas/empreendimentos",
+      "/vendas-urbanas/empreendimentos-construtoras",
       "/vendas-urbanas/agenda",
       "/vendas-urbanas/perfil-busca",
       "/vendas-urbanas/propostas",

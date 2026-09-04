@@ -31,6 +31,7 @@ const urbanSectorByPath: Record<string, UrbanSector> = {
   "/vendas-urbanas": "clients",
   "/vendas-urbanas/imoveis-proprietarios": "properties",
   "/vendas-urbanas/empreendimentos": "developments",
+  "/vendas-urbanas/empreendimentos-construtoras": "developments",
   "/vendas-urbanas/agenda": "agenda",
   "/vendas-urbanas/perfil-busca": "search",
   "/vendas-urbanas/propostas": "proposals",

@@ -57,6 +57,7 @@ function Router() {
     <Route path={"/loteadora"} component={SubdivisionFoundation} />
     <Route path={"/vendas-urbanas/imoveis-proprietarios"} component={UrbanPipeline} />
     <Route path={"/vendas-urbanas/empreendimentos"} component={UrbanPipeline} />
+    <Route path={"/vendas-urbanas/empreendimentos-construtoras"} component={UrbanPipeline} />
     <Route path={"/vendas-urbanas/agenda"} component={UrbanPipeline} />
     <Route path={"/vendas-urbanas/perfil-busca"} component={UrbanPipeline} />
     <Route path={"/vendas-urbanas/propostas"} component={UrbanPipeline} />

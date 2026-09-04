@@ -1507,6 +1507,13 @@
 ## Auditoria: Loteadora pós-logout de contexto
 - [x] Confirmar em modo de leitura que Loteadora retorna ao seletor vazio, à ausência de consultas e a controles de rascunho inativos após o logout local Supabase.
 
+## Auditoria: Empreendimentos e Construtoras — Vendas Urbanas com contexto
+- [x] Confirmar em modo de leitura que a jornada de estrutura urbana preserva empreendimento, construtora e torre/bloco como rascunhos separados, sem anúncio, disponibilidade, preço, proposta, reserva, contrato, comissão, cobrança, repasse ou Financeiro.
+
+## Correção: rota de Empreendimentos e Construtoras — Vendas Urbanas
+- [x] Corrigir o erro 404 da rota setorial de Empreendimentos e Construtoras, mantendo a página de estrutura urbana, os contextos e os bloqueios existentes.
+- [x] Cobrir a rota canônica e eventuais aliases definidos com teste, revisão visual e validação integral, sem criar registros ou alterar alçadas.
+
 ## Auditoria: contexto autorizado da Loteadora
 - [x] Confirmar em modo de leitura que Loteadora reconhece somente a organização autorizada após o login Supabase, sem selecionar, criar ou alterar contexto.
 - [x] Verificar que a rota preserva estados vazios e bloqueios econômicos, sem dados, comandos, contratos, valores, cobrança, pagamento, repasse ou integração externa.
