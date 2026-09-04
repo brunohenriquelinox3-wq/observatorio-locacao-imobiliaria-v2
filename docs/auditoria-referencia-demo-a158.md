@@ -64,3 +64,7 @@ Como medida de contenção, ficam proibidas nesta auditoria externa as ações p
 | Relatórios cuja granularidade não esteja comprovada | Não demonstrável no corte atual | Somente reconsiderar com uma visualização agregada previamente confirmada e sem identificadores |
 
 Com essa classificação, não há nova tela que possa ser aberta com segurança suficiente a partir do menu atual. A auditoria externa fica limitada ao registro das superfícies já demonstradas e das lacunas; a ampliação requer um ambiente de demonstração sem registros individuais por padrão ou orientação explícita do usuário sobre uma visualização agregada comprovadamente desidentificada.
+
+## Disponibilidade intermitente da sessão
+
+Depois da contenção, uma nova leitura do endereço de dashboard retornou à página de login no canal compartilhado. Como o objetivo não admite envio de credenciais, nova autenticação ou tentativas repetidas, a auditoria agregada foi interrompida. A disponibilidade de uma sessão autenticada em uma janela visual não é tratada como evidência de que a mesma sessão está disponível no canal de leitura; uma nova retomada só deve ocorrer quando a sessão compartilhada puder ser confirmada antes de qualquer exploração.

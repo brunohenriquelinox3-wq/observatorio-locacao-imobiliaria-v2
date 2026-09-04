@@ -1765,3 +1765,7 @@
 ## Contenção: abertura inadvertida de agenda demonstrativa
 - [x] Retornar ao dashboard imediatamente após uma abertura não intencional de agenda que exibiu registros individuais, sem selecionar, rolar, registrar ou reproduzir dados pessoais.
 - [x] Reforçar o protocolo externo para bloquear cliques por índices potencialmente instáveis e classificar a navegação futura sem abrir listas, agendas ou detalhes.
+
+## Auditoria agregada: dashboard do CRM de referência
+- [ ] Examinar somente a composição agregada de indicadores, ações de acesso e hierarquia visual, sem abrir listas, agendas, detalhes, filtros ou transcrever métricas e dados individuais.
+- [x] Interromper a auditoria agregada quando a sessão compartilhada retornou ao login, sem nova tentativa de credencial ou acesso a dados individuais.
