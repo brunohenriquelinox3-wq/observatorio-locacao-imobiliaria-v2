@@ -1501,6 +1501,9 @@
 - [x] Confirmar que o logout local retorna a Locação ao estado sem contexto e sem consulta, preservando a sessão autenticada da plataforma.
 - [x] Confirmar visualmente que seletores e comandos de rascunho voltam a estado inativo sem contexto, sem expor existência de registros ou permitir mutação.
 
+## Auditoria: Vendas Urbanas pós-logout de contexto
+- [x] Confirmar em modo de leitura que Vendas Urbanas retorna ao seletor vazio, à ausência de consultas e a controles de rascunho inativos após o logout local Supabase.
+
 ## Auditoria: contexto autorizado da Loteadora
 - [x] Confirmar em modo de leitura que Loteadora reconhece somente a organização autorizada após o login Supabase, sem selecionar, criar ou alterar contexto.
 - [x] Verificar que a rota preserva estados vazios e bloqueios econômicos, sem dados, comandos, contratos, valores, cobrança, pagamento, repasse ou integração externa.
