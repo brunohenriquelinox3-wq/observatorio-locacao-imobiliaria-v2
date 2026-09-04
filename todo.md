@@ -1782,3 +1782,13 @@
 ## Regressões seguras: Vendas Urbanas e Locação
 - [x] Cobrir que as consultas operacionais de Vendas Urbanas e Locação exigem sessão e contexto válidos, e que as mutações permanecem atrás de submissões explícitas.
 - [x] Preservar em regressão os setores de propostas, contratos, garantias e financeiro como bloqueados, sem consultas ou comandos materiais.
+
+## Atualização setorial: Loteadora
+- [x] Inventariar a arquitetura atual de Cadastro de Loteamentos, Estoque/Mapa de Lotes, Clientes Loteadora, Sócios e Parceiros e Vendas de Lotes, preservando o Financeiro bloqueado.
+- [x] Pesquisar referências, práticas operacionais e exigências públicas aplicáveis a loteamentos, inventário, governança e operação imobiliária no Brasil.
+- [x] Consolidar um blueprint de Loteadora que separe núcleo não financeiro imediato de contratos, financeiro, boletos, cobrança, pagamentos, repasses e integrações condicionados a validações específicas.
+- [x] Implementar o primeiro aprimoramento setorial não financeiro e não contratual com migração, RLS/RPCs fail-closed, testes, revisão visual e artefatos saneados.
+- [x] Criar a ficha de preparação operacional por loteamento em rascunho, com estados enumerados de planejamento, preparação municipal, preparação registral e preparação de implantação.
+- [x] Exigir que o responsável interno seja um vínculo temporal elegível do mesmo loteamento e que cada comando preserve organização, módulo, finalidade, correlação, idempotência e auditoria redigida.
+- [x] Expor a ficha somente no Setor 01, sem nomes pessoais, documentos, localização, área, custo, contrato, reserva, proposta, cobrança ou financeiro.
+- [x] Cobrir migração, serviço, contrato, roteamento, UI e comportamento fail-closed por testes automatizados antes da validação completa.

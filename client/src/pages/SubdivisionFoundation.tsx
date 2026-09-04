@@ -10,6 +10,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { attachmentIntentSelectionLabel, buyerClientSelectionLabel, saleDraftSelectionLabel } from "@/lib/subdivisionDraftSelection";
 import { subdivisionPartyRoleSelectionLabel } from "@/lib/subdivisionPartyRoleSelection";
 import { trpc } from "@/lib/trpc";
+import { SubdivisionPreparationProfile } from "@/components/SubdivisionPreparationProfile";
 import { crmNavigationItems } from "@/lib/crmNavigation";
 import { Building2, CalendarClock, CircleAlert, Compass, FileStack, House, LandPlot, Layers3, LockKeyhole, Map, ShieldCheck, UsersRound, Workflow } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -280,6 +281,14 @@ export default function SubdivisionFoundation() {
           {isWorkspaceReady && developmentsQuery.data?.length === 0 && <div className="subdivision-foundation-empty"><LandPlot size={18} /><p>Nenhum loteamento em rascunho foi devolvido para este contexto. A resposta não revela outros empreendimentos.</p></div>}
           {isWorkspaceReady && developmentsQuery.data && developmentsQuery.data.length > 0 && <div className="subdivision-foundation-list__rows">{developmentsQuery.data.map((development) => <article key={development.developmentId}><span>Loteamento em rascunho</span><h3>{development.internalReference}</h3><p><b>{workingPhases[development.workingPhase]}</b> · criado em {new Date(development.createdAt).toLocaleString("pt-BR")}</p><p className="subdivision-foundation-list__note">Referência operacional do loteamento no contexto atual.</p></article>)}</div>}
         </section>
+
+        <SubdivisionPreparationProfile
+          context={context}
+          isContextReady={isContextReady}
+          isWorkspaceReady={isWorkspaceReady}
+          developments={developmentsQuery.data}
+          internalPartyRoles={internalPartyRolesQuery.data}
+        />
 
         <section id="subdivision-inventory" className="subdivision-foundation-workspace" aria-labelledby="subdivision-block-title">
           <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">04 · QUADRA MATRIZ</p><h2 id="subdivision-block-title">Quadra N é a matriz — os lotes continuam fora deste corte.</h2></div><p>Selecione um loteamento retornado pelo contexto e registre somente o número da Quadra. Nenhum lote, mapa, estoque, valor ou disponibilidade é criado.</p></div>

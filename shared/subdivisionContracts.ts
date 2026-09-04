@@ -87,6 +87,35 @@ export const draftSubdivisionDevelopmentInputSchema = subdivisionContextSchema.e
   workingPhase: subdivisionDevelopmentPhaseSchema,
 });
 
+export const subdivisionPlanningStateSchema = z.enum([
+  "reference",
+  "internal_study",
+  "project_preparation",
+  "internal_review",
+]);
+
+export const subdivisionCompliancePreparationStateSchema = z.enum([
+  "not_started",
+  "internal_organization",
+  "evidence_for_review",
+]);
+
+export const subdivisionImplementationPreparationStateSchema = z.enum([
+  "not_started",
+  "internal_planning",
+  "review_required",
+]);
+
+export const draftSubdivisionDevelopmentPreparationProfileInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  developmentId: z.string().uuid(),
+  planningState: subdivisionPlanningStateSchema,
+  municipalPreparationState: subdivisionCompliancePreparationStateSchema,
+  registrationPreparationState: subdivisionCompliancePreparationStateSchema,
+  implementationPreparationState: subdivisionImplementationPreparationStateSchema,
+  responsibleInternalPartyRoleId: z.string().uuid().nullable(),
+});
+
 export type SubdivisionContext = z.infer<typeof subdivisionContextSchema>;
 export type DraftSubdivisionDevelopmentInput = z.infer<typeof draftSubdivisionDevelopmentInputSchema>;
 export type DraftSubdivisionBlockInput = z.infer<typeof draftSubdivisionBlockInputSchema>;
@@ -100,3 +129,4 @@ export type DraftSubdivisionSaleDraftCoBuyerInput = z.infer<typeof draftSubdivis
 export type DraftSubdivisionEconomicRuleSetInput = z.infer<typeof draftSubdivisionEconomicRuleSetInputSchema>;
 export type DraftSubdivisionEconomicRuleComponentInput = z.infer<typeof draftSubdivisionEconomicRuleComponentInputSchema>;
 export type DraftSubdivisionEconomicRuleComponentRoleReferenceInput = z.infer<typeof draftSubdivisionEconomicRuleComponentRoleReferenceInputSchema>;
+export type DraftSubdivisionDevelopmentPreparationProfileInput = z.infer<typeof draftSubdivisionDevelopmentPreparationProfileInputSchema>;

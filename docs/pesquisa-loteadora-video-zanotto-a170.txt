@@ -1,0 +1,73 @@
+Starting video analysis...
+Submitting video analysis task...
+Task submitted (ID: video-analysis-26a0cd63-0c43-4ce9-a65c-30afaf2e2be1)
+[8s] Status: Analyzing video content with AI...
+[33s] Still processing, please wait...
+[1m3s] Still processing, please wait...
+[1m33s] Still processing, please wait...
+[2m3s] Still processing, please wait...
+[2m6s] Status: Analysis completed
+[2m6s] Analysis completed!
+Full analysis result saved to: /home/ubuntu/video_QscV13CYn8w_analysis_20260904_233532.md
+Note: This tool performs AI-based visual and audio analysis, not verbatim transcription. For detailed speech transcription, use `manus-speech-to-text` instead.
+Analysis result:
+
+Com base na análise detalhada do vídeo fornecido, abaixo está a extração exaustiva das informações focadas na gestão de loteamentos e na transformação da intenção em atendimento e vendas, estruturada conforme solicitado:
+
+### (A) Credenciais e contexto do participante
+*   **Nome:** Gustavo Zanotto.
+*   **Experiência:** 25 anos de atuação no mercado imobiliário.
+*   **Formação e Início:** Formado em Engenharia Civil. Ingressou no mercado imobiliário no ano 2000. Morou nos Estados Unidos, onde conheceu o setor de *Real Estate*, visitando obras e conversando com imobiliárias e incorporadoras.
+*   **Transição de Carreira:** Ao retornar ao Brasil, foi atuar com comunicação e marketing em construtoras e incorporadoras na cidade de Campinas (SP). Em 2014, pediu demissão de uma grande incorporadora em São Paulo para prestar consultoria em lançamentos do mercado primário.
+*   **Atuação Atual:** Profissional de inovação e estratégia. Co-founder do *PropTalks* (canal de podcast). Reconhecido como Top 15 Influencer Proptech LATAM e Top 25 Influencer do mercado imobiliário brasileiro. Atua com consultoria, comunicação e palestras (embora prefira o termo "transmissor de conteúdo").
+*   **Foco:** Há 10 anos foca especificamente no mercado de luxo, altíssimo padrão, tecnologia, inovação e tendências.
+
+### (B) Citações diretas ou quase diretas sobre processos, dados, marca, atendimento e operação
+*   **Sobre Marketing:** "O nosso mercado imobiliário não entende o que é marketing." / "Marketing não é publicidade... marketing é você agir no mercado, é você movimentar o mercado. É você criar movimentos que façam com que as pessoas te encontrem." / "Marketing são todas as estratégias que você cria para fazer o seu produto ou serviço ser vendável."
+*   **Sobre Loteamentos:** "Loteamento para mim é algo que você só tangibiliza quando você pisa na terra. Você tem que levar a pessoa lá para pisar na terra. É diferente de você comprar uma incorporação vertical onde a pessoa entra numa sala de vendas, tem material, tem apartamento modelo."
+*   **Sobre o Propósito do Loteador:** "O loteador não pode só pensar em fracionar a terra e vender. Ele tem que ter vocação, tem que ter propósito para aquela fração que ele vai distribuir para o mercado."
+*   **Sobre o Corretor de Imóveis:** "A barreira de entrada hoje para você ser corretor... qualquer pessoa pode fazer um curso rápido de TTI e virar um corretor." / "O corretor vira corretor no dia a dia. Ele vai apanhar no começo para depois entender o que é o nosso mercado." / "Existe mais corretor de palco do que corretor de pasta. Eles querem ser celebridades, subir em palco, fazer palestra."
+*   **Sobre o Cliente de Luxo:** "O dinheiro do teu cliente vai comprar qualquer coisa. A única coisa que ele não compra é a essência do luxo." / "O cliente do altíssimo padrão... ele quer tranquilidade, ele quer o que a gente chama de luxo silencioso. Ele não quer aparecer, não quer fazer barulho, ele tá buscando bem-estar."
+*   **Sobre Vendas de Alto Padrão:** "Você não pode pegar uma equipe de vendas que tá sempre falando de classe econômica e pôr esse cara para falar de altíssimo padrão. Os discursos são muito diferentes." / "Se o cara do altíssimo padrão fizer uma única pergunta sobre a madeira da escada... e ele [corretor] não souber responder, a pessoa vai olhar para ele, vai falar 'ok, entendi', vai continuar no atendimento, mas não faz o fechamento."
+*   **Sobre Marcas (Collabs):** "O mercado imobiliário é a última barreira que elas [marcas de luxo] tinham para se perpetuar." / "A marca quer que o incorporador seja um aliado dela... se você errar, você vai pôr a perder tudo o que você criou."
+
+### (C) Todos os dados, datas, números e ferramentas mencionados
+*   **Datas e Prazos:** 
+    *   2000: Ano de ingresso de Zanotto no mercado.
+    *   2010: Trabalhava em uma incorporadora em São Paulo.
+    *   2014: Ano em que pediu demissão para abrir consultoria.
+    *   2015: Viagem a Miami para estudar o mercado.
+    *   2020: Criação da ferramenta Urbia pelo Grupo Sólido.
+    *   1995: Ano da apostila de engenharia que Zanotto encontrou ao fazer o curso de TTI (em 2022).
+    *   Tempo de formação TTI: Zanotto relata ter feito o curso em 1 final de semana e a prova 2 dias depois (nota 9,5).
+*   **Valores e Produtos (Exemplos citados):**
+    *   Apartamentos de R$ 25 milhões a R$ 50 milhões.
+    *   Lotes de R$ 1 milhão a R$ 2 milhões (ex: 500 lotes a R$ 1 milhão cada).
+    *   Terrenos de 250m² a 300m² (ex: 12x25m).
+    *   Imóveis em Porto Alegre de R$ 5 milhões a R$ 10 milhões.
+*   **Ferramenta/Empresa (Mencionada no Merchandising):**
+    *   **Grupo Sólido / Urbia:** 14 anos de atuação. A *Urbia* é uma inteligência artificial para urbanização (tecnologia paramétrica).
+    *   *Resultados da Urbia:* Otimização que gera mais de 20% de ganho em lotes. Mais de 350 projetos desenvolvidos em mais de 120 cidades. Pipeline de mais de R$ 10 bilhões em negócios.
+    *   *Case Isla:* 100% dos 470 lotes vendidos no lançamento, alcançando um VGV de R$ 190 milhões.
+*   **Marcas de Luxo Citadas (Collabs):** Porsche (Porsche Consulting, Porsche Design), Pininfarina, YOO (Philippe Starck), Tiffany & Co., Lacoste, Bulgari, Jacob & Co., Davidoff, Gucci, Armani, Mercedes.
+*   **Localidades Mencionadas:** Campinas, São Paulo (Faria Lima), Miami (Sunny Isles), Nova York, São Francisco, Xangai, Hong Kong, Dubai, Abu Dhabi, Lisboa, Punta del Este, Belém do Pará, Porto Alegre, Fortaleza, Goiânia, João Pessoa (Condomínio das Américas no Cabo Branco), Caruaru.
+
+### (D) Práticas aplicáveis ao desenho de CRM
+*   **Segmentação Comportamental e Geracional:** O CRM deve classificar leads não apenas por renda, mas por geração e comportamento. *Millennials* com alto poder aquisitivo buscam sustentabilidade (tomada para carro elétrico, reuso de água, eficiência energética). O público *Old Money* (dinheiro antigo) busca tradição e discrição.
+*   **Qualificação e Roteamento de Leads:** Leads de altíssimo padrão não podem ser direcionados para corretores habituados a vender produtos econômicos. O CRM deve rotear o lead com base no "fit" entre o perfil do cliente e a "cultura/calo" do corretor.
+*   **Mapeamento de Estilo de Vida (Data Enrichment):** Para vender luxo, o sistema deve capturar dados além do básico. Zanotto sugere perguntas qualificatórias: "Onde você costuma comer? Onde você leva sua esposa? Onde seus filhos estudam? A escola é a mesma do filho dos amigos?". Isso define a "tribo" do cliente.
+*   **Gestão da Experiência no Estande (Jornada Física):** Para alto padrão, o CRM deve gerenciar agendamentos rigorosos para evitar superlotação. O ambiente deve ser controlado (música ambiente tranquila, comida/bebida elaborada, sem gritaria ou corretores disputando clientes).
+*   **Base de Conhecimento Integrada:** O corretor precisa ter acesso rápido via sistema a detalhes técnicos profundos do produto (ex: origem do mármore Carrara, composição química, história da marca parceira), pois o cliente de luxo fará perguntas específicas.
+
+### (E) Riscos, limites e ressalvas
+*   **O Risco da "Gritaria" no Alto Padrão:** Fazer eventos de lançamento no modelo tradicional (fila, barulho, disputa por lotes) afasta o cliente de luxo, que busca exclusividade e discrição.
+*   **Incompatibilidade de Marca (Collab Fake):** Trazer uma marca de luxo internacional para assinar um projeto que não possui a estrutura, a localização ou o público adequado. A marca não permitirá que seu nome seja usado se houver risco à sua reputação.
+*   **O Risco do "Copy/Paste" Regional:** Pegar um modelo de apartamento compacto que funciona em São Paulo e tentar replicar em João Pessoa sem entender se há demanda local para isso. O resultado é estoque encalhado.
+*   **Falta de Preparo do Corretor:** O limite do sucesso de um lançamento de luxo é o corretor. Se ele não tiver cultura, vocabulário e conhecimento técnico, o cliente perde a confiança instantaneamente. Zanotto ressalta: "A barreira de entrada é muito baixa".
+*   **Ressalva sobre a Crítica aos Corretores:** Zanotto faz um *disclaimer* explícito de que não está jogando contra a classe dos corretores ou atacando o patrimônio deles, mas sim apontando a necessidade urgente de elevação do nível cultural e técnico ("precisa aprender muito mais a se posicionar").
+
+### (F) Posicionamento e confiança
+*   **Os 3 Cs do Corretor de Sucesso:** Para ter confiança e vender alto padrão, o profissional precisa de **C**onhecimento (desde o primeiro dia), **C**onteúdo (absorvido no dia a dia) e **C**alo (experiência prática).
+*   **Luxo é Pertencimento e Comunidade:** O posicionamento de um loteamento de luxo deve focar em criar uma comunidade de pares. O cliente compra para conviver com pessoas do mesmo nível social, cultural e de consumo.
+*   **A "Brasilidade" como Posicionamento:** Há uma tendência forte de valorização da cultura, arquitetura e paisagismo brasileiros. Empreendimentos que resgatam o "Made in Tupiniquim" com excelência estão ganhando destaque frente a cópias de modelos estrangeiros.
+*   **A Essência Acima do Preço:** O verdadeiro luxo não se mede apenas pelo valor financeiro (preço), mas pela entrega de tranquilidade, isolamento do caos, naturalidade (contato com água, ar, madeira, pedra) e um serviço de curadoria/concierge que entenda a vida do cliente. "O luxo é você querer ser aquilo que você realmente é, e não aquilo que os outros impõem que você seja."

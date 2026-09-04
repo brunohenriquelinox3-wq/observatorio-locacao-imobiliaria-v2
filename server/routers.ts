@@ -118,6 +118,7 @@ import {
   draftSubdivisionBuyerClientInputSchema,
   draftSubdivisionBuyerAttachmentIntentInputSchema,
   draftSubdivisionDevelopmentInputSchema,
+  draftSubdivisionDevelopmentPreparationProfileInputSchema,
   draftSubdivisionLotInputSchema,
   draftSubdivisionLotInventoryStateInputSchema,
   draftSubdivisionSaleDraftInputSchema,
@@ -132,6 +133,10 @@ import {
   createDraftSubdivisionDevelopment,
   listDraftSubdivisionDevelopments,
 } from "./subdivisionDevelopment";
+import {
+  listDraftSubdivisionDevelopmentPreparationProfiles,
+  upsertDraftSubdivisionDevelopmentPreparationProfile,
+} from "./subdivisionDevelopmentPreparation";
 import {
   createDraftSubdivisionBlock,
   listDraftSubdivisionBlocks,
@@ -362,6 +367,12 @@ export const appRouter = router({
     createDraftDevelopment: protectedProcedure
       .input(draftSubdivisionDevelopmentInputSchema)
       .mutation(({ ctx, input }) => createDraftSubdivisionDevelopment(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftDevelopmentPreparationProfiles: protectedProcedure
+      .input(subdivisionContextSchema)
+      .query(({ ctx, input }) => listDraftSubdivisionDevelopmentPreparationProfiles(ctx.supabaseSubjectId ?? undefined, input)),
+    upsertDraftDevelopmentPreparationProfile: protectedProcedure
+      .input(draftSubdivisionDevelopmentPreparationProfileInputSchema)
+      .mutation(({ ctx, input }) => upsertDraftSubdivisionDevelopmentPreparationProfile(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBlocks: protectedProcedure
       .input(subdivisionContextSchema.extend({ developmentId: z.string().uuid() }))
       .query(({ ctx, input }) => listDraftSubdivisionBlocks(ctx.supabaseSubjectId ?? undefined, input, input.developmentId)),
