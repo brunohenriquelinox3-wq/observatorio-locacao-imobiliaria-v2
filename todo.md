@@ -1631,3 +1631,7 @@
 - [x] Corrigir a rota ausente de Vendas Urbanas para apresentar o setor bloqueado, sem implementar proposta, reserva, contrato, assinatura, preço, cobrança ou financeiro.
 - [x] Cobrir a rota bloqueada com teste, revisão visual, build e artefatos saneados.
 - [x] Garantir que o alias registrado resolva o setor Propostas bloqueado, em vez de voltar ao setor Clientes e Leads.
+
+## Auditoria: Clientes e Interessados — Locação
+- [x] Verificar que a jornada mantém a entrada interna em rascunho, sem garantia, cadastro de locação, proposta, contrato, cobrança, pagamento ou financeiro.
+- [x] Validar em modo de leitura a rota, a separação setorial e os bloqueios, sem criar ou alterar registros.
