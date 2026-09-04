@@ -1,14 +1,7 @@
-import DashboardLayout, { type DashboardNavigationItem } from "@/components/DashboardLayout";
+import DashboardLayout from "@/components/DashboardLayout";
+import { crmNavigationItems } from "@/lib/crmNavigation";
 import { Building2, ClipboardList, FileStack, Landmark, LayoutDashboard, MapPinned, ShieldCheck, UsersRound } from "lucide-react";
 import "../crm-entry.css";
-
-const navigationItems: DashboardNavigationItem[] = [
-  { icon: ShieldCheck, label: "Central de Plataforma", path: "/administracao" },
-  { icon: LayoutDashboard, label: "Painel ADM", path: "/adm" },
-  { icon: Landmark, label: "Loteadora", path: "/loteadora" },
-  { icon: Building2, label: "Vendas Urbanas", path: "/vendas-urbanas" },
-  { icon: MapPinned, label: "Locação", path: "/locacao" },
-];
 
 const columns = [
   {
@@ -55,7 +48,7 @@ const columns = [
 
 export default function Home() {
   return (
-    <DashboardLayout navigationItems={navigationItems} navigationTitle="CRM">
+    <DashboardLayout navigationItems={crmNavigationItems} navigationTitle="CRM">
       <main className="crm-entry" aria-labelledby="crm-entry-title">
         <header className="crm-entry__header">
           <div className="crm-entry__header-mark" aria-hidden="true"><ClipboardList size={22} /></div>

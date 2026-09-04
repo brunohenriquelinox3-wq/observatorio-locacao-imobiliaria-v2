@@ -27,6 +27,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarProvider,
   SidebarTrigger,
   useSidebar,
@@ -40,8 +43,9 @@ import { groupDashboardNavigation } from "@/lib/dashboardNavigationGroups";
 import { isNavigationPaletteShortcut } from "@/lib/dashboardNavigationPalette";
 import { getDashboardProfilePresentation } from "@/lib/dashboardProfilePresentation";
 import { getSidebarWidthAfterKeyboardCommand } from "@/lib/dashboardSidebarResize";
+import { crmNavigationItems } from "@/lib/crmNavigation";
 import { trpc } from "@/lib/trpc";
-import { ArrowUpRight, Compass, LayoutDashboard, LockKeyhole, LogOut, PanelLeft, Search, Users, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, Building2, Compass, Landmark, LayoutDashboard, Layers3, LockKeyhole, LogOut, MapPinned, PanelLeft, Search, Users, type LucideIcon } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -93,6 +97,16 @@ const SIDEBAR_WIDTH_KEY = "sidebar-width";
 const DEFAULT_WIDTH = 280;
 const MIN_WIDTH = 200;
 const MAX_WIDTH = 480;
+
+const columnSidebarIcons = {
+  loteadora: Landmark,
+  urban_sales: Building2,
+  rental: MapPinned,
+} as const;
+
+function isColumnSidebarGroup(groupId: string): groupId is keyof typeof columnSidebarIcons {
+  return groupId in columnSidebarIcons;
+}
 
 export default function DashboardLayout({
   children,
@@ -210,8 +224,11 @@ function DashboardLayoutContent({
     { module: "locacao" },
     moduleQueryOptions,
   );
+  const canonicalNavigationItems = [...crmNavigationItems, ...navigationItems].filter(
+    (item, index, allItems) => allItems.findIndex(candidate => candidate.path === item.path) === index,
+  );
   const visibleNavigationItems = filterNavigationByAuthorizedModules({
-    items: navigationItems,
+    items: canonicalNavigationItems,
     isAvailabilityResolved:
       loteadoraContextsQuery.isSuccess && urbanSalesContextsQuery.isSuccess && rentalContextsQuery.isSuccess,
     authorizedModules: {
@@ -378,37 +395,88 @@ function DashboardLayoutContent({
           </SidebarHeader>
 
           <SidebarContent className="gap-0">
-            {navigationGroups.map((group) => (
-              <SidebarGroup key={group.id} className="px-2 py-1">
-                <SidebarGroupLabel className="h-7 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-sidebar-foreground/55">
-                  {group.label}
-                </SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu aria-label={`Navegação: ${group.label}`}>
-                    {group.items.map(item => {
-                      const isActive = location === item.path;
-                      return (
-                        <SidebarMenuItem key={item.path}>
+            {navigationGroups.map((group) => {
+              const isColumnGroup = isColumnSidebarGroup(group.id);
+              const firstAvailableItem = group.items.find(item => !item.disabled);
+              const isGroupDisabled = !firstAvailableItem;
+              const isGroupActive = group.items.some(item => item.path === location);
+              const ColumnIcon = isColumnSidebarGroup(group.id) ? columnSidebarIcons[group.id] : Layers3;
+
+              return (
+                <SidebarGroup key={group.id} className="px-2 py-1">
+                  <SidebarGroupLabel className="h-7 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-sidebar-foreground/55">
+                    {isColumnGroup ? "Coluna" : group.label}
+                  </SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    {isColumnGroup ? (
+                      <SidebarMenu aria-label={`Coluna ${group.label}`}>
+                        <SidebarMenuItem>
                           <SidebarMenuButton
-                            isActive={isActive}
-                            disabled={item.disabled}
-                            aria-current={isActive ? "page" : undefined}
-                            onClick={() => !item.disabled && navigateTo(item.path)}
-                            tooltip={item.description ?? item.label}
-                            className="h-10 transition-all font-normal"
+                            isActive={isGroupActive}
+                            disabled={isGroupDisabled}
+                            aria-current={isGroupActive ? "page" : undefined}
+                            onClick={() => firstAvailableItem && navigateTo(firstAvailableItem.path)}
+                            tooltip={isGroupDisabled ? `${group.label}: nenhum contexto autorizado nesta sessão` : `Abrir coluna ${group.label}`}
+                            className="h-10 font-semibold"
                           >
-                            <item.icon
-                              className={`h-4 w-4 ${isActive ? "text-primary" : ""}`}
-                            />
-                            <span>{item.label}</span>
+                            <ColumnIcon className={`h-4 w-4 ${isGroupActive ? "text-primary" : ""}`} />
+                            <span>{group.label}</span>
                           </SidebarMenuButton>
+                          <SidebarMenuSub aria-label={`Setores de ${group.label}`}>
+                            {group.items.map((item, itemIndex) => {
+                              const isActive = location === item.path;
+                              return (
+                                <SidebarMenuSubItem key={item.path}>
+                                  <SidebarMenuSubButton
+                                    asChild
+                                    isActive={isActive}
+                                    size="sm"
+                                    className={item.disabled ? "cursor-not-allowed opacity-50" : ""}
+                                  >
+                                    <button
+                                      type="button"
+                                      disabled={item.disabled}
+                                      aria-current={isActive ? "page" : undefined}
+                                      aria-label={`${String(itemIndex + 1).padStart(2, "0")} · ${item.label}${item.disabled ? " · bloqueado" : ""}`}
+                                      title={item.description ?? item.label}
+                                      onClick={() => !item.disabled && navigateTo(item.path)}
+                                    >
+                                      <span className="w-4 shrink-0 text-[9px] font-semibold text-sidebar-foreground/45">{String(itemIndex + 1).padStart(2, "0")}</span>
+                                      <span>{item.label}</span>
+                                    </button>
+                                  </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                              );
+                            })}
+                          </SidebarMenuSub>
                         </SidebarMenuItem>
-                      );
-                    })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            ))}
+                      </SidebarMenu>
+                    ) : (
+                      <SidebarMenu aria-label={`Navegação: ${group.label}`}>
+                        {group.items.map(item => {
+                          const isActive = location === item.path;
+                          return (
+                            <SidebarMenuItem key={item.path}>
+                              <SidebarMenuButton
+                                isActive={isActive}
+                                disabled={item.disabled}
+                                aria-current={isActive ? "page" : undefined}
+                                onClick={() => !item.disabled && navigateTo(item.path)}
+                                tooltip={item.description ?? item.label}
+                                className="h-10 transition-all font-normal"
+                              >
+                                <item.icon className={`h-4 w-4 ${isActive ? "text-primary" : ""}`} />
+                                <span>{item.label}</span>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                          );
+                        })}
+                      </SidebarMenu>
+                    )}
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              );
+            })}
           </SidebarContent>
 
           <SidebarFooter className="p-3">

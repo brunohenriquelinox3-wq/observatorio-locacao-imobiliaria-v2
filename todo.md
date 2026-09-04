@@ -1562,3 +1562,9 @@
 - [x] Exibir os módulos e seus setores na ordem aprovada, usando estados bloqueados e sem conceder contexto, grant ou alçada por aparência.
 - [x] Criar rotas de entrada claras para a Central de Plataforma e o Painel ADM, preservando todas as rotas existentes.
 - [x] Cobrir rotas, responsividade, acessibilidade, testes e artefatos saneados após o redesenho.
+
+## Correção estrutural: setores aninhados na sidebar
+- [x] Exibir na sidebar os setores internos de Loteadora, Vendas Urbanas e Locação, aninhados sob a respectiva coluna e na ordem aprovada.
+- [x] Manter SUPER ADM e ADM no topo da hierarquia e não conceder contexto, membership, grant, escopo ou alçada pelo item de navegação.
+- [x] Exibir setores sem alçada como bloqueados e inacessíveis, sem ocultar sua existência nem executar consultas ou comandos indevidos.
+- [x] Cobrir ordem, bloqueio, teclado, responsividade, testes e artefatos saneados após a atualização da sidebar.
