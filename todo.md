@@ -1778,3 +1778,7 @@
 
 ## Regressão segura: Clientes Loteadora
 - [x] Cobrir que as consultas da jornada só habilitam com sessão e contexto válidos e que as mutações de cliente e intenção privada exigem submissão explícita de formulário.
+
+## Regressões seguras: Vendas Urbanas e Locação
+- [x] Cobrir que as consultas operacionais de Vendas Urbanas e Locação exigem sessão e contexto válidos, e que as mutações permanecem atrás de submissões explícitas.
+- [x] Preservar em regressão os setores de propostas, contratos, garantias e financeiro como bloqueados, sem consultas ou comandos materiais.
