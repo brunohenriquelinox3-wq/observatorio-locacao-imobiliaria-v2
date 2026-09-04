@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createDraftUrbanDevelopment, linkDraftUrbanDevelopmentDeveloper, listDraftUrbanDevelopmentDeveloperLinks, listDraftUrbanDevelopments, listDraftUrbanDevelopers, registerDraftUrbanDeveloper } from "./urbanDevelopment";
+import { createDraftUrbanDevelopment, createDraftUrbanDevelopmentStructure, linkDraftUrbanDevelopmentDeveloper, listDraftUrbanDevelopmentDeveloperLinks, listDraftUrbanDevelopmentStructures, listDraftUrbanDevelopments, listDraftUrbanDevelopers, registerDraftUrbanDeveloper } from "./urbanDevelopment";
 
 const subjectId = "550e8400-e29b-41d4-a716-446655440000";
 const organizationId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
@@ -8,6 +8,7 @@ const correlationId = "8ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const partyId = "9ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const developerProfileId = "0ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const linkId = "1ba7b810-9dad-11d1-80b4-00c04fd430c8";
+const structureId = "2ba7b810-9dad-11d1-80b4-00c04fd430c8";
 const context = { organizationId, module: "vendas_urbanas" as const, purposeCode: "CADASTRO_INICIAL" };
 const rpc = vi.fn(); const client = { rpc } as never;
 
@@ -43,5 +44,16 @@ describe("urban development server boundary", () => {
     rpc.mockResolvedValueOnce({ data: linkId, error: null });
     await linkDraftUrbanDevelopmentDeveloper(subjectId, { ...context, correlationId, developmentId, developerProfileId, relationship: "development_responsible" }, client);
     expect(rpc).toHaveBeenLastCalledWith("urban_link_draft_development_developer", expect.objectContaining({ p_development_id: developmentId, p_developer_profile_id: developerProfileId }));
+  });
+
+  it("creates a tower or block only inside a contextual draft development", async () => {
+    rpc.mockResolvedValueOnce({ data: structureId, error: null });
+    await createDraftUrbanDevelopmentStructure(subjectId, { ...context, correlationId, developmentId, internalReference: "TORRE_A", structureKind: "tower" }, client);
+    expect(rpc).toHaveBeenLastCalledWith("urban_create_draft_development_structure", expect.objectContaining({ p_development_id: developmentId, p_internal_reference: "TORRE_A", p_structure_kind: "tower" }));
+  });
+
+  it("reads only minimized structural summaries", async () => {
+    rpc.mockResolvedValueOnce({ data: [{ structure_id: structureId, development_id: developmentId, development_reference: "TORRE_CENTRAL", internal_reference: "BLOCO_A", structure_kind: "block", created_at: "2026-09-04T00:00:00+00:00" }], error: null });
+    await expect(listDraftUrbanDevelopmentStructures(subjectId, context, client)).resolves.toEqual([{ structureId, developmentId, developmentReference: "TORRE_CENTRAL", internalReference: "BLOCO_A", structureKind: "block", createdAt: "2026-09-04T00:00:00+00:00" }]);
   });
 });

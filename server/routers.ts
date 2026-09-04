@@ -66,8 +66,8 @@ import {
   listDraftUrbanLeads,
   transitionDraftUrbanLead,
 } from "./urbanPipeline";
-import { draftUrbanDevelopmentDeveloperLinkInputSchema, draftUrbanDevelopmentInputSchema, draftUrbanDeveloperInputSchema } from "../shared/urbanDevelopmentContracts";
-import { createDraftUrbanDevelopment, linkDraftUrbanDevelopmentDeveloper, listDraftUrbanDevelopmentDeveloperLinks, listDraftUrbanDevelopments, listDraftUrbanDevelopers, registerDraftUrbanDeveloper } from "./urbanDevelopment";
+import { draftUrbanDevelopmentDeveloperLinkInputSchema, draftUrbanDevelopmentInputSchema, draftUrbanDevelopmentStructureInputSchema, draftUrbanDeveloperInputSchema } from "../shared/urbanDevelopmentContracts";
+import { createDraftUrbanDevelopment, createDraftUrbanDevelopmentStructure, linkDraftUrbanDevelopmentDeveloper, listDraftUrbanDevelopmentDeveloperLinks, listDraftUrbanDevelopmentStructures, listDraftUrbanDevelopments, listDraftUrbanDevelopers, registerDraftUrbanDeveloper } from "./urbanDevelopment";
 import {
   linkDraftUrbanLeadAsset,
   listDraftUrbanLeadAssetLinks,
@@ -309,6 +309,8 @@ export const appRouter = router({
     registerDraftDeveloper: protectedProcedure.input(draftUrbanDeveloperInputSchema).mutation(({ ctx, input }) => registerDraftUrbanDeveloper(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftDevelopmentDeveloperLinks: protectedProcedure.input(urbanSalesContextSchema).query(({ ctx, input }) => listDraftUrbanDevelopmentDeveloperLinks(ctx.supabaseSubjectId ?? undefined, input)),
     linkDraftDevelopmentDeveloper: protectedProcedure.input(draftUrbanDevelopmentDeveloperLinkInputSchema).mutation(({ ctx, input }) => linkDraftUrbanDevelopmentDeveloper(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftDevelopmentStructures: protectedProcedure.input(urbanSalesContextSchema).query(({ ctx, input }) => listDraftUrbanDevelopmentStructures(ctx.supabaseSubjectId ?? undefined, input)),
+    createDraftDevelopmentStructure: protectedProcedure.input(draftUrbanDevelopmentStructureInputSchema).mutation(({ ctx, input }) => createDraftUrbanDevelopmentStructure(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   rentalPipeline: router({

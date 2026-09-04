@@ -1522,3 +1522,9 @@
 - [x] Permitir somente a associação estrutural entre construtora em rascunho e empreendimento em rascunho, com contexto, idempotência, RLS, negação direta e auditoria redigida.
 - [x] Preservar o bloqueio de unidades, estoque, disponibilidade, preço, anúncio, proposta, reserva, contrato, comissão, cobrança, pagamento, repasse e integração externa.
 - [x] Validar integração, testes, build, revisão visual e artefatos saneados sem criar registros de negócio.
+
+## Evolução: torres e blocos de Empreendimentos Urbanos
+- [x] Modelar torre e bloco apenas como estrutura interna em rascunho de um empreendimento já autorizado, sem unidades, pavimentos, metragem, endereço, disponibilidade ou preço.
+- [x] Exigir contexto, idempotência, RLS, negação direta e auditoria redigida nas associações estruturais.
+- [x] Manter bloqueados estoque, anúncios, propostas, reservas, contratos, comissões, cobrança, pagamentos, repasses e integrações externas.
+- [x] Validar integração, testes, build, revisão visual e artefatos saneados sem criar registros de negócio.
