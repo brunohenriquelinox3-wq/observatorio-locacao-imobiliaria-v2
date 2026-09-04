@@ -394,7 +394,7 @@ function DashboardLayoutContent({
             </div>
           </SidebarHeader>
 
-          <SidebarContent className="gap-0">
+          <SidebarContent className="gap-0 overflow-y-auto overscroll-contain">
             {navigationGroups.map((group) => {
               const isColumnGroup = isColumnSidebarGroup(group.id);
               const firstAvailableItem = group.items.find(item => !item.disabled);

@@ -184,11 +184,11 @@ function Sidebar({
   if (isMobile) {
     return (
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
-        <SheetContent
-          data-sidebar="sidebar"
-          data-slot="sidebar"
-          data-mobile="true"
-          className="bg-sidebar text-sidebar-foreground w-(--sidebar-width) p-0 [&>button]:hidden"
+          <SheetContent
+            data-sidebar="sidebar"
+            data-slot="sidebar"
+            data-mobile="true"
+            className="!z-[60] !bg-[#092733] !text-[#ecf7f6] !opacity-100 w-(--sidebar-width) p-0 shadow-2xl [&>button]:hidden"
           style={
             {
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
@@ -200,7 +200,7 @@ function Sidebar({
             <SheetTitle>Navegação lateral</SheetTitle>
             <SheetDescription>Exibe a navegação lateral em dispositivos móveis.</SheetDescription>
           </SheetHeader>
-          <div className="flex h-full w-full flex-col">{children}</div>
+          <div className="isolate flex h-full w-full flex-col overflow-hidden bg-[#092733] opacity-100">{children}</div>
         </SheetContent>
       </Sheet>
     );

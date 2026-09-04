@@ -1573,3 +1573,8 @@
 - [x] Identificar a origem mensurada do bundle inicial de aproximadamente 1,02 MB sem minificação adicional e da folha principal de aproximadamente 242 KB.
 - [x] Aplicar somente uma otimização de carregamento com ganho mensurável, preservando navegação, autorização e funcionalidade.
 - [x] Remedir o bundle, registrar a comparação, validar regressões e gerar artefatos saneados somente se o ganho for comprovado.
+
+## Correção: sidebar móvel opaca e legível
+- [x] Remover a transparência indevida da superfície da sidebar no modo móvel, impedindo a leitura simultânea do conteúdo de fundo.
+- [x] Garantir contraste, camada de sobreposição, foco, rolagem interna e alcance de todos os setores sem afetar os estados bloqueados.
+- [x] Cobrir a correção em desktop/mobile com testes, revisão visual, build e artefatos saneados.
