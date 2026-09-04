@@ -1775,3 +1775,6 @@
 - [x] Corrigir a legibilidade do rótulo nos controles desabilitados de abertura de coluna, preservando o bloqueio por ausência de contexto e a distinção visual de estado inativo.
 - [x] Complementar a verificação segura das rotas operacionais representativas em tablet e tela ampla, sem contexto, dados ou comandos.
 - [x] Corrigir o cabeçalho da entrada operacional na faixa de tablet, onde a grade de três colunas comprime título e descrição, sem alterar conteúdo, navegação ou controles de segurança.
+
+## Regressão segura: Clientes Loteadora
+- [x] Cobrir que as consultas da jornada só habilitam com sessão e contexto válidos e que as mutações de cliente e intenção privada exigem submissão explícita de formulário.

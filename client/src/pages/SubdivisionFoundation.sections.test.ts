@@ -24,4 +24,14 @@ describe("setores da coluna Loteadora", () => {
     expect(page).not.toContain("listEconomicRuleSets.useQuery");
     expect(page).not.toContain("createEconomicRuleSet.useMutation");
   });
+
+  it("mantém Clientes Loteadora dependente de sessão, contexto e submissão explícita", () => {
+    const page = source();
+
+    expect(page).toContain("const isWorkspaceReady = isAuthenticated && isContextReady");
+    expect(page).toContain("listDraftBuyerClients.useQuery(context, { enabled: isWorkspaceReady, retry: false })");
+    expect(page).toContain("listBuyerAttachmentIntents.useQuery(context, { enabled: isWorkspaceReady, retry: false })");
+    expect(page).toContain("createBuyerClientMutation.mutate({ ...context, correlationId: crypto.randomUUID(), partyRoleAssignmentId: buyerClientRoleId })");
+    expect(page).toContain("createAttachmentIntentMutation.mutate({ ...context, correlationId: crypto.randomUUID(), buyerClientId: buyerClientIdForAttachment })");
+  });
 });
