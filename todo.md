@@ -1561,6 +1561,9 @@
 ## Auditoria: Administração de Locação com contexto
 - [x] Confirmar em modo de leitura que a jornada organiza somente interesse de administração em rascunho e escopo declarado, sem mandato, exclusividade, gestão, anúncio, disponibilidade, preço, contrato, cobrança, portal ou Financeiro.
 
+## Auditoria: correspondência entre navegação e rotas canônicas
+- [x] Comparar os caminhos setoriais definidos na navegação com os registros do roteador e documentar somente divergências comprovadas, sem criar aliases especulativos nem alterar dados ou alçadas. Todos os 24 caminhos navegáveis possuem rota; os dois caminhos setoriais adicionais são aliases intencionais já cobertos.
+
 ## Registro: caminho não canônico de Estoque e Mapa de Lotes — Loteadora
 - [x] Confirmar que o caminho manual que retornou 404 não é uma rota definida; a navegação oficial preserva o caminho canônico de inventário interno, sem alteração de contexto ou bloqueios.
 - [x] Manter a rota canônica já coberta e não adicionar alias especulativo, evitando ampliar a superfície de roteamento sem necessidade comprovada.
