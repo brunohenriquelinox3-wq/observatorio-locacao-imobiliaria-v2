@@ -1578,3 +1578,9 @@
 - [x] Remover a transparência indevida da superfície da sidebar no modo móvel, impedindo a leitura simultânea do conteúdo de fundo.
 - [x] Garantir contraste, camada de sobreposição, foco, rolagem interna e alcance de todos os setores sem afetar os estados bloqueados.
 - [x] Cobrir a correção em desktop/mobile com testes, revisão visual, build e artefatos saneados.
+
+## Evolução: Clientes Loteadora
+- [x] Criar uma jornada setorial de cliente comprador em rascunho, vinculada somente a Party canônica autorizada e sem duplicar cadastro.
+- [x] Separar identificação da Party, papel de comprador no loteamento e cobertura documental futura, sem coletar anexos, dados reais ou documentos nesta etapa.
+- [x] Preservar bloqueios de lote, estoque, reserva, venda, proposta, contrato, boleto, cobrança, pagamento, repasse e Financeiro.
+- [x] Cobrir a jornada, a rota, os limites de não persistência indevida, acessibilidade, build e artefatos saneados.
