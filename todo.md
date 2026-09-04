@@ -226,7 +226,7 @@
 - [x] Guiar e verificar a aplicação assistida de A0 e A0.1 pelo SQL Editor do projeto oficial.
 - [x] Auditar compatibilidade de build, runtime, funções e variáveis para o deploy Netlify sem publicar.
 - [x] Preparar configuração Netlify e documentação de variáveis server-side e redirects sem expor segredos.
-- [ ] Validar build de produção e apresentar a pré-publicação Netlify para confirmação explícita.
+- [x] Validar build de produção e apresentar a pré-publicação Netlify para confirmação explícita, sem publicar ou alterar configurações externas.
 - [x] Gerar pacote estático de prévia e manual de upload Netlify, com limites explícitos para API, OAuth e comandos administrativos.
 - [x] Documentar o caminho de deploy completo por Git para Functions, segredos e Supabase sem publicar automaticamente.
 - [x] Implementar jornadas de criação de organização, delegação, suspensão e revogação com alçada e evidência. **Reconciliado no A35:** cobertura interna atual aprovada em 20 testes; nenhuma permissão real foi alterada.
