@@ -1556,3 +1556,9 @@
 - [x] Manter explícita a hierarquia SUPER ADM → ADM, os estados da identidade e os comandos governados, sem emitir nenhum comando pela interface.
 - [x] Separar estados de fundação, identidade/MFA, organizações, grants e auditoria em áreas administrativas legíveis e bloqueadas quando necessário.
 - [x] Cobrir rotas, responsividade, acessibilidade, testes e artefatos saneados após o redesenho.
+
+## Correção estrutural: entrada principal do CRM
+- [x] Substituir a página inicial editorial por uma entrada operacional com a hierarquia SUPER ADM → ADM → Loteadora → Vendas Urbanas → Locação.
+- [x] Exibir os módulos e seus setores na ordem aprovada, usando estados bloqueados e sem conceder contexto, grant ou alçada por aparência.
+- [x] Criar rotas de entrada claras para a Central de Plataforma e o Painel ADM, preservando todas as rotas existentes.
+- [x] Cobrir rotas, responsividade, acessibilidade, testes e artefatos saneados após o redesenho.
