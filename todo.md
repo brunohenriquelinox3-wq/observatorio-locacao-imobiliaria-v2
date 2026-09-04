@@ -1551,6 +1551,13 @@
 ## Auditoria: Clientes Loteadora com contexto
 - [x] Confirmar em modo de leitura que o setor reutiliza Party canônica e papel temporal, sem dossiê, anexos, venda, reserva, contrato, cobrança, pagamento, repasse ou Financeiro.
 
+## Auditoria: Sócios e Parceiros — Loteadora com contexto
+- [x] Confirmar em modo de leitura que Party e papel temporal permanecem separados, sem participação econômica, valor, recebível, contrato, portal, cobrança, pagamento, repasse ou Financeiro.
+- [x] Confirmar visualmente que a rota canônica renderiza o Setor 04 com estado seguro sem contexto; a leitura autenticada permanece pendente porque o navegador do usuário não respondeu, sem interação material.
+
+## Auditoria: Vendas de Lotes — Loteadora com contexto
+- [x] Confirmar em modo de leitura que o setor mantém somente a ligação interna entre lote e cliente comprador, sem reserva, proposta, contrato, preço, cobrança, boleto, comissão, repasse ou Financeiro.
+
 ## Registro: caminho não canônico de Estoque e Mapa de Lotes — Loteadora
 - [x] Confirmar que o caminho manual que retornou 404 não é uma rota definida; a navegação oficial preserva o caminho canônico de inventário interno, sem alteração de contexto ou bloqueios.
 - [x] Manter a rota canônica já coberta e não adicionar alias especulativo, evitando ampliar a superfície de roteamento sem necessidade comprovada.
