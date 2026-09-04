@@ -1,0 +1,5 @@
+.crm-entry__column footer {
+  display: flex;
+  padding: 0;
+  background: transparent;
+}

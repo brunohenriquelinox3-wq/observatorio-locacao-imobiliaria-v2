@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 
 const home = readFileSync(resolve(import.meta.dirname, "Home.tsx"), "utf8");
 const styles = readFileSync(resolve(import.meta.dirname, "../crm-entry.css"), "utf8");
+const overrides = readFileSync(resolve(import.meta.dirname, "../crm-entry-overrides.css"), "utf8");
 
 describe("entrada operacional do CRM", () => {
   it("expõe a hierarquia e todas as colunas na sequência aprovada", () => {
@@ -18,5 +19,11 @@ describe("entrada operacional do CRM", () => {
     expect(home).toContain("DashboardLayout");
     expect(home).not.toContain("Caderno de Campo Urbano");
     expect(styles).toContain(".crm-entry__grid");
+  });
+  it("preserva legibilidade do controle de abertura contra regras globais de rodapé", () => {
+    expect(home).toContain('import "../crm-entry-overrides.css"');
+    expect(overrides).toContain(".crm-entry__column footer");
+    expect(overrides).toContain("padding: 0");
+    expect(overrides).toContain("background: transparent");
   });
 });

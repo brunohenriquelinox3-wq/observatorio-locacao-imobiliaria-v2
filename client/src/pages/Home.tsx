@@ -2,6 +2,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { crmNavigationItems } from "@/lib/crmNavigation";
 import { Building2, ClipboardList, FileStack, Landmark, LayoutDashboard, MapPinned, ShieldCheck, UsersRound } from "lucide-react";
 import "../crm-entry.css";
+import "../crm-entry-overrides.css";
 
 const columns = [
   {
