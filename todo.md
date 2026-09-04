@@ -1478,6 +1478,9 @@
 - [ ] Confirmar o contexto autorizado em modo de leitura, sem registrar dados ou executar comandos.
 - [ ] Auditar filtros e saídas das jornadas permitidas sem qualquer mutação.
 
+## Limitação registrada: auditoria de filtros
+- [x] Confirmar que a sessão observada não possui uma organização autorizada selecionada e manter filtros, saídas e consultas condicionados ao contexto ativo, sem tentativa de contorno.
+
 ## Correção estrutural: coluna Loteadora
 - [x] Substituir a página única de Loteadora por setores independentes e ordenados: Cadastro de Loteamentos, Estoque/Mapa de Lotes, Clientes Loteadora, Sócios e Parceiros e Financeiro bloqueado.
 - [x] Criar uma navegação operacional contextual para Loteadora, mantendo a hierarquia SUPER ADM → ADM → módulos e os guardas de autorização existentes.
