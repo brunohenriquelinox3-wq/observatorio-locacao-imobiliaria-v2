@@ -1544,3 +1544,9 @@
 - [x] Separar Ativos, Relações e Estados internos em setores ordenados e legíveis, sem misturar controles na mesma tela.
 - [x] Preservar consultas, comandos, contexto, guards, falha segura e limites não financeiros sem mudar modelo ou alçada.
 - [x] Cobrir rotas, responsividade, acessibilidade, testes e artefatos saneados após o redesenho.
+
+## Correção estrutural: Painel ADM
+- [x] Substituir o hero editorial e os cartões narrativos do Painel ADM por uma visão operacional compacta de módulos e estado de contexto.
+- [x] Manter Loteadora, Vendas Urbanas e Locação ordenadas e visíveis, sem criar contexto, grant ou alçada pela interface.
+- [x] Reforçar visualmente que o ADM continua subordinado ao SUPER ADM e que as frentes não liberadas permanecem bloqueadas.
+- [x] Cobrir rotas, responsividade, acessibilidade, testes e artefatos saneados após o redesenho.

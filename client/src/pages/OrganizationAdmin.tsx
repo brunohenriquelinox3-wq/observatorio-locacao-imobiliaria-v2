@@ -18,39 +18,14 @@ const accessGate: DashboardAccessGate = {
   eyebrow: "ADM ORGANIZACIONAL · CONTEXTO ANTES DE OPERAÇÃO",
   title: "Acesse somente os módulos liberados para sua organização.",
   description: "A coluna ADM organiza o trabalho por módulo. A sessão não revela dados nem atribui acesso por si só: cada rota confirma contexto, grant, vigência e finalidade.",
-  routeTitle: "Rota de acesso",
-  routeDetail: "Autenticação → organização → módulo → policy",
-  actionLabel: "Acessar painel ADM",
-  footerLabel: "ESTADO",
-  footerValue: "ACESSO GOVERNADO",
-  footerNote: "Nenhum registro operacional é exibido antes da confirmação de contexto.",
-  railTop: "ADM",
-  railBottom: "ORGANIZAÇÃO",
+  routeTitle: "Rota de acesso", routeDetail: "Autenticação → organização → módulo → policy", actionLabel: "Acessar painel ADM", footerLabel: "ESTADO", footerValue: "ACESSO GOVERNADO", footerNote: "Nenhum registro operacional é exibido antes da confirmação de contexto.", railTop: "ADM", railBottom: "ORGANIZAÇÃO",
 };
 
-type ModuleCardProps = {
-  code: string;
-  title: string;
-  description: string;
-  path: string;
-  state: OrganizationAdminModuleState;
-  icon: typeof LandPlot;
-};
+type ModuleCardProps = { code: string; title: string; description: string; path: string; state: OrganizationAdminModuleState; icon: typeof LandPlot };
 
 function ModuleCard({ code, title, description, path, state, icon: Icon }: ModuleCardProps) {
   const available = state === "available";
-  return (
-    <article className={`organization-admin-module organization-admin-module--${state}`}>
-      <div className="organization-admin-module__top"><span>{code}</span><Icon size={20} aria-hidden="true" /></div>
-      <p className="organization-admin-module__state">{organizationAdminModuleLabel(state)}</p>
-      <h2>{title}</h2>
-      <p>{description}</p>
-      <div className="organization-admin-module__footer">
-        <span>{available ? "Sem registros de negócio" : "Aguardando contexto"}</span>
-        {available ? <Link href={path}>Abrir módulo <ArrowUpRight size={16} /></Link> : <span className="organization-admin-module__blocked">Sem atalho</span>}
-      </div>
-    </article>
-  );
+  return <article className={`organization-admin-module organization-admin-module--${state}`}><div className="organization-admin-module__index"><span>{code}</span><Icon size={18} aria-hidden="true" /></div><div className="organization-admin-module__content"><p className="organization-admin-module__state">{organizationAdminModuleLabel(state)}</p><h2>{title}</h2><p>{description}</p></div><div className="organization-admin-module__footer"><span>{available ? "Sem registros de negócio" : "Contexto ainda não liberado"}</span>{available ? <Link href={path}>Abrir módulo <ArrowUpRight size={15} /></Link> : <span className="organization-admin-module__blocked" aria-label={`${title} bloqueado até existir contexto autorizado`}>Bloqueado</span>}</div></article>;
 }
 
 export default function OrganizationAdmin() {
@@ -59,47 +34,17 @@ export default function OrganizationAdmin() {
   const subdivision = trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "loteadora" }, queryOptions);
   const urbanSales = trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "vendas_urbanas" }, queryOptions);
   const rental = trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "locacao" }, queryOptions);
-
   const cards: ModuleCardProps[] = [
-    { code: "01", title: "Loteadora", description: "Estruture loteamentos, quadras e o futuro mapa de lotes dentro de um contexto autorizado.", path: "/loteadora", icon: LandPlot, state: organizationAdminModuleState({ loading: subdivision.isLoading, denied: subdivision.isError, contextCount: subdivision.data?.length }) },
-    { code: "02", title: "Vendas Urbanas", description: "Organize interesse, agenda e próximos passos sem transformar rascunhos em compromisso comercial.", path: "/vendas-urbanas", icon: Workflow, state: organizationAdminModuleState({ loading: urbanSales.isLoading, denied: urbanSales.isError, contextCount: urbanSales.data?.length }) },
-    { code: "03", title: "Locação", description: "Separe jornada de administração e locação antes de qualquer contrato, garantia ou financeiro.", path: "/locacao", icon: Home, state: organizationAdminModuleState({ loading: rental.isLoading, denied: rental.isError, contextCount: rental.data?.length }) },
+    { code: "01", title: "Loteadora", description: "Cadastros de loteamentos, estoque/mapa de lotes, clientes e sócios/parceiros em setores próprios.", path: "/loteadora", icon: LandPlot, state: organizationAdminModuleState({ loading: subdivision.isLoading, denied: subdivision.isError, contextCount: subdivision.data?.length }) },
+    { code: "02", title: "Vendas Urbanas", description: "Clientes e leads, imóveis e proprietários, agenda, busca e empreendimentos em jornadas separadas.", path: "/vendas-urbanas", icon: Workflow, state: organizationAdminModuleState({ loading: urbanSales.isLoading, denied: urbanSales.isError, contextCount: urbanSales.data?.length }) },
+    { code: "03", title: "Locação", description: "Clientes, imóveis e proprietários, agenda, busca e administração em setores distintos e governados.", path: "/locacao", icon: Home, state: organizationAdminModuleState({ loading: rental.isLoading, denied: rental.isError, contextCount: rental.data?.length }) },
   ];
   const availableCount = cards.filter((card) => card.state === "available").length;
 
-  return (
-    <DashboardLayout navigationItems={navigationItems} navigationTitle="Núcleo CRM" accessGate={accessGate}>
-      <main className="organization-admin">
-        <header className="organization-admin__hero">
-          <div>
-            <p className="organization-admin__eyebrow">PAINEL ADM · OPERAÇÃO ORGANIZADA</p>
-            <h1>Uma operação clara antes do primeiro cadastro.</h1>
-            <p>Este painel reúne apenas os módulos autorizados para sua organização. Ele mostra onde começar, o que ainda está vazio e qual limite protege cada jornada.</p>
-          </div>
-          <aside aria-label="Resumo de acesso organizacional">
-            <ShieldCheck size={20} aria-hidden="true" />
-            <span>Módulos liberados</span>
-            <strong>{availableCount} de 3</strong>
-            <small>Sem dados de negócio cadastrados</small>
-          </aside>
-        </header>
-
-        <section className="organization-admin__guide" aria-label="Guia de início">
-          <div><span>01</span><p><b>Escolha o módulo</b><small>Acesso é demonstrado por contexto, não por promessa visual.</small></p></div>
-          <div><span>02</span><p><b>Comece em rascunho</b><small>Nenhum formulário cria contrato, financeiro ou efeito externo.</small></p></div>
-          <div><span>03</span><p><b>Avance com evidência</b><small>Permissões e dados continuam verificados pelo servidor.</small></p></div>
-        </section>
-
-        <section className="organization-admin__section" aria-labelledby="modules-heading">
-          <div className="organization-admin__section-heading"><p className="organization-admin__eyebrow">MÓDULOS CONTRATADOS</p><h2 id="modules-heading">Sua operação, organizada por frente de trabalho.</h2></div>
-          <div className="organization-admin__grid">{cards.map((card) => <ModuleCard key={card.code} {...card} />)}</div>
-        </section>
-
-        <section className="organization-admin__empty" aria-label="Estado inicial da operação">
-          <Building2 size={22} aria-hidden="true" />
-          <div><p className="organization-admin__eyebrow">PRÓXIMO MARCO</p><h2>O ambiente está pronto para desenvolvimento, sem registros operacionais.</h2><p>O avanço recomendado é aprimorar as jornadas e painéis de cada módulo; cadastros reais continuam aguardando uma decisão operacional específica.</p></div>
-        </section>
-      </main>
-    </DashboardLayout>
-  );
+  return <DashboardLayout navigationItems={navigationItems} navigationTitle="Núcleo CRM" accessGate={accessGate}><main className="organization-admin">
+    <header className="organization-admin__commandbar"><div><p className="organization-admin__eyebrow">ADM ORGANIZACIONAL · ABAIXO DO SUPER ADM</p><h1>Painel ADM</h1><p>Escolha uma frente de trabalho, confirme o contexto autorizado e avance somente pelos setores liberados.</p></div><aside aria-label="Resumo de acesso organizacional"><ShieldCheck size={18} aria-hidden="true" /><span>Módulos liberados</span><strong>{availableCount} de 3</strong><small>Sem dados de negócio cadastrados</small></aside></header>
+    <section className="organization-admin__guide" aria-label="Regras operacionais"><div><span>01</span><p><b>SUPER ADM governa</b><small>O ADM atua somente na própria organização.</small></p></div><div><span>02</span><p><b>Contexto confirma</b><small>A aparência não substitui membership, grant ou policy.</small></p></div><div><span>03</span><p><b>Setores organizam</b><small>O trabalho segue separado por coluna e jornada.</small></p></div></section>
+    <section className="organization-admin__section" aria-labelledby="modules-heading"><div className="organization-admin__section-heading"><div><p className="organization-admin__eyebrow">MÓDULOS DA ORGANIZAÇÃO</p><h2 id="modules-heading">Frentes de trabalho em ordem operacional.</h2></div><p>Contextos indisponíveis continuam visíveis e bloqueados. Isso não revela dados nem cria autorização.</p></div><div className="organization-admin__grid">{cards.map((card) => <ModuleCard key={card.code} {...card} />)}</div></section>
+    <section className="organization-admin__empty" aria-label="Estado inicial da operação"><Building2 size={20} aria-hidden="true" /><div><p className="organization-admin__eyebrow">ESTADO ATUAL</p><h2>Sem contexto operacional selecionado.</h2><p>Quando houver contexto autorizado, cada módulo abre seus setores próprios. Cadastros, contratos e financeiro continuam sujeitos à autorização e aos limites já estabelecidos.</p></div></section>
+  </main></DashboardLayout>;
 }
