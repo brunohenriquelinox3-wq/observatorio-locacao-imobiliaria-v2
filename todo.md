@@ -1584,3 +1584,7 @@
 - [x] Separar identificação da Party, papel de comprador no loteamento e cobertura documental futura, sem coletar anexos, dados reais ou documentos nesta etapa.
 - [x] Preservar bloqueios de lote, estoque, reserva, venda, proposta, contrato, boleto, cobrança, pagamento, repasse e Financeiro.
 - [x] Cobrir a jornada, a rota, os limites de não persistência indevida, acessibilidade, build e artefatos saneados.
+
+## Auditoria: Sócios e Parceiros
+- [x] Verificar que o setor reutiliza Party e papel temporal autorizados, sem participação econômica, recebível, contrato, portal ou repasse.
+- [x] Validar em modo de leitura a rota, os bloqueios, a separação setorial e a cobertura existente, sem criar ou alterar vínculos.
