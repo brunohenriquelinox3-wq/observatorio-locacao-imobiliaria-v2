@@ -66,8 +66,8 @@ import {
   listDraftUrbanLeads,
   transitionDraftUrbanLead,
 } from "./urbanPipeline";
-import { draftUrbanDevelopmentInputSchema } from "../shared/urbanDevelopmentContracts";
-import { createDraftUrbanDevelopment, listDraftUrbanDevelopments } from "./urbanDevelopment";
+import { draftUrbanDevelopmentDeveloperLinkInputSchema, draftUrbanDevelopmentInputSchema, draftUrbanDeveloperInputSchema } from "../shared/urbanDevelopmentContracts";
+import { createDraftUrbanDevelopment, linkDraftUrbanDevelopmentDeveloper, listDraftUrbanDevelopmentDeveloperLinks, listDraftUrbanDevelopments, listDraftUrbanDevelopers, registerDraftUrbanDeveloper } from "./urbanDevelopment";
 import {
   linkDraftUrbanLeadAsset,
   listDraftUrbanLeadAssetLinks,
@@ -305,6 +305,10 @@ export const appRouter = router({
     createDraftDevelopment: protectedProcedure
       .input(draftUrbanDevelopmentInputSchema)
       .mutation(({ ctx, input }) => createDraftUrbanDevelopment(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftDevelopers: protectedProcedure.input(urbanSalesContextSchema).query(({ ctx, input }) => listDraftUrbanDevelopers(ctx.supabaseSubjectId ?? undefined, input)),
+    registerDraftDeveloper: protectedProcedure.input(draftUrbanDeveloperInputSchema).mutation(({ ctx, input }) => registerDraftUrbanDeveloper(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftDevelopmentDeveloperLinks: protectedProcedure.input(urbanSalesContextSchema).query(({ ctx, input }) => listDraftUrbanDevelopmentDeveloperLinks(ctx.supabaseSubjectId ?? undefined, input)),
+    linkDraftDevelopmentDeveloper: protectedProcedure.input(draftUrbanDevelopmentDeveloperLinkInputSchema).mutation(({ ctx, input }) => linkDraftUrbanDevelopmentDeveloper(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   rentalPipeline: router({

@@ -15,3 +15,9 @@ A migração criou somente a estrutura técnica, sem inserir, editar ou excluir 
 ## Revisão visual
 
 A rota do setor foi revisada em modo de leitura e apresenta somente o painel de estrutura urbana, com referência interna, estrutura principal e fase de trabalho. Sem contexto autorizado, todos os controles permanecem indisponíveis e a tela informa que não ocorrerá leitura ou criação. A navegação continua exibindo o setor 03 como ativo, os setores contextuais separados e os setores de propostas/contratos e Financeiro bloqueados.
+
+## Verificação complementar: camada de Construtoras
+
+A rota passou a apresentar áreas distintas para **Estrutura em rascunho**, **Construtora em rascunho** e **Relação estrutural**. A seleção de construtora depende exclusivamente de uma Party jurídica retornada pelo contexto autorizado; sem esse contexto, nenhuma consulta útil ou comando é liberado. Não há campo de cadastro fiscal, contato, documento, procurador, correspondente, credencial, unidade, estoque, preço, anúncio, proposta, contrato ou superfície econômica.
+
+Na leitura integral da página, os controles de estrutura, construtora e relação apareceram em blocos distintos, sem sobreposição de campos. A barra setorial permanece no setor 03, com propostas/contratos e Financeiro bloqueados. Sem contexto, os comandos permanecem desabilitados e a tela informa explicitamente que não haverá leitura ou criação.

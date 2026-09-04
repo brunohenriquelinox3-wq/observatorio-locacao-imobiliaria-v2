@@ -1516,3 +1516,9 @@
 - [x] Separar o levantamento de estrutura do eventual cadastro operacional, sem preço, estoque, disponibilidade, publicação, proposta, contrato, comissão, cobrança, pagamento ou repasse.
 - [x] Cobrir a rota e os limites de não persistência com testes, revisão visual, build e artefatos saneados.
 - [x] Eliminar o aviso específico de RLS sem policy no novo recurso com uma policy explícita de negação direta, sem alterar acessos já existentes.
+
+## Evolução: camada de Construtoras em Vendas Urbanas
+- [x] Modelar uma construtora em rascunho a partir de Party canônica já autorizada, sem dados fiscais, contato, documentos, correspondente, representação ou credencial.
+- [x] Permitir somente a associação estrutural entre construtora em rascunho e empreendimento em rascunho, com contexto, idempotência, RLS, negação direta e auditoria redigida.
+- [x] Preservar o bloqueio de unidades, estoque, disponibilidade, preço, anúncio, proposta, reserva, contrato, comissão, cobrança, pagamento, repasse e integração externa.
+- [x] Validar integração, testes, build, revisão visual e artefatos saneados sem criar registros de negócio.
