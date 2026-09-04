@@ -1616,3 +1616,7 @@
 ## Auditoria: Agenda Interna — Vendas Urbanas e Locação
 - [x] Verificar que a agenda é interna e limitada, sem visita externa, contato, notificação, calendário integrado, proposta, contrato ou financeiro.
 - [x] Validar em modo de leitura as rotas, os estados e os bloqueios, sem criar ou alterar agendamentos.
+
+## Auditoria: Administração de Locação
+- [x] Verificar que a jornada organiza somente o interesse de administração em rascunho, sem mandato, exclusividade, contrato, cobrança, portal ou financeiro.
+- [x] Validar em modo de leitura a rota, os estados e os bloqueios, sem criar ou alterar registros.
