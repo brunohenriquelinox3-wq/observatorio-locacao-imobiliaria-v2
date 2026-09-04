@@ -1588,3 +1588,7 @@
 ## Auditoria: Sócios e Parceiros
 - [x] Verificar que o setor reutiliza Party e papel temporal autorizados, sem participação econômica, recebível, contrato, portal ou repasse.
 - [x] Validar em modo de leitura a rota, os bloqueios, a separação setorial e a cobertura existente, sem criar ou alterar vínculos.
+
+## Auditoria: Vendas de Lotes
+- [x] Verificar que a jornada mantém somente o rascunho interno entre lote e cliente, sem reserva, proposta, contrato, valor, cobrança ou financeiro.
+- [x] Validar em modo de leitura a rota, as dependências de contexto e os controles bloqueados, sem criar ou alterar registros.
