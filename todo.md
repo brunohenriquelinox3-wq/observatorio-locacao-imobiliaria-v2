@@ -1769,3 +1769,6 @@
 ## Auditoria agregada: dashboard do CRM de referência
 - [ ] Examinar somente a composição agregada de indicadores, ações de acesso e hierarquia visual, sem abrir listas, agendas, detalhes, filtros ou transcrever métricas e dados individuais.
 - [x] Interromper a auditoria agregada quando a sessão compartilhada retornou ao login, sem nova tentativa de credencial ou acesso a dados individuais.
+
+## Revisão visual: superfícies operacionais sem contexto
+- [x] Verificar as rotas principais em desktop e móvel para identificar somente quebras comprovadas de navegação, hierarquia, contraste, sobreposição, rolagem ou responsividade, sem criar dados ou acionar comandos.
