@@ -1499,6 +1499,10 @@
 - [x] Confirmar, após o login realizado pelo usuário, que os seletores autorizados de Vendas Urbanas e Locação deixam de retornar lista vazia, sem exibir identificadores técnicos.
 - [x] Confirmar em modo de leitura que Locação continua com estado vazio protegido e que Financeiro permanece bloqueado, sem dados, contratos, garantias, valores, cobrança, pagamento, repasse ou integração externa.
 
+## Auditoria: contexto autorizado da Loteadora
+- [x] Confirmar em modo de leitura que Loteadora reconhece somente a organização autorizada após o login Supabase, sem selecionar, criar ou alterar contexto.
+- [x] Verificar que a rota preserva estados vazios e bloqueios econômicos, sem dados, comandos, contratos, valores, cobrança, pagamento, repasse ou integração externa.
+
 ## Correção estrutural: coluna Loteadora
 - [x] Substituir a página única de Loteadora por setores independentes e ordenados: Cadastro de Loteamentos, Estoque/Mapa de Lotes, Clientes Loteadora, Sócios e Parceiros e Financeiro bloqueado.
 - [x] Criar uma navegação operacional contextual para Loteadora, mantendo a hierarquia SUPER ADM → ADM → módulos e os guardas de autorização existentes.
