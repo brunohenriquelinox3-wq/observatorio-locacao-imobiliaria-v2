@@ -1635,3 +1635,6 @@
 ## Auditoria: Clientes e Interessados — Locação
 - [x] Verificar que a jornada mantém a entrada interna em rascunho, sem garantia, cadastro de locação, proposta, contrato, cobrança, pagamento ou financeiro.
 - [x] Validar em modo de leitura a rota, a separação setorial e os bloqueios, sem criar ou alterar registros.
+
+## Auditoria: Contratos e Garantias bloqueado — Locação
+- [x] Confirmar em modo de leitura que a rota permanece bloqueada e não expõe contrato, garantia, assinatura, preço, cobrança, pagamento, repasse ou integração externa.
