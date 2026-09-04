@@ -1638,3 +1638,6 @@
 
 ## Auditoria: Contratos e Garantias bloqueado — Locação
 - [x] Confirmar em modo de leitura que a rota permanece bloqueada e não expõe contrato, garantia, assinatura, preço, cobrança, pagamento, repasse ou integração externa.
+
+## Auditoria: Financeiro bloqueado — Locação
+- [x] Confirmar em modo de leitura que a rota permanece bloqueada e não expõe valores, percentuais, cálculos, parcelas, cobrança, pagamento, repasse, contrato ou integração externa.
