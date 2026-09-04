@@ -1751,3 +1751,17 @@
 
 ## Auditoria: Financeiro bloqueado — Locação
 - [x] Confirmar em modo de leitura que a rota permanece bloqueada e não expõe valores, percentuais, cálculos, parcelas, cobrança, pagamento, repasse, contrato ou integração externa.
+
+## Retomada controlada: CRM de referência em demonstração
+- [x] Confirmar o contexto demonstrativo, a superfície inicial e as restrições de leitura antes de percorrer qualquer controle externo. A158 confirmou somente o dashboard e indicadores agregados, sem expor dados individuais ou executar controles.
+- [ ] Registrar evidência individual por controle, com alternância entre Vendas Urbanas e Locação, sem dados individuais ou operações materiais.
+
+## Correção de conexão: painel demonstrativo externo
+- [ ] Alinhar a aba autenticada do navegador do usuário com a sessão compartilhada, pois a rota `/dashboard` visível ao usuário redireciona a sessão conectada para login.
+
+## Bloqueio de privacidade: auditoria do CRM de referência
+- [x] Restringir a auditoria externa a superfícies agregadas e controles sem dados pessoais, pois a Lista de Leads apresenta registros individuais por padrão.
+
+## Contenção: abertura inadvertida de agenda demonstrativa
+- [x] Retornar ao dashboard imediatamente após uma abertura não intencional de agenda que exibiu registros individuais, sem selecionar, rolar, registrar ou reproduzir dados pessoais.
+- [x] Reforçar o protocolo externo para bloquear cliques por índices potencialmente instáveis e classificar a navegação futura sem abrir listas, agendas ou detalhes.
