@@ -34,6 +34,7 @@ const urbanSectorByPath: Record<string, UrbanSector> = {
   "/vendas-urbanas/agenda": "agenda",
   "/vendas-urbanas/perfil-busca": "search",
   "/vendas-urbanas/propostas": "proposals",
+  "/vendas-urbanas/propostas-reservas-contratos": "proposals",
   "/vendas-urbanas/financeiro": "finance",
 };
 

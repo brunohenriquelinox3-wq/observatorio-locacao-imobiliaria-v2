@@ -24,6 +24,7 @@ describe("rotas da aplicação", () => {
       "/vendas-urbanas/agenda",
       "/vendas-urbanas/perfil-busca",
       "/vendas-urbanas/propostas",
+      "/vendas-urbanas/propostas-reservas-contratos",
       "/vendas-urbanas/financeiro",
       "/locacao",
       "/locacao/imoveis-proprietarios",

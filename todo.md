@@ -1623,3 +1623,11 @@
 
 ## Auditoria: Financeiro bloqueado — Vendas Urbanas
 - [x] Confirmar em modo de leitura que a rota Financeiro permanece bloqueada e não expõe valores, cálculos, cobrança, pagamento, repasse, contrato ou integração externa.
+
+## Auditoria: Propostas, Reservas e Contratos bloqueado — Vendas Urbanas
+- [x] Confirmar em modo de leitura que a rota permanece bloqueada e não expõe proposta, reserva, contrato, instrumento negocial, assinatura, preço, cobrança ou financeiro.
+
+## Correção: rota bloqueada de Propostas, Reservas e Contratos
+- [x] Corrigir a rota ausente de Vendas Urbanas para apresentar o setor bloqueado, sem implementar proposta, reserva, contrato, assinatura, preço, cobrança ou financeiro.
+- [x] Cobrir a rota bloqueada com teste, revisão visual, build e artefatos saneados.
+- [x] Garantir que o alias registrado resolva o setor Propostas bloqueado, em vez de voltar ao setor Clientes e Leads.
