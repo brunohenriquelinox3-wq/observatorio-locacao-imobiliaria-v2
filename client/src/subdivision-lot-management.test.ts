@@ -61,4 +61,13 @@ describe("central de gestão territorial por Quadra e Lote", () => {
     expect(source).toContain('lot.lotTypology !== "standard"');
     expect(source).toContain('lot.lotTypology === "standard" ? "Tipologia pendente"');
   });
+
+  it("alinha a pendência resumida da Quadra aos Lotes com qualquer atributo físico incompleto", () => {
+    const source = studio();
+
+    expect(source).toContain("lotsWithPhysicalPending");
+    expect(source).toContain('lot.positionCode === "not_declared"');
+    expect(source).toContain("Lotes com pendência");
+    expect(source).toContain("block.lotsWithPhysicalPending");
+  });
 });

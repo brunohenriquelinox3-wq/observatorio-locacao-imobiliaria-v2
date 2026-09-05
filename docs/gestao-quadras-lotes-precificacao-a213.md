@@ -114,3 +114,9 @@ Na leitura autenticada, a área, a posição e a tipologia estavam completas; fr
 | Ausência de inferência | Frente e profundidade foram mantidas como pendências de fonte; nenhum dado foi preenchido ou estimado. |
 | Teste e build | Teste dirigido, 212 arquivos e 515 testes da suíte, tipagem, build Netlify e integridade de diff foram aprovados. O único aviso remanescente é o não bloqueante de chunks grandes. |
 | Artefatos | ZIP e HTML A216 foram gerados e saneados; não incluem ambiente, dependências, logs, build, documentação, checklist, credenciais ou endereços de infraestrutura. |
+
+## Coerência de pendências por Quadra A218
+
+O resumo expansível de cada Quadra passou a contar **Lotes com pendência**, e não apenas Lotes sem área. O novo total considera um Lote pendente quando ao menos um atributo físico permanece sem evidência de fonte: área, frente, profundidade, posição ou tipologia. Dessa forma, o resumo de Quadra não entra em contradição com o painel de completude e com o detalhe dos Lotes.
+
+Essa métrica é somente uma agregação da leitura autorizada. Ela não cria campos, não preenche o que está ausente e não muda a estrutura salva. A revisão autenticada confirmou a coerência entre a quantidade de Lotes da Quadra, a pendência exibida e os atributos mostrados no detalhe. A validação integral aprovou 212 arquivos e 517 testes; o build preservou somente o aviso não bloqueante de chunks grandes. O ZIP e o HTML A218 foram regenerados e verificados como saneados.

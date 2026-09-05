@@ -2111,3 +2111,8 @@
 - [x] Impedir que os valores-padrão estruturais `not_declared` e `standard` sejam tratados como posição ou tipologia confirmadas por uma fonte física. **A217:** ambos agora contam como pendência; a etiqueta de tipologia padrão declara a pendência em vez de apresentar dado presumido.
 - [x] Revisar a leitura autenticada, a cobertura de teste e os artefatos saneados após a correção. **A217:** leitura autenticada confirmou 1/5 atributos com fonte; teste dirigido, suíte integral com 212 arquivos/516 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
 - [x] Salvar checkpoint A217 após a correção semântica, a validação integral e o saneamento dos artefatos. **A217:** checkpoint `be1ab426` preserva a distinção entre defaults estruturais e dados físicos confirmados.
+
+## Coerência de pendências por Quadra — A218
+- [x] Substituir o total de pendências limitado à área pelo total de Lotes com algum atributo físico pendente em cada Quadra. **A218:** cada resumo agora indica “Lotes com pendência”, considerando área, frente, profundidade, posição e tipologia.
+- [x] Manter a matriz em leitura, testar a nova métrica e validar a experiência sem criar ou preencher dados físicos. **A218:** leitura autenticada, teste dirigido, suíte integral com 212 arquivos/517 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
+- [ ] Salvar checkpoint A218 após a validação integral, a revisão visual e o saneamento dos artefatos.

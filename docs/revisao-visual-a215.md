@@ -29,3 +29,7 @@ Na inspeção visual focal da central, o bloco de completude ficou entre as mét
 ## Correção semântica A217
 
 A revisão identificou que `not_declared` e `standard` são valores-padrão de estrutura, não evidência recebida de fonte física. A central foi corrigida para tratá-los como pendência. A leitura autenticada confirmou a composição corrigida: somente Área apareceu como atributo completo; Frente, Profundidade, Posição e Tipologia ficaram explicitamente pendentes de fonte. Os cartões de Lote também passaram a exibir “Tipologia pendente” para o valor-padrão, sem qualquer alteração da matriz, inclusão de dado ou comando material.
+
+## Coerência por Quadra A218
+
+A leitura autenticada confirmou que o resumo de cada Quadra agora usa “Lotes com pendência” em vez de uma contagem limitada à área. Na primeira Quadra, por exemplo, a quantidade exibida correspondeu aos três Lotes que ainda necessitam de atributos físicos; as demais Quadras seguiram a mesma regra. Essa leitura permanece derivada, não aciona edição e não modifica dados físicos.
