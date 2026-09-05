@@ -142,9 +142,27 @@ import {
   subdivisionContextSchema,
 } from "../shared/subdivisionContracts";
 import {
+  archiveSubdivisionDevelopmentAttachmentInputSchema,
+  archiveSubdivisionDevelopmentStudioInputSchema,
+  createSubdivisionDevelopmentAttachmentIntentInputSchema,
+  createSubdivisionDevelopmentStudioInputSchema,
+  updateSubdivisionDevelopmentStudioInputSchema,
+} from "../shared/subdivisionDevelopmentStudioContracts";
+import {
   createDraftSubdivisionDevelopment,
   listDraftSubdivisionDevelopments,
 } from "./subdivisionDevelopment";
+import {
+  archiveSubdivisionDevelopmentStudio,
+  createSubdivisionDevelopmentStudio,
+  listSubdivisionDevelopmentStudio,
+  updateSubdivisionDevelopmentStudio,
+} from "./subdivisionDevelopmentStudio";
+import {
+  archiveSubdivisionDevelopmentAttachment,
+  createSubdivisionDevelopmentAttachmentIntent,
+  listSubdivisionDevelopmentAttachments,
+} from "./subdivisionDevelopmentAttachment";
 import {
   listDraftSubdivisionDevelopmentPreparationProfiles,
   upsertDraftSubdivisionDevelopmentPreparationProfile,
@@ -171,6 +189,13 @@ import { addSubdivisionEconomicRuleComponentRoleReference, listSubdivisionEconom
 import { authorizedOrganizationContextInputSchema, listAuthorizedOrganizationContexts } from "./organizationContext";
 import { clientImportCommitInputSchema } from "../shared/clientImportContracts";
 import { commitClientImport } from "./clientImport";
+
+async function requireRecentTotpMfa(ctx: { supabaseAccessToken?: string; supabaseSubjectId?: string | null }) {
+  const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
+  if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2" || attestation.method !== "totp") {
+    throw new TRPCError({ code: "PRECONDITION_FAILED", message: "SUBDIVISION_COMMAND_PRECONDITIONS_UNMET" });
+  }
+}
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -428,7 +453,46 @@ export const appRouter = router({
       .query(({ ctx, input }) => listDraftSubdivisionDevelopments(ctx.supabaseSubjectId ?? undefined, input)),
     createDraftDevelopment: protectedProcedure
       .input(draftSubdivisionDevelopmentInputSchema)
-      .mutation(({ ctx, input }) => createDraftSubdivisionDevelopment(ctx.supabaseSubjectId ?? undefined, input)),
+      .mutation(async ({ ctx, input }) => {
+        await requireRecentTotpMfa(ctx);
+        return createDraftSubdivisionDevelopment(ctx.supabaseSubjectId ?? undefined, input);
+      }),
+    listDevelopmentStudio: protectedProcedure
+      .input(subdivisionContextSchema)
+      .query(({ ctx, input }) => listSubdivisionDevelopmentStudio(ctx.supabaseSubjectId ?? undefined, input)),
+    createDevelopmentStudio: protectedProcedure
+      .input(createSubdivisionDevelopmentStudioInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        await requireRecentTotpMfa(ctx);
+        return createSubdivisionDevelopmentStudio(ctx.supabaseSubjectId ?? undefined, input);
+      }),
+    updateDevelopmentStudio: protectedProcedure
+      .input(updateSubdivisionDevelopmentStudioInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        await requireRecentTotpMfa(ctx);
+        return updateSubdivisionDevelopmentStudio(ctx.supabaseSubjectId ?? undefined, input);
+      }),
+    archiveDevelopmentStudio: protectedProcedure
+      .input(archiveSubdivisionDevelopmentStudioInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        await requireRecentTotpMfa(ctx);
+        return archiveSubdivisionDevelopmentStudio(ctx.supabaseSubjectId ?? undefined, input);
+      }),
+    listDevelopmentAttachments: protectedProcedure
+      .input(subdivisionContextSchema.extend({ developmentId: z.string().uuid() }))
+      .query(({ ctx, input }) => listSubdivisionDevelopmentAttachments(ctx.supabaseSubjectId ?? undefined, input, input.developmentId)),
+    createDevelopmentAttachmentIntent: protectedProcedure
+      .input(createSubdivisionDevelopmentAttachmentIntentInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        await requireRecentTotpMfa(ctx);
+        return createSubdivisionDevelopmentAttachmentIntent(ctx.supabaseSubjectId ?? undefined, input);
+      }),
+    archiveDevelopmentAttachment: protectedProcedure
+      .input(archiveSubdivisionDevelopmentAttachmentInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        await requireRecentTotpMfa(ctx);
+        return archiveSubdivisionDevelopmentAttachment(ctx.supabaseSubjectId ?? undefined, input);
+      }),
     listDraftDevelopmentPreparationProfiles: protectedProcedure
       .input(subdivisionContextSchema)
       .query(({ ctx, input }) => listDraftSubdivisionDevelopmentPreparationProfiles(ctx.supabaseSubjectId ?? undefined, input)),

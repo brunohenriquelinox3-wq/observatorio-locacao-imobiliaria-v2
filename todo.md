@@ -1902,3 +1902,20 @@
 ## Reforço de deduplicação canônica da importação
 - [x] Corrigir a rotina de importação para reutilizar a Party existente antes de criar um novo papel, impedindo duplicidade quando o mesmo cliente já estiver cadastrado com outro papel no mesmo contexto. **A193:** RPC redefinida com busca Party-primeiro e lock transacional por combinação canônica.
 - [x] Validar o reforço com testes, catálogo, build e novo checkpoint, sem importar dados reais. **A193:** testes dirigidos, suíte integral, tipagem, build e catálogo aprovados; não foram criados registros de clientes.
+
+## Governança ampliada para importação de clientes
+- [ ] Definir uma matriz de campos pessoais mínimos, finalidades, classes de retenção e proibições para importação de clientes, sem processar dados reais.
+- [ ] Modelar uma prévia local que classifique colunas pessoais permitidas, exija aviso de privacidade e rejeite documentos, anexos, contratos, valores e campos fora da matriz.
+- [ ] Aplicar persistência minimizada, criptografia em trânsito, RLS, MFA, autorização por contexto e auditoria redigida para os campos liberados.
+- [ ] Criar controles de retenção, expurgo e revisão humana que não eliminem dados por automação nem alterem registros reais durante o desenvolvimento.
+- [ ] Cobrir permissões, minimização, deduplicação, prévia, retenção, build e responsividade com testes e revisão técnica sem importar dados reais.
+- [ ] Gerar documentação, ZIP e HTML saneados e salvar checkpoint sem publicar ou realizar importação real.
+
+## Reconstrução do Cadastro de Loteamentos
+- [x] Inventariar o fluxo atual de Cadastro de Loteamentos, seus dados, comandos, estados vazios e lacunas de edição, exclusão e anexos sem expor registros existentes. **A195:** confirmado que o fluxo era linear e não possuía edição, arquivamento ou anexo do próprio loteamento.
+- [x] Reestruturar a experiência em etapas navegáveis, com resumo dinâmico, validações por seção, revisão e retorno claro para o setor de Loteadora. **A195:** criado estúdio com navegador de rascunhos e etapas de identificação, revisão, documentos e ciclo de cadastro.
+- [x] Implementar criação, edição e arquivamento controlado de loteamento, sempre sujeitos a subject ativo, MFA, organização ativa, contexto, grant, finalidade, correlação e auditoria redigida. **A195/A196:** comandos novos com MFA no tRPC, RPCs contextualizadas e reforço transversal de organização ativa.
+- [x] Implementar anexos de loteamento com carregamento para armazenamento protegido, metadados mínimos, listagem autorizada e remoção lógica sem expor arquivo ou identificador técnico. **A195:** PDF/JPEG/PNG privados, até 5 MB, com intenção, MFA antes do multipart e desvinculação lógica de chave.
+- [x] Cobrir criação, edição, arquivamento, anexos, remoção, negações de alçada, escopo, MFA e organização demonstrativa com testes automatizados e catálogo de segurança. **A195/A196:** 12 testes dirigidos, catálogo de RLS/RPCs e guarda transversal aprovados.
+- [x] Executar homologação controlada somente em organização ativa não demonstrativa, com registro sintético não pessoal e anexo não sensível, seguida de remoção lógica e limpeza de referências. **A195:** ciclo positivo de criação, edição, anexo, remoção e arquivamento executado; verificação agregada confirmou ausência de referência sintética ativa.
+- [x] Revisar desktop/móvel, documentar evidências, gerar ZIP e HTML saneados e salvar checkpoint sem publicar. **A195:** revisão visual, suíte integral de 465 testes, tipagem, build, saneamento e checkpoint concluídos.
