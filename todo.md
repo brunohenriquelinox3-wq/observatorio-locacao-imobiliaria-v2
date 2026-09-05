@@ -2115,4 +2115,4 @@
 ## Coerência de pendências por Quadra — A218
 - [x] Substituir o total de pendências limitado à área pelo total de Lotes com algum atributo físico pendente em cada Quadra. **A218:** cada resumo agora indica “Lotes com pendência”, considerando área, frente, profundidade, posição e tipologia.
 - [x] Manter a matriz em leitura, testar a nova métrica e validar a experiência sem criar ou preencher dados físicos. **A218:** leitura autenticada, teste dirigido, suíte integral com 212 arquivos/517 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
-- [ ] Salvar checkpoint A218 após a validação integral, a revisão visual e o saneamento dos artefatos.
+- [x] Salvar checkpoint A218 após a validação integral, a revisão visual e o saneamento dos artefatos. **A218:** checkpoint `70851eeb` preserva a coerência entre pendências por Quadra e atributos físicos por Lote.
