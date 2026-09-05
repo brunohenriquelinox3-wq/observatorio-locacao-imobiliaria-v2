@@ -106,4 +106,15 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain('openModule("documents")');
     expect(studio).toContain('disabled={!selectedDevelopmentId || !isWorkspaceReady || isBusy}');
   });
+
+  it("torna a divergência estrutural visível e não cria Lotes por estimativa", () => {
+    const studio = source();
+    expect(studio).toContain('const structuralReconciliationState');
+    expect(studio).toContain('structuralReconciliationPending');
+    expect(studio).toContain("RECONCILIAÇÃO ESTRUTURAL");
+    expect(studio).toContain("Não inclua Lotes por estimativa.");
+    expect(studio).toContain('requirementCode: "technical_layout"');
+    expect(studio).toContain('requirementState: "review_required"');
+    expect(studio).not.toContain("Criar Lote faltante");
+  });
 });

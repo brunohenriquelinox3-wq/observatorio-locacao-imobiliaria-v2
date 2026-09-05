@@ -195,6 +195,8 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const structureQuery = trpc.subdivisionFoundation.listDraftStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const physicalStructureQuery = trpc.subdivisionFoundation.listDraftPhysicalStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const requirementsQuery = trpc.subdivisionFoundation.listDraftDevelopmentRequirements.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
+  const structuralReconciliationState = requirementsQuery.data?.find((requirement) => requirement.requirementCode === "technical_layout")?.requirementState as RequirementState | undefined;
+  const structuralReconciliationPending = structuralReconciliationState === "review_required";
 
   useEffect(() => {
     setHasExplicitDraftChoice(false);
@@ -641,6 +643,12 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                 {!structureQuery.isLoading && activeSavedStructure.length > 0 && <div className="subdivision-studio__structure-chart" role="img" aria-label={`Matriz com ${activeSavedStructure.length} Quadras e ${savedLotCount} Lotes em rascunho`}>
                   {activeSavedStructure.map((block) => <div className="subdivision-studio__structure-chart-column" key={block.blockId}><div className="subdivision-studio__structure-chart-value">{block.lotCount}</div><div className="subdivision-studio__structure-chart-bar" style={{ height: `${Math.max(8, Math.round((block.lotCount / Math.max(...activeSavedStructure.map((item) => item.lotCount), 1)) * 100))}%` }} /><b>Q{block.blockNumber}</b><span>{block.lotCount} L</span></div>)}
                 </div>}
+              </section>}
+
+              {selectedDevelopmentId && <section className="subdivision-studio__reconciliation" data-pending={structuralReconciliationPending} aria-labelledby="structural-reconciliation-title">
+                <div><span>RECONCILIAÇÃO ESTRUTURAL</span><h5 id="structural-reconciliation-title">Não inclua Lotes por estimativa.</h5><p>{structuralReconciliationPending ? "A matriz está protegida enquanto a divergência aguarda uma fonte física conciliada." : "Quando o total de referência e a fonte física não coincidirem, registre a revisão antes de alterar a matriz."}</p></div>
+                <div className="subdivision-studio__reconciliation-status"><b>{structuralReconciliationPending ? "Revisão obrigatória" : "Sem revisão registrada"}</b><span>{structuralReconciliationPending ? "Nova fonte deve identificar cada par Quadra–Lote." : "A confirmação não cria nem completa Lotes automaticamente."}</span></div>
+                <button type="button" onClick={() => upsertRequirementMutation.mutate({ ...context, developmentId: selectedDevelopmentId, requirementCode: "technical_layout", requirementState: "review_required", correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy || requirementsQuery.isLoading || structuralReconciliationPending}>{structuralReconciliationPending ? "Pendência registrada" : "Registrar pendência de conciliação"}</button>
               </section>}
 
               {selectedDevelopmentId && <section className="subdivision-studio__physical-source" aria-labelledby="physical-source-title">
