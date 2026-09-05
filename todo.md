@@ -2127,3 +2127,8 @@
 - [x] Explicar quando nenhum Lote atende ao filtro “Completos na fonte” ou “Com pendência física”, sem sugerir preenchimento automático ou status comercial. **A220:** as mensagens descrevem ausência de evidência de fonte ou ajuste de filtro de leitura, sem induzir mutação.
 - [x] Cobrir os estados vazios, revisar a interface, validar e gerar artefatos saneados. **A220:** revisão autenticada, teste dirigido, suíte integral com 212 arquivos/519 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
 - [x] Salvar checkpoint A220 após os estados vazios, a validação integral e o saneamento dos artefatos. **A220:** checkpoint `74fe1bdf` preserva a orientação contextual sem inferências ou comandos materiais.
+
+## Clareza dos indicadores físicos — A221
+- [x] Renomear o indicador resumido de pendência para deixar explícito que ele mede somente a área, enquanto a completude geral permanece no painel por atributo. **A221:** “Área pendente” foi substituído por “Área sem fonte”.
+- [x] Cobrir a cópia, validar a leitura autenticada e gerar artefatos saneados. **A221:** leitura autenticada, teste dirigido, suíte integral com 212 arquivos/520 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
+- [ ] Salvar checkpoint A221 após a correção de nomenclatura, a validação e o saneamento dos artefatos.

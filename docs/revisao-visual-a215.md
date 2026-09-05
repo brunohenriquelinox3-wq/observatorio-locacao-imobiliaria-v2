@@ -43,3 +43,9 @@ Na revisão da faixa de filtros, a busca, o recorte de Quadra e a situação fí
 ## Estados vazios A220
 
 A recarga autenticada confirmou que a central manteve a matriz, os cartões de completude, os filtros e a política local separados de qualquer operação comercial. A mensagem contextual para “Completos na fonte” foi adicionada ao resultado vazio para explicar que ausência de resultado representa atributos ainda sem fonte, não disponibilidade ou ausência de Lotes.
+
+## Nomenclatura de área A221
+
+A revisão foi reiniciada após a alteração de cópia. A primeira captura ainda estava em carregamento da área protegida; portanto, ela não é considerada evidência da versão final. A confirmação visual deste rótulo permanece pendente de uma leitura autenticada estável, embora o teste dirigido e a tipagem tenham aprovado a alteração.
+
+A leitura autenticada estabilizada confirmou o indicador **Área sem fonte** ao lado de Área informada e do total em m². A cobertura geral continuou apresentada exclusivamente no painel **Completude física**, preservando a distinção entre uma métrica de área e o conjunto de atributos físicos.

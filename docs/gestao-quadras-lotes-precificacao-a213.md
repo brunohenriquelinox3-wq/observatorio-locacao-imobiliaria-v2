@@ -132,3 +132,9 @@ O estado do filtro existe somente na memória do navegador e retorna a “Todos 
 Quando a situação física selecionada não encontra Lotes, a central agora distingue o motivo. Para **Completos na fonte**, ela explica que não há Lotes com todos os atributos físicos confirmados e remete à conferência de fonte, sem sugerir preenchimento automático. Para **Com pendência física**, ela esclarece que os filtros de leitura podem ser ajustados, sem propor mudança cadastral.
 
 As mensagens permanecem locais e não contêm comandos de gravação, disponibilidade, preço ou venda. A validação integral aprovou 212 arquivos e 519 testes; o build manteve somente o aviso não bloqueante de chunks grandes. ZIP e HTML A220 foram regenerados e validados como saneados.
+
+## Clareza dos indicadores físicos A221
+
+O cartão resumido de área passou a usar o rótulo **Área sem fonte**. Essa nomenclatura deixa claro que o indicador trata exclusivamente da ausência do atributo de área; a completude dos demais atributos continua sendo apresentada no painel dedicado de Completude física. A revisão autenticada confirmou ambas as superfícies visíveis e sem ambiguidade.
+
+A validação integral aprovou 212 arquivos e 520 testes; o build manteve somente o aviso não bloqueante de chunks grandes. ZIP e HTML A221 foram gerados e validados como saneados. Nenhum Lote, preço, documento ou operação comercial foi alterado.

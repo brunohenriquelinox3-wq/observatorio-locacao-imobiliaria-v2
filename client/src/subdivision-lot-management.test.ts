@@ -88,4 +88,12 @@ describe("central de gestão territorial por Quadra e Lote", () => {
     expect(source).toContain("Ajuste apenas os filtros de leitura para ampliar a consulta.");
     expect(source).toContain("emptyLotFilterMessage");
   });
+
+  it("distingue a pendência de área da completude geral por atributo", () => {
+    const source = studio();
+
+    expect(source).toContain("Área sem fonte");
+    expect(source).toContain("COMPLETUDE FÍSICA");
+    expect(source).not.toContain('<span>Área pendente</span>');
+  });
 });
