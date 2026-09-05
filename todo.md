@@ -1842,3 +1842,7 @@
 - [x] Corrigir a compressão da área de trabalho na faixa de tablet, recolhendo a navegação lateral sem alterar a estrutura de setores, links ou controles de contexto.
 - [x] Aplicar a navegação em modo compacto na faixa de tablet e manter a barra lateral acessível pelo acionador existente, sem afetar a preferência de largura em desktop amplo.
 - [x] Cobrir o breakpoint compartilhado por teste automatizado e revisar as cinco rotas de Loteadora em tablet após a mudança.
+
+## Acessibilidade: ações bloqueadas sem contexto
+- [x] Diferenciar visualmente as ações desabilitadas de formulários Loteadora sem remover o bloqueio nativo, a semântica de botão ou o foco dos controles ativos.
+- [x] Cobrir o estilo de estado bloqueado e revisar as cinco rotas não financeiras em desktop e móvel antes do checkpoint.
