@@ -1826,3 +1826,7 @@
 - [x] Manter o quadro bloqueado sem contexto e sem rascunhos retornados, sem nomes, Lotes, identificadores, datas, botões, mutation, reserva, proposta, contrato, preço, cobrança ou financeiro.
 - [x] Cobrir cobertura, classificação, participantes, estados vazios e ausência de controles materiais por testes automatizados antes da validação integral.
 - [x] Confirmar que o 404 ocorreu em caminho manual não canônico; preservar a rota oficial `/loteadora/vendas` sem criar alias especulativo, mudar guardas, contexto ou permissões.
+
+## Homologação humana: Loteadora em leitura segura
+- [x] Elaborar roteiro de homologação humana somente de leitura para os cinco setores não financeiros, sem criar, editar, excluir, importar ou exportar registros.
+- [x] Definir critérios de aceite, parada imediata e continuidade para preservar contexto, dados pessoais, documentos, contratos e o Financeiro bloqueado.
