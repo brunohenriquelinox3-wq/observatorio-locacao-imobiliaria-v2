@@ -55,6 +55,20 @@ const predominantUseLabels: Record<PredominantUse, string> = {
   to_review: "A confirmar na revisão",
 };
 
+const lotTypologyLabels: Record<string, string> = {
+  standard: "Padrão",
+  corner: "Esquina",
+  irregular: "Irregular",
+  other: "Outro",
+};
+
+const lotPositionLabels: Record<string, string> = {
+  not_declared: "Não informada",
+  internal: "Interna",
+  corner: "Esquina",
+  end: "Final de Quadra",
+};
+
 const phaseLabels: Record<WorkingPhase, string> = {
   preliminary_reference: "Referência preliminar",
   structuring: "Em estruturação",
@@ -178,6 +192,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const [declaredLotTotal, setDeclaredLotTotal] = useState("");
   const [physicalStructureConfirmed, setPhysicalStructureConfirmed] = useState(false);
   const [lotSearch, setLotSearch] = useState("");
+  const [lotBlockFilter, setLotBlockFilter] = useState("all");
   const [pricePerSqmPreview, setPricePerSqmPreview] = useState("");
   const [priceScopeBlock, setPriceScopeBlock] = useState("all");
   const [isUploading, setIsUploading] = useState(false);
@@ -204,9 +219,26 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const physicalLots = useMemo(() => (physicalStructureQuery.data ?? []).flatMap((block) => block.lots.map((lot) => ({ ...lot, blockNumber: block.blockNumber }))), [physicalStructureQuery.data]);
   const searchedLots = useMemo(() => {
     const query = lotSearch.trim().toLocaleLowerCase("pt-BR");
-    if (!query) return physicalLots;
-    return physicalLots.filter((lot) => `q${lot.blockNumber} l${lot.lotNumber} ${lot.lotTypology} ${lot.positionCode}`.toLocaleLowerCase("pt-BR").includes(query));
-  }, [lotSearch, physicalLots]);
+    const blockNumber = lotBlockFilter === "all" ? null : Number(lotBlockFilter);
+    return physicalLots.filter((lot) => {
+      const matchesBlock = blockNumber === null || lot.blockNumber === blockNumber;
+      const matchesSearch = !query || `q${lot.blockNumber} l${lot.lotNumber} ${lot.lotTypology} ${lot.positionCode}`.toLocaleLowerCase("pt-BR").includes(query);
+      return matchesBlock && matchesSearch;
+    });
+  }, [lotSearch, lotBlockFilter, physicalLots]);
+  const visibleLotBlocks = useMemo(() => {
+    const groups: Array<{ blockNumber: number; lots: typeof physicalLots }> = [];
+    searchedLots.forEach((lot) => {
+      const group = groups.find((candidate) => candidate.blockNumber === lot.blockNumber);
+      if (group) group.lots.push(lot);
+      else groups.push({ blockNumber: lot.blockNumber, lots: [lot] });
+    });
+    return groups.sort((left, right) => left.blockNumber - right.blockNumber).map((group) => ({
+      ...group,
+      totalAreaSqm: group.lots.reduce((total, lot) => total + (lot.areaSqm ?? 0), 0),
+      areasPending: group.lots.filter((lot) => typeof lot.areaSqm !== "number").length,
+    }));
+  }, [searchedLots]);
   const lotsWithArea = physicalLots.filter((lot) => typeof lot.areaSqm === "number");
   const totalAreaSqm = lotsWithArea.reduce((total, lot) => total + (lot.areaSqm ?? 0), 0);
   const selectedPriceLots = priceScopeBlock === "all" ? physicalLots : physicalLots.filter((lot) => lot.blockNumber === Number(priceScopeBlock));
@@ -275,7 +307,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
 
   const updateMutation = trpc.subdivisionFoundation.updateDevelopmentStudio.useMutation({
     onSuccess() {
-      toast.success("Módulo atualizado", { description: "A atualização preserva o rascunho e registra somente metadados redigidos em auditoria." });
+      toast.success("Módulo atualizado", { description: "A atualização preserva o cadastro em estruturação e registra somente metadados redigidos em auditoria." });
       void utils.subdivisionFoundation.listDevelopmentStudio.invalidate(context);
       void utils.subdivisionFoundation.listDraftDevelopments.invalidate(context);
     },
@@ -309,7 +341,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
 
   const applyStructureMutation = trpc.subdivisionFoundation.applyDraftStructure.useMutation({
     onSuccess(result) {
-      toast.success("Estrutura de Quadras aplicada", { description: `${result.blockCount} Quadra(s) e ${result.lotCount} Lote(s) em rascunho. Nenhuma disponibilidade, reserva, venda ou contrato foi criado.` });
+      toast.success("Estrutura de Quadras aplicada", { description: `${result.blockCount} Quadra(s) e ${result.lotCount} Lote(s) no cadastro em estruturação. Nenhuma disponibilidade, reserva, venda ou contrato foi criado.` });
       setReplaceStructureConfirmed(false);
       setStructureLoadedFor("");
       void utils.subdivisionFoundation.listDraftStructure.invalidate(structureInput);
@@ -335,7 +367,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   });
   const restoreBlockMutation = trpc.subdivisionFoundation.restoreDraftBlock.useMutation({
     onSuccess(result) {
-      toast.success("Quadra restaurada", { description: `${result.restoredLotCount} Lote(s) arquivados voltaram ao rascunho. Nenhum Lote novo foi criado.` });
+      toast.success("Quadra restaurada", { description: `${result.restoredLotCount} Lote(s) arquivados voltaram ao cadastro em estruturação. Nenhum Lote novo foi criado.` });
       setStructureLoadedFor("");
       void utils.subdivisionFoundation.listDraftStructure.invalidate(structureInput);
       void utils.subdivisionFoundation.listArchivedDraftStructure.invalidate(structureInput);
@@ -343,12 +375,12 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       void utils.subdivisionFoundation.listDraftLotInventoryStates.invalidate(context);
     },
     onError() {
-      toast.error("Restauração bloqueada", { description: "O servidor exige MFA recente, contexto autorizado e vínculo da Quadra arquivada com este rascunho." });
+      toast.error("Restauração bloqueada", { description: "O servidor exige MFA recente, contexto autorizado e vínculo da Quadra arquivada com este cadastro." });
     },
   });
   const applyPhysicalStructureMutation = trpc.subdivisionFoundation.applyDraftPhysicalStructure.useMutation({
     onSuccess(result) {
-      toast.success("Matriz física aplicada", { description: `${result.blockCount} Quadra(s) e ${result.lotCount} Lote(s) em rascunho. Nenhuma disponibilidade, venda, contrato ou preço foi criado.` });
+      toast.success("Matriz física aplicada", { description: `${result.blockCount} Quadra(s) e ${result.lotCount} Lote(s) no cadastro em estruturação. Nenhuma disponibilidade, venda, contrato ou preço foi criado.` });
       setPhysicalStructureConfirmed(false);
       void utils.subdivisionFoundation.listDraftPhysicalStructure.invalidate(structureInput);
       void utils.subdivisionFoundation.listDraftStructure.invalidate(structureInput);
@@ -363,7 +395,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       void utils.subdivisionFoundation.listDraftDevelopmentRequirements.invalidate(structureInput);
     },
     onError() {
-      toast.error("Pendência não atualizada", { description: "O servidor exige MFA, contexto autorizado e um loteamento em rascunho." });
+      toast.error("Pendência não atualizada", { description: "O servidor exige MFA, contexto autorizado e um cadastro de loteamento em estruturação." });
     },
   });
 
@@ -454,7 +486,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       return;
     }
     if (structureWouldArchive && !replaceStructureConfirmed) {
-      toast.message("Confirmação necessária", { description: "A redução de quantidade ou retirada de uma Quadra arquiva referências em rascunho. Confirme a revisão antes de aplicar." });
+      toast.message("Confirmação necessária", { description: "A redução de quantidade ou retirada de uma Quadra arquiva referências do cadastro em estruturação. Confirme a revisão antes de aplicar." });
       return;
     }
     applyStructureMutation.mutate({
@@ -501,7 +533,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
 
   function openModule(module: StudioModule) {
     if ((module === "documents" || module === "lifecycle") && !selectedDevelopmentId) {
-      toast.message("Crie o rascunho antes de avançar", { description: "Documentos e ciclo de cadastro só ficam disponíveis depois que a referência interna é criada." });
+      toast.message("Crie o cadastro antes de avançar", { description: "Documentos e ciclo de cadastro só ficam disponíveis depois que a referência interna é criada." });
       return;
     }
     setActiveModule(module);
@@ -685,16 +717,16 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                 <div className="subdivision-studio__physical-source-head"><div><span>FONTE FÍSICA LOCAL</span><h5 id="physical-source-title">Concilie a matriz antes de criar Quadras e Lotes.</h5><p>A planilha fica neste navegador. O sistema lê somente Quadra, Lote e Área; status, valores, vendas e dados pessoais são descartados.</p></div><TableProperties size={22} /></div>
                 <div className="subdivision-studio__physical-source-controls"><label>Planilha estrutural <input ref={physicalSourceInput} type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={(event) => void loadPhysicalSource(event.target.files?.[0] ?? null)} disabled={!isWorkspaceReady || isBusy} /></label><label>Total de Lotes declarado <input type="number" min={1} max={2000} value={declaredLotTotal} onChange={(event) => { setDeclaredLotTotal(event.target.value); setPhysicalStructureConfirmed(false); }} placeholder="Confirme o total" disabled={!isWorkspaceReady || isBusy || !physicalSourcePreview} /></label></div>
                 {physicalSourceError && <p className="subdivision-studio__structure-error" role="alert">{physicalSourceError}</p>}
-                {physicalSourcePreview && <div className="subdivision-studio__physical-source-preview"><div className="subdivision-studio__physical-source-summary"><div><b>{physicalSourcePreview.blockCount}</b><span>Quadras lidas</span></div><div><b>{physicalSourcePreview.lotCount}</b><span>Lotes na fonte</span></div><div><b>{physicalSourcePreview.areaCoverageCount}</b><span>Áreas declaradas</span></div><div data-match={Number(declaredLotTotal) === physicalSourcePreview.lotCount}><b>{declaredLotTotal || "—"}</b><span>{Number(declaredLotTotal) === physicalSourcePreview.lotCount ? "Total conciliado" : "Total a conciliar"}</span></div></div><div className="subdivision-studio__physical-source-blocks">{physicalSourcePreview.blocks.map((block) => <span key={block.blockNumber}>Q{block.blockNumber} · {block.lots.length} Lotes</span>)}</div>{physicalSourcePreview.issues.length > 0 && <p className="subdivision-studio__structure-error" role="alert">A fonte apresenta {physicalSourcePreview.issues.length} inconsistência(s) estrutural(is). Corrija a planilha antes de aplicar.</p>}<label className="subdivision-studio__replacement-confirmation"><input type="checkbox" checked={physicalStructureConfirmed} onChange={(event) => setPhysicalStructureConfirmed(event.target.checked)} disabled={!isWorkspaceReady || isBusy || physicalSourcePreview.issues.length > 0 || Number(declaredLotTotal) !== physicalSourcePreview.lotCount} /><span><b>Confirmo a matriz física revisada.</b> A aplicação usa somente estes dados físicos e pode arquivar logicamente estruturas em rascunho que não apareçam na fonte.</span></label><button type="button" onClick={applyPhysicalSource} disabled={!isWorkspaceReady || isBusy || !physicalStructureConfirmed || physicalSourcePreview.issues.length > 0 || Number(declaredLotTotal) !== physicalSourcePreview.lotCount}>{applyPhysicalStructureMutation.isPending ? "Aplicando matriz física" : "Aplicar matriz física revisada"}</button></div>}
+                {physicalSourcePreview && <div className="subdivision-studio__physical-source-preview"><div className="subdivision-studio__physical-source-summary"><div><b>{physicalSourcePreview.blockCount}</b><span>Quadras lidas</span></div><div><b>{physicalSourcePreview.lotCount}</b><span>Lotes na fonte</span></div><div><b>{physicalSourcePreview.areaCoverageCount}</b><span>Áreas declaradas</span></div><div data-match={Number(declaredLotTotal) === physicalSourcePreview.lotCount}><b>{declaredLotTotal || "—"}</b><span>{Number(declaredLotTotal) === physicalSourcePreview.lotCount ? "Total conciliado" : "Total a conciliar"}</span></div></div><div className="subdivision-studio__physical-source-blocks">{physicalSourcePreview.blocks.map((block) => <span key={block.blockNumber}>Q{block.blockNumber} · {block.lots.length} Lotes</span>)}</div>{physicalSourcePreview.issues.length > 0 && <p className="subdivision-studio__structure-error" role="alert">A fonte apresenta {physicalSourcePreview.issues.length} inconsistência(s) estrutural(is). Corrija a planilha antes de aplicar.</p>}<label className="subdivision-studio__replacement-confirmation"><input type="checkbox" checked={physicalStructureConfirmed} onChange={(event) => setPhysicalStructureConfirmed(event.target.checked)} disabled={!isWorkspaceReady || isBusy || physicalSourcePreview.issues.length > 0 || Number(declaredLotTotal) !== physicalSourcePreview.lotCount} /><span><b>Confirmo a matriz física revisada.</b> A aplicação usa somente estes dados físicos e pode arquivar logicamente estruturas do cadastro em estruturação que não apareçam na fonte.</span></label><button type="button" onClick={applyPhysicalSource} disabled={!isWorkspaceReady || isBusy || !physicalStructureConfirmed || physicalSourcePreview.issues.length > 0 || Number(declaredLotTotal) !== physicalSourcePreview.lotCount}>{applyPhysicalStructureMutation.isPending ? "Aplicando matriz física" : "Aplicar matriz física revisada"}</button></div>}
                 {physicalStructureQuery.isLoading && <p className="subdivision-studio__physical-source-status"><LoaderCircle className="subdivision-foundation-spinner" />Confirmando os atributos físicos autorizados.</p>}
                 {physicalStructureQuery.data && physicalStructureQuery.data.length > 0 && <p className="subdivision-studio__physical-source-status"><CheckCircle2 size={16} />A matriz salva possui {physicalStructureQuery.data.reduce((total, block) => total + block.lots.length, 0)} Lote(s) físicos neste contexto.</p>}
               </section>}
 
               {selectedDevelopmentId && physicalLots.length > 0 && <section className="subdivision-lot-management" aria-labelledby="lot-management-title">
-                <div className="subdivision-lot-management__head"><div><span>GESTÃO FÍSICA POR UNIDADE</span><h5 id="lot-management-title">Veja cada Lote além da quantidade da Quadra.</h5><p>Esta visão organiza somente atributos físicos já registrados. Não mostra disponibilidade, preço aprovado, venda, contrato ou financeiro.</p></div><Ruler size={22} /></div>
-                <div className="subdivision-lot-management__metrics"><div><b>{physicalLots.length}</b><span>Lotes físicos</span></div><div><b>{lotsWithArea.length}</b><span>Com área informada</span></div><div><b>{physicalLots.length - lotsWithArea.length}</b><span>Com área pendente</span></div></div>
-                <label className="subdivision-lot-management__search"><Search size={15} /><span className="sr-only">Buscar Lote por Quadra, número, tipologia ou posição</span><input value={lotSearch} onChange={(event) => setLotSearch(event.target.value)} placeholder="Buscar Q1, L15, esquina ou tipologia" /></label>
-                <div className="subdivision-lot-management__list">{searchedLots.length === 0 ? <p className="subdivision-lot-management__empty">Nenhum Lote físico corresponde à busca.</p> : searchedLots.map((lot) => <article className="subdivision-lot-management__lot" key={`${lot.blockNumber}-${lot.lotNumber}`}><div className="subdivision-lot-management__lot-head"><b>Q{lot.blockNumber} · L{lot.lotNumber}</b><em>{lot.lotTypology.replace("_", " ")}</em></div><dl><div><dt>Área</dt><dd>{typeof lot.areaSqm === "number" ? `${lot.areaSqm.toLocaleString("pt-BR")} m²` : "Pendente"}</dd></div><div><dt>Posição</dt><dd>{lot.positionCode.replace("_", " ")}</dd></div><div><dt>Frente</dt><dd>{typeof lot.frontageM === "number" ? `${lot.frontageM.toLocaleString("pt-BR")} m` : "Pendente"}</dd></div><div><dt>Profundidade</dt><dd>{typeof lot.depthM === "number" ? `${lot.depthM.toLocaleString("pt-BR")} m` : "Pendente"}</dd></div></dl></article>)}</div>
+                <div className="subdivision-lot-management__head"><div><span>GESTÃO FÍSICA POR UNIDADE</span><h5 id="lot-management-title">Matriz detalhada por Quadra e Lote.</h5><p>Use os filtros para localizar um Lote e confira somente a sua estrutura física. Disponibilidade, preço aprovado, venda, contrato e financeiro ficam em setores próprios.</p></div><div className="subdivision-lot-management__head-mark"><Ruler size={20} /><span>Leitura física</span></div></div>
+                <div className="subdivision-lot-management__metrics"><div><b>{physicalLots.length}</b><span>Lotes físicos</span></div><div><b>{lotsWithArea.length}</b><span>Área informada</span></div><div><b>{physicalLots.length - lotsWithArea.length}</b><span>Área pendente</span></div><div><b>{totalAreaSqm.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}</b><span>m² na matriz</span></div></div>
+                <div className="subdivision-lot-management__toolbar"><label className="subdivision-lot-management__search"><Search size={15} /><span className="sr-only">Buscar Lote por Quadra, número, tipologia ou posição</span><input value={lotSearch} onChange={(event) => setLotSearch(event.target.value)} placeholder="Buscar Q1, L15, esquina ou tipologia" /></label><label className="subdivision-lot-management__block-filter"><span>Filtrar Quadra</span><select value={lotBlockFilter} onChange={(event) => setLotBlockFilter(event.target.value)}><option value="all">Todas as Quadras</option>{activeSavedStructure.map((block) => <option key={block.blockId} value={String(block.blockNumber)}>Q{block.blockNumber}</option>)}</select></label></div>
+                <div className="subdivision-lot-management__list">{visibleLotBlocks.length === 0 ? <p className="subdivision-lot-management__empty">Nenhum Lote físico corresponde ao filtro informado.</p> : visibleLotBlocks.map((block, index) => <details className="subdivision-lot-management__block" key={block.blockNumber} open={lotBlockFilter !== "all" || Boolean(lotSearch.trim()) || index === 0}><summary><div><span>QUADRA</span><h6>Q{block.blockNumber}</h6></div><dl><div><dt>Lotes exibidos</dt><dd>{block.lots.length}</dd></div><div><dt>Área física</dt><dd>{block.totalAreaSqm.toLocaleString("pt-BR", { maximumFractionDigits: 2 })} m²</dd></div><div><dt>Pendências</dt><dd>{block.areasPending}</dd></div></dl><span className="subdivision-lot-management__toggle">Ver Lotes</span></summary><div className="subdivision-lot-management__lot-grid">{block.lots.map((lot) => <article className="subdivision-lot-management__lot" key={`${lot.blockNumber}-${lot.lotNumber}`}><div className="subdivision-lot-management__lot-head"><b>L{lot.lotNumber}</b><em>{lotTypologyLabels[lot.lotTypology] ?? "Não informada"}</em></div><dl><div><dt>Área</dt><dd>{typeof lot.areaSqm === "number" ? `${lot.areaSqm.toLocaleString("pt-BR")} m²` : "Pendente"}</dd></div><div><dt>Posição</dt><dd>{lotPositionLabels[lot.positionCode] ?? "Não informada"}</dd></div><div><dt>Frente</dt><dd>{typeof lot.frontageM === "number" ? `${lot.frontageM.toLocaleString("pt-BR")} m` : "Pendente"}</dd></div><div><dt>Profundidade</dt><dd>{typeof lot.depthM === "number" ? `${lot.depthM.toLocaleString("pt-BR")} m` : "Pendente"}</dd></div></dl></article>)}</div></details>)}</div>
               </section>}
 
               {selectedDevelopmentId && <section className="subdivision-lot-pricing" aria-labelledby="lot-pricing-title">

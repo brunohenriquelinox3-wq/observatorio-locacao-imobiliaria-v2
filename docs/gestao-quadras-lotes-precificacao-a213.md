@@ -51,3 +51,21 @@ A área **Política de preço por m² · Prévia** permite informar um preço/m�
 | Validação integral | 211 arquivos de teste e 510 testes aprovados, além de tipagem, build e integridade do diff. |
 
 O cadastro real permanece sem preço/m², valor-base persistido, regra de reajuste ou condição comercial. A criação de tabela de preço real exige uma política formal com vigência, responsável e transição de aprovação, que deverá ser submetida e auditada separadamente.
+
+## Revisão visual posterior
+
+Uma revisão posterior identificou que a primeira apresentação da Gestão física por unidade ocorreu enquanto a prévia mantinha uma falha anterior de resolução de folha de estilos. O conteúdo apareceu em fluxo textual, sem cartões e sem hierarquia suficiente; essa apresentação não deve ser considerada aprovada. A prévia foi reiniciada, a folha isolada voltou a carregar e a próxima revisão deve confirmar os painéis em renderização real antes de qualquer novo empacotamento ou solicitação de aceite.
+
+Após o reinício, a sessão autenticada voltou a carregar a camada visual e a estrutura semântica confirmou filtros de busca e Quadra, indicadores separados e grupos de Lotes por Quadra. A composição foi ainda reforçada para retirar a lista única de 164 cartões e apresentar cada Quadra como bloco próprio, com área física e pendências. A validação visual detalhada em desktop e móvel continua pendente antes de uma nova entrega.
+
+Na confirmação autenticada após a correção, a tela apresentou a gestão agrupada por Quadra, filtro de Quadra, busca local e rótulos físicos em português, sem valores técnicos em inglês. A próxima revisão focará exclusivamente na composição visual abaixo da dobra, sem repetir comandos de estrutura ou consultar conteúdo comercial.
+
+A revisão autenticada na área Estrutura confirmou que a matriz física continua preservada e que a Recuperação rápida permanece visível após a reorganização. Os cartões de Quadra na matriz original não foram alterados por essa revisão; a nova leitura detalhada fica separada como camada de consulta física, sem comandos de inclusão, venda, preço persistido ou financeiro.
+
+Na inspeção de sessão após o reinício, a matriz e a Recuperação rápida permanecem visualmente separadas e o retorno da organização de Lotes não alterou os controles de estrutura. A leitura detalhada continua filtrável por Quadra e por busca local, enquanto os campos físicos sem fonte permanecem explicitamente pendentes em vez de receber dados fictícios.
+
+Após a compactação final, a leitura detalhada apresenta uma única Quadra aberta por padrão. As demais ficam compactas com quantidade de Lotes, área física, pendências e o controle “Ver Lotes”; filtro ou busca abrem somente resultados relevantes. Assim, todos os Lotes permanecem acessíveis sem uma lista contínua que torne a área extensa e difícil de navegar.
+
+Capturas independentes em desktop e móvel confirmaram que a área de trabalho preserva sua hierarquia em larguras reduzidas: controles se empilham, cartões ficam legíveis e a coluna lateral não cria espaços vazios. A leitura autenticada confirmou que a navegação expansível de Quadras carrega após o contexto autorizado; as capturas de layout não iniciaram comandos nem exibiram dados do cadastro real.
+
+Após a correção de rótulos, a validação integral voltou a passar: suíte de testes, tipagem, build compatível com Netlify e integridade do diff. O build manteve somente o aviso não bloqueante sobre chunks grandes. Esta rodada não executou comando de matriz, política de preço ou operação comercial.
