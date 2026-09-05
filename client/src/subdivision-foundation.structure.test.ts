@@ -11,4 +11,11 @@ describe("responsividade do construtor estrutural", () => {
     expect(source).toContain("overflow-x: auto");
     expect(source).toContain("min-width: 505px");
   });
+
+  it("trata a matriz por Quadra como visualização gráfica responsiva", () => {
+    const source = css();
+    expect(source).toContain("subdivision-studio__structure-visualization");
+    expect(source).toContain("subdivision-studio__structure-chart");
+    expect(source).toContain("repeating-linear-gradient(to top");
+  });
 });

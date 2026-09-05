@@ -1939,3 +1939,12 @@
 
 ## Correção da homologação A198
 - [x] Corrigir a referência de normalização incompatível identificada durante a primeira transação sintética, preservando rollback automático e sem criar registros. **A199:** RPCs substituídas e a segunda homologação foi aprovada com limpeza integral.
+
+## Correção de descoberta visual: Estrutura por Quadra
+- [x] Selecionar automaticamente um rascunho já autorizado ao carregar o Cadastro de Loteamentos, sem substituir uma seleção ou edição iniciada pela pessoa usuária. **A200:** a sessão autenticada confirmou seleção inicial do rascunho autorizado e preservação de escolha explícita no código.
+- [x] Dar prioridade visual ao módulo Estrutura quando houver loteamento selecionado, com um atalho claro para Quadras e Lotes a partir da Identificação. **A200:** abertura em Estrutura confirmada na sessão autenticada.
+- [x] Adicionar uma visualização estrutural por Quadra baseada somente nas quantidades salvas, com estados vazios honestos e sem dados inventados. **A200:** gráfico usa somente Quadras com Lotes ativos e estado vazio não infere dados.
+- [x] Navegar em sessão autenticada, exclusivamente em leitura, pela seleção de loteamento, módulos, Estrutura, anexos e atalho ao Estoque/Mapa sem criar ou alterar registros. **A200:** percurso autenticado confirmado sem mutações.
+- [x] Tratar Quadras legadas sem Lotes ativos como inconsistência de estrutura, sem representá-las como matriz válida ou alterar o registro existente automaticamente. **A200:** aviso, exclusão de contagens e bloqueio de atalho observados na sessão.
+- [x] Cobrir seleção inicial, preservação de edição, atalho para Estrutura, visualização vazia e responsividade com testes e revisão visual. **A200:** cobertura dirigida, suíte integral, tipagem, build e revisões visuais aprovados.
+- [x] Documentar a correção, gerar ZIP e HTML saneados, validar build e salvar checkpoint sem publicar ou alterar registros existentes do usuário. **A200:** navegação autenticada em leitura registrada; ZIP e HTML saneados foram gerados após validação integral.

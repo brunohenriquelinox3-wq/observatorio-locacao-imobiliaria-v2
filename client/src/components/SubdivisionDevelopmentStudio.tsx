@@ -96,6 +96,7 @@ function normalizeReference(value: string) {
 export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorkspaceReady }: DevelopmentStudioProps) {
   const [selectedDevelopmentId, setSelectedDevelopmentId] = useState("");
   const [mode, setMode] = useState<"create" | "edit">("create");
+  const [hasExplicitDraftChoice, setHasExplicitDraftChoice] = useState(false);
   const [activeModule, setActiveModule] = useState<StudioModule>("identity");
   const [form, setForm] = useState<StudioForm>(emptyForm);
   const [recordFilter, setRecordFilter] = useState("");
@@ -121,6 +122,10 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const structureQuery = trpc.subdivisionFoundation.listDraftStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
 
   useEffect(() => {
+    setHasExplicitDraftChoice(false);
+  }, [context.organizationId, context.module, context.purposeCode]);
+
+  useEffect(() => {
     if (selectedDevelopmentId && !developmentsQuery.data?.some((development) => development.developmentId === selectedDevelopmentId)) {
       setSelectedDevelopmentId("");
       setMode("create");
@@ -128,6 +133,17 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       setActiveModule("identity");
     }
   }, [developmentsQuery.data, selectedDevelopmentId]);
+
+  useEffect(() => {
+    const firstAuthorizedDraft = developmentsQuery.data?.[0];
+    if (!isWorkspaceReady || hasExplicitDraftChoice || selectedDevelopmentId || mode !== "create" || !firstAuthorizedDraft) return;
+    setSelectedDevelopmentId(firstAuthorizedDraft.developmentId);
+    setMode("edit");
+    setForm(toForm(firstAuthorizedDraft));
+    setActiveModule("structure");
+    setStructureRows([]);
+    setStructureLoadedFor("");
+  }, [developmentsQuery.data, hasExplicitDraftChoice, isWorkspaceReady, mode, selectedDevelopmentId]);
 
   useEffect(() => {
     if (mode === "edit" && selectedDevelopment) setForm(toForm(selectedDevelopment));
@@ -226,19 +242,22 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const structureReady = Boolean(form.municipality) === Boolean(form.stateCode) && form.plannedStageCount >= 1;
   const activeAttachmentCount = attachmentsQuery.data?.filter((attachment) => attachment.state === "recorded").length ?? 0;
   const savedStructure = structureQuery.data ?? [];
+  const activeSavedStructure = savedStructure.filter((block) => block.lotCount > 0);
+  const legacyEmptyBlocks = savedStructure.filter((block) => block.lotCount < 1);
   const normalizedStructureRows = structureRows.filter((row) => Number.isInteger(row.blockNumber) && row.blockNumber >= 1 && row.blockNumber <= 999 && Number.isInteger(row.lotCount) && row.lotCount >= 1 && row.lotCount <= 100);
   const hasDuplicateBlockNumber = new Set(structureRows.map((row) => row.blockNumber)).size !== structureRows.length;
   const structureWouldArchive = savedStructure.some((saved) => {
     const draft = structureRows.find((row) => row.blockNumber === saved.blockNumber);
     return !draft || draft.lotCount < saved.lotCount;
   });
-  const savedLotCount = savedStructure.reduce((total, block) => total + block.lotCount, 0);
+  const savedLotCount = activeSavedStructure.reduce((total, block) => total + block.lotCount, 0);
   const draftLotCount = structureRows.reduce((total, block) => total + (Number.isFinite(block.lotCount) ? block.lotCount : 0), 0);
-  const completedModules = [identityReady, savedStructure.length > 0 || structureReady, Boolean(form.workingPhase)].filter(Boolean).length;
+  const completedModules = [identityReady, activeSavedStructure.length > 0 || structureReady, Boolean(form.workingPhase)].filter(Boolean).length;
   const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || isUploading;
   const selectedModule = studioModules.find((module) => module.id === activeModule) ?? studioModules[0];
 
   function startNew() {
+    setHasExplicitDraftChoice(true);
     setSelectedDevelopmentId("");
     setMode("create");
     setActiveModule("identity");
@@ -251,9 +270,10 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   }
 
   function selectDevelopment(id: string) {
+    setHasExplicitDraftChoice(true);
     setSelectedDevelopmentId(id);
     setMode("edit");
-    setActiveModule("identity");
+    setActiveModule("structure");
     setStructureRows([]);
     setStructureLoadedFor("");
     setReplaceStructureConfirmed(false);
@@ -409,7 +429,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
             {studioModules.map((module, index) => {
               const ModuleIcon = module.icon;
               const requiresSavedDraft = module.id === "documents" || module.id === "lifecycle";
-              const isComplete = module.id === "identity" ? identityReady : module.id === "structure" ? savedStructure.length > 0 : module.id === "preparation" ? Boolean(form.workingPhase) : module.id === "documents" ? activeAttachmentCount > 0 : false;
+              const isComplete = module.id === "identity" ? identityReady : module.id === "structure" ? activeSavedStructure.length > 0 : module.id === "preparation" ? Boolean(form.workingPhase) : module.id === "documents" ? activeAttachmentCount > 0 : false;
               return <button type="button" key={module.id} onClick={() => openModule(module.id)} aria-current={activeModule === module.id ? "step" : undefined} data-active={activeModule === module.id} data-complete={isComplete} disabled={!isWorkspaceReady || (requiresSavedDraft && !selectedDevelopmentId)}>
                 <span className="subdivision-studio__module-index">{String(index + 1).padStart(2, "0")}</span><ModuleIcon size={17} /><span><b>{module.label}</b><small>{module.caption}</small></span>{isComplete && <CheckCircle2 size={15} />}
               </button>;
@@ -429,6 +449,16 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
             </form>}
 
             {activeModule === "structure" && <div className="subdivision-studio__structure-module">
+              {selectedDevelopmentId && <section className="subdivision-studio__structure-visualization" aria-labelledby="subdivision-structure-chart-title">
+                <div className="subdivision-studio__structure-visualization-head"><div><span>MATRIZ FÍSICA DO RASCUNHO</span><h5 id="subdivision-structure-chart-title">Quadras e Lotes já estruturados</h5><p>Leitura por Quadra da quantidade de Lotes salva neste loteamento. Este quadro não indica disponibilidade comercial.</p></div><div><b>{activeSavedStructure.length}</b><span>Quadras</span><b>{savedLotCount}</b><span>Lotes</span></div></div>
+                {structureQuery.isLoading && <div className="subdivision-studio__structure-chart-empty"><LoaderCircle className="subdivision-foundation-spinner" /><span>Confirmando a matriz autorizada.</span></div>}
+                {!structureQuery.isLoading && legacyEmptyBlocks.length > 0 && <p className="subdivision-studio__structure-warning" role="alert"><ShieldAlert size={16} /><span>{legacyEmptyBlocks.length === 1 ? `A Q${legacyEmptyBlocks[0].blockNumber} está registrada sem Lotes ativos.` : `${legacyEmptyBlocks.length} Quadras estão registradas sem Lotes ativos.`} Revise a quantidade no construtor antes de tratar esta matriz como concluída.</span></p>}
+                {!structureQuery.isLoading && activeSavedStructure.length === 0 && legacyEmptyBlocks.length === 0 && <div className="subdivision-studio__structure-chart-empty"><LandPlot size={18} /><span>Estruture a primeira Quadra abaixo. A prévia é montada somente com dados que você informar.</span></div>}
+                {!structureQuery.isLoading && activeSavedStructure.length > 0 && <div className="subdivision-studio__structure-chart" role="img" aria-label={`Matriz com ${activeSavedStructure.length} Quadras e ${savedLotCount} Lotes em rascunho`}>
+                  {activeSavedStructure.map((block) => <div className="subdivision-studio__structure-chart-column" key={block.blockId}><div className="subdivision-studio__structure-chart-value">{block.lotCount}</div><div className="subdivision-studio__structure-chart-bar" style={{ height: `${Math.max(8, Math.round((block.lotCount / Math.max(...activeSavedStructure.map((item) => item.lotCount), 1)) * 100))}%` }} /><b>Q{block.blockNumber}</b><span>{block.lotCount} L</span></div>)}
+                </div>}
+              </section>}
+
               <form className="subdivision-studio__module-form subdivision-studio__structure-profile" onSubmit={saveDevelopment}>
                 <div className="subdivision-studio__field-grid subdivision-studio__field-grid--three">
                   <label>Enquadramento<select value={form.developmentKind} onChange={(event) => setForm((current) => ({ ...current, developmentKind: event.target.value as DevelopmentKind }))} disabled={!isWorkspaceReady || isBusy}>{Object.entries(kindLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
@@ -452,9 +482,9 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                 {!structureQuery.isLoading && !structureQuery.isError && structureRows.length > 0 && <div className="subdivision-studio__structure-grid" role="list" aria-label="Matriz de Quadras e Lotes"><div className="subdivision-studio__structure-grid-head"><span>Quadra</span><span>Quantidade de Lotes</span><span>Prévia gerada</span><span className="sr-only">Ação</span></div>{structureRows.map((row, index) => <div className="subdivision-studio__structure-row" role="listitem" key={`${row.blockNumber}-${index}`}><label><span className="sr-only">Número da Quadra {index + 1}</span><div className="subdivision-studio__number-input"><em>Q</em><input type="number" min={1} max={999} value={row.blockNumber} onChange={(event) => updateStructureRow(index, { blockNumber: Number(event.target.value) })} disabled={!isWorkspaceReady || isBusy} required /></div></label><label><span className="sr-only">Quantidade de Lotes da Quadra {row.blockNumber || index + 1}</span><div className="subdivision-studio__number-input"><em>L</em><input type="number" min={1} max={100} value={row.lotCount} onChange={(event) => updateStructureRow(index, { lotCount: Number(event.target.value) })} disabled={!isWorkspaceReady || isBusy} required /></div></label><p><b>Q{row.blockNumber || "?"}</b> · L1–L{row.lotCount || "?"}</p><button type="button" className="subdivision-studio__remove-row" onClick={() => removeStructureRow(index)} disabled={!isWorkspaceReady || isBusy}><Trash2 size={15} /><span className="sr-only">Remover Quadra {row.blockNumber}</span></button></div>)}</div>}
                 {hasDuplicateBlockNumber && <p className="subdivision-studio__structure-error" role="alert">Cada Quadra precisa de numeração única. Corrija os números repetidos antes de aplicar.</p>}
                 {structureWouldArchive && <label className="subdivision-studio__replacement-confirmation"><input type="checkbox" checked={replaceStructureConfirmed} onChange={(event) => setReplaceStructureConfirmed(event.target.checked)} disabled={!isWorkspaceReady || isBusy} /><span><b>Confirmo a revisão da redução estrutural.</b> Quadras removidas e Lotes acima da nova quantidade serão arquivados logicamente; não há exclusão física nem efeito em venda, contrato ou financeiro.</span></label>}
-                <div className="subdivision-studio__structure-apply"><div><span>ESTRUTURA SALVA</span><b>{savedStructure.length ? `${savedStructure.length} Quadra(s) · ${savedLotCount} Lote(s)` : "Ainda não há Quadras salvas"}</b></div><button type="submit" disabled={!isWorkspaceReady || isBusy || structureRows.length === 0 || normalizedStructureRows.length !== structureRows.length || hasDuplicateBlockNumber || (structureWouldArchive && !replaceStructureConfirmed)}>{applyStructureMutation.isPending ? "Aplicando estrutura" : savedStructure.length ? "Aplicar revisão da estrutura" : "Criar Quadras e Lotes"}</button></div>
-                {savedStructure.length > 0 && <div className="subdivision-studio__saved-structure"><div><span>QUADRAS SALVAS</span><p>Use o botão de arquivamento apenas para uma Quadra inteira. Seus Lotes em rascunho serão arquivados junto dela.</p></div><div>{savedStructure.map((block) => <article key={block.blockId}><b>Q{block.blockNumber}</b><span>{block.lotCount} Lote(s)</span><AlertDialog><AlertDialogTrigger asChild><button type="button" className="subdivision-studio__danger" disabled={isBusy}><Archive size={14} />Arquivar</button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Arquivar Q{block.blockNumber}?</AlertDialogTitle><AlertDialogDescription>Os Lotes de rascunho vinculados a esta Quadra serão arquivados logicamente. O histórico é preservado; não há exclusão em cascata, venda, contrato ou efeito financeiro.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => archiveBlockMutation.mutate({ ...context, developmentId: selectedDevelopmentId, blockId: block.blockId, correlationId: crypto.randomUUID() })}>Arquivar Quadra</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></article>)}</div></div>}
-                {savedStructure.length > 0 && <a className="subdivision-studio__inventory-link" href="/estoque-lotes"><MapPinned size={16} /><span>Abrir Estoque/Mapa de Lotes</span><small>Revise a matriz Qn · Ln criada neste contexto.</small></a>}
+                <div className="subdivision-studio__structure-apply"><div><span>ESTRUTURA SALVA</span><b>{activeSavedStructure.length ? `${activeSavedStructure.length} Quadra(s) · ${savedLotCount} Lote(s)` : legacyEmptyBlocks.length ? "Inconsistência: Quadra sem Lotes ativos" : "Ainda não há Quadras salvas"}</b></div><button type="submit" disabled={!isWorkspaceReady || isBusy || structureRows.length === 0 || normalizedStructureRows.length !== structureRows.length || hasDuplicateBlockNumber || (structureWouldArchive && !replaceStructureConfirmed)}>{applyStructureMutation.isPending ? "Aplicando estrutura" : savedStructure.length ? "Aplicar revisão da estrutura" : "Criar Quadras e Lotes"}</button></div>
+                {savedStructure.length > 0 && <div className="subdivision-studio__saved-structure"><div><span>QUADRAS REGISTRADAS</span><p>Quadras sem Lotes ativos exigem revisão. Use o arquivamento apenas para uma Quadra inteira; seus Lotes de rascunho serão arquivados junto dela.</p></div><div>{savedStructure.map((block) => <article key={block.blockId} data-incomplete={block.lotCount < 1}><b>Q{block.blockNumber}</b><span>{block.lotCount > 0 ? `${block.lotCount} Lote(s)` : "Sem Lotes ativos · revisar"}</span><AlertDialog><AlertDialogTrigger asChild><button type="button" className="subdivision-studio__danger" disabled={isBusy}><Archive size={14} />Arquivar</button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Arquivar Q{block.blockNumber}?</AlertDialogTitle><AlertDialogDescription>Os Lotes de rascunho vinculados a esta Quadra serão arquivados logicamente. O histórico é preservado; não há exclusão em cascata, venda, contrato ou efeito financeiro.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => archiveBlockMutation.mutate({ ...context, developmentId: selectedDevelopmentId, blockId: block.blockId, correlationId: crypto.randomUUID() })}>Arquivar Quadra</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></article>)}</div></div>}
+                {activeSavedStructure.length > 0 && <a className="subdivision-studio__inventory-link" href="/estoque-lotes"><MapPinned size={16} /><span>Abrir Estoque/Mapa de Lotes</span><small>Revise a matriz Qn · Ln criada neste contexto.</small></a>}
               </form>}
             </div>}
 
@@ -489,7 +519,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
           <div className="subdivision-studio__overview-name"><strong>{mode === "create" ? form.displayName || "Novo loteamento" : selectedDevelopment?.displayName ?? selectedDevelopment?.internalReference}</strong><span>{form.internalReference || "Referência pendente"}</span></div>
           <div className="subdivision-studio__overview-grid">
             <div><span>BASE</span><b>{identityReady ? "Completa" : "Em preenchimento"}</b></div>
-            <div><span>ESTRUTURA</span><b>{savedStructure.length ? `${savedStructure.length} Q · ${savedLotCount} L` : structureReady ? "Aguardando Quadras" : "Revisar"}</b></div>
+            <div><span>ESTRUTURA</span><b>{activeSavedStructure.length ? `${activeSavedStructure.length} Q · ${savedLotCount} L` : legacyEmptyBlocks.length ? "Revisão de estrutura" : structureReady ? "Aguardando Quadras" : "Revisar"}</b></div>
             <div><span>PREPARAÇÃO</span><b>{phaseLabels[form.workingPhase]}</b></div>
             <div><span>DOCUMENTOS</span><b>{selectedDevelopmentId ? `${activeAttachmentCount} privado(s)` : "Após criar"}</b></div>
           </div>

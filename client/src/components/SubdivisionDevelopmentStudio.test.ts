@@ -51,4 +51,29 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain('caption: "Quadras e Lotes"');
     expect(studio).toContain('aria-label="Matriz de Quadras e Lotes"');
   });
+
+  it("abre o primeiro rascunho autorizado na Estrutura sem sobrescrever uma escolha explícita", () => {
+    const studio = source();
+    expect(studio).toContain("const [hasExplicitDraftChoice, setHasExplicitDraftChoice]");
+    expect(studio).toContain("if (!isWorkspaceReady || hasExplicitDraftChoice || selectedDevelopmentId || mode !== \"create\" || !firstAuthorizedDraft) return;");
+    expect(studio).toContain("setActiveModule(\"structure\")");
+    expect(studio).toContain("setHasExplicitDraftChoice(true)");
+  });
+
+  it("exibe a leitura gráfica somente com a estrutura autorizada já salva", () => {
+    const studio = source();
+    expect(studio).toContain("MATRIZ FÍSICA DO RASCUNHO");
+    expect(studio).toContain("Quadras e Lotes já estruturados");
+    expect(studio).toContain("Estruture a primeira Quadra abaixo");
+    expect(studio).toContain("Matriz com ${activeSavedStructure.length} Quadras e ${savedLotCount} Lotes em rascunho");
+  });
+
+  it("não representa Quadra legada sem Lotes ativos como matriz pronta", () => {
+    const studio = source();
+    expect(studio).toContain("const activeSavedStructure = savedStructure.filter((block) => block.lotCount > 0)");
+    expect(studio).toContain("const legacyEmptyBlocks = savedStructure.filter((block) => block.lotCount < 1)");
+    expect(studio).toContain("está registrada sem Lotes ativos");
+    expect(studio).toContain("Inconsistência: Quadra sem Lotes ativos");
+    expect(studio).toContain("Revisão de estrutura");
+  });
 });
