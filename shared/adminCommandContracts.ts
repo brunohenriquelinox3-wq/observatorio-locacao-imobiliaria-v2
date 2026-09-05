@@ -10,6 +10,14 @@ export const organizationRoleSchema = z.enum([
   "operator",
 ]);
 
+export const workforceProfileSchema = z.enum(["collaborator", "broker"]);
+
+const workforceScopeSelectorSchema = z
+  .object({
+    modules: z.array(z.enum(["loteadora", "vendas_urbanas", "locacao"])).min(1).max(3),
+  })
+  .strict();
+
 export const platformRoleSchema = z.enum([
   "platform_super_admin",
   "platform_security_admin",
@@ -67,6 +75,32 @@ export const suspendMembershipInputSchema = z
 
 export const revokeMembershipInputSchema = suspendMembershipInputSchema;
 
+export const requestOwnWorkforceAccessInputSchema = z
+  .object({
+    organizationReference: z.string().trim().min(2).max(160),
+    profile: workforceProfileSchema,
+    correlationId,
+  })
+  .strict();
+
+export const prepareWorkforceAccessInputSchema = z
+  .object({
+    requestId: uuid,
+    role: organizationRoleSchema,
+    scopeSelector: workforceScopeSelectorSchema,
+    purposeCode: z.enum(["cadastro_inicial", "operacao_interna", "revisao_cadastral"]),
+    expiresAt: z.string().datetime({ offset: true }),
+    correlationId,
+  })
+  .strict();
+
+export const acceptOwnWorkforceAccessInputSchema = z
+  .object({
+    requestId: uuid,
+    correlationId,
+  })
+  .strict();
+
 export const bootstrapPlatformPrincipalInputSchema = z
   .object({
     subjectId: uuid,
@@ -84,5 +118,9 @@ export type ActivateSelfOrganizationAdminInput = z.infer<typeof activateSelfOrga
 export type ActivateOrganizationInput = z.infer<typeof activateOrganizationInputSchema>;
 export type SuspendMembershipInput = z.infer<typeof suspendMembershipInputSchema>;
 export type RevokeMembershipInput = z.infer<typeof revokeMembershipInputSchema>;
+export type WorkforceProfile = z.infer<typeof workforceProfileSchema>;
+export type RequestOwnWorkforceAccessInput = z.infer<typeof requestOwnWorkforceAccessInputSchema>;
+export type PrepareWorkforceAccessInput = z.infer<typeof prepareWorkforceAccessInputSchema>;
+export type AcceptOwnWorkforceAccessInput = z.infer<typeof acceptOwnWorkforceAccessInputSchema>;
 export type BootstrapPlatformPrincipalInput = z.infer<typeof bootstrapPlatformPrincipalInputSchema>;
 export type AdministrativeRequestMeta = z.infer<typeof administrativeRequestMetaSchema>;

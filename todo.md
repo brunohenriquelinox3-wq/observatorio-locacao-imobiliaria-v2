@@ -1846,3 +1846,15 @@
 ## Acessibilidade: ações bloqueadas sem contexto
 - [x] Diferenciar visualmente as ações desabilitadas de formulários Loteadora sem remover o bloqueio nativo, a semântica de botão ou o foco dos controles ativos.
 - [x] Cobrir o estilo de estado bloqueado e revisar as cinco rotas não financeiras em desktop e móvel antes do checkpoint.
+
+## Governança administrativa: SUPER ADM e ADM
+- [x] Inventariar os painéis, identidades, organizações, memberships, grants, escopos, MFA e jornadas existentes de colaboradores e corretores.
+- [x] Pesquisar práticas de delegação administrativa e definir matriz segura que preserve SUPER ADM acima de ADM, sem liberação automática ou convite externo.
+- [x] Implementar o primeiro painel de preparação de colaboradores e corretores, com validações server-side, RLS/RPCs fail-closed, testes, revisão visual e artefatos saneados.
+- [x] Criar solicitação autônoma de acesso por identidade já ativa, sem senha, e-mail, convite, link sensível ou dados pessoais exibidos.
+- [x] Exigir que SUPER ADM prepare perfis de colaborador/corretor com papéis organizacionais permitidos e que ADM prepare somente operador da própria organização, com escopo contido e vigência explícita.
+- [x] Exigir aceite separado pelo próprio sujeito com MFA antes de ativar membership ou grant; não criar acesso automático na preparação.
+- [x] Expor painéis SUPER ADM e ADM com solicitações ordinais e estado redigido, sem nome, e-mail, UUID, documento, dados de RH, contratos, comissão ou financeiro.
+- [x] Cobrir migration, RLS, RPCs, identidade, MFA, alçada, organização cruzada, escopo excessivo, idempotência, roteamento e responsividade por testes automatizados.
+- [x] Bloquear visualmente a solicitação própria quando a sessão Supabase não fornecer subject, sem confundir autenticação da plataforma com elegibilidade de acesso.
+- [x] Bloquear visualmente a preparação de equipe pelo ADM quando a sessão Supabase não fornecer subject, sem confundir autenticação da plataforma com alçada organizacional.

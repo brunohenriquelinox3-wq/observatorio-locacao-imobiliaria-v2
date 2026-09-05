@@ -18,13 +18,25 @@ import {
   revokeMembership,
   suspendMembership,
 } from "./adminCommands";
+import {
+  acceptOwnWorkforceAccess,
+  listOrganizationWorkforceAccessRequests,
+  listOwnWorkforceAccessRequests,
+  listPlatformWorkforceAccessRequests,
+  prepareOrganizationWorkforceAccess,
+  preparePlatformWorkforceAccess,
+  requestOwnWorkforceAccess,
+} from "./adminWorkforceAccess";
 import { attestSupabaseMfa } from "./supabaseIdentity";
 import {
+  acceptOwnWorkforceAccessInputSchema,
   activateOrganizationInputSchema,
   activateSelfOrganizationAdminInputSchema,
   administrativeRequestMetaSchema,
   grantMembershipInputSchema,
+  prepareWorkforceAccessInputSchema,
   provisionOrganizationInputSchema,
+  requestOwnWorkforceAccessInputSchema,
   revokeMembershipInputSchema,
   suspendMembershipInputSchema,
 } from "../shared/adminCommandContracts";
@@ -232,6 +244,42 @@ export const appRouter = router({
     revokeMembership: platformActiveProcedure
       .input(revokeMembershipInputSchema)
       .mutation(({ ctx, input }) => revokeMembership(ctx.supabaseSubjectId, input)),
+    requestOwnWorkforceAccess: protectedProcedure
+      .input(requestOwnWorkforceAccessInputSchema)
+      .mutation(({ ctx, input }) => requestOwnWorkforceAccess(ctx.supabaseSubjectId ?? null, input)),
+    listOwnWorkforceAccessRequests: protectedProcedure
+      .query(({ ctx }) => listOwnWorkforceAccessRequests(ctx.supabaseSubjectId ?? null)),
+    acceptOwnWorkforceAccess: protectedProcedure
+      .input(acceptOwnWorkforceAccessInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
+        if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2" || attestation.method !== "totp" || !attestation.verifiedRecoveryChannel) {
+          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ADMIN_COMMAND_PRECONDITIONS_UNMET" });
+        }
+        return acceptOwnWorkforceAccess(ctx.supabaseSubjectId ?? null, input);
+      }),
+    listPlatformWorkforceAccessRequests: platformActiveProcedure
+      .query(({ ctx }) => listPlatformWorkforceAccessRequests(ctx.supabaseSubjectId ?? null)),
+    preparePlatformWorkforceAccess: platformActiveProcedure
+      .input(prepareWorkforceAccessInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
+        if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2" || attestation.method !== "totp" || !attestation.verifiedRecoveryChannel) {
+          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ADMIN_COMMAND_PRECONDITIONS_UNMET" });
+        }
+        return preparePlatformWorkforceAccess(ctx.supabaseSubjectId ?? null, input);
+      }),
+    listOrganizationWorkforceAccessRequests: protectedProcedure
+      .query(({ ctx }) => listOrganizationWorkforceAccessRequests(ctx.supabaseSubjectId ?? null)),
+    prepareOrganizationWorkforceAccess: protectedProcedure
+      .input(prepareWorkforceAccessInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
+        if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2" || attestation.method !== "totp" || !attestation.verifiedRecoveryChannel) {
+          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ADMIN_COMMAND_PRECONDITIONS_UNMET" });
+        }
+        return prepareOrganizationWorkforceAccess(ctx.supabaseSubjectId ?? null, input);
+      }),
   }),
 
   organizationContext: router({
