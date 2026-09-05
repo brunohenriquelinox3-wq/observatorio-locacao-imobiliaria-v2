@@ -1862,3 +1862,13 @@
 ## Homologação humana: governança de equipe em leitura segura
 - [x] Elaborar roteiro somente de leitura para SUPER ADM, ADM e solicitação própria de equipe, sem criar solicitação, delegação, convite ou acesso.
 - [x] Definir critérios de aceite e parada para identidade, MFA, escopo, estados redigidos, alçadas e ausência de dados pessoais.
+
+## Teste controlado: solicitação própria de equipe
+- [ ] Confirmar sessão Supabase, MFA e identidade ativa antes de criar uma única solicitação própria de preparação, sem convite, senha ou ativação.
+- [ ] Registrar a solicitação com perfil de trabalho e organização de referência informados pelo próprio usuário, sem expor identificadores ou criar qualquer delegação.
+- [ ] Verificar que a solicitação permanece pendente e exigir confirmação separada antes de qualquer preparo, aceite ou ativação de membership/grant.
+- [ ] Confirmar por submissão controlada que uma identidade já vinculada à organização é negada e não cria solicitação, membership, grant ou acesso adicional.
+
+## Recuperação técnica: teste de equipe
+- [x] Estabilizar a prévia após a indisponibilidade do navegador, sem repetir submissões ou criar solicitação de acesso.
+- [x] Validar por testes a negação de identidade já vinculada, a idempotência e a ausência de ativação automática, preservando o aceite pessoal como etapa separada.
