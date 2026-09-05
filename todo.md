@@ -2166,4 +2166,4 @@
 - [x] Exibir somente o número de linha de origem e a categoria do campo obrigatório pendente, sem valor, Quadra, Lote, cliente, status ou outra informação comercial. **A227:** a prévia retorna no máximo dez referências saneadas de linha/categoria; a interface declara explicitamente os campos que não exibe.
 - [x] Manter a exceção bloqueadora e a preparação indisponível até a planilha ser corrigida na origem e reenviada para nova prévia. **A227:** a verificação efêmera confirmou uma pendência de área ou preço-base na linha de origem 29; não houve banco, política ou linha persistida.
 - [x] Cobrir a orientação, validar e gerar ZIP e HTML sem persistir dados da fonte. **A227:** teste dirigido, suíte integral com 214 arquivos/535 testes, tipagem, build Netlify, integridade de diff e saneamento de ZIP/HTML foram aprovados.
-- [ ] Salvar checkpoint A227 após documentação, validação e saneamento dos artefatos.
+- [x] Salvar checkpoint A227 após documentação, validação e saneamento dos artefatos. **A227:** checkpoint `a1320510` preserva a orientação saneada e o bloqueio de preparação sem persistir a fonte.
