@@ -166,9 +166,11 @@ import {
 import {
   applyDraftSubdivisionStructure,
   archiveDraftSubdivisionBlock,
+  listArchivedDraftSubdivisionStructure,
   listDraftSubdivisionStructure,
+  restoreDraftSubdivisionBlock,
 } from "./subdivisionStructureBuilder";
-import { applySubdivisionDraftStructureInputSchema, archiveSubdivisionDraftBlockInputSchema } from "../shared/subdivisionStructureBuilderContracts";
+import { applySubdivisionDraftStructureInputSchema, archiveSubdivisionDraftBlockInputSchema, restoreSubdivisionDraftBlockInputSchema } from "../shared/subdivisionStructureBuilderContracts";
 import {
   applySubdivisionPhysicalStructureInputSchema,
   upsertSubdivisionDevelopmentRequirementInputSchema,
@@ -523,6 +525,15 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         await requireRecentTotpMfa(ctx);
         return archiveDraftSubdivisionBlock(ctx.supabaseSubjectId ?? undefined, input);
+      }),
+    listArchivedDraftStructure: protectedProcedure
+      .input(subdivisionContextSchema.extend({ developmentId: z.string().uuid() }))
+      .query(({ ctx, input }) => listArchivedDraftSubdivisionStructure(ctx.supabaseSubjectId ?? undefined, input, input.developmentId)),
+    restoreDraftBlock: protectedProcedure
+      .input(restoreSubdivisionDraftBlockInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        await requireRecentTotpMfa(ctx);
+        return restoreDraftSubdivisionBlock(ctx.supabaseSubjectId ?? undefined, input);
       }),
     listDraftPhysicalStructure: protectedProcedure
       .input(subdivisionContextSchema.extend({ developmentId: z.string().uuid() }))

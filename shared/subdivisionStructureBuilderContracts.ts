@@ -31,6 +31,9 @@ export const archiveSubdivisionDraftBlockInputSchema = subdivisionContextSchema.
   blockId: z.string().uuid(),
 });
 
+export const restoreSubdivisionDraftBlockInputSchema = archiveSubdivisionDraftBlockInputSchema;
+
 export type ApplySubdivisionDraftStructureInput = z.infer<typeof applySubdivisionDraftStructureInputSchema>;
 export type SubdivisionStructureBlock = z.infer<typeof subdivisionStructureBlockSchema>;
 export type ArchiveSubdivisionDraftBlockInput = z.infer<typeof archiveSubdivisionDraftBlockInputSchema>;
+export type RestoreSubdivisionDraftBlockInput = z.infer<typeof restoreSubdivisionDraftBlockInputSchema>;

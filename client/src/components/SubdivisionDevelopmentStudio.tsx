@@ -3,7 +3,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { trpc } from "@/lib/trpc";
 import { parsePhysicalSourceFile, type PhysicalSourcePreview } from "@/lib/subdivisionPhysicalSourcePreview";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Archive, BookOpenCheck, CheckCircle2, ClipboardCheck, FilePlus2, FileText, LandPlot, LoaderCircle, MapPinned, PencilLine, Plus, Search, ShieldAlert, ShieldCheck, TableProperties, Trash2, Upload, Workflow } from "lucide-react";
+import { Archive, ArchiveRestore, BookOpenCheck, CheckCircle2, ClipboardCheck, FilePlus2, FileText, LandPlot, LoaderCircle, MapPinned, PencilLine, Plus, Search, ShieldAlert, ShieldCheck, TableProperties, Trash2, Upload, Workflow } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -193,6 +193,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const attachmentsQuery = trpc.subdivisionFoundation.listDevelopmentAttachments.useQuery(attachmentInputContext, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const structureInput = useMemo(() => ({ ...context, developmentId: selectedDevelopmentId }), [context, selectedDevelopmentId]);
   const structureQuery = trpc.subdivisionFoundation.listDraftStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
+  const archivedStructureQuery = trpc.subdivisionFoundation.listArchivedDraftStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const physicalStructureQuery = trpc.subdivisionFoundation.listDraftPhysicalStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const requirementsQuery = trpc.subdivisionFoundation.listDraftDevelopmentRequirements.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const structuralReconciliationState = requirementsQuery.data?.find((requirement) => requirement.requirementCode === "technical_layout")?.requirementState as RequirementState | undefined;
@@ -309,11 +310,25 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       toast.success("Quadra arquivada", { description: `${result.archivedLotCount} Lote(s) foram arquivados logicamente. O histórico foi preservado.` });
       setStructureLoadedFor("");
       void utils.subdivisionFoundation.listDraftStructure.invalidate(structureInput);
+      void utils.subdivisionFoundation.listArchivedDraftStructure.invalidate(structureInput);
       void utils.subdivisionFoundation.listDraftBlocks.invalidate(structureInput);
       void utils.subdivisionFoundation.listDraftLotInventoryStates.invalidate(context);
     },
     onError() {
       toast.error("Quadra não arquivada", { description: "O servidor exige MFA, contexto autorizado e vínculo com o loteamento selecionado." });
+    },
+  });
+  const restoreBlockMutation = trpc.subdivisionFoundation.restoreDraftBlock.useMutation({
+    onSuccess(result) {
+      toast.success("Quadra restaurada", { description: `${result.restoredLotCount} Lote(s) arquivados voltaram ao rascunho. Nenhum Lote novo foi criado.` });
+      setStructureLoadedFor("");
+      void utils.subdivisionFoundation.listDraftStructure.invalidate(structureInput);
+      void utils.subdivisionFoundation.listArchivedDraftStructure.invalidate(structureInput);
+      void utils.subdivisionFoundation.listDraftBlocks.invalidate(structureInput);
+      void utils.subdivisionFoundation.listDraftLotInventoryStates.invalidate(context);
+    },
+    onError() {
+      toast.error("Restauração bloqueada", { description: "O servidor exige MFA recente, contexto autorizado e vínculo da Quadra arquivada com este rascunho." });
     },
   });
   const applyPhysicalStructureMutation = trpc.subdivisionFoundation.applyDraftPhysicalStructure.useMutation({
@@ -354,7 +369,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const savedLotCount = activeSavedStructure.reduce((total, block) => total + block.lotCount, 0);
   const draftLotCount = structureRows.reduce((total, block) => total + (Number.isFinite(block.lotCount) ? block.lotCount : 0), 0);
   const completedModules = [identificationDetailed, activeSavedStructure.length > 0, Boolean(form.workingPhase)].filter(Boolean).length;
-  const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || applyPhysicalStructureMutation.isPending || upsertRequirementMutation.isPending || isUploading;
+  const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || restoreBlockMutation.isPending || applyPhysicalStructureMutation.isPending || upsertRequirementMutation.isPending || isUploading;
   const selectedModule = studioModules.find((module) => module.id === activeModule) ?? studioModules[0];
 
   function startNew() {
@@ -672,6 +687,8 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                 {structureWouldArchive && <label className="subdivision-studio__replacement-confirmation"><input type="checkbox" checked={replaceStructureConfirmed} onChange={(event) => setReplaceStructureConfirmed(event.target.checked)} disabled={!isWorkspaceReady || isBusy} /><span><b>Confirmo a revisão da redução estrutural.</b> Quadras removidas e Lotes acima da nova quantidade serão arquivados logicamente; não há exclusão física nem efeito em venda, contrato ou financeiro.</span></label>}
                 <div className="subdivision-studio__structure-apply"><div><span>ESTRUTURA SALVA</span><b>{activeSavedStructure.length ? `${activeSavedStructure.length} Quadra(s) · ${savedLotCount} Lote(s)` : legacyEmptyBlocks.length ? "Inconsistência: Quadra sem Lotes ativos" : "Ainda não há Quadras salvas"}</b></div><button type="submit" disabled={!isWorkspaceReady || isBusy || structureRows.length === 0 || normalizedStructureRows.length !== structureRows.length || hasDuplicateBlockNumber || (structureWouldArchive && !replaceStructureConfirmed)}>{applyStructureMutation.isPending ? "Aplicando estrutura" : savedStructure.length ? "Aplicar revisão da estrutura" : "Criar Quadras e Lotes"}</button></div>
                 {savedStructure.length > 0 && <div className="subdivision-studio__saved-structure"><div><span>QUADRAS REGISTRADAS</span><p>Quadras sem Lotes ativos exigem revisão. Use o arquivamento apenas para uma Quadra inteira; seus Lotes de rascunho serão arquivados junto dela.</p></div><div>{savedStructure.map((block) => <article key={block.blockId} data-incomplete={block.lotCount < 1}><b>Q{block.blockNumber}</b><span>{block.lotCount > 0 ? `${block.lotCount} Lote(s)` : "Sem Lotes ativos · revisar"}</span><AlertDialog><AlertDialogTrigger asChild><button type="button" className="subdivision-studio__danger" disabled={isBusy}><Archive size={14} />Arquivar</button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Arquivar Q{block.blockNumber}?</AlertDialogTitle><AlertDialogDescription>Os Lotes de rascunho vinculados a esta Quadra serão arquivados logicamente. O histórico é preservado; não há exclusão em cascata, venda, contrato ou efeito financeiro.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => archiveBlockMutation.mutate({ ...context, developmentId: selectedDevelopmentId, blockId: block.blockId, correlationId: crypto.randomUUID() })}>Arquivar Quadra</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></article>)}</div></div>}
+                {archivedStructureQuery.data && archivedStructureQuery.data.length > 0 && <section className="subdivision-studio__saved-structure subdivision-studio__archived-structure" aria-labelledby="archived-blocks-title"><div><span>QUADRAS ARQUIVADAS</span><h5 id="archived-blocks-title">Clique por engano? Restaure sem refazer a matriz.</h5><p>A restauração reativa somente a Quadra e os Lotes arquivados junto dela neste rascunho. Ela não cria Lotes, preços, reservas, vendas ou contratos.</p></div><div>{archivedStructureQuery.data.map((block) => <article key={block.blockId}><b>Q{block.blockNumber}</b><span>{block.archivedLotCount} Lote(s) arquivado(s)</span><AlertDialog><AlertDialogTrigger asChild><button type="button" className="subdivision-studio__secondary" disabled={isBusy}><ArchiveRestore size={14} />Restaurar</button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Restaurar Q{block.blockNumber}?</AlertDialogTitle><AlertDialogDescription>A Quadra e os Lotes arquivados junto dela voltarão para este rascunho. A ação não cria Lotes e continua sujeita a MFA recente, contexto e alçada.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => restoreBlockMutation.mutate({ ...context, developmentId: selectedDevelopmentId, blockId: block.blockId, correlationId: crypto.randomUUID() })}>Restaurar Quadra</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></article>)}</div></section>}
+                {selectedDevelopmentId && !archivedStructureQuery.isLoading && (archivedStructureQuery.data?.length ?? 0) === 0 && <section className="subdivision-studio__saved-structure subdivision-studio__archived-structure" aria-labelledby="archived-blocks-title"><div><span>QUADRAS ARQUIVADAS</span><h5 id="archived-blocks-title">Nenhuma Quadra arquivada neste rascunho.</h5><p>Se uma Quadra for arquivada por engano, ela aparecerá aqui com o botão Restaurar. O histórico é preservado e a restauração continua exigindo MFA recente.</p></div></section>}
                 {activeSavedStructure.length > 0 && <a className="subdivision-studio__inventory-link" href="/estoque-lotes"><MapPinned size={16} /><span>Abrir Estoque/Mapa de Lotes</span><small>Revise a matriz Qn · Ln criada neste contexto.</small></a>}
               </form>}
             </div>}

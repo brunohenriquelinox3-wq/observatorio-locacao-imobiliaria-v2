@@ -3,8 +3,10 @@ import { subdivisionContextSchema } from "../shared/subdivisionContracts";
 import {
   applySubdivisionDraftStructureInputSchema,
   archiveSubdivisionDraftBlockInputSchema,
+  restoreSubdivisionDraftBlockInputSchema,
   type ArchiveSubdivisionDraftBlockInput,
   type ApplySubdivisionDraftStructureInput,
+  type RestoreSubdivisionDraftBlockInput,
 } from "../shared/subdivisionStructureBuilderContracts";
 import { getSupabaseAdminClient } from "./supabase";
 
@@ -14,6 +16,10 @@ export type DraftSubdivisionStructureRow = {
   blockId: string;
   blockNumber: number;
   lotCount: number;
+};
+
+export type ArchivedDraftSubdivisionStructureRow = DraftSubdivisionStructureRow & {
+  archivedLotCount: number;
 };
 
 export type DraftSubdivisionStructureResult = {
@@ -106,4 +112,52 @@ export async function archiveDraftSubdivisionBlock(
     throw new Error("SUBDIVISION_STRUCTURE_COMMAND_DENIED");
   }
   return { blockId: result.block_id, archivedLotCount: Number(result.archived_lot_count) };
+}
+
+export async function listArchivedDraftSubdivisionStructure(
+  subjectId: string | undefined,
+  rawContext: unknown,
+  developmentId: string,
+  client: RpcClient = getSupabaseAdminClient(),
+): Promise<ArchivedDraftSubdivisionStructureRow[]> {
+  const actorUserId = requireSubject(subjectId);
+  const context = subdivisionContextSchema.parse(rawContext);
+  const { data, error } = await client.rpc("subdivision_list_archived_draft_structure_v1", {
+    p_actor_user_id: actorUserId,
+    p_organization_id: context.organizationId,
+    p_module: context.module,
+    p_purpose_code: context.purposeCode,
+    p_development_id: developmentId,
+  });
+  if (error || !Array.isArray(data)) throw new Error("SUBDIVISION_STRUCTURE_READ_DENIED");
+  return data.map((row) => ({
+    blockId: String(row.block_id),
+    blockNumber: Number(row.block_number),
+    lotCount: Number(row.archived_lot_count),
+    archivedLotCount: Number(row.archived_lot_count),
+  }));
+}
+
+export async function restoreDraftSubdivisionBlock(
+  subjectId: string | undefined,
+  rawInput: RestoreSubdivisionDraftBlockInput,
+  client: RpcClient = getSupabaseAdminClient(),
+): Promise<{ blockId: string; restoredLotCount: number }> {
+  const actorUserId = requireSubject(subjectId);
+  const input = restoreSubdivisionDraftBlockInputSchema.parse(rawInput);
+  const { data, error } = await client.rpc("subdivision_restore_draft_block_v1", {
+    p_actor_user_id: actorUserId,
+    p_organization_id: input.organizationId,
+    p_module: input.module,
+    p_purpose_code: input.purposeCode,
+    p_development_id: input.developmentId,
+    p_block_id: input.blockId,
+    p_correlation_id: input.correlationId,
+  });
+  if (error || !data || typeof data !== "object" || Array.isArray(data)) throw new Error("SUBDIVISION_STRUCTURE_COMMAND_DENIED");
+  const result = data as Record<string, unknown>;
+  if (typeof result.block_id !== "string" || !Number.isInteger(Number(result.restored_lot_count)) || Number(result.restored_lot_count) < 0) {
+    throw new Error("SUBDIVISION_STRUCTURE_COMMAND_DENIED");
+  }
+  return { blockId: result.block_id, restoredLotCount: Number(result.restored_lot_count) };
 }

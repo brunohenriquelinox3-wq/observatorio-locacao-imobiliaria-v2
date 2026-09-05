@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { applyDraftSubdivisionStructure, archiveDraftSubdivisionBlock, listDraftSubdivisionStructure } from "./subdivisionStructureBuilder";
+import { applyDraftSubdivisionStructure, archiveDraftSubdivisionBlock, listArchivedDraftSubdivisionStructure, listDraftSubdivisionStructure, restoreDraftSubdivisionBlock } from "./subdivisionStructureBuilder";
 
 const subjectId = "550e8400-e29b-41d4-a716-446655440000";
 const organizationId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
@@ -36,5 +36,17 @@ describe("fronteira do construtor de estrutura", () => {
     rpc.mockResolvedValueOnce({ data: { block_id: blockId, archived_lot_count: 15 }, error: null });
     await expect(archiveDraftSubdivisionBlock(subjectId, { ...context, developmentId, blockId, correlationId }, client)).resolves.toEqual({ blockId, archivedLotCount: 15 });
     expect(rpc).toHaveBeenLastCalledWith("subdivision_archive_draft_block_v2", expect.objectContaining({ p_block_id: blockId, p_development_id: developmentId }));
+  });
+
+  it("lista somente Quadras arquivadas do rascunho contextual", async () => {
+    rpc.mockResolvedValueOnce({ data: [{ block_id: blockId, block_number: 3, archived_lot_count: 12 }], error: null });
+    await expect(listArchivedDraftSubdivisionStructure(subjectId, context, developmentId, client)).resolves.toEqual([{ blockId, blockNumber: 3, lotCount: 12, archivedLotCount: 12 }]);
+    expect(rpc).toHaveBeenLastCalledWith("subdivision_list_archived_draft_structure_v1", expect.objectContaining({ p_development_id: developmentId }));
+  });
+
+  it("restaura somente a Quadra arquivada contextual e retorna contagem agregada", async () => {
+    rpc.mockResolvedValueOnce({ data: { block_id: blockId, restored_lot_count: 12 }, error: null });
+    await expect(restoreDraftSubdivisionBlock(subjectId, { ...context, developmentId, blockId, correlationId }, client)).resolves.toEqual({ blockId, restoredLotCount: 12 });
+    expect(rpc).toHaveBeenLastCalledWith("subdivision_restore_draft_block_v1", expect.objectContaining({ p_block_id: blockId, p_development_id: developmentId }));
   });
 });
