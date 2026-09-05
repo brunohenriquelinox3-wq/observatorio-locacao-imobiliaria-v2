@@ -1792,3 +1792,12 @@
 - [x] Exigir que o responsável interno seja um vínculo temporal elegível do mesmo loteamento e que cada comando preserve organização, módulo, finalidade, correlação, idempotência e auditoria redigida.
 - [x] Expor a ficha somente no Setor 01, sem nomes pessoais, documentos, localização, área, custo, contrato, reserva, proposta, cobrança ou financeiro.
 - [x] Cobrir migração, serviço, contrato, roteamento, UI e comportamento fail-closed por testes automatizados antes da validação completa.
+
+## Atualização setorial: Estoque/Mapa de Lotes
+- [x] Inventariar a estrutura atual de Quadras, Lotes, estados internos, histórico e mapa, preservando a vedação de disponibilidade comercial, reserva, venda, contrato e financeiro.
+- [x] Pesquisar práticas públicas de inventário de loteamentos e definir uma melhoria de consistência não comercial, sem mapas externos ou dados de localização.
+- [x] Implementar e validar a próxima melhoria do Setor 02 com RLS/RPCs fail-closed, testes, revisão visual e artefatos saneados.
+- [x] Criar uma matriz somente de leitura que ordene os Lotes autorizados da Quadra e combine, localmente, o estado interno já devolvido pelo servidor.
+- [x] Manter a matriz bloqueada sem contexto ou Quadra, tratar estados ausentes como revisão pendente e não adicionar reserva, venda, preço, mapa externo ou comandos por célula.
+- [x] Cobrir ordenação, fallback de estado, bloqueio e limites não comerciais com testes automatizados antes da validação integral.
+- [x] Confirmar que o 404 ocorreu em caminho manual não canônico; preservar a rota oficial `/estoque-lotes` sem criar alias especulativo ou mudar guardas, contexto ou permissões.
