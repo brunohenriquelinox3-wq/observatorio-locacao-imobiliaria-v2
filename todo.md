@@ -1872,3 +1872,7 @@
 ## Recuperação técnica: teste de equipe
 - [x] Estabilizar a prévia após a indisponibilidade do navegador, sem repetir submissões ou criar solicitação de acesso.
 - [x] Validar por testes a negação de identidade já vinculada, a idempotência e a ausência de ativação automática, preservando o aceite pessoal como etapa separada.
+
+## Verificação pós-atualização: gestão de equipe
+- [x] Medir a composição dos bundles administrativos e verificar os erros agregados recentes da prévia, sem executar mutações ou ampliar permissões.
+- [x] Registrar somente resultados mensuráveis e corrigir apenas regressões comprovadas de carregamento, navegação ou console.
