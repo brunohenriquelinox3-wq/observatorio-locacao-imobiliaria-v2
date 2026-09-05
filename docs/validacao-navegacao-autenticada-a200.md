@@ -33,4 +33,10 @@ A entrada do cadastro foi corrigida para selecionar automaticamente apenas o pri
 
 Os testes dirigidos de descoberta visual, estrutura e responsividade foram aprovados, assim como a suíte integral, verificação TypeScript, build compatível com Netlify e integridade de diff. A navegação autenticada percorreu a entrada do Cadastro de Loteamentos, Estrutura, Documentos, Ciclo e Estoque/Mapa somente em leitura. Não houve criação, edição, exclusão, anexo, remoção, arquivamento, exportação, importação ou alteração de permissões.
 
+Após a reinicialização do computador conectado, a mesma jornada foi retomada. O carregamento inicial exibiu corretamente o estado seguro de contexto em espera e, em seguida, reconheceu a organização autorizada, carregou os rascunhos permitidos, selecionou o primeiro deles e abriu novamente o módulo Estrutura. Não houve interação de gravação durante essa confirmação.
+
+Na etapa Estrutura, o construtor exibiu a orientação de quantidade independente por Quadra e a referência operacional de Q1 com 15 Lotes e Q2 com 25 Lotes. A referência legada sem Lotes ativos foi mostrada como inconsistência de revisão, mantendo as contagens em zero e evitando que a matriz fosse apresentada como pronta. Nenhum campo foi editado, nenhum botão de aplicação foi acionado e nenhum dado foi alterado.
+
+Também foi confirmada a grade operacional do construtor: ela apresenta contador de Quadras, contador de Lotes previstos, ações locais para adicionar uma ou cinco Quadras, campos separados de numeração e quantidade por Quadra e uma prévia de nomenclatura `Qn · L1–L?`. Com quantidade zero, o comando de aplicação permaneceu indisponível; isso evita que uma referência estrutural incompleta seja gravada como matriz válida.
+
 O resultado torna a matriz de Quadras e Lotes visível sem induzir a pessoa usuária a tratar registros legados incompletos como dados prontos. Isso apoia **explorar os dados de forma mais intuitiva**, **entender melhor as tendências** estruturais e **salvar ou compartilhar facilmente** somente os relatórios já autorizados.

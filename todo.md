@@ -1948,3 +1948,10 @@
 - [x] Tratar Quadras legadas sem Lotes ativos como inconsistência de estrutura, sem representá-las como matriz válida ou alterar o registro existente automaticamente. **A200:** aviso, exclusão de contagens e bloqueio de atalho observados na sessão.
 - [x] Cobrir seleção inicial, preservação de edição, atalho para Estrutura, visualização vazia e responsividade com testes e revisão visual. **A200:** cobertura dirigida, suíte integral, tipagem, build e revisões visuais aprovados.
 - [x] Documentar a correção, gerar ZIP e HTML saneados, validar build e salvar checkpoint sem publicar ou alterar registros existentes do usuário. **A200:** navegação autenticada em leitura registrada; ZIP e HTML saneados foram gerados após validação integral.
+
+## Recuperação do computador conectado
+- [x] Reiniciar o computador conectado a pedido do usuário e confirmar seu retorno à operação antes de retomar a prévia do CRM. **A200:** a recuperação foi confirmada após a nova inicialização, sem alterações de CRM.
+
+## Validação autenticada passo a passo após reinicialização
+- [x] Percorrer em leitura o contexto autorizado, a seleção de rascunho, o módulo Estrutura, a matriz de Quadras/Lotes, Documentos, Ciclo e Estoque/Mapa após a reinicialização do computador. **A201:** contexto carregou após estado seguro inicial; seleção automática, estrutura, construtor, Documentos, Ciclo e Estoque/Mapa foram revisados sem comandos de gravação.
+- [x] Registrar somente evidências redigidas da navegação e comunicar o resultado sem criar, editar, anexar, remover ou arquivar dados. **A201:** evidências preservadas em documento interno redigido; não houve mutação na sessão.
