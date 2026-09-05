@@ -2105,4 +2105,4 @@
 - [x] Exibir a cobertura física de área, frente, profundidade, posição e tipologia com contagens derivadas exclusivamente da matriz já autorizada. **A216:** o painel usa somente contagens de atributos físicos presentes na leitura contextual.
 - [x] Direcionar a pessoa operadora para revisão física sem preencher, estimar ou salvar dados ausentes. **A216:** campos ausentes aparecem como pendência de fonte e a interface declara explicitamente a ausência de inferência ou modificação.
 - [x] Cobrir a leitura, a responsividade e a ausência de comandos comerciais; gerar artefatos saneados. **A216:** leitura autenticada, teste dirigido, suíte integral com 212 arquivos/515 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
-- [ ] Salvar checkpoint A216 após documentação, validação integral, revisão visual e saneamento dos artefatos.
+- [x] Salvar checkpoint A216 após documentação, validação integral, revisão visual e saneamento dos artefatos. **A216:** checkpoint `d31f4a1b` preserva a leitura de completude física, as pendências de fonte e a ausência de qualquer mutação material.
