@@ -126,3 +126,9 @@ Essa métrica é somente uma agregação da leitura autorizada. Ela não cria ca
 Além da busca textual e do recorte por Quadra, a central agora permite filtrar localmente a situação física em três estados: todos os Lotes, Lotes com pendência física e Lotes completos na fonte. O filtro usa exatamente os mesmos critérios do painel de completude e dos resumos por Quadra, evitando classificações paralelas ou comerciais.
 
 O estado do filtro existe somente na memória do navegador e retorna a “Todos os Lotes” ao trocar ou iniciar um cadastro. A leitura autenticada confirmou que o seletor aparece no mesmo agrupamento dos outros filtros e que suas opções não expõem disponibilidade, valores ou vendas. A validação integral aprovou 212 arquivos e 518 testes; o build manteve somente o aviso não bloqueante de chunks grandes. ZIP e HTML A219 foram regenerados e validados como saneados.
+
+## Estados vazios de exploração física A220
+
+Quando a situação física selecionada não encontra Lotes, a central agora distingue o motivo. Para **Completos na fonte**, ela explica que não há Lotes com todos os atributos físicos confirmados e remete à conferência de fonte, sem sugerir preenchimento automático. Para **Com pendência física**, ela esclarece que os filtros de leitura podem ser ajustados, sem propor mudança cadastral.
+
+As mensagens permanecem locais e não contêm comandos de gravação, disponibilidade, preço ou venda. A validação integral aprovou 212 arquivos e 519 testes; o build manteve somente o aviso não bloqueante de chunks grandes. ZIP e HTML A220 foram regenerados e validados como saneados.

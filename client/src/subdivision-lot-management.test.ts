@@ -80,4 +80,12 @@ describe("central de gestão territorial por Quadra e Lote", () => {
     expect(source).toContain("Completos na fonte");
     expect(source).not.toContain("Disponibilidade comercial");
   });
+
+  it("explica resultado vazio de completude sem propor preenchimento ou classificação comercial", () => {
+    const source = studio();
+
+    expect(source).toContain("Nenhum Lote possui todos os atributos físicos confirmados na fonte.");
+    expect(source).toContain("Ajuste apenas os filtros de leitura para ampliar a consulta.");
+    expect(source).toContain("emptyLotFilterMessage");
+  });
 });
