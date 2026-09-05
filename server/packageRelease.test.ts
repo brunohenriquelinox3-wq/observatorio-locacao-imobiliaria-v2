@@ -17,6 +17,7 @@ describe("release package exclusions", () => {
     const source = await readFile(new URL("../scripts/package-release.mjs", import.meta.url), "utf8");
 
     expect(source).toContain('process.argv.indexOf("--tag")');
+    expect(source).toContain('process.argv.indexOf("--label")');
     expect(source).toContain("RELEASE_LABEL_INVALID");
     expect(source).toContain("^[a-z0-9]+(?:-[a-z0-9]+)*$");
   });

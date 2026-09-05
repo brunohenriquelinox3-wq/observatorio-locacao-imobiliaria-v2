@@ -2031,3 +2031,7 @@
 - [x] Cobrir em testes a divergência, a negação de inclusão não comprovada, a persistência da pendência e a responsividade do aviso. **A208:** teste dirigido aprovou a regra de não inclusão por estimativa; validação integral aprovou 207 arquivos/503 testes, tipagem, build e diff, além da revisão autenticada em leitura.
 - [x] Gerar ZIP e HTML saneados sem criar Lote adicional, publicar, ou abrir módulos comerciais. **A208:** entrega de código e HTML regenerada a partir do estado validado, com exclusões de `.env`, dependências, logs, build, checklist, documentação operacional e referências de cadastro real.
 - [x] Salvar checkpoint A208 sem criar Lote adicional, publicar ou abrir módulos comerciais. **A208:** consolidação preparada após validação, revisão visual e geração da entrega saneada.
+
+## Correção de rotulagem da entrega A208
+- [x] Corrigir o empacotador para que o rótulo solicitado seja refletido nos nomes do ZIP e HTML, sem ampliar o conteúdo incluído. **A208:** o empacotador aceita `--tag` e `--label`, preservando a mesma validação de rótulo seguro e as exclusões de conteúdo.
+- [x] Regenerar e conferir os artefatos A208 com o rótulo correto, sem dados operacionais, credenciais, infraestrutura, documentação ou checklist. **A208:** ZIP e HTML com rótulo de reconciliação foram gerados e conferidos por metadados; a verificação de exclusões continua coberta pelo teste do empacotador.

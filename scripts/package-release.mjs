@@ -6,7 +6,12 @@ import path from "node:path";
 const execFileAsync = promisify(execFile);
 const root = process.cwd();
 const tagArgumentIndex = process.argv.indexOf("--tag");
-const requestedReleaseLabel = tagArgumentIndex >= 0 ? process.argv[tagArgumentIndex + 1] : process.env.RELEASE_LABEL ?? "fundacao-a0";
+const labelArgumentIndex = process.argv.indexOf("--label");
+const requestedReleaseLabel = tagArgumentIndex >= 0
+  ? process.argv[tagArgumentIndex + 1]
+  : labelArgumentIndex >= 0
+    ? process.argv[labelArgumentIndex + 1]
+    : process.env.RELEASE_LABEL ?? "fundacao-a0";
 if (!requestedReleaseLabel || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(requestedReleaseLabel)) {
   throw new Error("RELEASE_LABEL_INVALID");
 }
