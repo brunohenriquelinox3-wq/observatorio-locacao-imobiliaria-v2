@@ -1809,3 +1809,11 @@
 - [x] Criar um quadro somente de leitura que sintetize vínculo de cadastro-base, estado opaco de anexo e revisão humana por rótulo ordinal local.
 - [x] Manter o quadro bloqueado sem contexto e sem cliente devolvido, sem mutação, arquivo, download, integração, notificação ou classificação de risco.
 - [x] Cobrir os rótulos, o fallback de estado e a ausência de elementos materiais por testes automatizados antes da validação integral.
+
+## Atualização setorial: Sócios e Parceiros
+- [x] Inventariar os vínculos atuais de sócios, parceiros e cedentes, incluindo escopo, vigência e proteção contra efeito econômico.
+- [x] Pesquisar práticas públicas de governança de parceiros de empreendimentos e definir uma melhoria interna sem valores, percentuais, recebíveis, portais ou repasses.
+- [x] Implementar e validar a próxima melhoria de governança do Setor 04 com contexto, RLS/RPCs fail-closed, testes, revisão visual e artefatos saneados.
+- [x] Criar uma visão somente de leitura por loteamento que agrupe vínculos por tipo de papel e apresente rótulo ordinal local com vigência declarada aberta ou encerrada.
+- [x] Manter a visão bloqueada sem contexto ou loteamento, sem nomes, identificadores técnicos, datas, percentuais, valores, decisões, comunicação, portais ou comandos.
+- [x] Cobrir agrupamento, vigência, estados vazios e ausência de controles materiais por testes automatizados antes da validação integral.
