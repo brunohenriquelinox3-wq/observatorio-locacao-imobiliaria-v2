@@ -2131,4 +2131,4 @@
 ## Clareza dos indicadores físicos — A221
 - [x] Renomear o indicador resumido de pendência para deixar explícito que ele mede somente a área, enquanto a completude geral permanece no painel por atributo. **A221:** “Área pendente” foi substituído por “Área sem fonte”.
 - [x] Cobrir a cópia, validar a leitura autenticada e gerar artefatos saneados. **A221:** leitura autenticada, teste dirigido, suíte integral com 212 arquivos/520 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
-- [ ] Salvar checkpoint A221 após a correção de nomenclatura, a validação e o saneamento dos artefatos.
+- [x] Salvar checkpoint A221 após a correção de nomenclatura, a validação e o saneamento dos artefatos. **A221:** checkpoint `e81bf342` preserva a distinção entre ausência de área e completude física geral.
