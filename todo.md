@@ -1965,8 +1965,8 @@
 - [x] Projetar suporte para dados físicos por lote e um dossiê de pendências, mantendo preço por metro quadrado, valores de lote, reajustes e regras comerciais bloqueados até validação jurídica e contábil. **A202:** campos econômicos permanecem bloqueados.
 - [x] Implementar e testar somente a estrutura e os controles documentais autorizados, sem cadastrar o empreendimento real, vendas, clientes, corretores, preços ou dados financeiros. **A202:** testes, catálogo, build e prévia local autenticada aprovados sem persistência do empreendimento real.
 - [x] Preparar uma proposta de cadastro real com lista exata de campos, Quadras, Lotes, anexos, estados e consequências para confirmação explícita antes de qualquer gravação. **A203:** proposta pronta; aguarda decisão sobre a divergência de um Lote.
-- [ ] Após confirmação específica, cadastrar o empreendimento e sua matriz física sem incluir vendas realizadas, clientes, contratos, cobranças, preços ou regras de reajuste não homologadas.
-- [ ] Executar a confirmação B: criar um único rascunho Vista do Sol com 14 Quadras e 164 Lotes físicos, registrar a pendência de reconciliação do 165º Lote e não incluir qualquer dado comercial, pessoal, financeiro ou documental.
+- [x] Após confirmação específica, cadastrar o empreendimento e sua matriz física sem incluir vendas realizadas, clientes, contratos, cobranças, preços ou regras de reajuste não homologadas. **A207:** cadastro limitado e matriz física foram confirmados após MFA recente, contexto e alçada revalidados pelo servidor.
+- [x] Executar a confirmação B: criar um único rascunho Vista do Sol com 14 Quadras e 164 Lotes físicos, registrar a pendência de reconciliação do 165º Lote e não incluir qualquer dado comercial, pessoal, financeiro ou documental. **A207/A208:** rascunho e matriz foram persistidos; a pendência permanece sem inclusão automática de Lote adicional.
 - [x] Validar em sessão autenticada, gerar ZIP e HTML saneados e salvar checkpoint sem publicar. **A202/A203:** prévia local e segurança revisadas na sessão autenticada; artefatos saneados gerados; a gravação real continua pendente de confirmação específica.
 
 ## Jornada visível de Segurança e MFA
@@ -1980,12 +1980,12 @@
 - [x] Validar em sessão autenticada a inscrição ou revalidação TOTP feita pela própria pessoa, sem publicar, criar dados comerciais ou enfraquecer MFA. **A204:** a pessoa usuária confirmou a tela “MFA recente reconhecido”; nenhum segredo, QR ou código foi recebido ou registrado.
 
 ## Treinamento guiado de Segurança e MFA
-- [ ] Reescrever os estados de Segurança e MFA em linguagem simples, sem siglas como requisito de compreensão e com explicação direta de finalidade e próximo passo.
-- [ ] Criar um roteiro visual numerado de primeiro acesso, incluindo preparação do autenticador, leitura do QR, confirmação do código e retorno ao comando bloqueado.
-- [ ] Separar visualmente os caminhos “configurar pela primeira vez”, “renovar a verificação” e “resolver problema”, com um único botão principal por estado.
-- [ ] Adicionar avisos práticos sobre o que a pessoa verá no celular, o que não deve compartilhar e como recuperar-se de falha sem prometer liberação automática.
-- [ ] Cobrir textos, ordem das etapas, um CTA por estado, responsividade e ausência de segredo nos testes; revisar visualmente com foco em pessoa em treinamento.
-- [ ] Gerar ZIP e HTML saneados, validar build e salvar checkpoint sem publicar ou enfraquecer a proteção MFA.
+- [x] Reescrever os estados de Segurança e MFA em linguagem simples, sem siglas como requisito de compreensão e com explicação direta de finalidade e próximo passo. **A204/A205:** os estados de configuração, renovação, indisponibilidade e sessão reforçada foram apresentados em linguagem orientada à ação.
+- [x] Criar um roteiro visual numerado de primeiro acesso, incluindo preparação do autenticador, leitura do QR, confirmação do código e retorno ao comando bloqueado. **A204/A205:** a rota de segurança e o guia no Painel ADM conduzem configuração ou renovação, confirmação no aplicativo e retorno ao cadastro.
+- [x] Separar visualmente os caminhos “configurar pela primeira vez”, “renovar a verificação” e “resolver problema”, com um único botão principal por estado. **A204/A207:** estado derivado de MFA diferencia primeiro fator, revalidação e indisponibilidade, sem expor fatores ou permitir bypass.
+- [x] Adicionar avisos práticos sobre o que a pessoa verá no celular, o que não deve compartilhar e como recuperar-se de falha sem prometer liberação automática. **A204/A205:** interface e documentação orientam a não compartilhar QR, segredo, senha ou código e preservam a recuperação pelo provedor.
+- [x] Cobrir textos, ordem das etapas, um CTA por estado, responsividade e ausência de segredo nos testes; revisar visualmente com foco em pessoa em treinamento. **A204/A205/A207:** cobertura dirigida, suíte, tipagem, build e revisão desktop/móvel foram aprovados; o cenário de token vencido agora reabre a revalidação corretamente.
+- [x] Gerar ZIP e HTML saneados, validar build e salvar checkpoint sem publicar ou enfraquecer a proteção MFA. **A204/A205:** entregas saneadas e checkpoints foram gerados; a proteção MFA permaneceu server-side.
 
 ## Descoberta de MFA dentro do Painel ADM
 - [x] Corrigir a asserção de cobertura do guia MFA para refletir o texto contextual renderizado sem alterar a orientação ao usuário. **A205:** asserção alinhada ao texto renderizado e teste dirigido aprovado.
