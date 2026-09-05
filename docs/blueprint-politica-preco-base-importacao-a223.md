@@ -107,3 +107,7 @@ O histórico também foi corrigido para ser consultado por **cadastro selecionad
 | Políticas e linhas persistidas | 0 | Nenhuma política, valor real ou efeito comercial foi criado durante a implementação. |
 
 > A próxima utilização operacional exige que a fonte seja corrigida na origem para eliminar a única exceção e que o operador revalide MFA no próprio autenticador antes de executar a prévia protegida. Preparar uma política não cria venda; encaminhar exige fonte sem exceções; aprovar exige pessoa distinta da preparadora.
+
+### Orientação saneada de correção A227
+
+Quando a prévia encontra campo obrigatório ausente, a interface passa a mostrar somente a **linha de origem** e a **categoria de pendência**, limitada a dez referências. Ela não mostra valor, Quadra, Lote, status, cliente ou qualquer outro conteúdo da planilha. Na verificação efêmera da fonte autorizada, a única pendência foi classificada como `AREA_OR_PRICE_REQUIRED` na linha de origem 29; por isso a preparação continua bloqueada até que a planilha seja corrigida e reenviada para uma nova prévia.

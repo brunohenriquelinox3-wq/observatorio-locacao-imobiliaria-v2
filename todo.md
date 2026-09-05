@@ -2161,3 +2161,9 @@
 - [x] Separar claramente referência de preço-base, proposta, formalização, obrigações, encerramento e distrato, sem criar ações materiais. **A226:** a jornada declara os limites de cada domínio e bloqueia a reversão de Lote por atalho.
 - [x] Cobrir a jornada em teste, revisão visual, validação integral, ZIP e HTML, sem publicação. **A226:** teste dirigido, suíte integral com 214 arquivos/533 testes, tipagem, build Netlify, integridade de diff e capturas desktop/móvel foram concluídos; as capturas sem contexto verificaram responsividade estrutural e a sessão autenticada permaneceu em esqueleto transitório durante a inspeção específica.
 - [x] Salvar checkpoint A226 após documentação, validação e saneamento dos artefatos. **A226:** checkpoint `25414ba0` preserva o roteiro visual e a separação dos domínios sem criar qualquer ato material.
+
+## Orientação saneada para exceção de preço-base — A227
+- [x] Exibir somente o número de linha de origem e a categoria do campo obrigatório pendente, sem valor, Quadra, Lote, cliente, status ou outra informação comercial. **A227:** a prévia retorna no máximo dez referências saneadas de linha/categoria; a interface declara explicitamente os campos que não exibe.
+- [x] Manter a exceção bloqueadora e a preparação indisponível até a planilha ser corrigida na origem e reenviada para nova prévia. **A227:** a verificação efêmera confirmou uma pendência de área ou preço-base na linha de origem 29; não houve banco, política ou linha persistida.
+- [x] Cobrir a orientação, validar e gerar ZIP e HTML sem persistir dados da fonte. **A227:** teste dirigido, suíte integral com 214 arquivos/535 testes, tipagem, build Netlify, integridade de diff e saneamento de ZIP/HTML foram aprovados.
+- [ ] Salvar checkpoint A227 após documentação, validação e saneamento dos artefatos.

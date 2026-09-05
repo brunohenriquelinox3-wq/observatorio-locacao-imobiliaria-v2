@@ -54,6 +54,14 @@ describe("subdivision price-base policy boundary", () => {
     expect(rpc).not.toHaveBeenCalled();
   });
 
+  it("returns only source-row and category for a required-field exception", async () => {
+    const sourceContentBase64 = makeSource([["Quadra", "Lote", "Área (m²)", "Valor (m²)"], [1, 1, 100, 500], [1, 2, 100, ""]]);
+    const rpc = vi.fn().mockResolvedValue({ data: { reconciled_line_count: 1, unreconciled_line_count: 0 }, error: null });
+    const result = await previewSubdivisionPriceBaseSource(actor, { ...context, developmentId, sourceFileName: "fonte.xlsx", sourceContentBase64 }, { rpc });
+    expect(result.exceptionRows).toEqual([{ sourceRow: 3, code: "AREA_OR_PRICE_REQUIRED" }]);
+    expect(JSON.stringify(result.exceptionRows)).not.toContain("500");
+  });
+
   it("prepares only reconciled source rows and returns aggregate policy metadata", async () => {
     const sourceContentBase64 = makeSource([["Quadra", "Lote", "Área (m²)", "Valor (m²)"], [1, 1, 100, 500]]);
     const rpc = vi.fn().mockResolvedValue({ data: { policy_id: "00000000-0000-4000-8000-000000000005", line_count: 1, exception_count: 0 }, error: null });

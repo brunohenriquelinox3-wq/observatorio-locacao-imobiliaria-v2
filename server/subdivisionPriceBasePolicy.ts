@@ -44,12 +44,14 @@ type ParsedSource = {
   auxiliaryFormulaCount: number;
   validLines: ParsedLine[];
   exceptionCounts: Record<string, number>;
+  exceptionRows: Array<{ sourceRow: number; code: string }>;
 };
 
 export type PriceBasePreview = {
   sourceRows: number;
   importableLineCount: number;
   exceptionCounts: Record<string, number>;
+  exceptionRows: Array<{ sourceRow: number; code: string }>;
   ignoredColumns: string[];
   auxiliaryFormulaCount: number;
   sourceFingerprint: string;
@@ -170,8 +172,10 @@ function extractParsedSource(sourceContentBase64: string): ParsedSource {
 
   const validLines: ParsedLine[] = [];
   const exceptionCounts: Record<string, number> = {};
-  const increment = (code: string) => {
+  const exceptionRows: Array<{ sourceRow: number; code: string }> = [];
+  const increment = (code: string, sourceRow: number) => {
     exceptionCounts[code] = (exceptionCounts[code] ?? 0) + 1;
+    if (exceptionRows.length < 10) exceptionRows.push({ sourceRow, code });
   };
   let sourceRows = 0;
   let auxiliaryFormulaCount = 0;
@@ -191,16 +195,16 @@ function extractParsedSource(sourceContentBase64: string): ParsedSource {
     const areaSqm = toPositiveDecimal(cells[indices.area ?? 0]?.v);
     const pricePerSqm = toPositiveDecimal(cells[indices.price ?? 0]?.v);
     if (!blockNumber || !lotNumber) {
-      increment("PHYSICAL_IDENTIFIER_REQUIRED");
+      increment("PHYSICAL_IDENTIFIER_REQUIRED", row + 1);
       continue;
     }
     if (!areaSqm || !pricePerSqm) {
-      increment("AREA_OR_PRICE_REQUIRED");
+      increment("AREA_OR_PRICE_REQUIRED", row + 1);
       continue;
     }
     const pair = `${blockNumber}:${lotNumber}`;
     if (pairs.has(pair)) {
-      increment("PHYSICAL_IDENTIFIER_DUPLICATE");
+      increment("PHYSICAL_IDENTIFIER_DUPLICATE", row + 1);
       continue;
     }
     pairs.add(pair);
@@ -215,6 +219,7 @@ function extractParsedSource(sourceContentBase64: string): ParsedSource {
     auxiliaryFormulaCount,
     validLines,
     exceptionCounts,
+    exceptionRows,
   };
 }
 
@@ -236,6 +241,7 @@ export async function previewSubdivisionPriceBaseSource(subjectId: string | unde
     sourceRows: parsed.sourceRows,
     importableLineCount: parsed.validLines.length,
     exceptionCounts: parsed.exceptionCounts,
+    exceptionRows: parsed.exceptionRows,
     ignoredColumns: parsed.ignoredHeaders,
     auxiliaryFormulaCount: parsed.auxiliaryFormulaCount,
     sourceFingerprint: parsed.sourceFingerprint,

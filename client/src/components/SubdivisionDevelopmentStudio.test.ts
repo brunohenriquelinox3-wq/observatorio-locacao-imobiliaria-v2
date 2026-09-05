@@ -138,4 +138,10 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("cliente, proposta, contrato, parcela, assinatura, cobrança, pagamento, restituição ou disponibilidade");
     expect(studio).not.toContain("criarDistrato");
   });
+
+  it("orienta a correção da fonte de preço por linha sem exibir valores ou identificadores físicos", () => {
+    const studio = source();
+    expect(studio).toContain("Referência saneada: {priceBaseSourcePreview.exceptionRows.map");
+    expect(studio).toContain("Nenhum valor, Quadra, Lote ou status é exibido.");
+  });
 });
