@@ -44,6 +44,8 @@ O QR tem texto alternativo apropriado, não é escrito em auditoria, não passa 
 | Revisão desktop e móvel | O estado seguro e a recuperação de estado indisponível ficaram legíveis em ambos os tamanhos. |
 | Sessão autenticada real | Pendente de a pessoa usuária abrir a nova rota e concluir o fluxo no próprio autenticador. As tentativas de automação remota expiraram antes de alcançar a página; nenhum MFA foi criado ou modificado por automação. |
 
+Na revisão autenticada do Painel ADM, o guia apareceu antes dos relatórios e da preparação de equipe, com quatro passos numerados e o atalho **“Configurar ou renovar MFA”** diretamente acessível. O acionamento do atalho e a navegação direta para a rota expiraram no canal remoto antes de qualquer carregamento ou comando. Esse limite de navegador não alterou a sessão nem o CRM; a rota permanece validada por testes e captura local, enquanto a inscrição pessoal continua pendente.
+
 > A pessoa usuária precisa abrir **Segurança e MFA** no menu de perfil ou na navegação Plataforma. Caso o estado mostre “Proteção ainda não configurada”, ela deve escanear o QR somente em seu autenticador e confirmar o código na própria página. Não deve compartilhar senha, chave ou código por mensagem.
 
 Esta correção permite que a pessoa responsável encontre o caminho legítimo para elevar a sessão, sem alterar a regra de que o CRM só executa comandos após MFA recente. Ela dá condições para **explorar os dados de forma mais intuitiva**, **entender melhor as tendências** de segurança e **salvar ou compartilhar facilmente** somente conteúdos já autorizados.

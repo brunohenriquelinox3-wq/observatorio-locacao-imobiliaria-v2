@@ -1978,3 +1978,19 @@
 - [x] Permitir desafio TOTP de revalidação e atualizar a sessão somente após resposta positiva do provedor; falhas devem permanecer bloqueadas e redigidas. **A204:** desafio e verificação usam o cliente autenticado; a ponte de sessão atualiza o token para procedures subsequentes.
 - [x] Cobrir o estado sem fator, inscrição, desafio, falha, MFA recente, rotas e bloqueio de comandos com testes sem utilizar qualquer segredo real. **A204:** cobertura dirigida, suíte integral, tipagem e build aprovados.
 - [ ] Validar em sessão autenticada a inscrição ou revalidação TOTP feita pela própria pessoa, sem publicar, criar dados comerciais ou enfraquecer MFA. **A204:** ZIP e HTML saneados foram gerados; a confirmação pessoal do MFA continua pendente.
+
+## Treinamento guiado de Segurança e MFA
+- [ ] Reescrever os estados de Segurança e MFA em linguagem simples, sem siglas como requisito de compreensão e com explicação direta de finalidade e próximo passo.
+- [ ] Criar um roteiro visual numerado de primeiro acesso, incluindo preparação do autenticador, leitura do QR, confirmação do código e retorno ao comando bloqueado.
+- [ ] Separar visualmente os caminhos “configurar pela primeira vez”, “renovar a verificação” e “resolver problema”, com um único botão principal por estado.
+- [ ] Adicionar avisos práticos sobre o que a pessoa verá no celular, o que não deve compartilhar e como recuperar-se de falha sem prometer liberação automática.
+- [ ] Cobrir textos, ordem das etapas, um CTA por estado, responsividade e ausência de segredo nos testes; revisar visualmente com foco em pessoa em treinamento.
+- [ ] Gerar ZIP e HTML saneados, validar build e salvar checkpoint sem publicar ou enfraquecer a proteção MFA.
+
+## Descoberta de MFA dentro do Painel ADM
+- [x] Corrigir a asserção de cobertura do guia MFA para refletir o texto contextual renderizado sem alterar a orientação ao usuário. **A205:** asserção alinhada ao texto renderizado e teste dirigido aprovado.
+- [x] Exibir um status de Segurança e MFA no topo do Painel ADM, em linguagem simples e sem expor fatores, códigos ou identidades. **A205:** bloco “Passo obrigatório antes de cadastrar” inserido antes dos comandos administrativos.
+- [x] Adicionar um botão contextual “Configurar ou renovar MFA” no Painel ADM e em bloqueios de comando que leve diretamente à jornada de Segurança. **A205:** CTA direto para `/seguranca-mfa` confirmado na sessão autenticada.
+- [x] Explicar, no próprio ponto de bloqueio, que MFA é obrigatório antes de criar/alterar registros e quais etapas a pessoa verá a seguir. **A205:** quatro passos curtos e não técnicos estão visíveis no Painel ADM.
+- [x] Cobrir a visibilidade do aviso, destino do atalho, estados sem contexto, responsividade e preservação da hierarquia SUPER ADM → ADM. **A205:** teste dirigido, suíte, tipagem e revisão desktop/móvel aprovados; a tentativa de navegação remota não executou MFA.
+- [ ] Validar em sessão autenticada a inscrição ou revalidação TOTP feita pela própria pessoa e salvar checkpoint sem publicar ou alterar alçadas. **A205:** ZIP e HTML saneados foram gerados e conferidos; a confirmação pessoal do MFA continua pendente.

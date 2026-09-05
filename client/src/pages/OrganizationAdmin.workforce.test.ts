@@ -16,4 +16,11 @@ describe("painel ADM — preparação de equipe", () => {
     expect(source).toContain('trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "loteadora" }, queryOptions)');
     expect(source).toContain("A aparência não substitui membership, grant ou policy.");
   });
+
+  it("deixa a jornada de MFA visível antes de comandos de cadastro ou delegação", () => {
+    expect(source).toContain('href="/seguranca-mfa"');
+    expect(source).toContain("Configurar ou renovar MFA");
+    expect(source).toContain("Valide sua segurança antes de criar ou alterar.");
+    expect(source).toContain("você precisa confirmar o MFA.");
+  });
 });
