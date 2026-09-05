@@ -47,22 +47,29 @@ Quando a confirmação chega ao servidor, a operação cria apenas Party e papel
 | EXECUTE | Papéis anônimo e autenticado não executam as funções; a RPC pública é exclusiva da camada de servidor e o helper permanece privado. | Aprovado. |
 | Alçada | A validação exige organização ativa, membership administrativa, grant ativo, finalidade e módulo no escopo. | Aprovado. |
 | MFA | O roteador exige atestação AAL2 por TOTP antes de chamar o serviço. | Aprovado. |
-| Idempotência e duplicidade | A correlação é única por ator; a mesma pessoa, tipo, papel, módulo e finalidade não são recriados no mesmo contexto. | Aprovado. |
+| Idempotência e duplicidade | A correlação é única por ator; Party em rascunho é reutilizada antes de criar papel no mesmo contexto, e a mesma combinação de Party, papel, módulo e finalidade não é recriada. | Aprovado, com reforço A193. |
 | Auditoria | O evento registra somente contagens e contexto redigido. | Aprovado. |
 
 O verificador de segurança listou uma informação de RLS sem policy permissiva para a nova tabela. Esse resultado é esperado no desenho **fail-closed**, pois o acesso direto está revogado e não há policy permissiva; a operação usa exclusivamente a RPC controlada. O verificador também manteve um aviso preexistente referente à proteção do provedor contra senhas vazadas. Essa configuração global não foi alterada neste marco; a documentação oficial de avaliação está disponível em [3].
+
+### Reforço A193 — reutilização canônica de Party
+
+Na revisão de código posterior à A192, foi identificada uma lacuna preventiva: a busca de duplicidade comparava Party e papel simultaneamente. Uma Party já existente com outro papel poderia, portanto, receber uma segunda Party de mesmo nome em vez de reutilizar o cadastro canônico. A migração aditiva A193 redefine exclusivamente a RPC de importação para localizar primeiro a Party em rascunho do mesmo contexto e, somente depois, o papel correspondente.
+
+O A193 usa lock transacional derivado da combinação de organização, módulo, finalidade, nome normalizado, tipo e papel. Assim, chamadas concorrentes para a mesma combinação não criam duas Parties durante a mesma janela de importação. A RPC mantém `SECURITY DEFINER`, `search_path` vazio, RLS na tabela de lote e execução exclusiva à camada de servidor. A migração foi aplicada sem criar ou alterar registros de clientes.
 
 ## Validação executada
 
 | Verificação | Resultado |
 |---|---|
 | Testes dirigidos de contrato, serviço, roteador, migração, prévia, exportação e guardas operacionais | Aprovados. |
-| Suíte integral | **191 arquivos e 451 testes aprovados**. |
+| Suíte integral | **192 arquivos de teste aprovados** após o reforço A193. |
 | Verificação TypeScript | Aprovada. |
 | Build compatível com Netlify | Aprovado; houve somente aviso de tamanho de chunk, sem erro de compilação. |
 | Integridade de diff | Aprovada. |
 | Capturas de tela | Revisadas em desktop e móvel para Central SUPER ADM, Painel ADM, Clientes Loteadora, Importar clientes, Vendas Urbanas e Locação. Os botões permaneceram visíveis, legíveis e bloqueados sem contexto. |
 | Catálogo Supabase | Revisado apenas em modo estrutural, sem leitura de registros de clientes ou organizações. |
+| Reforço A193 | Migração aplicada, testes dirigidos aprovados e catálogo confirmou `SECURITY DEFINER`, `search_path` vazio e EXECUTE restrito à camada de servidor. |
 
 ## Limites e próximo uso autorizado
 

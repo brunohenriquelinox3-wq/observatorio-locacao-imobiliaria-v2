@@ -1898,3 +1898,7 @@
 - [x] Exigir autorização server-side, contexto organizacional, escopo de módulo e confirmação humana explícita antes de qualquer importação que grave dados de clientes. **A192:** o servidor exige MFA TOTP, organização ativa, papel administrativo, grant, contexto e confirmação tipada.
 - [x] Cobrir exportação, validação de arquivo, bloqueios de autorização, deduplicação, idempotência, limites de tamanho e ausência de persistência na prévia com testes automatizados. **A192:** testes dirigidos e suíte integral aprovados sem importar dados reais.
 - [x] Revisar desktop/móvel, gerar documentação e artefatos saneados, validar build e salvar checkpoint sem publicar ou importar dados reais. **A192:** revisão visual, tipagem, build e integridade de diff aprovados; artefatos saneados serão gerados antes do checkpoint.
+
+## Reforço de deduplicação canônica da importação
+- [x] Corrigir a rotina de importação para reutilizar a Party existente antes de criar um novo papel, impedindo duplicidade quando o mesmo cliente já estiver cadastrado com outro papel no mesmo contexto. **A193:** RPC redefinida com busca Party-primeiro e lock transacional por combinação canônica.
+- [x] Validar o reforço com testes, catálogo, build e novo checkpoint, sem importar dados reais. **A193:** testes dirigidos, suíte integral, tipagem, build e catálogo aprovados; não foram criados registros de clientes.
