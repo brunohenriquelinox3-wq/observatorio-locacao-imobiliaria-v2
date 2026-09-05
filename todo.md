@@ -1817,3 +1817,12 @@
 - [x] Criar uma visão somente de leitura por loteamento que agrupe vínculos por tipo de papel e apresente rótulo ordinal local com vigência declarada aberta ou encerrada.
 - [x] Manter a visão bloqueada sem contexto ou loteamento, sem nomes, identificadores técnicos, datas, percentuais, valores, decisões, comunicação, portais ou comandos.
 - [x] Cobrir agrupamento, vigência, estados vazios e ausência de controles materiais por testes automatizados antes da validação integral.
+
+## Atualização setorial: Vendas de Lotes
+- [x] Inventariar o rascunho interno entre Lote e cliente comprador, co-compradores, cobertura opaca de anexos e classificação de trabalho, preservando a ausência de reserva, proposta, contrato, preço, cobrança e financeiro.
+- [x] Pesquisar práticas públicas de preparação comercial de loteamentos e definir uma melhoria somente de leitura, sem contato, notificação, integração ou efeito material.
+- [x] Implementar e validar a próxima melhoria do Setor 05 com consultas protegidas, testes, revisão visual e artefatos saneados.
+- [x] Criar um quadro somente de leitura por rascunho que sintetize vínculo interno, cobertura opaca, participantes internos e classificação de trabalho por rótulo ordinal local.
+- [x] Manter o quadro bloqueado sem contexto e sem rascunhos retornados, sem nomes, Lotes, identificadores, datas, botões, mutation, reserva, proposta, contrato, preço, cobrança ou financeiro.
+- [x] Cobrir cobertura, classificação, participantes, estados vazios e ausência de controles materiais por testes automatizados antes da validação integral.
+- [x] Confirmar que o 404 ocorreu em caminho manual não canônico; preservar a rota oficial `/loteadora/vendas` sem criar alias especulativo, mudar guardas, contexto ou permissões.
