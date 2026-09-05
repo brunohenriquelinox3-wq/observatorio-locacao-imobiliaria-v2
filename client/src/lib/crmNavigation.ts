@@ -4,6 +4,7 @@ import { Building2, CalendarClock, ClipboardCheck, Compass, FileText, House, Lan
 export const crmNavigationItems: DashboardNavigationItem[] = [
   { icon: Compass, label: "Central de plataforma", path: "/administracao" },
   { icon: ShieldCheck, label: "Painel ADM", path: "/adm" },
+  { icon: LockKeyhole, label: "Segurança e MFA", path: "/seguranca-mfa", description: "Inscrição e revalidação TOTP" },
   { icon: LandPlot, label: "Cadastro de Loteamentos", path: "/loteadora", description: "Loteadora · setor 01" },
   { icon: Map, label: "Estoque/Mapa de Lotes", path: "/estoque-lotes", description: "Loteadora · setor 02" },
   { icon: UsersRound, label: "Clientes Loteadora", path: "/loteadora/clientes", description: "Loteadora · setor 03" },

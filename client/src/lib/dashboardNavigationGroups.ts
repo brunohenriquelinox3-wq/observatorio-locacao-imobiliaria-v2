@@ -20,7 +20,7 @@ const groupDefinitions: Array<Pick<DashboardNavigationGroup<NavigationItemLike>,
 ];
 
 function resolveNavigationGroup(path: string): DashboardNavigationGroupId {
-  if (path === "/administracao" || path === "/adm") return "platform";
+  if (path === "/administracao" || path === "/adm" || path === "/seguranca-mfa") return "platform";
   if (path === "/estoque-lotes" || path === "/loteadora" || path.startsWith("/loteadora/")) return "loteadora";
   if (path === "/vendas-urbanas" || path.startsWith("/vendas-urbanas/")) return "urban_sales";
   if (path === "/locacao" || path.startsWith("/locacao/")) return "rental";

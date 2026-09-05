@@ -500,11 +500,11 @@ function DashboardLayoutContent({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
-                  onClick={() => navigateTo(`/entrar?proximo=${encodeURIComponent(location)}`)}
+                  onClick={() => navigateTo("/seguranca-mfa")}
                   className="cursor-pointer"
                 >
                   <KeyRound className="mr-2 h-4 w-4" />
-                  <span>Validar contexto</span>
+                  <span>Segurança e MFA</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={logout}

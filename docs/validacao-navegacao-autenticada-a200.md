@@ -40,3 +40,9 @@ Na etapa Estrutura, o construtor exibiu a orientação de quantidade independent
 Também foi confirmada a grade operacional do construtor: ela apresenta contador de Quadras, contador de Lotes previstos, ações locais para adicionar uma ou cinco Quadras, campos separados de numeração e quantidade por Quadra e uma prévia de nomenclatura `Qn · L1–L?`. Com quantidade zero, o comando de aplicação permaneceu indisponível; isso evita que uma referência estrutural incompleta seja gravada como matriz válida.
 
 O resultado torna a matriz de Quadras e Lotes visível sem induzir a pessoa usuária a tratar registros legados incompletos como dados prontos. Isso apoia **explorar os dados de forma mais intuitiva**, **entender melhor as tendências** estruturais e **salvar ou compartilhar facilmente** somente os relatórios já autorizados.
+
+## Revalidação antes do cadastro Vista do Sol
+
+Em sessão autenticada posterior, o contexto Loteadora voltou a carregar com a organização autorizada, módulo e finalidade apresentados pela aplicação. O estúdio selecionou um rascunho legado automaticamente e abriu a etapa Estrutura. A leitura confirmou que esse rascunho possui uma Quadra sem Lotes ativos, zero Lotes estruturais e sinalização explícita de revisão obrigatória. Nenhum controle de salvar, aplicar, arquivar, anexar ou remover foi acionado nessa revalidação.
+
+Essa evidência confirma que a nova gravação do Vista do Sol deve ser feita em um rascunho independente, sem tentar reutilizar ou corrigir implicitamente o registro legado.

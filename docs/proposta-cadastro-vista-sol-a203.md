@@ -73,3 +73,15 @@ Após a confirmação, o CRM criará um novo rascunho de loteamento, as Quadras 
 > Para autorizar a gravação real, responda com uma das opções: **“Confirmo A: o 165º Lote é Q__ · L__”** ou **“Confirmo B: criar o Vista do Sol com 164 Lotes e registrar a pendência de reconciliação”**. Essa confirmação autoriza somente os campos e efeitos listados aqui.
 
 Ao finalizar essa etapa, a equipe poderá **explorar os dados de forma mais intuitiva**, **entender melhor as tendências** da estrutura física e **salvar ou compartilhar facilmente** somente as referências já autorizadas.
+
+## Abertura controlada do rascunho
+
+Após a confirmação da alternativa B, a sessão autenticada voltou ao Cadastro de Loteamentos, manteve o contexto autorizado e abriu a tela de **Novo rascunho**. A ação foi somente local: não havia criação persistida, a lista de rascunhos permaneceu inalterada e os únicos campos habilitados eram a referência interna e o nome de trabalho. O registro legado não foi selecionado para alteração.
+
+Na etapa seguinte, foram preenchidos localmente a referência interna `VISTA_DO_SOL` e o nome de trabalho **Vista do Sol Loteamento**. A visão operacional passou a indicar identificação completa e estrutura ainda aguardando Quadras, mas a criação persistida não havia sido acionada neste ponto.
+
+O foco foi posicionado no comando **Criar e avançar para estrutura**, que está habilitado somente após os dois campos de identificação serem preenchidos. Nenhuma tecla de confirmação foi enviada nesta etapa; o próximo comando persistirá apenas o rascunho independente já delimitado pela alternativa B.
+
+## Negação segura antes da criação
+
+O comando de criação foi acionado após a confirmação da alternativa B, mas o servidor recusou a gravação porque a atestação MFA TOTP recente não estava presente na sessão. Nenhum rascunho, Quadra, Lote, pendência, anexo ou dado comercial foi criado. A negação confirma que o contexto visual autorizado e o preenchimento local não substituem a verificação de identidade, MFA e alçada no servidor.
