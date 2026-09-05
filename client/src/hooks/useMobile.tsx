@@ -1,6 +1,8 @@
 import * as React from "react";
 
-const MOBILE_BREAKPOINT = 768;
+// O painel lateral aberto comprime formulários setoriais em tablets; abaixo de
+// 1024 px, o mesmo acionador passa a abrir o menu em painel sobreposto.
+export const MOBILE_BREAKPOINT = 1024;
 
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(

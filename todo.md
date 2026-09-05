@@ -1835,3 +1835,10 @@
 - [x] Inventariar os bloqueios atuais de contratos, valores, cobrança, boletos, pagamentos, repasses, fornecedores, obras e demais controles materiais.
 - [x] Pesquisar obrigações públicas e controles de governança aplicáveis ao desenho futuro, sem iniciar implementações materiais ou integrações externas.
 - [x] Consolidar o blueprint não executável, dependências de validação jurídica-contábil e critérios de autorização individual antes de qualquer alteração material.
+
+## Auditoria acessível: Loteadora sem contexto
+- [x] Verificar no tablet as cinco rotas não financeiras e auditar rótulos, foco, estrutura semântica, contraste e estados bloqueados sem acionar controles.
+- [x] Corrigir somente falhas comprovadas de acessibilidade e preservar as rotas, a ordem setorial, os bloqueios materiais e o desempenho carregado sob demanda.
+- [x] Corrigir a compressão da área de trabalho na faixa de tablet, recolhendo a navegação lateral sem alterar a estrutura de setores, links ou controles de contexto.
+- [x] Aplicar a navegação em modo compacto na faixa de tablet e manter a barra lateral acessível pelo acionador existente, sem afetar a preferência de largura em desktop amplo.
+- [x] Cobrir o breakpoint compartilhado por teste automatizado e revisar as cinco rotas de Loteadora em tablet após a mudança.
