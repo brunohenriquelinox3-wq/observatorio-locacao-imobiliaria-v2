@@ -1830,3 +1830,8 @@
 ## Homologação humana: Loteadora em leitura segura
 - [x] Elaborar roteiro de homologação humana somente de leitura para os cinco setores não financeiros, sem criar, editar, excluir, importar ou exportar registros.
 - [x] Definir critérios de aceite, parada imediata e continuidade para preservar contexto, dados pessoais, documentos, contratos e o Financeiro bloqueado.
+
+## Blueprint condicionado: contratos e Financeiro da Loteadora
+- [x] Inventariar os bloqueios atuais de contratos, valores, cobrança, boletos, pagamentos, repasses, fornecedores, obras e demais controles materiais.
+- [x] Pesquisar obrigações públicas e controles de governança aplicáveis ao desenho futuro, sem iniciar implementações materiais ou integrações externas.
+- [x] Consolidar o blueprint não executável, dependências de validação jurídica-contábil e critérios de autorização individual antes de qualquer alteração material.
