@@ -55,3 +55,7 @@ A leitura autenticada estabilizada confirmou o indicador **Área sem fonte** ao 
 A revisão do novo resumo foi iniciada após a atualização. A segunda captura da área autenticada não retornou conteúdo legível; ela não será usada como evidência visual. A validação dirigida confirmou que a contagem deriva de Lotes e Quadras filtrados, e a revisão visual deverá ser repetida após a interface estabilizar.
 
 Após reinício controlado da prévia, a leitura autenticada foi estabilizada. O resumo apareceu entre os filtros e as Quadras: **164 Lotes encontrados em 14 Quadras**, seguido da indicação de que a contagem reflete somente filtros locais. Nenhuma ação de edição, preço ou operação comercial foi acionada durante a inspeção.
+
+## Revisão móvel de continuidade
+
+A captura móvel atual da rota de Cadastro de Loteamentos confirmou a composição em coluna única, campos dimensionados ao viewport e navegação modular legível. Como a captura de prévia não estava em um cadastro selecionado da sessão autenticada, ela valida somente a responsividade estrutural da rota; a leitura da matriz e os controles físicos continuam validados na inspeção autenticada separada.
