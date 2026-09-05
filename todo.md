@@ -1881,3 +1881,12 @@
 - [x] Confirmar que solicitações, memberships, grants, escopos e módulos de equipe são negados para organizações demonstrativas isoladas.
 - [x] Cobrir a negação em migration, serviço e roteador sem criar ou ativar nenhum dado no Ambiente Demonstrativo.
 - [x] Restringir as solicitações de equipe a organizações ativas e revalidar esse estado antes do preparo ou aceite, impedindo qualquer delegação para organização em rascunho.
+
+## Recuperação da prévia temporária
+- [x] Recuperar o endereço temporário indisponível e confirmar uma rota segura do CRM sem contexto, dados ou comandos.
+
+## Verificação integral: permissões SUPER ADM e ADM
+- [x] Confirmar rotas, composição visual, estados bloqueados e ausência de exposição de identidade nos painéis SUPER ADM, ADM e acesso próprio de equipe. **A191:** revisado em desktop e móvel no estado seguro, sem acionamento de comandos.
+- [x] Executar a cobertura automatizada de solicitação, preparo, aceite, negação, organização cruzada, escopo excessivo, MFA, idempotência e isolamento demonstrativo. **A191:** suíte integral aprovada; os testes dirigidos do fluxo de equipe permanecem cobertos.
+- [x] Verificar no banco somente RLS, RPCs, funções e privilégios da delegação de equipe, sem ler registros de pessoas ou organizações. **A191:** catálogo confirmou RLS, revogação de leitura direta e EXECUTE restrito; não foram consultados registros.
+- [x] Consolidar a evidência e corrigir somente desvios comprovados antes do próximo checkpoint. **A191:** nenhum desvio foi comprovado; o ciclo positivo real permanece pendente de segunda identidade ativa, sem membership e com MFA próprio.
