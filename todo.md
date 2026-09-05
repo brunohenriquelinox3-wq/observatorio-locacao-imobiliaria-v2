@@ -1858,3 +1858,7 @@
 - [x] Cobrir migration, RLS, RPCs, identidade, MFA, alçada, organização cruzada, escopo excessivo, idempotência, roteamento e responsividade por testes automatizados.
 - [x] Bloquear visualmente a solicitação própria quando a sessão Supabase não fornecer subject, sem confundir autenticação da plataforma com elegibilidade de acesso.
 - [x] Bloquear visualmente a preparação de equipe pelo ADM quando a sessão Supabase não fornecer subject, sem confundir autenticação da plataforma com alçada organizacional.
+
+## Homologação humana: governança de equipe em leitura segura
+- [x] Elaborar roteiro somente de leitura para SUPER ADM, ADM e solicitação própria de equipe, sem criar solicitação, delegação, convite ou acesso.
+- [x] Definir critérios de aceite e parada para identidade, MFA, escopo, estados redigidos, alçadas e ausência de dados pessoais.
