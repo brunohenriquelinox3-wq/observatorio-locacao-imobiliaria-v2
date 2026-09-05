@@ -41,4 +41,16 @@ describe("central de gestão territorial por Quadra e Lote", () => {
     expect(source).toContain("ações do cadastro em estruturação");
     expect(source).not.toContain("antes de qualquer leitura ou rascunho");
   });
+
+  it("deriva a completude apenas dos atributos físicos retornados e declara a ausência de inferência", () => {
+    const source = studio();
+    const style = styles();
+
+    expect(source).toContain("const physicalCoverage = [");
+    expect(source).toContain('key: "frontage"');
+    expect(source).toContain('key: "depth"');
+    expect(source).toContain("Campos pendentes continuam vazios até uma fonte física revisada ser aplicada.");
+    expect(source).toContain("Esta leitura não preenche, estima nem modifica Lotes.");
+    expect(style).toContain(".subdivision-lot-management__completeness-grid");
+  });
 });

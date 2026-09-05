@@ -101,3 +101,16 @@ A superfície **Política de preço por m² · Prévia** passou a declarar visua
 | Validação técnica | Teste dirigido ampliado, suíte integral com 212 arquivos e 514 testes, tipagem, build Netlify e `git diff --check` aprovados. O build manteve somente o aviso não bloqueante de chunks grandes. |
 
 Na revisão visual autenticada em desktop, a política preparada apareceu como cartão independente e a edição da matriz permaneceu fora do fluxo de consulta até ser aberta manualmente. A captura móvel de rota confirmou o empilhamento responsivo da experiência de Cadastro de Loteamentos; os estilos específicos de política e de revisão usam a mesma regra móvel de coluna única. A captura móvel não selecionou um cadastro autenticado e, portanto, não foi usada para declarar leitura adicional da matriz real.
+
+## Completude física por atributo A216
+
+A leitura operacional agora apresenta um painel de completude imediatamente após as métricas físicas. Ele mostra, para cada atributo, a razão entre Lotes com dado conhecido e o total da matriz: **Área**, **Frente**, **Profundidade**, **Posição** e **Tipologia**. A visualização é derivada exclusivamente da estrutura já autorizada e não propõe preenchimento automático, estimativa ou valor comercial.
+
+Na leitura autenticada, a área, a posição e a tipologia estavam completas; frente e profundidade permaneceram marcadas como pendentes de fonte. Essa distinção transforma uma lacuna técnica em fila clara de conferência, sem transformar a ausência de dado em zero ou informação presumida. O painel não tem comando de gravação e a atualização de qualquer atributo continua condicionada a uma fonte física revisada e aos controles existentes.
+
+| Verificação A216 | Resultado |
+|---|---|
+| Leitura autenticada | O painel revelou os cinco atributos após o carregamento autorizado, sem reutilizar totais durante o estado transitório. |
+| Ausência de inferência | Frente e profundidade foram mantidas como pendências de fonte; nenhum dado foi preenchido ou estimado. |
+| Teste e build | Teste dirigido, 212 arquivos e 515 testes da suíte, tipagem, build Netlify e integridade de diff foram aprovados. O único aviso remanescente é o não bloqueante de chunks grandes. |
+| Artefatos | ZIP e HTML A216 foram gerados e saneados; não incluem ambiente, dependências, logs, build, documentação, checklist, credenciais ou endereços de infraestrutura. |

@@ -2100,3 +2100,9 @@
 - [x] Salvar checkpoint A215 após documentação, testes, build, integridade, revisão visual e saneamento dos artefatos. **A215:** checkpoint `dceb0940` preserva a central de consulta, a política preparada e os limites de não persistência.
 - [x] Separar a matriz de edição da central de leitura em um painel expansível “Revisar matriz física”, evitando que 14 Quadras editáveis ocupem a tela durante a consulta operacional. **A215:** o painel fica fechado quando o cadastro já possui matriz e pode ser aberto por intenção, sem submissão automática.
 - [x] Reforçar a prévia de preço/m² como painel de política preparada, com explicação de escopo, vigência e aprovação antes do campo local, sem persistir valores ou iniciar venda. **A215:** a sequência Preparar → Vigência → Aprovar está visível e não indica política efetiva.
+
+## Completude física por atributo — A216
+- [x] Exibir a cobertura física de área, frente, profundidade, posição e tipologia com contagens derivadas exclusivamente da matriz já autorizada. **A216:** o painel usa somente contagens de atributos físicos presentes na leitura contextual.
+- [x] Direcionar a pessoa operadora para revisão física sem preencher, estimar ou salvar dados ausentes. **A216:** campos ausentes aparecem como pendência de fonte e a interface declara explicitamente a ausência de inferência ou modificação.
+- [x] Cobrir a leitura, a responsividade e a ausência de comandos comerciais; gerar artefatos saneados. **A216:** leitura autenticada, teste dirigido, suíte integral com 212 arquivos/515 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
+- [ ] Salvar checkpoint A216 após documentação, validação integral, revisão visual e saneamento dos artefatos.

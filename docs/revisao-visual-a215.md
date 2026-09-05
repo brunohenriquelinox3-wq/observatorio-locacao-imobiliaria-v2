@@ -15,3 +15,13 @@ A leitura textual e a renderização inicial autenticadas confirmaram a matriz f
 ## Verificação desktop por intenção
 
 No navegador autenticado, a política de preço foi visualizada como cartão separado, com três etapas legíveis — Preparar, Vigência e Aprovar — antes do campo de valor local e do seletor de escopo. O painel “Revisar matriz física” apareceu fechado ao fim da leitura. Ao abri-lo, o cabeçalho de edição, os totais de estrutura e os controles de inclusão ficaram disponíveis sem acionar submissão, alteração, arquivamento ou restauração. A página também confirmou a remoção da expressão visível “rascunho” do aviso de contexto deste cadastro.
+
+## Início da revisão A216
+
+Após a recarga autenticada, enquanto as consultas protegidas ainda estavam em andamento, a tela apresentou contagens neutras e mensagens de confirmação de matriz e de atributos físicos. Nenhum total anterior foi reaproveitado como dado local. A verificação da completude por atributo será registrada somente depois que a leitura autorizada terminar.
+
+## Leitura autenticada de completude
+
+Após a conclusão da leitura autorizada, o painel mostrou a cobertura por atributo sem preencher lacunas: Área, Posição e Tipologia estavam completos para os 164 Lotes físicos; Frente e Profundidade permaneceram integralmente pendentes de fonte. A matriz continuou em 14 Quadras e 164 Lotes, e o aviso deixou explícito que a visualização não preenche, estima ou modifica Lotes. Nenhum comando de matriz, preço ou operação comercial foi acionado.
+
+Na inspeção visual focal da central, o bloco de completude ficou entre as métricas resumidas e os filtros, preservando a ordem de leitura: total físico, qualidade da fonte e, só então, navegação por Quadra. As cinco categorias ficaram legíveis como cartões curtos, e as pendências não foram disfarçadas como dados válidos.
