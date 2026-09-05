@@ -573,8 +573,8 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
             {isWorkspaceReady && !developmentsQuery.isLoading && filteredDevelopments.length === 0 && <p className="subdivision-studio__record-empty">{recordFilter ? "Nenhum rascunho corresponde à busca." : "Nenhum loteamento em rascunho foi devolvido."}</p>}
             {filteredDevelopments.map((development) => <button type="button" key={development.developmentId} onClick={() => selectDevelopment(development.developmentId)} data-active={development.developmentId === selectedDevelopmentId}>
               <span>{development.displayName ?? development.internalReference}</span>
-              <small>{development.internalReference}</small>
-              <em>{phaseLabels[development.workingPhase]}</em>
+              <small><b>Referência</b>{development.internalReference}</small>
+              <em><b>Fase</b>{phaseLabels[development.workingPhase]}<i>Abrir cadastro →</i></em>
             </button>)}
           </div>
           <div className="subdivision-studio__records-foot"><ShieldCheck size={15} /><span>A lista revela somente referências autorizadas do contexto atual.</span></div>
