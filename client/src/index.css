@@ -1,6 +1,7 @@
 /* Caderno de Campo Urbano: papel mineral, azul cadastral e argila de decisão. */
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./subdivision-archived-recovery.css";
 
 @custom-variant dark (&:is(.dark *));
 

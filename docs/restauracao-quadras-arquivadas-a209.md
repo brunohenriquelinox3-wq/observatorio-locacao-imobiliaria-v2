@@ -21,3 +21,17 @@ Em revisão autenticada, o módulo Estrutura passou a exibir **Quadras arquivada
 ## Validação
 
 Os testes dirigidos cobriram a ausência de identidade, serialização contextual, listagem redigida e restauração com contagem agregada. A validação integral aprovou **208 arquivos de teste e 506 testes**, além de tipagem, build compatível com Netlify e integridade do diff. O build apresentou somente o aviso não bloqueante de chunks grandes.
+
+## Observação posterior de uso
+
+Na primeira tentativa humana de arquivamento, o servidor negou corretamente o comando porque a janela de MFA recente já tinha expirado. A tela de Segurança e MFA confirmou a necessidade de revalidação, e a pessoa usuária renovou o fator antes do teste controlado seguinte. A mensagem genérica do bloqueio será substituída por uma orientação direta à revalidação, e a área Arquivados será destacada visualmente para reduzir a procura após um clique acidental.
+
+## Teste controlado após revalidação
+
+Com MFA recente confirmado, uma única Quadra de teste foi arquivada logicamente e passou a aparecer na área **Quadras arquivadas**, com a contagem agregada dos Lotes já existentes e o botão **Restaurar**. A primeira restauração foi bloqueada por uma falha de normalização na escrita da auditoria; a correção A210 foi aplicada de forma aditiva e a segunda restauração foi aceita. A leitura posterior confirmou o retorno da Quadra e de seus Lotes já existentes, a área Arquivados vazia e a matriz restaurada à mesma contagem agregada inicial. Nenhum Lote novo, preço, venda, contrato, documento, pessoa, cobrança ou financeiro foi criado ou alterado.
+
+## Correção de descoberta e validação final
+
+A seção de Arquivados foi convertida em um cartão verde de **Recuperação rápida**, com borda reforçada, rótulo permanente e ação **Restaurar** em destaque quando houver item disponível. Em estado vazio, o cartão continua na mesma posição e explica onde o item aparecerá após um arquivamento acidental. Isso elimina a procura por uma área escondida, sem reduzir as confirmações e as guards server-side.
+
+A validação integral aprovou **210 arquivos de teste e 508 testes**, além de tipagem, build compatível com Netlify e integridade do diff. O build manteve somente o aviso não bloqueante sobre tamanho de chunk. A migração A210 não amplia privilégios e corrige somente a normalização redigida usada na auditoria da restauração.

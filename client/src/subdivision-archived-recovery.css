@@ -1,0 +1,66 @@
+.subdivision-studio__archived-structure {
+  position: relative;
+  gap: 14px;
+  margin-top: 10px;
+  padding: 17px;
+  border: 2px solid #6fb8a8;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #e6f7f1 0%, #ffffff 72%);
+  box-shadow: 0 8px 22px rgba(22, 111, 97, .09);
+}
+
+.subdivision-studio__archived-structure::before {
+  display: block;
+  width: max-content;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: #176f61;
+  color: #fff;
+  content: "RECUPERAÇÃO RÁPIDA";
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .11em;
+}
+
+.subdivision-studio__archived-structure > div:first-child > span {
+  color: #126f61;
+  font-weight: 900;
+}
+
+.subdivision-studio__archived-structure h5 {
+  margin: 3px 0 6px;
+  color: #133f47;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.subdivision-studio__archived-structure > div:last-child {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  width: 100%;
+}
+
+.subdivision-studio__archived-structure article {
+  min-height: 56px;
+  padding: 10px 11px;
+  border-color: #7abbaa;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(22, 111, 97, .08);
+}
+
+.subdivision-studio__archived-structure .subdivision-studio__secondary {
+  min-height: 34px;
+  border-color: #176f61 !important;
+  background: #176f61 !important;
+  color: #fff !important;
+  font-weight: 850;
+}
+
+.subdivision-studio__archived-structure .subdivision-studio__secondary:hover:not(:disabled) {
+  background: #10584e !important;
+}
+
+@media (max-width: 780px) {
+  .subdivision-studio__archived-structure { padding: 14px; }
+  .subdivision-studio__archived-structure h5 { font-size: 15px; }
+}
