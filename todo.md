@@ -2116,3 +2116,9 @@
 - [x] Substituir o total de pendências limitado à área pelo total de Lotes com algum atributo físico pendente em cada Quadra. **A218:** cada resumo agora indica “Lotes com pendência”, considerando área, frente, profundidade, posição e tipologia.
 - [x] Manter a matriz em leitura, testar a nova métrica e validar a experiência sem criar ou preencher dados físicos. **A218:** leitura autenticada, teste dirigido, suíte integral com 212 arquivos/517 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
 - [x] Salvar checkpoint A218 após a validação integral, a revisão visual e o saneamento dos artefatos. **A218:** checkpoint `70851eeb` preserva a coerência entre pendências por Quadra e atributos físicos por Lote.
+
+## Filtro de situação física — A219
+- [x] Adicionar filtro local para todos os Lotes, Lotes com atributos pendentes e Lotes fisicamente completos, combinado à busca e ao recorte por Quadra. **A219:** o seletor Situação física usa os mesmos critérios da completude e da pendência por Quadra.
+- [x] Manter o filtro estritamente em memória, sem persistir, alterar Lotes ou criar classificação comercial. **A219:** o estado é reiniciado ao trocar ou iniciar cadastro e não chama procedure de alteração.
+- [x] Cobrir filtragem, revisão visual, validação integral e artefatos saneados. **A219:** leitura autenticada, teste dirigido, suíte integral com 212 arquivos/518 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
+- [ ] Salvar checkpoint A219 após a filtragem local, a validação e o saneamento dos artefatos.

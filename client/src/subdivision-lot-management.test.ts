@@ -70,4 +70,14 @@ describe("central de gestão territorial por Quadra e Lote", () => {
     expect(source).toContain("Lotes com pendência");
     expect(source).toContain("block.lotsWithPhysicalPending");
   });
+
+  it("filtra localmente por situação física sem introduzir estado comercial", () => {
+    const source = studio();
+
+    expect(source).toContain('useState<"all" | "pending" | "complete">("all")');
+    expect(source).toContain("matchesPhysicalStatus");
+    expect(source).toContain("Com pendência física");
+    expect(source).toContain("Completos na fonte");
+    expect(source).not.toContain("Disponibilidade comercial");
+  });
 });

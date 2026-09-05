@@ -33,3 +33,9 @@ A revisão identificou que `not_declared` e `standard` são valores-padrão de e
 ## Coerência por Quadra A218
 
 A leitura autenticada confirmou que o resumo de cada Quadra agora usa “Lotes com pendência” em vez de uma contagem limitada à área. Na primeira Quadra, por exemplo, a quantidade exibida correspondeu aos três Lotes que ainda necessitam de atributos físicos; as demais Quadras seguiram a mesma regra. Essa leitura permanece derivada, não aciona edição e não modifica dados físicos.
+
+## Filtro local A219
+
+Na leitura autenticada, o novo seletor **Situação física** foi exibido junto da busca e do filtro de Quadra. As opções apresentadas são Todos os Lotes, Com pendência física e Completos na fonte; elas se referem exclusivamente a atributos físicos e não introduzem disponibilidade, preço ou estado comercial.
+
+Na revisão da faixa de filtros, a busca, o recorte de Quadra e a situação física ficaram disponíveis no mesmo ponto de decisão, após a completude e antes da lista expansível. O agrupamento preserva leitura primeiro e evita que a pessoa operadora precise entrar em edição para localizar lacunas físicas.

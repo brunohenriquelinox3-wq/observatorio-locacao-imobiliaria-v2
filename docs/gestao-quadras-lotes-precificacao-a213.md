@@ -120,3 +120,9 @@ Na leitura autenticada, a área, a posição e a tipologia estavam completas; fr
 O resumo expansível de cada Quadra passou a contar **Lotes com pendência**, e não apenas Lotes sem área. O novo total considera um Lote pendente quando ao menos um atributo físico permanece sem evidência de fonte: área, frente, profundidade, posição ou tipologia. Dessa forma, o resumo de Quadra não entra em contradição com o painel de completude e com o detalhe dos Lotes.
 
 Essa métrica é somente uma agregação da leitura autorizada. Ela não cria campos, não preenche o que está ausente e não muda a estrutura salva. A revisão autenticada confirmou a coerência entre a quantidade de Lotes da Quadra, a pendência exibida e os atributos mostrados no detalhe. A validação integral aprovou 212 arquivos e 517 testes; o build preservou somente o aviso não bloqueante de chunks grandes. O ZIP e o HTML A218 foram regenerados e verificados como saneados.
+
+## Filtro de situação física A219
+
+Além da busca textual e do recorte por Quadra, a central agora permite filtrar localmente a situação física em três estados: todos os Lotes, Lotes com pendência física e Lotes completos na fonte. O filtro usa exatamente os mesmos critérios do painel de completude e dos resumos por Quadra, evitando classificações paralelas ou comerciais.
+
+O estado do filtro existe somente na memória do navegador e retorna a “Todos os Lotes” ao trocar ou iniciar um cadastro. A leitura autenticada confirmou que o seletor aparece no mesmo agrupamento dos outros filtros e que suas opções não expõem disponibilidade, valores ou vendas. A validação integral aprovou 212 arquivos e 518 testes; o build manteve somente o aviso não bloqueante de chunks grandes. ZIP e HTML A219 foram regenerados e validados como saneados.
