@@ -43,7 +43,7 @@ const attachmentCategoryLabels: Record<AttachmentCategory, string> = {
 
 const studioModules: Array<{ id: StudioModule; label: string; caption: string; icon: typeof PencilLine }> = [
   { id: "identity", label: "Identificação", caption: "Referência e nome", icon: PencilLine },
-  { id: "structure", label: "Estrutura", caption: "Enquadramento e etapas", icon: Workflow },
+  { id: "structure", label: "Estrutura", caption: "Quadras e Lotes", icon: Workflow },
   { id: "preparation", label: "Preparação", caption: "Roteiro interno", icon: ClipboardCheck },
   { id: "documents", label: "Documentos", caption: "Anexos privados", icon: FileText },
   { id: "lifecycle", label: "Ciclo", caption: "Arquivamento", icon: Archive },
@@ -58,6 +58,11 @@ type StudioForm = {
   plannedStageCount: number;
   workingPhase: WorkingPhase;
   internalNote: string;
+};
+
+type StructureRow = {
+  blockNumber: number;
+  lotCount: number;
 };
 
 const emptyForm: StudioForm = {
@@ -96,6 +101,9 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const [recordFilter, setRecordFilter] = useState("");
   const [attachmentCategory, setAttachmentCategory] = useState<AttachmentCategory>("planning");
   const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
+  const [structureRows, setStructureRows] = useState<StructureRow[]>([]);
+  const [structureLoadedFor, setStructureLoadedFor] = useState("");
+  const [replaceStructureConfirmed, setReplaceStructureConfirmed] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const attachmentInput = useRef<HTMLInputElement>(null);
   const utils = trpc.useUtils();
@@ -109,6 +117,8 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   }, [developmentsQuery.data, recordFilter]);
   const attachmentInputContext = useMemo(() => ({ ...context, developmentId: selectedDevelopmentId }), [context, selectedDevelopmentId]);
   const attachmentsQuery = trpc.subdivisionFoundation.listDevelopmentAttachments.useQuery(attachmentInputContext, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
+  const structureInput = useMemo(() => ({ ...context, developmentId: selectedDevelopmentId }), [context, selectedDevelopmentId]);
+  const structureQuery = trpc.subdivisionFoundation.listDraftStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
 
   useEffect(() => {
     if (selectedDevelopmentId && !developmentsQuery.data?.some((development) => development.developmentId === selectedDevelopmentId)) {
@@ -123,12 +133,27 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     if (mode === "edit" && selectedDevelopment) setForm(toForm(selectedDevelopment));
   }, [mode, selectedDevelopment]);
 
+  useEffect(() => {
+    if (!selectedDevelopmentId) {
+      setStructureRows([]);
+      setStructureLoadedFor("");
+      setReplaceStructureConfirmed(false);
+      return;
+    }
+    if (structureQuery.data && structureLoadedFor !== selectedDevelopmentId) {
+      setStructureRows(structureQuery.data.map((block) => ({ blockNumber: block.blockNumber, lotCount: block.lotCount })));
+      setStructureLoadedFor(selectedDevelopmentId);
+      setReplaceStructureConfirmed(false);
+    }
+  }, [selectedDevelopmentId, structureLoadedFor, structureQuery.data]);
+
   const createMutation = trpc.subdivisionFoundation.createDevelopmentStudio.useMutation({
     onSuccess(result) {
       toast.success("Loteamento em rascunho criado", { description: "O cadastro foi salvo como referência interna e não aprova empreendimento, estoque, contrato ou financeiro." });
       setSelectedDevelopmentId(result.developmentId);
       setMode("edit");
       setActiveModule("structure");
+      setStructureLoadedFor("");
       void utils.subdivisionFoundation.listDevelopmentStudio.invalidate(context);
       void utils.subdivisionFoundation.listDraftDevelopments.invalidate(context);
     },
@@ -171,11 +196,46 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     },
   });
 
+  const applyStructureMutation = trpc.subdivisionFoundation.applyDraftStructure.useMutation({
+    onSuccess(result) {
+      toast.success("Estrutura de Quadras aplicada", { description: `${result.blockCount} Quadra(s) e ${result.lotCount} Lote(s) em rascunho. Nenhuma disponibilidade, reserva, venda ou contrato foi criado.` });
+      setReplaceStructureConfirmed(false);
+      setStructureLoadedFor("");
+      void utils.subdivisionFoundation.listDraftStructure.invalidate(structureInput);
+      void utils.subdivisionFoundation.listDraftBlocks.invalidate(structureInput);
+      void utils.subdivisionFoundation.listDraftLotInventoryStates.invalidate(context);
+    },
+    onError() {
+      toast.error("Estrutura não aplicada", { description: "Revise MFA, contexto, numeração única e a confirmação exigida para reduzir ou retirar Quadras e Lotes já salvos." });
+    },
+  });
+  const archiveBlockMutation = trpc.subdivisionFoundation.archiveDraftBlock.useMutation({
+    onSuccess(result) {
+      toast.success("Quadra arquivada", { description: `${result.archivedLotCount} Lote(s) foram arquivados logicamente. O histórico foi preservado.` });
+      setStructureLoadedFor("");
+      void utils.subdivisionFoundation.listDraftStructure.invalidate(structureInput);
+      void utils.subdivisionFoundation.listDraftBlocks.invalidate(structureInput);
+      void utils.subdivisionFoundation.listDraftLotInventoryStates.invalidate(context);
+    },
+    onError() {
+      toast.error("Quadra não arquivada", { description: "O servidor exige MFA, contexto autorizado e vínculo com o loteamento selecionado." });
+    },
+  });
+
   const identityReady = form.internalReference.length >= 3 && form.displayName.trim().length >= 3;
   const structureReady = Boolean(form.municipality) === Boolean(form.stateCode) && form.plannedStageCount >= 1;
   const activeAttachmentCount = attachmentsQuery.data?.filter((attachment) => attachment.state === "recorded").length ?? 0;
-  const completedModules = [identityReady, structureReady, Boolean(form.workingPhase)].filter(Boolean).length;
-  const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || isUploading;
+  const savedStructure = structureQuery.data ?? [];
+  const normalizedStructureRows = structureRows.filter((row) => Number.isInteger(row.blockNumber) && row.blockNumber >= 1 && row.blockNumber <= 999 && Number.isInteger(row.lotCount) && row.lotCount >= 1 && row.lotCount <= 100);
+  const hasDuplicateBlockNumber = new Set(structureRows.map((row) => row.blockNumber)).size !== structureRows.length;
+  const structureWouldArchive = savedStructure.some((saved) => {
+    const draft = structureRows.find((row) => row.blockNumber === saved.blockNumber);
+    return !draft || draft.lotCount < saved.lotCount;
+  });
+  const savedLotCount = savedStructure.reduce((total, block) => total + block.lotCount, 0);
+  const draftLotCount = structureRows.reduce((total, block) => total + (Number.isFinite(block.lotCount) ? block.lotCount : 0), 0);
+  const completedModules = [identityReady, savedStructure.length > 0 || structureReady, Boolean(form.workingPhase)].filter(Boolean).length;
+  const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || isUploading;
   const selectedModule = studioModules.find((module) => module.id === activeModule) ?? studioModules[0];
 
   function startNew() {
@@ -184,6 +244,9 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     setActiveModule("identity");
     setForm(emptyForm);
     setAttachmentFile(null);
+    setStructureRows([]);
+    setStructureLoadedFor("");
+    setReplaceStructureConfirmed(false);
     if (attachmentInput.current) attachmentInput.current.value = "";
   }
 
@@ -191,6 +254,55 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     setSelectedDevelopmentId(id);
     setMode("edit");
     setActiveModule("identity");
+    setStructureRows([]);
+    setStructureLoadedFor("");
+    setReplaceStructureConfirmed(false);
+  }
+
+  function addStructureRows(amount: number) {
+    setStructureRows((current) => {
+      if (current.length >= 50) return current;
+      const numbers = new Set(current.map((row) => row.blockNumber));
+      const additions: StructureRow[] = [];
+      let candidate = 1;
+      while (additions.length < amount && current.length + additions.length < 50 && candidate <= 999) {
+        if (!numbers.has(candidate)) {
+          additions.push({ blockNumber: candidate, lotCount: 1 });
+          numbers.add(candidate);
+        }
+        candidate += 1;
+      }
+      return [...current, ...additions];
+    });
+  }
+
+  function updateStructureRow(index: number, patch: Partial<StructureRow>) {
+    setStructureRows((current) => current.map((row, rowIndex) => rowIndex === index ? { ...row, ...patch } : row));
+    setReplaceStructureConfirmed(false);
+  }
+
+  function removeStructureRow(index: number) {
+    setStructureRows((current) => current.filter((_, rowIndex) => rowIndex !== index));
+    setReplaceStructureConfirmed(false);
+  }
+
+  function applyStructure(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!selectedDevelopmentId || structureRows.length === 0 || normalizedStructureRows.length !== structureRows.length || hasDuplicateBlockNumber) {
+      toast.error("Revise as Quadras", { description: "Cada Quadra deve ter número único de 1 a 999 e de 1 a 100 Lotes." });
+      return;
+    }
+    if (structureWouldArchive && !replaceStructureConfirmed) {
+      toast.message("Confirmação necessária", { description: "A redução de quantidade ou retirada de uma Quadra arquiva referências em rascunho. Confirme a revisão antes de aplicar." });
+      return;
+    }
+    applyStructureMutation.mutate({
+      ...context,
+      developmentId: selectedDevelopmentId,
+      blocks: [...normalizedStructureRows].sort((left, right) => left.blockNumber - right.blockNumber),
+      replaceExisting: structureWouldArchive,
+      correlationId: crypto.randomUUID(),
+    });
   }
 
   function openModule(module: StudioModule) {
@@ -297,7 +409,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
             {studioModules.map((module, index) => {
               const ModuleIcon = module.icon;
               const requiresSavedDraft = module.id === "documents" || module.id === "lifecycle";
-              const isComplete = module.id === "identity" ? identityReady : module.id === "structure" ? structureReady : module.id === "preparation" ? Boolean(form.workingPhase) : module.id === "documents" ? activeAttachmentCount > 0 : false;
+              const isComplete = module.id === "identity" ? identityReady : module.id === "structure" ? savedStructure.length > 0 : module.id === "preparation" ? Boolean(form.workingPhase) : module.id === "documents" ? activeAttachmentCount > 0 : false;
               return <button type="button" key={module.id} onClick={() => openModule(module.id)} aria-current={activeModule === module.id ? "step" : undefined} data-active={activeModule === module.id} data-complete={isComplete} disabled={!isWorkspaceReady || (requiresSavedDraft && !selectedDevelopmentId)}>
                 <span className="subdivision-studio__module-index">{String(index + 1).padStart(2, "0")}</span><ModuleIcon size={17} /><span><b>{module.label}</b><small>{module.caption}</small></span>{isComplete && <CheckCircle2 size={15} />}
               </button>;
@@ -316,18 +428,35 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
               <div className="subdivision-studio__module-actions"><button type="submit" disabled={!isWorkspaceReady || isBusy}>{isBusy ? "Validando requisitos" : mode === "create" ? "Criar e avançar para estrutura" : "Salvar identificação"}</button>{mode === "edit" && <button type="button" className="subdivision-studio__secondary" onClick={() => openModule("structure")} disabled={isBusy}>Ir para estrutura</button>}</div>
             </form>}
 
-            {activeModule === "structure" && <form className="subdivision-studio__module-form" onSubmit={saveDevelopment}>
-              <div className="subdivision-studio__field-grid subdivision-studio__field-grid--three">
-                <label>Enquadramento<select value={form.developmentKind} onChange={(event) => setForm((current) => ({ ...current, developmentKind: event.target.value as DevelopmentKind }))} disabled={!isWorkspaceReady || isBusy}>{Object.entries(kindLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
-                <label>Etapas planejadas<input type="number" min={1} max={20} value={form.plannedStageCount} onChange={(event) => setForm((current) => ({ ...current, plannedStageCount: Number(event.target.value) || 1 }))} disabled={!isWorkspaceReady || isBusy} required /></label>
-                <div className="subdivision-studio__field-callout"><Workflow size={17} /><span>Estrutura interna; Quadras e Lotes permanecem no Setor 02.</span></div>
-              </div>
-              <div className="subdivision-studio__field-grid subdivision-studio__field-grid--location">
-                <label>Município de referência <small>Opcional, junto da UF</small><input value={form.municipality} onChange={(event) => setForm((current) => ({ ...current, municipality: event.target.value }))} placeholder="Município" disabled={!isWorkspaceReady || isBusy} maxLength={80} /></label>
-                <label>UF <small>Opcional, junto do município</small><input value={form.stateCode} onChange={(event) => setForm((current) => ({ ...current, stateCode: event.target.value.toUpperCase().slice(0, 2) }))} placeholder="UF" disabled={!isWorkspaceReady || isBusy} minLength={2} maxLength={2} /></label>
-              </div>
-              <div className="subdivision-studio__module-actions"><button type="submit" disabled={!isWorkspaceReady || isBusy}>{isBusy ? "Validando requisitos" : "Salvar estrutura"}</button><button type="button" className="subdivision-studio__secondary" onClick={() => openModule("preparation")} disabled={!selectedDevelopmentId || isBusy}>Ir para preparação</button></div>
-            </form>}
+            {activeModule === "structure" && <div className="subdivision-studio__structure-module">
+              <form className="subdivision-studio__module-form subdivision-studio__structure-profile" onSubmit={saveDevelopment}>
+                <div className="subdivision-studio__field-grid subdivision-studio__field-grid--three">
+                  <label>Enquadramento<select value={form.developmentKind} onChange={(event) => setForm((current) => ({ ...current, developmentKind: event.target.value as DevelopmentKind }))} disabled={!isWorkspaceReady || isBusy}>{Object.entries(kindLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
+                  <label>Etapas planejadas<input type="number" min={1} max={20} value={form.plannedStageCount} onChange={(event) => setForm((current) => ({ ...current, plannedStageCount: Number(event.target.value) || 1 }))} disabled={!isWorkspaceReady || isBusy} required /></label>
+                  <div className="subdivision-studio__field-callout"><Workflow size={17} /><span>Defina a matriz de Quadras e Lotes abaixo. A quantidade é própria de cada Quadra.</span></div>
+                </div>
+                <div className="subdivision-studio__field-grid subdivision-studio__field-grid--location">
+                  <label>Município de referência <small>Opcional, junto da UF</small><input value={form.municipality} onChange={(event) => setForm((current) => ({ ...current, municipality: event.target.value }))} placeholder="Município" disabled={!isWorkspaceReady || isBusy} maxLength={80} /></label>
+                  <label>UF <small>Opcional, junto do município</small><input value={form.stateCode} onChange={(event) => setForm((current) => ({ ...current, stateCode: event.target.value.toUpperCase().slice(0, 2) }))} placeholder="UF" disabled={!isWorkspaceReady || isBusy} minLength={2} maxLength={2} /></label>
+                </div>
+                <div className="subdivision-studio__module-actions"><button type="submit" disabled={!isWorkspaceReady || isBusy}>{isBusy ? "Validando requisitos" : "Salvar dados estruturais"}</button></div>
+              </form>
+
+              {!selectedDevelopmentId && <div className="subdivision-studio__module-empty"><LandPlot size={19} /><p>Salve a identificação do loteamento para montar Quadras e Lotes. A estrutura sempre fica vinculada ao rascunho selecionado.</p></div>}
+
+              {selectedDevelopmentId && <form className="subdivision-studio__structure-builder" onSubmit={applyStructure}>
+                <div className="subdivision-studio__structure-builder-head"><div><span>QUADRAS E LOTES</span><h5>Monte a matriz do loteamento por Quadra.</h5><p>Inclua uma linha por Quadra e informe quantos Lotes ela possui. Exemplo: Q1 com 15 Lotes e Q2 com 25 Lotes.</p></div><div className="subdivision-studio__structure-totals"><b>{structureRows.length}</b><span>Quadras</span><b>{draftLotCount}</b><span>Lotes previstos</span></div></div>
+                <div className="subdivision-studio__structure-actions"><button type="button" className="subdivision-studio__secondary" onClick={() => addStructureRows(1)} disabled={!isWorkspaceReady || isBusy || structureRows.length >= 50}><Plus size={15} />Adicionar Quadra</button><button type="button" className="subdivision-studio__secondary" onClick={() => addStructureRows(5)} disabled={!isWorkspaceReady || isBusy || structureRows.length >= 50}><Plus size={15} />Adicionar 5 Quadras</button>{structureRows.length === 0 && <button type="button" onClick={() => addStructureRows(1)} disabled={!isWorkspaceReady || isBusy}>Começar por Q1</button>}</div>
+                {structureQuery.isLoading && <div className="subdivision-foundation-empty"><LoaderCircle className="subdivision-foundation-spinner" /><p>Carregando a estrutura autorizada do loteamento.</p></div>}
+                {structureQuery.isError && <div className="subdivision-foundation-empty is-error"><ShieldAlert size={18} /><p>A estrutura não foi liberada neste contexto. Nenhuma Quadra ou Lote de outro loteamento é exibido.</p></div>}
+                {!structureQuery.isLoading && !structureQuery.isError && structureRows.length > 0 && <div className="subdivision-studio__structure-grid" role="list" aria-label="Matriz de Quadras e Lotes"><div className="subdivision-studio__structure-grid-head"><span>Quadra</span><span>Quantidade de Lotes</span><span>Prévia gerada</span><span className="sr-only">Ação</span></div>{structureRows.map((row, index) => <div className="subdivision-studio__structure-row" role="listitem" key={`${row.blockNumber}-${index}`}><label><span className="sr-only">Número da Quadra {index + 1}</span><div className="subdivision-studio__number-input"><em>Q</em><input type="number" min={1} max={999} value={row.blockNumber} onChange={(event) => updateStructureRow(index, { blockNumber: Number(event.target.value) })} disabled={!isWorkspaceReady || isBusy} required /></div></label><label><span className="sr-only">Quantidade de Lotes da Quadra {row.blockNumber || index + 1}</span><div className="subdivision-studio__number-input"><em>L</em><input type="number" min={1} max={100} value={row.lotCount} onChange={(event) => updateStructureRow(index, { lotCount: Number(event.target.value) })} disabled={!isWorkspaceReady || isBusy} required /></div></label><p><b>Q{row.blockNumber || "?"}</b> · L1–L{row.lotCount || "?"}</p><button type="button" className="subdivision-studio__remove-row" onClick={() => removeStructureRow(index)} disabled={!isWorkspaceReady || isBusy}><Trash2 size={15} /><span className="sr-only">Remover Quadra {row.blockNumber}</span></button></div>)}</div>}
+                {hasDuplicateBlockNumber && <p className="subdivision-studio__structure-error" role="alert">Cada Quadra precisa de numeração única. Corrija os números repetidos antes de aplicar.</p>}
+                {structureWouldArchive && <label className="subdivision-studio__replacement-confirmation"><input type="checkbox" checked={replaceStructureConfirmed} onChange={(event) => setReplaceStructureConfirmed(event.target.checked)} disabled={!isWorkspaceReady || isBusy} /><span><b>Confirmo a revisão da redução estrutural.</b> Quadras removidas e Lotes acima da nova quantidade serão arquivados logicamente; não há exclusão física nem efeito em venda, contrato ou financeiro.</span></label>}
+                <div className="subdivision-studio__structure-apply"><div><span>ESTRUTURA SALVA</span><b>{savedStructure.length ? `${savedStructure.length} Quadra(s) · ${savedLotCount} Lote(s)` : "Ainda não há Quadras salvas"}</b></div><button type="submit" disabled={!isWorkspaceReady || isBusy || structureRows.length === 0 || normalizedStructureRows.length !== structureRows.length || hasDuplicateBlockNumber || (structureWouldArchive && !replaceStructureConfirmed)}>{applyStructureMutation.isPending ? "Aplicando estrutura" : savedStructure.length ? "Aplicar revisão da estrutura" : "Criar Quadras e Lotes"}</button></div>
+                {savedStructure.length > 0 && <div className="subdivision-studio__saved-structure"><div><span>QUADRAS SALVAS</span><p>Use o botão de arquivamento apenas para uma Quadra inteira. Seus Lotes em rascunho serão arquivados junto dela.</p></div><div>{savedStructure.map((block) => <article key={block.blockId}><b>Q{block.blockNumber}</b><span>{block.lotCount} Lote(s)</span><AlertDialog><AlertDialogTrigger asChild><button type="button" className="subdivision-studio__danger" disabled={isBusy}><Archive size={14} />Arquivar</button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Arquivar Q{block.blockNumber}?</AlertDialogTitle><AlertDialogDescription>Os Lotes de rascunho vinculados a esta Quadra serão arquivados logicamente. O histórico é preservado; não há exclusão em cascata, venda, contrato ou efeito financeiro.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => archiveBlockMutation.mutate({ ...context, developmentId: selectedDevelopmentId, blockId: block.blockId, correlationId: crypto.randomUUID() })}>Arquivar Quadra</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></article>)}</div></div>}
+                {savedStructure.length > 0 && <a className="subdivision-studio__inventory-link" href="/estoque-lotes"><MapPinned size={16} /><span>Abrir Estoque/Mapa de Lotes</span><small>Revise a matriz Qn · Ln criada neste contexto.</small></a>}
+              </form>}
+            </div>}
 
             {activeModule === "preparation" && <form className="subdivision-studio__module-form" onSubmit={saveDevelopment}>
               <div className="subdivision-studio__field-grid">
@@ -360,7 +489,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
           <div className="subdivision-studio__overview-name"><strong>{mode === "create" ? form.displayName || "Novo loteamento" : selectedDevelopment?.displayName ?? selectedDevelopment?.internalReference}</strong><span>{form.internalReference || "Referência pendente"}</span></div>
           <div className="subdivision-studio__overview-grid">
             <div><span>BASE</span><b>{identityReady ? "Completa" : "Em preenchimento"}</b></div>
-            <div><span>ESTRUTURA</span><b>{structureReady ? `${form.plannedStageCount} etapa(s)` : "Revisar"}</b></div>
+            <div><span>ESTRUTURA</span><b>{savedStructure.length ? `${savedStructure.length} Q · ${savedLotCount} L` : structureReady ? "Aguardando Quadras" : "Revisar"}</b></div>
             <div><span>PREPARAÇÃO</span><b>{phaseLabels[form.workingPhase]}</b></div>
             <div><span>DOCUMENTOS</span><b>{selectedDevelopmentId ? `${activeAttachmentCount} privado(s)` : "Após criar"}</b></div>
           </div>

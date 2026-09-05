@@ -1926,3 +1926,16 @@
 - [x] Reorganizar a seleção de loteamentos em uma lista lateral operacional com busca local, estado, progresso e ação explícita de novo cadastro. **A197:** registros, busca, estado, progresso de módulos-base e resumo operacional foram separados visualmente.
 - [x] Cobrir navegação entre módulos, preservação de rascunho, estados bloqueados e responsividade antes da revisão visual final. **A197:** três testes específicos, revisão desktop/móvel, suíte integral de 468 testes, tipagem, build e diff aprovados.
 - [x] Revisar a correção em desktop e móvel, gerar ZIP e HTML saneados e salvar checkpoint sem publicar. **A197:** artefatos saneados e checkpoint corretivo preparados após revisão visual e validação integral.
+
+## Estrutura operacional: Quadras e Lotes por Loteamento
+- [x] Corrigir a compressão dos rótulos dos módulos quando as colunas laterais reduzem a largura útil da área de trabalho. **A198:** módulos usam largura mínima e rolagem horizontal, sem sobreposição de rótulos.
+- [x] Mapear a implementação atual de Quadra matriz e Lote para identificar as lacunas de inclusão, edição e encaminhamento do cadastro ao Estoque/Mapa. **A198:** lacunas eram ausência de aplicação em lote, quantidade variável por Quadra, redução confirmada e caminho pós-cadastro.
+- [x] Criar um construtor de estrutura por loteamento que permita adicionar, editar e arquivar Quadras individualmente, sem alterar registros existentes sem comando explícito. **A198:** construtor revisável, aplicação contextual e arquivamento lógico individual.
+- [x] Permitir definir quantidade própria de Lotes para cada Quadra, de 1 a 100, com nomenclatura gerada como `Qn · Ln`, prévia por quadra e validação antes de gravar. **A198:** limites, numeração única e prévia implementados.
+- [x] Permitir revisar e aplicar um lote de quadras com quantidades variáveis — por exemplo, Q1 com 15 Lotes e Q2 com 25 — preservando contexto, MFA, idempotência e auditoria redigida. **A198/A199:** aplicação transacional com MFA, correlação, lock e correção da normalização de auditoria.
+- [x] Exibir, depois do cadastro, um resumo estrutural e um caminho explícito e protegido ao Estoque/Mapa de Lotes, sem habilitar disponibilidade, reserva, venda, preço, contrato ou financeiro. **A198:** resumo de Quadras/Lotes e atalho contextual adicionados.
+- [x] Cobrir criação, edição, arquivamento, limites, duplicidade, concorrência, alçada, MFA, isolamento demonstrativo e responsividade com testes; realizar homologação somente com dados sintéticos fora do Ambiente Demonstrativo. **A198/A199:** testes dirigidos, catálogo e ciclo sintético completo aprovados sem registro ativo remanescente.
+- [x] Documentar, gerar ZIP e HTML saneados, validar build e salvar checkpoint sem publicar ou alterar registros existentes do usuário. **A198/A199:** documentação, validação integral e artefatos saneados concluídos antes do checkpoint.
+
+## Correção da homologação A198
+- [x] Corrigir a referência de normalização incompatível identificada durante a primeira transação sintética, preservando rollback automático e sem criar registros. **A199:** RPCs substituídas e a segunda homologação foi aprovada com limpeza integral.

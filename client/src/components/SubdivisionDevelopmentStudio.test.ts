@@ -29,4 +29,26 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain('archiveDevelopmentStudio');
     expect(studio).toContain('X-Supabase-Access-Token');
   });
+
+  it("inclui o construtor de Quadras e Lotes no próprio cadastro", () => {
+    const studio = source();
+    expect(studio).toContain("Monte a matriz do loteamento por Quadra.");
+    expect(studio).toContain("Q1 com 15 Lotes e Q2 com 25 Lotes");
+    expect(studio).toContain("applyDraftStructure");
+    expect(studio).toContain("archiveDraftBlock");
+    expect(studio).toContain("Abrir Estoque/Mapa de Lotes");
+  });
+
+  it("exige confirmação antes de arquivar parte da estrutura já salva", () => {
+    const studio = source();
+    expect(studio).toContain("replaceStructureConfirmed");
+    expect(studio).toContain("structureWouldArchive && !replaceStructureConfirmed");
+    expect(studio).toContain("arquivados logicamente");
+  });
+
+  it("mantém módulos de cadastro como unidades navegáveis e não como formulário comprimido", () => {
+    const studio = source();
+    expect(studio).toContain('caption: "Quadras e Lotes"');
+    expect(studio).toContain('aria-label="Matriz de Quadras e Lotes"');
+  });
 });

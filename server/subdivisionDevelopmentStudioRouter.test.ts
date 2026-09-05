@@ -13,5 +13,7 @@ describe("roteamento do estúdio de loteamentos", () => {
     expect(source).toContain("archiveDevelopmentStudio: protectedProcedure");
     expect(source).toContain("createDevelopmentAttachmentIntent: protectedProcedure");
     expect(source).toContain("archiveDevelopmentAttachment: protectedProcedure");
+    expect(source).toContain("applyDraftStructure: protectedProcedure");
+    expect(source).toContain("archiveDraftBlock: protectedProcedure");
   });
 });
