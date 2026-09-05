@@ -53,4 +53,12 @@ describe("central de gestão territorial por Quadra e Lote", () => {
     expect(source).toContain("Esta leitura não preenche, estima nem modifica Lotes.");
     expect(style).toContain(".subdivision-lot-management__completeness-grid");
   });
+
+  it("não transforma defaults estruturais em evidência física confirmada", () => {
+    const source = studio();
+
+    expect(source).toContain('lot.positionCode !== "not_declared"');
+    expect(source).toContain('lot.lotTypology !== "standard"');
+    expect(source).toContain('lot.lotTypology === "standard" ? "Tipologia pendente"');
+  });
 });

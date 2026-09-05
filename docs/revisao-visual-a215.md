@@ -25,3 +25,7 @@ Após a recarga autenticada, enquanto as consultas protegidas ainda estavam em a
 Após a conclusão da leitura autorizada, o painel mostrou a cobertura por atributo sem preencher lacunas: Área, Posição e Tipologia estavam completos para os 164 Lotes físicos; Frente e Profundidade permaneceram integralmente pendentes de fonte. A matriz continuou em 14 Quadras e 164 Lotes, e o aviso deixou explícito que a visualização não preenche, estima ou modifica Lotes. Nenhum comando de matriz, preço ou operação comercial foi acionado.
 
 Na inspeção visual focal da central, o bloco de completude ficou entre as métricas resumidas e os filtros, preservando a ordem de leitura: total físico, qualidade da fonte e, só então, navegação por Quadra. As cinco categorias ficaram legíveis como cartões curtos, e as pendências não foram disfarçadas como dados válidos.
+
+## Correção semântica A217
+
+A revisão identificou que `not_declared` e `standard` são valores-padrão de estrutura, não evidência recebida de fonte física. A central foi corrigida para tratá-los como pendência. A leitura autenticada confirmou a composição corrigida: somente Área apareceu como atributo completo; Frente, Profundidade, Posição e Tipologia ficaram explicitamente pendentes de fonte. Os cartões de Lote também passaram a exibir “Tipologia pendente” para o valor-padrão, sem qualquer alteração da matriz, inclusão de dado ou comando material.

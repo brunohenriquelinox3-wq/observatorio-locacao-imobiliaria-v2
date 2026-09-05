@@ -2106,3 +2106,8 @@
 - [x] Direcionar a pessoa operadora para revisão física sem preencher, estimar ou salvar dados ausentes. **A216:** campos ausentes aparecem como pendência de fonte e a interface declara explicitamente a ausência de inferência ou modificação.
 - [x] Cobrir a leitura, a responsividade e a ausência de comandos comerciais; gerar artefatos saneados. **A216:** leitura autenticada, teste dirigido, suíte integral com 212 arquivos/515 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
 - [x] Salvar checkpoint A216 após documentação, validação integral, revisão visual e saneamento dos artefatos. **A216:** checkpoint `d31f4a1b` preserva a leitura de completude física, as pendências de fonte e a ausência de qualquer mutação material.
+
+## Correção de semântica da completude física — A217
+- [x] Impedir que os valores-padrão estruturais `not_declared` e `standard` sejam tratados como posição ou tipologia confirmadas por uma fonte física. **A217:** ambos agora contam como pendência; a etiqueta de tipologia padrão declara a pendência em vez de apresentar dado presumido.
+- [x] Revisar a leitura autenticada, a cobertura de teste e os artefatos saneados após a correção. **A217:** leitura autenticada confirmou 1/5 atributos com fonte; teste dirigido, suíte integral com 212 arquivos/516 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
+- [ ] Salvar checkpoint A217 após a correção semântica, a validação integral e o saneamento dos artefatos.
