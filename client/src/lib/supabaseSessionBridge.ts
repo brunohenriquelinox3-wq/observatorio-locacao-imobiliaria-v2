@@ -45,10 +45,19 @@ export function createSupabaseSessionBridge(source: SupabaseSessionSource | null
     ready: () => initialSession,
     async getAccessToken(): Promise<string | null> {
       await boundedInitialSession;
-      if (accessToken) return accessToken;
-      // Não inicia uma segunda leitura concorrente: ela pode manter o lote tRPC
-      // suspenso. As procedures continuam falhando fechadas sem o cabeçalho.
-      return initialSessionSettled ? accessToken : null;
+      if (!source) return null;
+      try {
+        // A confirmação TOTP pode renovar os claims AAL/AMR sem disparar um
+        // evento observável pelo bridge em uma prévia embutida. Cada comando
+        // protegido deve transportar a sessão atual, nunca um token em cache.
+        const { data } = await source.auth.getSession();
+        accessToken = tokenFrom(data.session);
+        return accessToken;
+      } catch {
+        // Sem uma leitura atual, não encaminha token em cache potencialmente
+        // desatualizado. O servidor permanece fail-closed.
+        return null;
+      }
     },
   };
 }

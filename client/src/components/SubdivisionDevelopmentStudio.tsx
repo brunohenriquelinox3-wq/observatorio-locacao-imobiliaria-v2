@@ -241,6 +241,8 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const createMutation = trpc.subdivisionFoundation.createDevelopmentStudio.useMutation({
     onSuccess(result) {
       toast.success("Loteamento em rascunho criado", { description: "O cadastro foi salvo como referência interna e não aprova empreendimento, estoque, contrato ou financeiro." });
+      setHasExplicitDraftChoice(true);
+      setRecordFilter("");
       setSelectedDevelopmentId(result.developmentId);
       setMode("edit");
       setActiveModule("structure");

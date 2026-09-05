@@ -3,16 +3,21 @@ import { createSupabaseSessionBridge, type SupabaseAccessTokenSession } from "./
 
 function sessionSource(initialSession: SupabaseAccessTokenSession) {
   let callback: ((event: string, session: SupabaseAccessTokenSession) => void) | undefined;
+  let currentSession = initialSession;
   return {
     auth: {
-      getSession: vi.fn().mockResolvedValue({ data: { session: initialSession } }),
+      getSession: vi.fn(() => Promise.resolve({ data: { session: currentSession } })),
       onAuthStateChange: vi.fn().mockImplementation((listener) => {
         callback = listener;
         return { data: { subscription: { unsubscribe: vi.fn() } } };
       }),
     },
     emit(event: string, session: SupabaseAccessTokenSession) {
+      currentSession = session;
       callback?.(event, session);
+    },
+    replaceSession(session: SupabaseAccessTokenSession) {
+      currentSession = session;
     },
   };
 }
@@ -51,6 +56,16 @@ describe("Supabase session bridge", () => {
 
     await bridge.ready();
     await expect(bridge.getAccessToken()).resolves.toBe("aal2-totp-token");
+  });
+
+  it("reads the fresh AAL2 session even when the client does not emit an MFA event", async () => {
+    const source = sessionSource({ access_token: "stale-aal1-token" });
+    const bridge = createSupabaseSessionBridge(source);
+    await bridge.ready();
+
+    source.replaceSession({ access_token: "fresh-aal2-totp-token" });
+
+    await expect(bridge.getAccessToken()).resolves.toBe("fresh-aal2-totp-token");
   });
 
   it("fails closed without a Supabase session source", async () => {

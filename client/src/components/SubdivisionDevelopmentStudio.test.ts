@@ -60,6 +60,13 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("setHasExplicitDraftChoice(true)");
   });
 
+  it("seleciona explicitamente o rascunho recém-criado antes de invalidar a lista", () => {
+    const studio = source();
+    expect(studio).toContain('toast.success("Loteamento em rascunho criado"');
+    expect(studio).toContain('setHasExplicitDraftChoice(true);\n      setRecordFilter("");\n      setSelectedDevelopmentId(result.developmentId);');
+    expect(studio).toContain('setActiveModule("structure");');
+  });
+
   it("exibe a leitura gráfica somente com a estrutura autorizada já salva", () => {
     const studio = source();
     expect(studio).toContain("MATRIZ FÍSICA DO RASCUNHO");

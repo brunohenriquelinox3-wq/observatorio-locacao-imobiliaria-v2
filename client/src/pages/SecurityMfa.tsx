@@ -1,5 +1,5 @@
 import DashboardLayout, { type DashboardAccessGate } from "@/components/DashboardLayout";
-import { mfaSecurityStatusCopy, resolveMfaSecurityStatus, type MfaSecurityStatus } from "@/lib/mfaSecurityState";
+import { hasRecentTotpMfa, mfaSecurityStatusCopy, resolveMfaSecurityStatus, type MfaSecurityStatus } from "@/lib/mfaSecurityState";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { toMfaQrImageSource, validateTotpCode } from "@/lib/identityMfa";
 import { ArrowRight, CircleAlert, Copy, Loader2, QrCode, ShieldCheck, ShieldAlert, Smartphone, TimerReset } from "lucide-react";
@@ -63,6 +63,7 @@ export default function SecurityMfa() {
         currentLevel: assurance.currentLevel,
         nextLevel: assurance.nextLevel,
         totpFactorCount: totpFactors.length,
+        hasRecentTotp: hasRecentTotpMfa(sessionData.session?.access_token),
       }));
     } catch {
       setStatus("error");
