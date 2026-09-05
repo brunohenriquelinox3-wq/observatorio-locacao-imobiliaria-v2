@@ -16,6 +16,8 @@ describe("guardas das jornadas operacionais", () => {
     expect(urban).toContain("function createAgenda(event: React.FormEvent<HTMLFormElement>)");
     expect(urban).toContain("createLeadMutation.mutate({ ...context, correlationId: crypto.randomUUID()");
     expect(urban).toContain("agendaMutation.mutate({ ...context, correlationId: crypto.randomUUID()");
+    expect(urban).toContain("ReportExportActions");
+    expect(urban).toContain("isAuthorized={enabled}");
   });
 
   it("mantém Locação dependente de sessão, contexto e submissões explícitas", () => {
@@ -28,6 +30,8 @@ describe("guardas das jornadas operacionais", () => {
     expect(rental).toContain("function createAgenda(event: React.FormEvent<HTMLFormElement>)");
     expect(rental).toContain("createMutation.mutate({ ...context, correlationId: crypto.randomUUID()");
     expect(rental).toContain("agendaMutation.mutate({ ...context, correlationId: crypto.randomUUID()");
+    expect(rental).toContain("ReportExportActions");
+    expect(rental).toContain("isAuthorized={isWorkspaceReady}");
   });
 
   it("mantém propostas, contratos, garantias e financeiro como setores bloqueados", () => {

@@ -169,6 +169,8 @@ import { createSubdivisionEconomicRuleSet, listSubdivisionEconomicRuleSets } fro
 import { createSubdivisionEconomicRuleComponent, listSubdivisionEconomicRuleComponents } from "./subdivisionEconomicRuleComponent";
 import { addSubdivisionEconomicRuleComponentRoleReference, listSubdivisionEconomicRuleComponentRoleReferences } from "./subdivisionEconomicRuleComponentRoleReference";
 import { authorizedOrganizationContextInputSchema, listAuthorizedOrganizationContexts } from "./organizationContext";
+import { clientImportCommitInputSchema } from "../shared/clientImportContracts";
+import { commitClientImport } from "./clientImport";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -286,6 +288,18 @@ export const appRouter = router({
     listAuthorizedForModule: protectedProcedure
       .input(authorizedOrganizationContextInputSchema)
       .query(({ ctx, input }) => listAuthorizedOrganizationContexts(ctx.supabaseSubjectId ?? undefined, input)),
+  }),
+
+  clientImport: router({
+    commit: protectedProcedure
+      .input(clientImportCommitInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
+        if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2" || attestation.method !== "totp") {
+          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "CLIENT_IMPORT_PRECONDITIONS_UNMET" });
+        }
+        return commitClientImport(ctx.supabaseSubjectId ?? undefined, input);
+      }),
   }),
 
   domainFoundation: router({

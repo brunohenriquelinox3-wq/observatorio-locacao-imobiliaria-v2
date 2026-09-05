@@ -11,6 +11,7 @@ import { validateRentalSourceCode } from "@/lib/rentalSourceCodeValidation";
 import { validateRentalStageReason } from "@/lib/rentalStageReasonValidation";
 import { crmNavigationItems } from "@/lib/crmNavigation";
 import { trpc } from "@/lib/trpc";
+import { ReportExportActions } from "@/components/ReportExportActions";
 import { CalendarClock, CircleAlert, CircleSlash2, ClipboardCheck, FileCheck2, House, Link2, Search, ShieldCheck, Tag, Workflow } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -267,6 +268,12 @@ export default function RentalPipeline() {
     if (!validation.valid) { toast.error("Código interno inválido", { description: validation.message }); return; }
     agendaClassificationMutation.mutate({ ...context, correlationId: crypto.randomUUID(), agendaId: classificationAgendaId.trim(), classification: agendaClassification, internalCode: validation.value });
   }
+  const reportRows = [
+    { section: "Setor", indicator: "Visão atual", status: activeRentalPresentation.title },
+    { section: "Contexto", indicator: "Autorização", status: isContextReady ? "Confirmado para leitura" : "Não selecionado" },
+    { section: "Triagem", indicator: "Entradas em rascunho", status: intakesQuery.data ? `${intakesQuery.data.length} registro(s) autorizado(s)` : "Leitura pendente ou bloqueada" },
+    { section: "Agenda", indicator: "Compromissos internos", status: agendasQuery.data ? `${agendasQuery.data.length} registro(s) autorizado(s)` : "Leitura pendente ou bloqueada" },
+  ];
 
   return (
     <DashboardLayout navigationItems={crmNavigationItems} navigationTitle="Núcleo CRM" accessGate={rentalAccessGate}>
@@ -284,6 +291,8 @@ export default function RentalPipeline() {
         </section>
 
         <nav className="rental-sector-switcher" aria-label="Setores da coluna Locação">{crmNavigationItems.slice(15, 22).map((item, index) => item.disabled ? <span key={item.path} aria-disabled="true"><item.icon size={16} aria-hidden="true" /><b>{String(index + 1).padStart(2, "0")}</b>{item.label}<small>Bloqueado</small></span> : <a key={item.path} href={item.path} aria-current={item.path === location ? "page" : undefined}><item.icon size={16} aria-hidden="true" /><b>{String(index + 1).padStart(2, "0")}</b>{item.label}</a>)}</nav>
+
+        <ReportExportActions report={{ title: `Resumo de Locação · ${activeRentalPresentation.title}`, scopeLabel: "Contexto autorizado e leitura redigida", rows: reportRows }} isAuthorized={isWorkspaceReady} description="Exporte somente o resumo agregado da jornada atual; nomes, contatos, imóveis, contratos e dados financeiros não são incluídos." />
 
         {(activeRentalSector === "contracts" || activeRentalSector === "finance") && <section className="rental-sector-locked" aria-labelledby="rental-sector-locked-title"><CircleSlash2 size={26} aria-hidden="true" /><div><p className="rental-pipeline-eyebrow">SETOR BLOQUEADO</p><h2 id="rental-sector-locked-title">{activeRentalSector === "contracts" ? "Contratos e garantias ainda não estão liberados." : "Financeiro ainda não está liberado para desenvolvimento."}</h2><p>Não há valores, percentuais, cálculos, contratos, garantias, parcelas, cobrança, pagamentos, repasses ou integrações externas nesta área.</p></div></section>}
 

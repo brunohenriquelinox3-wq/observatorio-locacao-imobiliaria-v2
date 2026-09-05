@@ -21,6 +21,7 @@ const LotInventory = lazy(() => import("./pages/LotInventory"));
 const AccountActivation = lazy(() => import("./pages/AccountActivation"));
 const SupabaseLogin = lazy(() => import("./pages/SupabaseLogin"));
 const OwnWorkforceAccess = lazy(() => import("./pages/OwnWorkforceAccess"));
+const ClientImport = lazy(() => import("./pages/ClientImport"));
 
 function RouteLoading() {
   return <main className="min-h-screen bg-[#f7f4eb] px-6 py-16 text-[#173b4d]"><p role="status" className="mx-auto max-w-xl font-mono text-xs font-semibold tracking-[.12em]">CARREGANDO ÁREA PROTEGIDA</p></main>;
@@ -47,6 +48,7 @@ function Router() {
     <Route path={"/crm"} component={CrmStrategy} />
     <Route path={"/administracao"} component={PlatformAdmin} />
     <Route path={"/adm"} component={OrganizationAdmin} />
+    <Route path={"/importar-clientes"} component={ClientImport} />
     <Route path={"/cadastro-base"} component={DomainFoundation} />
     <Route path={"/cadastros"} component={DomainFoundation} />
     <Route path={"/ativos-urbanos"} component={AssetFoundation} />

@@ -1,0 +1,53 @@
+.client-import-page { max-width: 1180px; margin: 0 auto; padding: clamp(1.2rem, 3vw, 2.4rem); color: #173b4d; }
+.client-import-page__header { display: flex; gap: 1.25rem; align-items: flex-start; justify-content: space-between; margin-bottom: 1.35rem; padding: clamp(1.35rem, 4vw, 2.25rem); border: 1px solid #c7ddd5; border-radius: 1.2rem; background: linear-gradient(135deg, #eff9f5, #fdfaf0 76%); }
+.client-import-page__header p, .client-import-page__step p, .client-import-page__context p, .client-import-page__preview-heading p { margin: 0 0 0.35rem; color: #397870; font-size: 0.67rem; font-weight: 800; letter-spacing: 0.13em; }
+.client-import-page__header h1 { max-width: 700px; margin: 0; color: #153f4e; font-size: clamp(1.6rem, 3.2vw, 2.5rem); line-height: 1.06; letter-spacing: -0.04em; }
+.client-import-page__header span { display: block; max-width: 750px; margin-top: 0.75rem; color: #506067; line-height: 1.55; }
+.client-import-page__back { display: inline-flex; align-items: center; gap: 0.45rem; flex: 0 0 auto; color: #245d58; font-size: 0.82rem; font-weight: 800; text-decoration: none; }
+.client-import-page__back:focus-visible, .client-import-page__template-card button:focus-visible, .client-import-page__clear:focus-visible { outline: 3px solid #c59236; outline-offset: 3px; }
+.client-import-page__context, .client-import-page__workspace, .client-import-page__preview, .client-import-page__confirmation { margin: 1.15rem 0; padding: clamp(1.1rem, 3vw, 1.6rem); border: 1px solid #d5dfdb; border-radius: 1rem; background: #fffdf7; box-shadow: 0 12px 30px rgba(20, 61, 74, 0.05); }
+.client-import-page__context { display: grid; grid-template-columns: 1.25fr minmax(230px, 0.75fr); gap: 1rem 1.5rem; align-items: end; }
+.client-import-page__context h2, .client-import-page__step h2, .client-import-page__preview h2 { margin: 0; font-size: clamp(1.15rem, 2vw, 1.45rem); line-height: 1.2; }
+.client-import-page__context span { display: block; margin-top: 0.4rem; color: #5b696c; font-size: 0.86rem; line-height: 1.45; }
+.client-import-page label { color: #244852; font-size: 0.8rem; font-weight: 800; }
+.client-import-page select { display: block; width: 100%; min-height: 2.7rem; margin-top: 0.45rem; padding: 0.55rem 0.65rem; border: 1px solid #b9c9c4; border-radius: 0.6rem; background: #fffefa; color: #173b4d; font: inherit; }
+.client-import-page__context-state { grid-column: 1 / -1; display: flex; gap: 0.55rem; align-items: flex-start; padding: 0.8rem 0.9rem; border-radius: 0.7rem; background: #f2f4f1; color: #60716f; font-size: 0.8rem; line-height: 1.45; }
+.client-import-page__context-state.is-ready { background: #e9f6f0; color: #286458; }
+.client-import-page__step { display: flex; gap: 0.75rem; align-items: flex-start; }
+.client-import-page__step > span { display: grid; width: 2rem; height: 2rem; flex: 0 0 auto; place-items: center; border-radius: 0.6rem; background: #174755; color: #fffdf6; font-family: ui-monospace, monospace; font-size: 0.75rem; font-weight: 800; }
+.client-import-page__upload-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.client-import-page__upload-card, .client-import-page__template-card { min-width: 0; padding: 1rem; border: 1px dashed #a9c5bb; border-radius: 0.8rem; background: #f8fbf8; }
+.client-import-page__upload-card svg, .client-import-page__template-card svg { color: #2a7067; }
+.client-import-page__upload-card h3, .client-import-page__template-card h3 { margin: 0.55rem 0 0; font-size: 1rem; }
+.client-import-page__upload-card p, .client-import-page__template-card p { min-height: 3.7rem; margin: 0.45rem 0 0.8rem; color: #576b6b; font-size: 0.83rem; line-height: 1.48; }
+.client-import-page__upload-card input { display: block; width: 100%; color: #234a52; font: inherit; font-size: 0.78rem; }
+.client-import-page__upload-card small, .client-import-page__template-card small { display: block; margin-top: 0.75rem; color: #62706c; font-size: 0.73rem; line-height: 1.42; }
+.client-import-page__template-card button, .client-import-page__confirmation-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 2.45rem; padding: 0.62rem 0.85rem; border: 1px solid #174755; border-radius: 0.6rem; background: #174755; color: #fffdf6; font: inherit; font-size: 0.8rem; font-weight: 800; cursor: pointer; }
+.client-import-page__template-card button:active:not(:disabled), .client-import-page__confirmation-actions button:active:not(:disabled) { transform: scale(0.97); }
+.client-import-page__preview.is-ready { border-color: #9dcdbd; }
+.client-import-page__preview.is-blocked { border-color: #e4b8a9; }
+.client-import-page__preview-heading { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; }
+.client-import-page__clear { display: inline-flex; align-items: center; gap: 0.35rem; border: 0; background: transparent; color: #456562; font: inherit; font-size: 0.78rem; font-weight: 800; cursor: pointer; }
+.client-import-page__issues { display: flex; gap: 0.6rem; margin-top: 0.9rem; padding: 0.8rem; border-radius: 0.7rem; background: #fff0ea; color: #864835; font-size: 0.81rem; }
+.client-import-page__issues ul { margin: 0; padding-left: 1rem; }
+.client-import-page__preview-summary { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.95rem 0; }
+.client-import-page__preview-summary span { padding: 0.45rem 0.65rem; border-radius: 999px; background: #eef5f1; color: #46635f; font-size: 0.78rem; }
+.client-import-page__preview-summary b { color: #174755; }
+.client-import-page__table-wrap { overflow-x: auto; border: 1px solid #dce5e0; border-radius: 0.7rem; }
+.client-import-page table { width: 100%; min-width: 700px; border-collapse: collapse; font-size: 0.79rem; }
+.client-import-page th { padding: 0.7rem; background: #eff6f2; color: #2c5c58; font-size: 0.68rem; letter-spacing: 0.05em; text-align: left; text-transform: uppercase; }
+.client-import-page td { padding: 0.7rem; border-top: 1px solid #e7ece8; color: #40595b; vertical-align: top; line-height: 1.42; }
+.client-import-page__table-limit { margin: 0.7rem 0 0; color: #5f7070; font-size: 0.75rem; }
+.client-import-page__confirm { display: flex; gap: 0.6rem; align-items: flex-start; margin-top: 1rem; padding: 0.85rem; border-radius: 0.7rem; background: #f0f6f2; line-height: 1.45; }
+.client-import-page__confirm input { width: 1rem; height: 1rem; margin-top: 0.1rem; accent-color: #1a6c61; }
+.client-import-page__confirmation-actions { display: flex; gap: 1rem; align-items: center; justify-content: space-between; margin-top: 1rem; }
+.client-import-page__confirmation-actions button:disabled { border-color: #bec8c4; background: #e8edeb; color: #77827f; cursor: not-allowed; }
+.client-import-page__confirmation-actions span { display: flex; max-width: 570px; gap: 0.4rem; align-items: flex-start; color: #59706b; font-size: 0.76rem; line-height: 1.45; }
+
+@media (max-width: 760px) {
+  .client-import-page__header, .client-import-page__context, .client-import-page__upload-grid { grid-template-columns: 1fr; display: grid; }
+  .client-import-page__header { gap: 1rem; }
+  .client-import-page__back { justify-self: start; }
+  .client-import-page__confirmation-actions { align-items: stretch; flex-direction: column; }
+  .client-import-page__confirmation-actions button { width: 100%; }
+}

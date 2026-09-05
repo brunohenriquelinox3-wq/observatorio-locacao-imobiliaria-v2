@@ -11,6 +11,7 @@ import { validateUrbanStageReason } from "@/lib/urbanStageReasonValidation";
 import { crmNavigationItems } from "@/lib/crmNavigation";
 import { trpc } from "@/lib/trpc";
 import { UrbanDevelopmentWorkspace } from "./UrbanDevelopmentWorkspace";
+import { ReportExportActions } from "@/components/ReportExportActions";
 import { Building2, CalendarClock, CircleAlert, CircleSlash2, House, Link2, LockKeyhole, Search, ShieldCheck, Tag, UserRoundPlus, Workflow } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -189,6 +190,12 @@ export default function UrbanPipeline() {
     if (!validation.valid) { toast.error("Código interno inválido", { description: validation.message }); return; }
     agendaClassificationMutation.mutate({ ...context, correlationId: crypto.randomUUID(), agendaId: classificationAgendaId.trim(), classification: agendaClassification, internalCode: validation.value });
   }
+  const reportRows = [
+    { section: "Setor", indicator: "Visão atual", status: activeUrbanPresentation.title },
+    { section: "Contexto", indicator: "Autorização", status: contextReady ? "Confirmado para leitura" : "Não selecionado" },
+    { section: "Triagem", indicator: "Leads em rascunho", status: leadsQuery.data ? `${leadsQuery.data.length} registro(s) autorizado(s)` : "Leitura pendente ou bloqueada" },
+    { section: "Agenda", indicator: "Compromissos internos", status: agendasQuery.data ? `${agendasQuery.data.length} registro(s) autorizado(s)` : "Leitura pendente ou bloqueada" },
+  ];
 
   return (
     <DashboardLayout navigationItems={crmNavigationItems} navigationTitle="Núcleo CRM" accessGate={urbanAccessGate}>
@@ -198,6 +205,8 @@ export default function UrbanPipeline() {
         <section className="urban-pipeline-context" aria-labelledby="urban-context-title"><div className="urban-pipeline-heading"><div><p className="urban-pipeline-eyebrow">01 · CONTEXTO</p><h2 id="urban-context-title">Vendas Urbanas é um módulo explícito.</h2></div><p>O contexto autorizado seleciona organização e finalidade sem exigir UUID manual. O módulo permanece fixo para impedir que esta jornada seja criada por Locação.</p></div><div className="urban-pipeline-context__fields"><label htmlFor="urban-organization"><ShieldCheck size={14} /> Organização autorizada<select id="urban-organization" value={selectedOrganizationId} onChange={(event) => setSelectedOrganizationId(event.target.value)} disabled={!isAuthenticated || authorizedContextsQuery.isLoading}><option value="">{authorizedContextsQuery.isLoading ? "Carregando contextos autorizados" : "Selecione uma organização autorizada"}</option>{authorizedContextsQuery.data?.map((organization) => <option key={organization.organizationId} value={organization.organizationId}>{organization.organizationLabel}</option>)}</select></label><label htmlFor="urban-purpose"><ShieldCheck size={14} /> Finalidade<input id="urban-purpose" value={context.purposeCode || "—"} readOnly aria-readonly="true" /></label></div><div className={`urban-pipeline-context__status ${contextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} /><span>{contextReady ? "Contexto autorizado selecionado. O servidor ainda verifica identidade, membership, grant, vigência, módulo e finalidade." : authorizedContextsQuery.isError ? "O contexto não foi liberado. A interface não revela organizações ou escopos externos." : "Selecione um contexto autorizado para liberar consulta, lead, transição ou agenda."}</span></div></section>
 
         <nav className="urban-sector-switcher" aria-label="Setores da coluna Vendas Urbanas">{crmNavigationItems.slice(8, 15).map((item, index) => item.disabled ? <span key={item.path} aria-disabled="true"><item.icon size={16} aria-hidden="true" /><b>{String(index + 1).padStart(2, "0")}</b>{item.label}<small>Bloqueado</small></span> : <a key={item.path} href={item.path} aria-current={item.path === location ? "page" : undefined}><item.icon size={16} aria-hidden="true" /><b>{String(index + 1).padStart(2, "0")}</b>{item.label}</a>)}</nav>
+
+        <ReportExportActions report={{ title: `Resumo de Vendas Urbanas · ${activeUrbanPresentation.title}`, scopeLabel: "Contexto autorizado e leitura redigida", rows: reportRows }} isAuthorized={enabled} description="Exporte somente o resumo agregado da jornada atual; nomes, contatos, ativos, contratos e dados financeiros não são incluídos." />
 
         {(activeUrbanSector === "proposals" || activeUrbanSector === "finance") && <section className="urban-sector-locked" aria-labelledby="urban-sector-locked-title"><CircleSlash2 size={26} aria-hidden="true" /><div><p className="urban-pipeline-eyebrow">SETOR BLOQUEADO</p><h2 id="urban-sector-locked-title">{activeUrbanSector === "proposals" ? "Propostas, reservas e contratos ainda não estão liberados." : "Financeiro ainda não está liberado para desenvolvimento."}</h2><p>Não há valores, percentuais, cálculos, contratos, parcelas, cobrança, pagamentos, repasses ou integrações externas nesta área.</p></div></section>}
         <UrbanDevelopmentWorkspace context={context} enabled={enabled} active={activeUrbanSector === "developments"} />

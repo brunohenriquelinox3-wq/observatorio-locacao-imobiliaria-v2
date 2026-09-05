@@ -11,6 +11,7 @@ describe("rotas da aplicação", () => {
       "/entrar",
       "/administracao",
       "/adm",
+      "/importar-clientes",
       "/cadastro-base",
       "/cadastros",
       "/ativos-urbanos",

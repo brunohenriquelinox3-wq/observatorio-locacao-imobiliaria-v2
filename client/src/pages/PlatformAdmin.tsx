@@ -34,6 +34,7 @@ import { validateMembershipEndReason } from "@/lib/membershipEndReasonValidation
 import { getPlatformPrincipalPresentation } from "@/lib/platformPrincipalPresentation";
 import { getPlatformGovernanceOverview } from "@/lib/platformGovernanceOverview";
 import { WorkforceManagementPanel } from "@/components/WorkforceManagementPanel";
+import { ReportExportActions } from "@/components/ReportExportActions";
 import "../platform-admin.css";
 import { getMfaAttestedCommandState } from "@/lib/adminMfaCommandGuard";
 
@@ -244,6 +245,12 @@ export default function PlatformAdmin() {
     principals: readiness?.counts.principals,
     grants: readiness?.counts.grants,
   });
+  const reportRows = [
+    { section: "Fundação", indicator: "Estado", status: foundationStatus },
+    { section: "Governança", indicator: "Organizações", status: metricValue(readiness?.counts.organizations) },
+    { section: "Governança", indicator: "Principals ativos", status: metricValue(readiness?.counts.principals) },
+    { section: "Governança", indicator: "Grants temporários", status: metricValue(readiness?.counts.grants) },
+  ];
 
   function executeCommand(command: PlatformCommand) {
     if (command === "grantMembership" && principalPresentation.isPlatformSuperAdmin) {
@@ -630,6 +637,8 @@ export default function PlatformAdmin() {
           <article><span>GRANTS TEMPORÁRIOS</span><strong>{metricValue(readiness?.counts.grants)}</strong><p>Leitura de alçada sem expor escopo individual.</p></article>
           <article><span>EVENTOS ADMIN</span><strong>{metricValue(readiness?.counts.auditEvents)}</strong><p>Audit log aguarda RPC controlada.</p></article>
         </section>
+
+        <ReportExportActions report={{ title: "Resumo da Central de Plataforma", scopeLabel: "Leitura agregada de governança", rows: reportRows }} isAuthorized={principalPresentation.isPlatformSuperAdmin && canLoadAdministrativeData} description="Exporte somente métricas agregadas e estados redigidos da Central de Plataforma." />
 
         <section className="platform-admin-board">
           <div className="platform-admin-board__rail">
