@@ -3,6 +3,7 @@
 @import "tw-animate-css";
 @import "./subdivision-archived-recovery.css";
 @import "./subdivision-record-list.css";
+@import "./subdivision-lot-management.css";
 
 @custom-variant dark (&:is(.dark *));
 

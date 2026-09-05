@@ -117,4 +117,16 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain('requirementState: "review_required"');
     expect(studio).not.toContain("Criar Lote faltante");
   });
+
+  it("oferece leitura física por Lote e prévia de preço sem misturar estrutura com venda", () => {
+    const studio = source();
+    expect(studio).toContain("GESTÃO FÍSICA POR UNIDADE");
+    expect(studio).toContain("Buscar Q1, L15, esquina ou tipologia");
+    expect(studio).toContain("POLÍTICA DE PREÇO POR M² · PRÉVIA");
+    expect(studio).toContain("Simule o valor-base sem misturar preço com a matriz física.");
+    expect(studio).toContain("A prévia não grava, não aprova tabela");
+    expect(studio).toContain("Lotes sem área não recebem valor por estimativa.");
+    expect(studio).toContain("previewBaseTotal");
+    expect(studio).not.toContain("Criar contrato de venda");
+  });
 });

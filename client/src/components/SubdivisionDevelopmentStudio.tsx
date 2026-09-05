@@ -3,7 +3,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { trpc } from "@/lib/trpc";
 import { parsePhysicalSourceFile, type PhysicalSourcePreview } from "@/lib/subdivisionPhysicalSourcePreview";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Archive, ArchiveRestore, BookOpenCheck, CheckCircle2, ClipboardCheck, FilePlus2, FileText, LandPlot, LoaderCircle, MapPinned, PencilLine, Plus, Search, ShieldAlert, ShieldCheck, TableProperties, Trash2, Upload, Workflow } from "lucide-react";
+import { Archive, ArchiveRestore, BookOpenCheck, Calculator, CheckCircle2, ClipboardCheck, FilePlus2, FileText, LandPlot, LoaderCircle, MapPinned, PencilLine, Plus, Ruler, Search, ShieldAlert, ShieldCheck, TableProperties, Trash2, Upload, Workflow } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -177,6 +177,9 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const [physicalSourceError, setPhysicalSourceError] = useState("");
   const [declaredLotTotal, setDeclaredLotTotal] = useState("");
   const [physicalStructureConfirmed, setPhysicalStructureConfirmed] = useState(false);
+  const [lotSearch, setLotSearch] = useState("");
+  const [pricePerSqmPreview, setPricePerSqmPreview] = useState("");
+  const [priceScopeBlock, setPriceScopeBlock] = useState("all");
   const [isUploading, setIsUploading] = useState(false);
   const attachmentInput = useRef<HTMLInputElement>(null);
   const physicalSourceInput = useRef<HTMLInputElement>(null);
@@ -198,6 +201,18 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const requirementsQuery = trpc.subdivisionFoundation.listDraftDevelopmentRequirements.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const structuralReconciliationState = requirementsQuery.data?.find((requirement) => requirement.requirementCode === "technical_layout")?.requirementState as RequirementState | undefined;
   const structuralReconciliationPending = structuralReconciliationState === "review_required";
+  const physicalLots = useMemo(() => (physicalStructureQuery.data ?? []).flatMap((block) => block.lots.map((lot) => ({ ...lot, blockNumber: block.blockNumber }))), [physicalStructureQuery.data]);
+  const searchedLots = useMemo(() => {
+    const query = lotSearch.trim().toLocaleLowerCase("pt-BR");
+    if (!query) return physicalLots;
+    return physicalLots.filter((lot) => `q${lot.blockNumber} l${lot.lotNumber} ${lot.lotTypology} ${lot.positionCode}`.toLocaleLowerCase("pt-BR").includes(query));
+  }, [lotSearch, physicalLots]);
+  const lotsWithArea = physicalLots.filter((lot) => typeof lot.areaSqm === "number");
+  const totalAreaSqm = lotsWithArea.reduce((total, lot) => total + (lot.areaSqm ?? 0), 0);
+  const selectedPriceLots = priceScopeBlock === "all" ? physicalLots : physicalLots.filter((lot) => lot.blockNumber === Number(priceScopeBlock));
+  const pricePerSqmNumber = Number(pricePerSqmPreview);
+  const previewPriceEligibleLots = selectedPriceLots.filter((lot) => typeof lot.areaSqm === "number");
+  const previewBaseTotal = Number.isFinite(pricePerSqmNumber) && pricePerSqmNumber > 0 ? previewPriceEligibleLots.reduce((total, lot) => total + ((lot.areaSqm ?? 0) * pricePerSqmNumber), 0) : null;
 
   useEffect(() => {
     setHasExplicitDraftChoice(false);
@@ -675,7 +690,20 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                 {physicalStructureQuery.data && physicalStructureQuery.data.length > 0 && <p className="subdivision-studio__physical-source-status"><CheckCircle2 size={16} />A matriz salva possui {physicalStructureQuery.data.reduce((total, block) => total + block.lots.length, 0)} Lote(s) físicos neste contexto.</p>}
               </section>}
 
-                {!selectedDevelopmentId && <div className="subdivision-studio__module-empty"><LandPlot size={19} /><p>Salve a identificação do loteamento para montar Quadras e Lotes. A estrutura sempre fica vinculada ao cadastro selecionado.</p></div>}
+              {selectedDevelopmentId && physicalLots.length > 0 && <section className="subdivision-lot-management" aria-labelledby="lot-management-title">
+                <div className="subdivision-lot-management__head"><div><span>GESTÃO FÍSICA POR UNIDADE</span><h5 id="lot-management-title">Veja cada Lote além da quantidade da Quadra.</h5><p>Esta visão organiza somente atributos físicos já registrados. Não mostra disponibilidade, preço aprovado, venda, contrato ou financeiro.</p></div><Ruler size={22} /></div>
+                <div className="subdivision-lot-management__metrics"><div><b>{physicalLots.length}</b><span>Lotes físicos</span></div><div><b>{lotsWithArea.length}</b><span>Com área informada</span></div><div><b>{physicalLots.length - lotsWithArea.length}</b><span>Com área pendente</span></div></div>
+                <label className="subdivision-lot-management__search"><Search size={15} /><span className="sr-only">Buscar Lote por Quadra, número, tipologia ou posição</span><input value={lotSearch} onChange={(event) => setLotSearch(event.target.value)} placeholder="Buscar Q1, L15, esquina ou tipologia" /></label>
+                <div className="subdivision-lot-management__list">{searchedLots.length === 0 ? <p className="subdivision-lot-management__empty">Nenhum Lote físico corresponde à busca.</p> : searchedLots.map((lot) => <article className="subdivision-lot-management__lot" key={`${lot.blockNumber}-${lot.lotNumber}`}><div className="subdivision-lot-management__lot-head"><b>Q{lot.blockNumber} · L{lot.lotNumber}</b><em>{lot.lotTypology.replace("_", " ")}</em></div><dl><div><dt>Área</dt><dd>{typeof lot.areaSqm === "number" ? `${lot.areaSqm.toLocaleString("pt-BR")} m²` : "Pendente"}</dd></div><div><dt>Posição</dt><dd>{lot.positionCode.replace("_", " ")}</dd></div><div><dt>Frente</dt><dd>{typeof lot.frontageM === "number" ? `${lot.frontageM.toLocaleString("pt-BR")} m` : "Pendente"}</dd></div><div><dt>Profundidade</dt><dd>{typeof lot.depthM === "number" ? `${lot.depthM.toLocaleString("pt-BR")} m` : "Pendente"}</dd></div></dl></article>)}</div>
+              </section>}
+
+              {selectedDevelopmentId && <section className="subdivision-lot-pricing" aria-labelledby="lot-pricing-title">
+                <div className="subdivision-lot-pricing__head"><div><span>POLÍTICA DE PREÇO POR M² · PRÉVIA</span><h5 id="lot-pricing-title">Simule o valor-base sem misturar preço com a matriz física.</h5><p>Informe um preço por m² para leitura local. A prévia não grava, não aprova tabela, não altera Lotes e não cria proposta, reserva, contrato, cobrança ou financeiro.</p></div><Calculator size={22} /></div>
+                <div className="subdivision-lot-pricing__form"><label>Preço por m² (BRL)<input type="number" min="0.0001" step="0.0001" value={pricePerSqmPreview} onChange={(event) => setPricePerSqmPreview(event.target.value)} placeholder="Ex.: 250,0000" inputMode="decimal" /></label><label>Aplicar a<select value={priceScopeBlock} onChange={(event) => setPriceScopeBlock(event.target.value)}><option value="all">Todas as Quadras físicas</option>{(physicalStructureQuery.data ?? []).map((block) => <option key={block.blockNumber} value={String(block.blockNumber)}>Somente Q{block.blockNumber}</option>)}</select></label><div className="subdivision-lot-pricing__result"><span>VALOR-BASE DA PRÉVIA</span><strong>{previewBaseTotal === null ? "Informe preço/m²" : previewPriceEligibleLots.length === 0 ? "Áreas pendentes" : previewBaseTotal.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong><span>{previewPriceEligibleLots.length} Lote(s) com área física</span></div></div>
+                <p className="subdivision-lot-pricing__note">Para registrar uma tabela real será necessária política formal com vigência, responsável e aprovação separada. Lotes sem área não recebem valor por estimativa.</p>
+              </section>}
+
+              {!selectedDevelopmentId && <div className="subdivision-studio__module-empty"><LandPlot size={19} /><p>Salve a identificação do loteamento para montar Quadras e Lotes. A estrutura sempre fica vinculada ao cadastro selecionado.</p></div>}
 
               {selectedDevelopmentId && <form className="subdivision-studio__structure-builder" onSubmit={applyStructure}>
                 <div className="subdivision-studio__structure-builder-head"><div><span>QUADRAS E LOTES</span><h5>Monte a matriz do loteamento por Quadra.</h5><p>Inclua uma linha por Quadra e informe quantos Lotes ela possui. Exemplo: Q1 com 15 Lotes e Q2 com 25 Lotes.</p></div><div className="subdivision-studio__structure-totals"><b>{structureRows.length}</b><span>Quadras</span><b>{draftLotCount}</b><span>Lotes previstos</span></div></div>
