@@ -138,3 +138,9 @@ As mensagens permanecem locais e não contêm comandos de gravação, disponibil
 O cartão resumido de área passou a usar o rótulo **Área sem fonte**. Essa nomenclatura deixa claro que o indicador trata exclusivamente da ausência do atributo de área; a completude dos demais atributos continua sendo apresentada no painel dedicado de Completude física. A revisão autenticada confirmou ambas as superfícies visíveis e sem ambiguidade.
 
 A validação integral aprovou 212 arquivos e 520 testes; o build manteve somente o aviso não bloqueante de chunks grandes. ZIP e HTML A221 foram gerados e validados como saneados. Nenhum Lote, preço, documento ou operação comercial foi alterado.
+
+## Resumo de resultados físicos A222
+
+Os filtros locais agora apresentam uma linha de resultado entre o agrupamento de busca e a lista de Quadras. Ela informa quantos Lotes foram encontrados e em quantas Quadras, com aviso explícito de que a contagem é derivada apenas dos filtros de leitura. Isso facilita a conferência do recorte sem introduzir um novo estado de negócio.
+
+Na leitura autenticada estabilizada, a central apresentou 164 Lotes em 14 Quadras no recorte inicial. A validação integral aprovou 212 arquivos e 521 testes; o build manteve somente o aviso não bloqueante de chunks grandes. ZIP e HTML A222 foram gerados e validados como saneados. Nenhuma estrutura, preço, documento ou operação comercial foi alterada.

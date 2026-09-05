@@ -49,3 +49,9 @@ A recarga autenticada confirmou que a central manteve a matriz, os cartões de c
 A revisão foi reiniciada após a alteração de cópia. A primeira captura ainda estava em carregamento da área protegida; portanto, ela não é considerada evidência da versão final. A confirmação visual deste rótulo permanece pendente de uma leitura autenticada estável, embora o teste dirigido e a tipagem tenham aprovado a alteração.
 
 A leitura autenticada estabilizada confirmou o indicador **Área sem fonte** ao lado de Área informada e do total em m². A cobertura geral continuou apresentada exclusivamente no painel **Completude física**, preservando a distinção entre uma métrica de área e o conjunto de atributos físicos.
+
+## Resumo de resultados A222
+
+A revisão do novo resumo foi iniciada após a atualização. A segunda captura da área autenticada não retornou conteúdo legível; ela não será usada como evidência visual. A validação dirigida confirmou que a contagem deriva de Lotes e Quadras filtrados, e a revisão visual deverá ser repetida após a interface estabilizar.
+
+Após reinício controlado da prévia, a leitura autenticada foi estabilizada. O resumo apareceu entre os filtros e as Quadras: **164 Lotes encontrados em 14 Quadras**, seguido da indicação de que a contagem reflete somente filtros locais. Nenhuma ação de edição, preço ou operação comercial foi acionada durante a inspeção.

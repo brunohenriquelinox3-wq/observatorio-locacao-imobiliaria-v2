@@ -2132,3 +2132,8 @@
 - [x] Renomear o indicador resumido de pendência para deixar explícito que ele mede somente a área, enquanto a completude geral permanece no painel por atributo. **A221:** “Área pendente” foi substituído por “Área sem fonte”.
 - [x] Cobrir a cópia, validar a leitura autenticada e gerar artefatos saneados. **A221:** leitura autenticada, teste dirigido, suíte integral com 212 arquivos/520 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
 - [x] Salvar checkpoint A221 após a correção de nomenclatura, a validação e o saneamento dos artefatos. **A221:** checkpoint `e81bf342` preserva a distinção entre ausência de área e completude física geral.
+
+## Resumo de resultados físicos — A222
+- [x] Exibir o total de Lotes e Quadras encontrados após busca, filtro de Quadra e situação física, exclusivamente com dados já lidos. **A222:** a linha de resultado deriva `searchedLots` e `visibleLotBlocks` e declara seu caráter local.
+- [x] Cobrir a leitura agregada, validar a experiência e gerar artefatos saneados. **A222:** leitura autenticada, teste dirigido, suíte integral com 212 arquivos/521 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
+- [ ] Salvar checkpoint A222 após o resumo local, a validação integral e o saneamento dos artefatos.

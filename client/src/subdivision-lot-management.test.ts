@@ -96,4 +96,12 @@ describe("central de gestão territorial por Quadra e Lote", () => {
     expect(source).toContain("COMPLETUDE FÍSICA");
     expect(source).not.toContain('<span>Área pendente</span>');
   });
+
+  it("resume a quantidade de Lotes e Quadras encontrados somente a partir da leitura filtrada", () => {
+    const source = studio();
+
+    expect(source).toContain("const visibleLotCount = searchedLots.length");
+    expect(source).toContain("const visibleBlockCount = visibleLotBlocks.length");
+    expect(source).toContain("A contagem reflete apenas os filtros locais de leitura.");
+  });
 });
