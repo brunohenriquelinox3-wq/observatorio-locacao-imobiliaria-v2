@@ -1,0 +1,44 @@
+import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
+const studio = () => readFileSync(path.resolve(process.cwd(), "client/src/components/SubdivisionDevelopmentStudio.tsx"), "utf8");
+const styles = () => readFileSync(path.resolve(process.cwd(), "client/src/subdivision-lot-management.css"), "utf8");
+const foundation = () => readFileSync(path.resolve(process.cwd(), "client/src/pages/SubdivisionFoundation.tsx"), "utf8");
+
+describe("central de gestão territorial por Quadra e Lote", () => {
+  it("mantém a matriz de edição fechada para um cadastro que já possui estrutura", () => {
+    const source = studio();
+
+    expect(source).toContain('className="subdivision-studio__matrix-editor"');
+    expect(source).toContain("open={activeSavedStructure.length === 0}");
+    expect(source).toContain("REVISAR MATRIZ FÍSICA");
+    expect(source).toContain("Alterar Quadras e Lotes com confirmação");
+  });
+
+  it("expõe a prévia como política preparada, não como tabela aprovada", () => {
+    const source = studio();
+
+    expect(source).toContain('className="subdivision-lot-pricing__governance"');
+    expect(source).toContain("Preparar");
+    expect(source).toContain("Vigência");
+    expect(source).toContain("Somente política aprovada orienta a operação.");
+    expect(source).toContain("A prévia não grava, não aprova tabela");
+  });
+
+  it("preserva superfícies visuais e responsivas para edição intencional e política preparada", () => {
+    const source = styles();
+
+    expect(source).toContain(".subdivision-studio__matrix-editor");
+    expect(source).toContain(".subdivision-lot-pricing__governance");
+    expect(source).toContain("@media (max-width: 720px)");
+  });
+
+  it("não apresenta o cadastro em estruturação como rascunho no contexto da tela", () => {
+    const source = foundation();
+
+    expect(source).toContain("antes de qualquer leitura ou alteração");
+    expect(source).toContain("ações do cadastro em estruturação");
+    expect(source).not.toContain("antes de qualquer leitura ou rascunho");
+  });
+});

@@ -69,3 +69,35 @@ Após a compactação final, a leitura detalhada apresenta uma única Quadra abe
 Capturas independentes em desktop e móvel confirmaram que a área de trabalho preserva sua hierarquia em larguras reduzidas: controles se empilham, cartões ficam legíveis e a coluna lateral não cria espaços vazios. A leitura autenticada confirmou que a navegação expansível de Quadras carrega após o contexto autorizado; as capturas de layout não iniciaram comandos nem exibiram dados do cadastro real.
 
 Após a correção de rótulos, a validação integral voltou a passar: suíte de testes, tipagem, build compatível com Netlify e integridade do diff. O build manteve somente o aviso não bloqueante sobre chunks grandes. Esta rodada não executou comando de matriz, política de preço ou operação comercial.
+
+## Modelo formal preparado para a política de preço
+
+A política real será ligada a um contêiner econômico já existente, porém terá registros próprios para impedir que o preço seja confundido com estrutura, comissão, recebível ou contrato.
+
+| Campo | Regra de domínio | Exposição na central |
+|---|---|---|
+| Escopo | Empreendimento inteiro ou uma única Quadra física do mesmo cadastro. | Exibe a abrangência; não altera Lotes. |
+| Preço por m² | Decimal positivo em BRL, com quatro casas para o cálculo-base. | Editável somente enquanto em preparação. |
+| Vigência | Data inicial obrigatória, término opcional e não anterior ao início. | Mostra apenas estado e período. |
+| Estado | Em preparação, encaminhada, aprovada, expirada ou retirada. | Só a aprovada e vigente é elegível para prévia oficial. |
+| Separação de funções | Criador não aprova a própria política; aprovação exige nova autoridade e MFA recente. | Exibe o estado sem nomear pessoas. |
+| Cálculo | Área física × preço/m² da regra específica; arredondamento final em duas casas. | Lote sem área ou regra aplicável continua “não calculado”. |
+
+O modelo não gera preço individual, proposta, reserva, venda, contrato, parcela, cobrança ou recebível. A implementação começa pela central visual e pela preparação de políticas; nenhum preço será incluído no cadastro atual sem uma regra formal submetida pela organização.
+
+## Central operacional A215
+
+A central passou a priorizar a leitura física antes da edição. A matriz resumida, a reconciliação, a fonte física local e a gestão detalhada permanecem expostas, enquanto o formulário completo de Quadras e Lotes é apresentado no painel expansível **Revisar matriz física**. Quando já existe uma matriz, ele inicia fechado e só revela os controles de alteração após ação intencional da pessoa operadora. A abertura não cria, arquiva, restaura ou altera qualquer registro.
+
+A superfície **Política de preço por m² · Prévia** passou a declarar visualmente o fluxo de governança **Preparar → Vigência → Aprovar**. O campo de preço e o escopo continuam sendo cálculo local e efêmero no navegador. A sequência explica que uma futura política real deverá ter escopo, vigência, responsável, aprovação separada e auditoria, sem converter a prévia em tabela aprovada ou efeito comercial.
+
+| Controle A215 | Evidência confirmada |
+|---|---|
+| Estrutura real | Mantida em leitura com 14 Quadras e 164 Lotes físicos; a pendência do 165º Lote não foi alterada. |
+| Edição intencional | Painel fechado para uma matriz existente e aberto apenas em inspeção visual sem submissão. |
+| Política de preço | Três etapas de governança visíveis; nenhum valor foi digitado, persistido ou aprovado. |
+| Segregação | Não foi executado comando de venda, proposta, reserva, contrato, cobrança, pagamento, repasse ou financeiro. |
+| Cópia | A nomenclatura residual “rascunho” foi removida do aviso de contexto do Cadastro de Loteamentos. |
+| Validação técnica | Teste dirigido ampliado, suíte integral com 212 arquivos e 514 testes, tipagem, build Netlify e `git diff --check` aprovados. O build manteve somente o aviso não bloqueante de chunks grandes. |
+
+Na revisão visual autenticada em desktop, a política preparada apareceu como cartão independente e a edição da matriz permaneceu fora do fluxo de consulta até ser aberta manualmente. A captura móvel de rota confirmou o empilhamento responsivo da experiência de Cadastro de Loteamentos; os estilos específicos de política e de revisão usam a mesma regra móvel de coluna única. A captura móvel não selecionou um cadastro autenticado e, portanto, não foi usada para declarar leitura adicional da matriz real.
