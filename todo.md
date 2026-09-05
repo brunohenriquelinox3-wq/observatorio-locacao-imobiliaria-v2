@@ -1919,3 +1919,10 @@
 - [x] Cobrir criação, edição, arquivamento, anexos, remoção, negações de alçada, escopo, MFA e organização demonstrativa com testes automatizados e catálogo de segurança. **A195/A196:** 12 testes dirigidos, catálogo de RLS/RPCs e guarda transversal aprovados.
 - [x] Executar homologação controlada somente em organização ativa não demonstrativa, com registro sintético não pessoal e anexo não sensível, seguida de remoção lógica e limpeza de referências. **A195:** ciclo positivo de criação, edição, anexo, remoção e arquivamento executado; verificação agregada confirmou ausência de referência sintética ativa.
 - [x] Revisar desktop/móvel, documentar evidências, gerar ZIP e HTML saneados e salvar checkpoint sem publicar. **A195:** revisão visual, suíte integral de 465 testes, tipagem, build, saneamento e checkpoint concluídos.
+
+## Correção visual: Cadastro de Loteamentos modular
+- [x] Substituir a composição remanescente de formulário linear e cartão de revisão por uma área de trabalho modular, com navegação interna e uma única seção de edição ativa por vez. **A197:** workbench com coluna de rascunhos, canvas e visão operacional contextual.
+- [x] Separar Identificação, Estrutura, Preparação, Documentos e Ciclo do Cadastro em módulos independentes, preservando os mesmos comandos e limites de segurança. **A197:** documentos e ciclo continuam indisponíveis até a criação do rascunho.
+- [x] Reorganizar a seleção de loteamentos em uma lista lateral operacional com busca local, estado, progresso e ação explícita de novo cadastro. **A197:** registros, busca, estado, progresso de módulos-base e resumo operacional foram separados visualmente.
+- [x] Cobrir navegação entre módulos, preservação de rascunho, estados bloqueados e responsividade antes da revisão visual final. **A197:** três testes específicos, revisão desktop/móvel, suíte integral de 468 testes, tipagem, build e diff aprovados.
+- [x] Revisar a correção em desktop e móvel, gerar ZIP e HTML saneados e salvar checkpoint sem publicar. **A197:** artefatos saneados e checkpoint corretivo preparados após revisão visual e validação integral.
