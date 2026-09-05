@@ -1,8 +1,9 @@
 import type { SubdivisionContext } from "@shared/subdivisionContracts";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { trpc } from "@/lib/trpc";
+import { parsePhysicalSourceFile, type PhysicalSourcePreview } from "@/lib/subdivisionPhysicalSourcePreview";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Archive, BookOpenCheck, CheckCircle2, ClipboardCheck, FilePlus2, FileText, LandPlot, LoaderCircle, MapPinned, PencilLine, Plus, Search, ShieldAlert, ShieldCheck, Trash2, Upload, Workflow } from "lucide-react";
+import { Archive, BookOpenCheck, CheckCircle2, ClipboardCheck, FilePlus2, FileText, LandPlot, LoaderCircle, MapPinned, PencilLine, Plus, Search, ShieldAlert, ShieldCheck, TableProperties, Trash2, Upload, Workflow } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -65,6 +66,29 @@ type StructureRow = {
   lotCount: number;
 };
 
+const requirementDefinitions = [
+  ["municipal_approval", "Prefeitura · aprovação"],
+  ["municipal_technical_project", "Prefeitura · projeto técnico"],
+  ["registry_matriculation", "Cartório · matrícula"],
+  ["registry_memorial", "Cartório · memorial"],
+  ["legal_review", "Jurídico · revisão"],
+  ["legal_registration", "Jurídico · registros"],
+  ["works_infrastructure", "Obras · infraestrutura"],
+  ["works_access", "Obras · acessos"],
+  ["environmental_license", "Ambiental · licença"],
+  ["technical_survey", "Técnico · levantamento"],
+  ["technical_layout", "Técnico · implantação"],
+] as const;
+type RequirementCode = (typeof requirementDefinitions)[number][0];
+type RequirementState = "not_started" | "pending_evidence" | "under_review" | "declared_complete" | "review_required";
+const requirementStateLabels: Record<RequirementState, string> = {
+  not_started: "Não iniciado",
+  pending_evidence: "Aguardando evidência",
+  under_review: "Em revisão",
+  declared_complete: "Declarado completo",
+  review_required: "Revisão necessária",
+};
+
 const emptyForm: StudioForm = {
   internalReference: "",
   displayName: "",
@@ -105,8 +129,13 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const [structureRows, setStructureRows] = useState<StructureRow[]>([]);
   const [structureLoadedFor, setStructureLoadedFor] = useState("");
   const [replaceStructureConfirmed, setReplaceStructureConfirmed] = useState(false);
+  const [physicalSourcePreview, setPhysicalSourcePreview] = useState<PhysicalSourcePreview | null>(null);
+  const [physicalSourceError, setPhysicalSourceError] = useState("");
+  const [declaredLotTotal, setDeclaredLotTotal] = useState("");
+  const [physicalStructureConfirmed, setPhysicalStructureConfirmed] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const attachmentInput = useRef<HTMLInputElement>(null);
+  const physicalSourceInput = useRef<HTMLInputElement>(null);
   const utils = trpc.useUtils();
 
   const developmentsQuery = trpc.subdivisionFoundation.listDevelopmentStudio.useQuery(context, { enabled: isWorkspaceReady, retry: false });
@@ -120,6 +149,8 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const attachmentsQuery = trpc.subdivisionFoundation.listDevelopmentAttachments.useQuery(attachmentInputContext, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const structureInput = useMemo(() => ({ ...context, developmentId: selectedDevelopmentId }), [context, selectedDevelopmentId]);
   const structureQuery = trpc.subdivisionFoundation.listDraftStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
+  const physicalStructureQuery = trpc.subdivisionFoundation.listDraftPhysicalStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
+  const requirementsQuery = trpc.subdivisionFoundation.listDraftDevelopmentRequirements.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
 
   useEffect(() => {
     setHasExplicitDraftChoice(false);
@@ -237,6 +268,26 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       toast.error("Quadra não arquivada", { description: "O servidor exige MFA, contexto autorizado e vínculo com o loteamento selecionado." });
     },
   });
+  const applyPhysicalStructureMutation = trpc.subdivisionFoundation.applyDraftPhysicalStructure.useMutation({
+    onSuccess(result) {
+      toast.success("Matriz física aplicada", { description: `${result.blockCount} Quadra(s) e ${result.lotCount} Lote(s) em rascunho. Nenhuma disponibilidade, venda, contrato ou preço foi criado.` });
+      setPhysicalStructureConfirmed(false);
+      void utils.subdivisionFoundation.listDraftPhysicalStructure.invalidate(structureInput);
+      void utils.subdivisionFoundation.listDraftStructure.invalidate(structureInput);
+      void utils.subdivisionFoundation.listDraftLotInventoryStates.invalidate(context);
+    },
+    onError() {
+      toast.error("Matriz física não aplicada", { description: "Revise a fonte local, a divergência de total, a confirmação, MFA e o contexto autorizado." });
+    },
+  });
+  const upsertRequirementMutation = trpc.subdivisionFoundation.upsertDraftDevelopmentRequirement.useMutation({
+    onSuccess() {
+      void utils.subdivisionFoundation.listDraftDevelopmentRequirements.invalidate(structureInput);
+    },
+    onError() {
+      toast.error("Pendência não atualizada", { description: "O servidor exige MFA, contexto autorizado e um loteamento em rascunho." });
+    },
+  });
 
   const identityReady = form.internalReference.length >= 3 && form.displayName.trim().length >= 3;
   const structureReady = Boolean(form.municipality) === Boolean(form.stateCode) && form.plannedStageCount >= 1;
@@ -253,7 +304,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const savedLotCount = activeSavedStructure.reduce((total, block) => total + block.lotCount, 0);
   const draftLotCount = structureRows.reduce((total, block) => total + (Number.isFinite(block.lotCount) ? block.lotCount : 0), 0);
   const completedModules = [identityReady, activeSavedStructure.length > 0 || structureReady, Boolean(form.workingPhase)].filter(Boolean).length;
-  const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || isUploading;
+  const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || applyPhysicalStructureMutation.isPending || upsertRequirementMutation.isPending || isUploading;
   const selectedModule = studioModules.find((module) => module.id === activeModule) ?? studioModules[0];
 
   function startNew() {
@@ -266,7 +317,12 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     setStructureRows([]);
     setStructureLoadedFor("");
     setReplaceStructureConfirmed(false);
+    setPhysicalSourcePreview(null);
+    setPhysicalSourceError("");
+    setDeclaredLotTotal("");
+    setPhysicalStructureConfirmed(false);
     if (attachmentInput.current) attachmentInput.current.value = "";
+    if (physicalSourceInput.current) physicalSourceInput.current.value = "";
   }
 
   function selectDevelopment(id: string) {
@@ -277,6 +333,11 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     setStructureRows([]);
     setStructureLoadedFor("");
     setReplaceStructureConfirmed(false);
+    setPhysicalSourcePreview(null);
+    setPhysicalSourceError("");
+    setDeclaredLotTotal("");
+    setPhysicalStructureConfirmed(false);
+    if (physicalSourceInput.current) physicalSourceInput.current.value = "";
   }
 
   function addStructureRows(amount: number) {
@@ -321,6 +382,39 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       developmentId: selectedDevelopmentId,
       blocks: [...normalizedStructureRows].sort((left, right) => left.blockNumber - right.blockNumber),
       replaceExisting: structureWouldArchive,
+      correlationId: crypto.randomUUID(),
+    });
+  }
+
+  async function loadPhysicalSource(file: File | null) {
+    setPhysicalSourcePreview(null);
+    setPhysicalSourceError("");
+    setPhysicalStructureConfirmed(false);
+    if (!file) return;
+    try {
+      setPhysicalSourcePreview(await parsePhysicalSourceFile(file));
+    } catch {
+      setPhysicalSourceError("A fonte local precisa ser uma planilha XLSX de até 2 MB com as colunas Quadra e Lote. Somente Área é lida como atributo físico opcional.");
+    }
+  }
+
+  function applyPhysicalSource() {
+    if (!selectedDevelopmentId || !physicalSourcePreview) return;
+    const declaredTotal = Number(declaredLotTotal);
+    if (!Number.isInteger(declaredTotal) || declaredTotal < 1 || declaredTotal !== physicalSourcePreview.lotCount || physicalSourcePreview.issues.length > 0 || !physicalStructureConfirmed) {
+      toast.error("Revise a matriz física", { description: "O total declarado deve coincidir com a fonte, não pode haver inconsistência e a revisão precisa ser confirmada." });
+      return;
+    }
+    applyPhysicalStructureMutation.mutate({
+      ...context,
+      developmentId: selectedDevelopmentId,
+      blocks: physicalSourcePreview.blocks.map((block) => ({
+        blockNumber: block.blockNumber,
+        sectorReference: null,
+        blockTypology: "regular" as const,
+        lots: block.lots.map((lot) => ({ lotNumber: lot.lotNumber, areaSqm: lot.areaSqm, frontageM: null, depthM: null, lotTypology: "standard" as const, positionCode: "not_declared" as const })),
+      })),
+      replaceExisting: savedStructure.length > 0,
       correlationId: crypto.randomUUID(),
     });
   }
@@ -459,6 +553,15 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                 </div>}
               </section>}
 
+              {selectedDevelopmentId && <section className="subdivision-studio__physical-source" aria-labelledby="physical-source-title">
+                <div className="subdivision-studio__physical-source-head"><div><span>FONTE FÍSICA LOCAL</span><h5 id="physical-source-title">Concilie a matriz antes de criar Quadras e Lotes.</h5><p>A planilha fica neste navegador. O sistema lê somente Quadra, Lote e Área; status, valores, vendas e dados pessoais são descartados.</p></div><TableProperties size={22} /></div>
+                <div className="subdivision-studio__physical-source-controls"><label>Planilha estrutural <input ref={physicalSourceInput} type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={(event) => void loadPhysicalSource(event.target.files?.[0] ?? null)} disabled={!isWorkspaceReady || isBusy} /></label><label>Total de Lotes declarado <input type="number" min={1} max={2000} value={declaredLotTotal} onChange={(event) => { setDeclaredLotTotal(event.target.value); setPhysicalStructureConfirmed(false); }} placeholder="Confirme o total" disabled={!isWorkspaceReady || isBusy || !physicalSourcePreview} /></label></div>
+                {physicalSourceError && <p className="subdivision-studio__structure-error" role="alert">{physicalSourceError}</p>}
+                {physicalSourcePreview && <div className="subdivision-studio__physical-source-preview"><div className="subdivision-studio__physical-source-summary"><div><b>{physicalSourcePreview.blockCount}</b><span>Quadras lidas</span></div><div><b>{physicalSourcePreview.lotCount}</b><span>Lotes na fonte</span></div><div><b>{physicalSourcePreview.areaCoverageCount}</b><span>Áreas declaradas</span></div><div data-match={Number(declaredLotTotal) === physicalSourcePreview.lotCount}><b>{declaredLotTotal || "—"}</b><span>{Number(declaredLotTotal) === physicalSourcePreview.lotCount ? "Total conciliado" : "Total a conciliar"}</span></div></div><div className="subdivision-studio__physical-source-blocks">{physicalSourcePreview.blocks.map((block) => <span key={block.blockNumber}>Q{block.blockNumber} · {block.lots.length} Lotes</span>)}</div>{physicalSourcePreview.issues.length > 0 && <p className="subdivision-studio__structure-error" role="alert">A fonte apresenta {physicalSourcePreview.issues.length} inconsistência(s) estrutural(is). Corrija a planilha antes de aplicar.</p>}<label className="subdivision-studio__replacement-confirmation"><input type="checkbox" checked={physicalStructureConfirmed} onChange={(event) => setPhysicalStructureConfirmed(event.target.checked)} disabled={!isWorkspaceReady || isBusy || physicalSourcePreview.issues.length > 0 || Number(declaredLotTotal) !== physicalSourcePreview.lotCount} /><span><b>Confirmo a matriz física revisada.</b> A aplicação usa somente estes dados físicos e pode arquivar logicamente estruturas em rascunho que não apareçam na fonte.</span></label><button type="button" onClick={applyPhysicalSource} disabled={!isWorkspaceReady || isBusy || !physicalStructureConfirmed || physicalSourcePreview.issues.length > 0 || Number(declaredLotTotal) !== physicalSourcePreview.lotCount}>{applyPhysicalStructureMutation.isPending ? "Aplicando matriz física" : "Aplicar matriz física revisada"}</button></div>}
+                {physicalStructureQuery.isLoading && <p className="subdivision-studio__physical-source-status"><LoaderCircle className="subdivision-foundation-spinner" />Confirmando os atributos físicos autorizados.</p>}
+                {physicalStructureQuery.data && physicalStructureQuery.data.length > 0 && <p className="subdivision-studio__physical-source-status"><CheckCircle2 size={16} />A matriz salva possui {physicalStructureQuery.data.reduce((total, block) => total + block.lots.length, 0)} Lote(s) físicos neste contexto.</p>}
+              </section>}
+
               <form className="subdivision-studio__module-form subdivision-studio__structure-profile" onSubmit={saveDevelopment}>
                 <div className="subdivision-studio__field-grid subdivision-studio__field-grid--three">
                   <label>Enquadramento<select value={form.developmentKind} onChange={(event) => setForm((current) => ({ ...current, developmentKind: event.target.value as DevelopmentKind }))} disabled={!isWorkspaceReady || isBusy}>{Object.entries(kindLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
@@ -499,6 +602,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
 
             {activeModule === "documents" && <div className="subdivision-studio__documents-module">
               <div className="subdivision-studio__module-context"><FilePlus2 size={18} /><p>Os anexos são privados. A tela não expõe nome original, URL, chave, conteúdo ou download.</p></div>
+              <section className="subdivision-studio__requirements" aria-labelledby="requirements-title"><div><span>DOSSIÊ DE PENDÊNCIAS</span><h5 id="requirements-title">Etapas futuras não são presumidas como aprovadas.</h5><p>Registre somente o estado de trabalho. O dossiê não cria número de processo, órgão, matrícula, contrato ou aprovação automática.</p></div>{requirementsQuery.isLoading && <p className="subdivision-studio__physical-source-status"><LoaderCircle className="subdivision-foundation-spinner" />Carregando pendências autorizadas.</p>}<div className="subdivision-studio__requirements-grid">{requirementDefinitions.map(([code, label]) => { const selected = requirementsQuery.data?.find((requirement) => requirement.requirementCode === code)?.requirementState as RequirementState | undefined; const state = selected ?? "not_started"; return <label key={code}><span>{label}</span><select value={state} disabled={!isWorkspaceReady || isBusy || requirementsQuery.isLoading} onChange={(event) => upsertRequirementMutation.mutate({ ...context, developmentId: selectedDevelopmentId, requirementCode: code as RequirementCode, requirementState: event.target.value as RequirementState, correlationId: crypto.randomUUID() })}>{Object.entries(requirementStateLabels).map(([value, stateLabel]) => <option value={value} key={value}>{stateLabel}</option>)}</select></label>; })}</div></section>
               <form className="subdivision-studio__attachment-form" onSubmit={uploadAttachment}>
                 <label>Categoria documental<select value={attachmentCategory} onChange={(event) => setAttachmentCategory(event.target.value as AttachmentCategory)} disabled={!isWorkspaceReady || isUploading}>{Object.entries(attachmentCategoryLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
                 <label>Arquivo privado<input ref={attachmentInput} type="file" accept="application/pdf,image/jpeg,image/png" onChange={(event) => setAttachmentFile(event.target.files?.[0] ?? null)} disabled={!isWorkspaceReady || isUploading} /></label>
@@ -523,7 +627,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
             <div><span>PREPARAÇÃO</span><b>{phaseLabels[form.workingPhase]}</b></div>
             <div><span>DOCUMENTOS</span><b>{selectedDevelopmentId ? `${activeAttachmentCount} privado(s)` : "Após criar"}</b></div>
           </div>
-          <div className="subdivision-studio__overview-boundary"><ShieldAlert size={15} /><p>Este setor não contém matrícula, área, lote, estoque, preço, contrato, proposta, cobrança, pagamento ou repasse.</p></div>
+          <div className="subdivision-studio__overview-boundary"><ShieldAlert size={15} /><p>Este setor organiza somente estrutura física e pendências internas. Não contém preço, disponibilidade, venda, contrato, proposta, cobrança, pagamento ou repasse.</p></div>
         </aside>
       </div>
     </section>

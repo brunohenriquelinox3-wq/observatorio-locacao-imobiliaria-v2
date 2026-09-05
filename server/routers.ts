@@ -170,6 +170,16 @@ import {
 } from "./subdivisionStructureBuilder";
 import { applySubdivisionDraftStructureInputSchema, archiveSubdivisionDraftBlockInputSchema } from "../shared/subdivisionStructureBuilderContracts";
 import {
+  applySubdivisionPhysicalStructureInputSchema,
+  upsertSubdivisionDevelopmentRequirementInputSchema,
+} from "../shared/subdivisionPhysicalStructureContracts";
+import {
+  applySubdivisionPhysicalStructure,
+  listDraftSubdivisionDevelopmentRequirements,
+  listDraftSubdivisionPhysicalStructure,
+  upsertDraftSubdivisionDevelopmentRequirement,
+} from "./subdivisionPhysicalStructure";
+import {
   listDraftSubdivisionDevelopmentPreparationProfiles,
   upsertDraftSubdivisionDevelopmentPreparationProfile,
 } from "./subdivisionDevelopmentPreparation";
@@ -513,6 +523,24 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         await requireRecentTotpMfa(ctx);
         return archiveDraftSubdivisionBlock(ctx.supabaseSubjectId ?? undefined, input);
+      }),
+    listDraftPhysicalStructure: protectedProcedure
+      .input(subdivisionContextSchema.extend({ developmentId: z.string().uuid() }))
+      .query(({ ctx, input }) => listDraftSubdivisionPhysicalStructure(ctx.supabaseSubjectId ?? undefined, input, input.developmentId)),
+    applyDraftPhysicalStructure: protectedProcedure
+      .input(applySubdivisionPhysicalStructureInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        await requireRecentTotpMfa(ctx);
+        return applySubdivisionPhysicalStructure(ctx.supabaseSubjectId ?? undefined, input);
+      }),
+    listDraftDevelopmentRequirements: protectedProcedure
+      .input(subdivisionContextSchema.extend({ developmentId: z.string().uuid() }))
+      .query(({ ctx, input }) => listDraftSubdivisionDevelopmentRequirements(ctx.supabaseSubjectId ?? undefined, input, input.developmentId)),
+    upsertDraftDevelopmentRequirement: protectedProcedure
+      .input(upsertSubdivisionDevelopmentRequirementInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        await requireRecentTotpMfa(ctx);
+        return upsertDraftSubdivisionDevelopmentRequirement(ctx.supabaseSubjectId ?? undefined, input);
       }),
     listDraftDevelopmentPreparationProfiles: protectedProcedure
       .input(subdivisionContextSchema)
