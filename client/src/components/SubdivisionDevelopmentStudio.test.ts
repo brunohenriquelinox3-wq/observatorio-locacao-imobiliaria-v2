@@ -129,4 +129,13 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("previewBaseTotal");
     expect(studio).not.toContain("Criar contrato de venda");
   });
+
+  it("organiza a preparação contratual como roteiro sem criar atos materiais", () => {
+    const studio = source();
+    expect(studio).toContain("ROTEIRO CONTRATUAL · PREPARAÇÃO");
+    expect(studio).toContain("Preço-base não é proposta; proposta não é contrato");
+    expect(studio).toContain("Nunca reverter um Lote por atalho");
+    expect(studio).toContain("cliente, proposta, contrato, parcela, assinatura, cobrança, pagamento, restituição ou disponibilidade");
+    expect(studio).not.toContain("criarDistrato");
+  });
 });

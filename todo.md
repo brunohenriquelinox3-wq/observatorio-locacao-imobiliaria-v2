@@ -2155,3 +2155,9 @@
 ## Correção de escopo da listagem de preço-base — A225
 - [x] Restringir no contrato, router, serviço e RPC a listagem de política de preço-base ao cadastro selecionado, eliminando qualquer filtragem apenas no navegador. **A225:** `developmentId` é exigido pelo contrato, encaminhado pelo router e validado/filtrado no RPC antes da resposta.
 - [x] Cobrir a restrição por cadastro em testes e reaplicar a função PostgreSQL de modo aditivo, sem alterar políticas ou linhas existentes. **A225:** a migração foi aplicada, os testes de serviço e migração foram aprovados, e a verificação agregada confirmou zero políticas/linhas e uma função escopada ativa.
+
+## Jornada visual de preparação contratual e distrato — A226
+- [x] Exibir os marcos contratuais e de distrato como roteiro operacional derivado do estudo saneado, sem cliente, contrato, assinatura, parcela, valor ou financeiro. **A226:** o módulo Preparação agora apresenta cinco marcos de leitura sem inputs, mutações ou efeitos materiais.
+- [x] Separar claramente referência de preço-base, proposta, formalização, obrigações, encerramento e distrato, sem criar ações materiais. **A226:** a jornada declara os limites de cada domínio e bloqueia a reversão de Lote por atalho.
+- [x] Cobrir a jornada em teste, revisão visual, validação integral, ZIP e HTML, sem publicação. **A226:** teste dirigido, suíte integral com 214 arquivos/533 testes, tipagem, build Netlify, integridade de diff e capturas desktop/móvel foram concluídos; as capturas sem contexto verificaram responsividade estrutural e a sessão autenticada permaneceu em esqueleto transitório durante a inspeção específica.
+- [ ] Salvar checkpoint A226 após documentação, validação e saneamento dos artefatos.

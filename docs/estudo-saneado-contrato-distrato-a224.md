@@ -37,3 +37,9 @@
 ## Consequência para o escopo autorizado agora
 
 O fluxo A223 permanece limitado a **Quadra, Lote, área e preço-base por m²**, com prévia, versionamento, vigência e aprovação separada. O estudo documental reforça — e não amplia — a proibição atual de criar clientes, contratos, distratos, cobranças, pagamentos, repasses, comissões, receitas ou status comercial de Lote.
+
+## Jornada visual A226
+
+O módulo Preparação passou a exibir um roteiro estático de cinco marcos: referência física, preço-base, qualificação e proposta, formalização, e encerramento/distrato. Essa composição ajuda a orientar o trabalho humano sem gravar qualquer dado de parte, instrumento, assinatura, parcela, valor contratual ou situação comercial.
+
+> **Proteção operacional.** O roteiro não tem comandos de contratação, distrato, cobrança ou retorno de Lote. Preço-base permanece uma referência anterior à proposta; um eventual distrato exigirá, em módulo futuro, instrumento de origem, evidência, aprovação e auditoria antes de produzir qualquer efeito material.
