@@ -60,19 +60,19 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("setHasExplicitDraftChoice(true)");
   });
 
-  it("seleciona explicitamente o rascunho recém-criado antes de invalidar a lista", () => {
+  it("seleciona explicitamente o cadastro recém-criado antes de invalidar a lista", () => {
     const studio = source();
-    expect(studio).toContain('toast.success("Loteamento em rascunho criado"');
+    expect(studio).toContain('toast.success("Cadastro em estruturação criado"');
     expect(studio).toContain('setHasExplicitDraftChoice(true);\n      setRecordFilter("");\n      setSelectedDevelopmentId(result.developmentId);');
     expect(studio).toContain('setActiveModule("structure");');
   });
 
   it("exibe a leitura gráfica somente com a estrutura autorizada já salva", () => {
     const studio = source();
-    expect(studio).toContain("MATRIZ FÍSICA DO RASCUNHO");
+    expect(studio).toContain("MATRIZ FÍSICA DO CADASTRO");
     expect(studio).toContain("Quadras e Lotes já estruturados");
     expect(studio).toContain("Estruture a primeira Quadra abaixo");
-    expect(studio).toContain("Matriz com ${activeSavedStructure.length} Quadras e ${savedLotCount} Lotes em rascunho");
+    expect(studio).toContain("Matriz com ${activeSavedStructure.length} Quadras e ${savedLotCount} Lotes em estruturação");
   });
 
   it("não representa Quadra legada sem Lotes ativos como matriz pronta", () => {
