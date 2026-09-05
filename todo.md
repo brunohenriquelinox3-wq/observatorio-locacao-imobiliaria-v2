@@ -2126,4 +2126,4 @@
 ## Estados vazios de exploração física — A220
 - [x] Explicar quando nenhum Lote atende ao filtro “Completos na fonte” ou “Com pendência física”, sem sugerir preenchimento automático ou status comercial. **A220:** as mensagens descrevem ausência de evidência de fonte ou ajuste de filtro de leitura, sem induzir mutação.
 - [x] Cobrir os estados vazios, revisar a interface, validar e gerar artefatos saneados. **A220:** revisão autenticada, teste dirigido, suíte integral com 212 arquivos/519 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
-- [ ] Salvar checkpoint A220 após os estados vazios, a validação integral e o saneamento dos artefatos.
+- [x] Salvar checkpoint A220 após os estados vazios, a validação integral e o saneamento dos artefatos. **A220:** checkpoint `74fe1bdf` preserva a orientação contextual sem inferências ou comandos materiais.
