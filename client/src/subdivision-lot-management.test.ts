@@ -104,4 +104,18 @@ describe("central de gestão territorial por Quadra e Lote", () => {
     expect(source).toContain("const visibleBlockCount = visibleLotBlocks.length");
     expect(source).toContain("A contagem reflete apenas os filtros locais de leitura.");
   });
+
+  it("separa a importação formal de preço-base da prévia local e preserva reconciliação, vigência e segunda aprovação", () => {
+    const source = studio();
+    const style = styles();
+
+    expect(source).toContain("POLÍTICA FORMAL DE PREÇO-BASE");
+    expect(source).toContain("Gerar prévia protegida");
+    expect(source).toContain("pares reconciliados");
+    expect(source).toContain("Coluna(s) descartada(s)");
+    expect(source).toContain("Aprovar como segunda pessoa");
+    expect(source).toContain("Preço-base é referência interna versionada.");
+    expect(style).toContain(".subdivision-price-base-policy__steps");
+    expect(style).toContain(".subdivision-price-base-policy__history");
+  });
 });

@@ -59,3 +59,11 @@ Após reinício controlado da prévia, a leitura autenticada foi estabilizada. O
 ## Revisão móvel de continuidade
 
 A captura móvel atual da rota de Cadastro de Loteamentos confirmou a composição em coluna única, campos dimensionados ao viewport e navegação modular legível. Como a captura de prévia não estava em um cadastro selecionado da sessão autenticada, ela valida somente a responsividade estrutural da rota; a leitura da matriz e os controles físicos continuam validados na inspeção autenticada separada.
+
+## A223/A224 — Política formal de preço-base e estudo contratual
+
+Em revisão autenticada de 05 set. 2026, a nova superfície de **Política formal de preço-base** foi renderizada dentro de Estrutura, após a prévia local e antes da edição intencional da matriz. A composição apresentou quatro etapas distintas — prévia, preparação, encaminhamento e aprovação por segunda pessoa — além de fonte XLSX, estado de reconciliação, campo de versão, vigência, histórico e bloqueios de efeito comercial. A matriz permaneceu em 14 Quadras e 164 Lotes; não havia política, linha de preço-base, venda, contrato, distrato, cobrança, pagamento ou repasse registrado na interface durante essa revisão.
+
+A leitura visível reiterou que status e totais derivados são descartados, que o arquivo é processado somente para prévia/preparação e que preço-base não é proposta, contrato, receita, recebível, lançamento tributário, cobrança, pagamento ou repasse. A interação com seleção de arquivo, prévia, preparação, encaminhamento e aprovação não foi executada nesta revisão; portanto, nenhum valor real foi enviado pelo navegador ou persistido.
+
+Após a correção A225, a leitura autenticada continuou estável com a matriz física de 14 Quadras e 164 Lotes e com o histórico da política vazio para o cadastro selecionado. A consulta do histórico passou a receber o identificador do cadastro no servidor; a interface não depende mais de filtrar uma lista organizacional ampla no navegador. Nenhuma ação de fonte, prévia, preparação, encaminhamento ou aprovação foi acionada.

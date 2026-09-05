@@ -204,6 +204,20 @@ import { addSubdivisionSaleDraftCoBuyer, listSubdivisionSaleDraftCoBuyers } from
 import { createSubdivisionEconomicRuleSet, listSubdivisionEconomicRuleSets } from "./subdivisionEconomicRuleSet";
 import { createSubdivisionEconomicRuleComponent, listSubdivisionEconomicRuleComponents } from "./subdivisionEconomicRuleComponent";
 import { addSubdivisionEconomicRuleComponentRoleReference, listSubdivisionEconomicRuleComponentRoleReferences } from "./subdivisionEconomicRuleComponentRoleReference";
+import {
+  approveSubdivisionPriceBasePolicy,
+  listSubdivisionPriceBasePolicies,
+  prepareSubdivisionPriceBasePolicy,
+  previewSubdivisionPriceBaseSource,
+  submitSubdivisionPriceBasePolicy,
+} from "./subdivisionPriceBasePolicy";
+import {
+  approveSubdivisionPriceBasePolicyInputSchema,
+  listSubdivisionPriceBasePoliciesInputSchema,
+  prepareSubdivisionPriceBasePolicyInputSchema,
+  previewSubdivisionPriceBaseSourceInputSchema,
+  submitSubdivisionPriceBasePolicyInputSchema,
+} from "../shared/subdivisionPriceBaseContracts";
 import { authorizedOrganizationContextInputSchema, listAuthorizedOrganizationContexts } from "./organizationContext";
 import { clientImportCommitInputSchema } from "../shared/clientImportContracts";
 import { commitClientImport } from "./clientImport";
@@ -588,6 +602,23 @@ export const appRouter = router({
     listEconomicRuleSets: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionEconomicRuleSets(ctx.supabaseSubjectId ?? undefined, input)),
     listEconomicRuleComponents: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionEconomicRuleComponents(ctx.supabaseSubjectId ?? undefined, input)),
     listEconomicRuleComponentRoleReferences: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionEconomicRuleComponentRoleReferences(ctx.supabaseSubjectId ?? undefined, input)),
+    listPriceBasePolicies: protectedProcedure.input(listSubdivisionPriceBasePoliciesInputSchema).query(({ ctx, input }) => listSubdivisionPriceBasePolicies(ctx.supabaseSubjectId ?? undefined, input)),
+    previewPriceBaseSource: protectedProcedure.input(previewSubdivisionPriceBaseSourceInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return previewSubdivisionPriceBaseSource(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    preparePriceBasePolicy: protectedProcedure.input(prepareSubdivisionPriceBasePolicyInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return prepareSubdivisionPriceBasePolicy(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    submitPriceBasePolicy: protectedProcedure.input(submitSubdivisionPriceBasePolicyInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return submitSubdivisionPriceBasePolicy(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    approvePriceBasePolicy: protectedProcedure.input(approveSubdivisionPriceBasePolicyInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return approveSubdivisionPriceBasePolicy(ctx.supabaseSubjectId ?? undefined, input);
+    }),
     createSaleDraft: protectedProcedure.input(draftSubdivisionSaleDraftInputSchema).mutation(({ ctx, input }) => createSubdivisionSaleDraft(ctx.supabaseSubjectId ?? undefined, input)),
     createEconomicRuleSet: protectedProcedure.input(draftSubdivisionEconomicRuleSetInputSchema).mutation(({ ctx, input }) => createSubdivisionEconomicRuleSet(ctx.supabaseSubjectId ?? undefined, input)),
     createEconomicRuleComponent: protectedProcedure.input(draftSubdivisionEconomicRuleComponentInputSchema).mutation(({ ctx, input }) => createSubdivisionEconomicRuleComponent(ctx.supabaseSubjectId ?? undefined, input)),
