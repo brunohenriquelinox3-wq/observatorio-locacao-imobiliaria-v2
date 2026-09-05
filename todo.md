@@ -1876,3 +1876,8 @@
 ## Verificação pós-atualização: gestão de equipe
 - [x] Medir a composição dos bundles administrativos e verificar os erros agregados recentes da prévia, sem executar mutações ou ampliar permissões.
 - [x] Registrar somente resultados mensuráveis e corrigir apenas regressões comprovadas de carregamento, navegação ou console.
+
+## Isolamento reforçado: Ambiente Demonstrativo
+- [x] Confirmar que solicitações, memberships, grants, escopos e módulos de equipe são negados para organizações demonstrativas isoladas.
+- [x] Cobrir a negação em migration, serviço e roteador sem criar ou ativar nenhum dado no Ambiente Demonstrativo.
+- [x] Restringir as solicitações de equipe a organizações ativas e revalidar esse estado antes do preparo ou aceite, impedindo qualquer delegação para organização em rascunho.
