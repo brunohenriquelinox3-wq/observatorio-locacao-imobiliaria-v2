@@ -9,7 +9,10 @@ import { toast } from "sonner";
 
 type DevelopmentKind = "residential" | "mixed_use" | "commercial" | "industrial" | "rural" | "other";
 type WorkingPhase = "preliminary_reference" | "structuring" | "review_required";
-type AttachmentCategory = "planning" | "municipal" | "registry" | "implementation" | "environmental" | "other";
+type ParcelingMode = "loteamento" | "desmembramento" | "condominio_lotes" | "acesso_controlado" | "other" | "to_review";
+type TerritorialContext = "urban" | "urban_expansion" | "specific_urbanization" | "to_review";
+type PredominantUse = "residential" | "mixed_use" | "commercial" | "industrial" | "institutional" | "to_review";
+type AttachmentCategory = "identity" | "planning" | "municipal" | "registry" | "implementation" | "environmental" | "other";
 type StudioModule = "identity" | "structure" | "preparation" | "documents" | "lifecycle";
 
 type DevelopmentStudioProps = {
@@ -27,6 +30,31 @@ const kindLabels: Record<DevelopmentKind, string> = {
   other: "Outro enquadramento",
 };
 
+const parcelingModeLabels: Record<ParcelingMode, string> = {
+  loteamento: "Loteamento",
+  desmembramento: "Desmembramento",
+  condominio_lotes: "Condomínio de lotes",
+  acesso_controlado: "Loteamento de acesso controlado",
+  other: "Outra modalidade",
+  to_review: "A confirmar na revisão",
+};
+
+const territorialContextLabels: Record<TerritorialContext, string> = {
+  urban: "Área urbana",
+  urban_expansion: "Expansão urbana",
+  specific_urbanization: "Urbanização específica",
+  to_review: "A confirmar na revisão",
+};
+
+const predominantUseLabels: Record<PredominantUse, string> = {
+  residential: "Residencial",
+  mixed_use: "Uso misto",
+  commercial: "Comercial",
+  industrial: "Industrial",
+  institutional: "Institucional",
+  to_review: "A confirmar na revisão",
+};
+
 const phaseLabels: Record<WorkingPhase, string> = {
   preliminary_reference: "Referência preliminar",
   structuring: "Em estruturação",
@@ -34,6 +62,7 @@ const phaseLabels: Record<WorkingPhase, string> = {
 };
 
 const attachmentCategoryLabels: Record<AttachmentCategory, string> = {
+  identity: "Identificação inicial",
   planning: "Planejamento interno",
   municipal: "Preparação municipal",
   registry: "Preparação registral",
@@ -59,6 +88,11 @@ type StudioForm = {
   plannedStageCount: number;
   workingPhase: WorkingPhase;
   internalNote: string;
+  parcelingMode: ParcelingMode;
+  territorialContext: TerritorialContext;
+  predominantUse: PredominantUse;
+  territorialReference: string;
+  identificationNote: string;
 };
 
 type StructureRow = {
@@ -98,9 +132,14 @@ const emptyForm: StudioForm = {
   plannedStageCount: 1,
   workingPhase: "preliminary_reference",
   internalNote: "",
+  parcelingMode: "to_review",
+  territorialContext: "to_review",
+  predominantUse: "to_review",
+  territorialReference: "",
+  identificationNote: "",
 };
 
-function toForm(development: { internalReference: string; displayName: string | null; developmentKind: DevelopmentKind | null; municipality: string | null; stateCode: string | null; plannedStageCount: number | null; workingPhase: WorkingPhase; internalNote: string | null }): StudioForm {
+function toForm(development: { internalReference: string; displayName: string | null; developmentKind: DevelopmentKind | null; municipality: string | null; stateCode: string | null; plannedStageCount: number | null; workingPhase: WorkingPhase; internalNote: string | null; parcelingMode: ParcelingMode | null; territorialContext: TerritorialContext | null; predominantUse: PredominantUse | null; territorialReference: string | null; identificationNote: string | null }): StudioForm {
   return {
     internalReference: development.internalReference,
     displayName: development.displayName ?? "",
@@ -110,6 +149,11 @@ function toForm(development: { internalReference: string; displayName: string | 
     plannedStageCount: development.plannedStageCount ?? 1,
     workingPhase: development.workingPhase,
     internalNote: development.internalNote ?? "",
+    parcelingMode: development.parcelingMode ?? "to_review",
+    territorialContext: development.territorialContext ?? "to_review",
+    predominantUse: development.predominantUse ?? "to_review",
+    territorialReference: development.territorialReference ?? "",
+    identificationNote: development.identificationNote ?? "",
   };
 }
 
@@ -124,7 +168,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const [activeModule, setActiveModule] = useState<StudioModule>("identity");
   const [form, setForm] = useState<StudioForm>(emptyForm);
   const [recordFilter, setRecordFilter] = useState("");
-  const [attachmentCategory, setAttachmentCategory] = useState<AttachmentCategory>("planning");
+  const [attachmentCategory, setAttachmentCategory] = useState<AttachmentCategory>("identity");
   const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
   const [structureRows, setStructureRows] = useState<StructureRow[]>([]);
   const [structureLoadedFor, setStructureLoadedFor] = useState("");
@@ -290,7 +334,9 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   });
 
   const identityReady = form.internalReference.length >= 3 && form.displayName.trim().length >= 3;
-  const structureReady = Boolean(form.municipality) === Boolean(form.stateCode) && form.plannedStageCount >= 1;
+  const classificationReady = form.parcelingMode !== "to_review" && form.predominantUse !== "to_review";
+  const territorialReady = Boolean(form.municipality) && Boolean(form.stateCode) && form.territorialContext !== "to_review";
+  const identificationDetailed = identityReady && classificationReady && territorialReady;
   const activeAttachmentCount = attachmentsQuery.data?.filter((attachment) => attachment.state === "recorded").length ?? 0;
   const savedStructure = structureQuery.data ?? [];
   const activeSavedStructure = savedStructure.filter((block) => block.lotCount > 0);
@@ -303,7 +349,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   });
   const savedLotCount = activeSavedStructure.reduce((total, block) => total + block.lotCount, 0);
   const draftLotCount = structureRows.reduce((total, block) => total + (Number.isFinite(block.lotCount) ? block.lotCount : 0), 0);
-  const completedModules = [identityReady, activeSavedStructure.length > 0 || structureReady, Boolean(form.workingPhase)].filter(Boolean).length;
+  const completedModules = [identificationDetailed, activeSavedStructure.length > 0, Boolean(form.workingPhase)].filter(Boolean).length;
   const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || applyPhysicalStructureMutation.isPending || upsertRequirementMutation.isPending || isUploading;
   const selectedModule = studioModules.find((module) => module.id === activeModule) ?? studioModules[0];
 
@@ -436,6 +482,8 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       municipality: form.municipality.trim() || null,
       stateCode: form.stateCode.trim().toUpperCase() || null,
       internalNote: form.internalNote.trim() || null,
+      territorialReference: form.territorialReference.trim() || null,
+      identificationNote: form.identificationNote.trim() || null,
     };
     if (mode === "create") {
       createMutation.mutate({ ...context, ...normalized, correlationId: crypto.randomUUID() });
@@ -523,7 +571,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
             {studioModules.map((module, index) => {
               const ModuleIcon = module.icon;
               const requiresSavedDraft = module.id === "documents" || module.id === "lifecycle";
-              const isComplete = module.id === "identity" ? identityReady : module.id === "structure" ? activeSavedStructure.length > 0 : module.id === "preparation" ? Boolean(form.workingPhase) : module.id === "documents" ? activeAttachmentCount > 0 : false;
+              const isComplete = module.id === "identity" ? identificationDetailed : module.id === "structure" ? activeSavedStructure.length > 0 : module.id === "preparation" ? Boolean(form.workingPhase) : module.id === "documents" ? activeAttachmentCount > 0 : false;
               return <button type="button" key={module.id} onClick={() => openModule(module.id)} aria-current={activeModule === module.id ? "step" : undefined} data-active={activeModule === module.id} data-complete={isComplete} disabled={!isWorkspaceReady || (requiresSavedDraft && !selectedDevelopmentId)}>
                 <span className="subdivision-studio__module-index">{String(index + 1).padStart(2, "0")}</span><ModuleIcon size={17} /><span><b>{module.label}</b><small>{module.caption}</small></span>{isComplete && <CheckCircle2 size={15} />}
               </button>;
@@ -533,14 +581,54 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
           <section className="subdivision-studio__active-module" aria-labelledby={`studio-module-${activeModule}`}>
             <div className="subdivision-studio__active-module-heading"><div><p>MÓDULO {String(studioModules.findIndex((module) => module.id === activeModule) + 1).padStart(2, "0")}</p><h4 id={`studio-module-${activeModule}`}>{selectedModule.label}</h4><span>{selectedModule.caption}</span></div><BookOpenCheck size={21} /></div>
 
-            {activeModule === "identity" && <form className="subdivision-studio__module-form" onSubmit={saveDevelopment}>
-              <div className="subdivision-studio__field-grid">
-                <label>Referência interna<input value={form.internalReference} onChange={(event) => setForm((current) => ({ ...current, internalReference: normalizeReference(event.target.value) }))} placeholder="EX.: JARDINS_DO_SUL" disabled={!isWorkspaceReady || isBusy} required minLength={3} maxLength={80} /></label>
-                <label>Nome de trabalho<input value={form.displayName} onChange={(event) => setForm((current) => ({ ...current, displayName: event.target.value }))} placeholder="Nome interno do loteamento" disabled={!isWorkspaceReady || isBusy} required minLength={3} maxLength={120} /></label>
-              </div>
-              <p className="subdivision-studio__module-note"><MapPinned size={15} />Esta referência organiza o trabalho interno. Ela não representa matrícula, aprovação, estoque, contrato ou disponibilidade comercial.</p>
-              <div className="subdivision-studio__module-actions"><button type="submit" disabled={!isWorkspaceReady || isBusy}>{isBusy ? "Validando requisitos" : mode === "create" ? "Criar e avançar para estrutura" : "Salvar identificação"}</button>{mode === "edit" && <button type="button" className="subdivision-studio__secondary" onClick={() => openModule("structure")} disabled={isBusy}>Ir para estrutura</button>}</div>
-            </form>}
+            {activeModule === "identity" && <div className="subdivision-studio__identity-module">
+              <form className="subdivision-studio__module-form" onSubmit={saveDevelopment}>
+                <section className="subdivision-studio__identity-section" aria-labelledby="identity-base-title">
+                  <div className="subdivision-studio__identity-section-heading"><span>01 · BASE DO CADASTRO</span><h5 id="identity-base-title">Como este loteamento será reconhecido internamente?</h5><p>Comece com a referência e o nome. Estes campos organizam o rascunho, não certificam aprovação, estoque ou disponibilidade comercial.</p></div>
+                  <div className="subdivision-studio__field-grid">
+                    <label>Referência interna <small>Obrigatória · código de trabalho</small><input value={form.internalReference} onChange={(event) => setForm((current) => ({ ...current, internalReference: normalizeReference(event.target.value) }))} placeholder="EX.: JARDINS_DO_SUL" disabled={!isWorkspaceReady || isBusy} required minLength={3} maxLength={80} /></label>
+                    <label>Nome de trabalho <small>Obrigatório · como a equipe identifica o projeto</small><input value={form.displayName} onChange={(event) => setForm((current) => ({ ...current, displayName: event.target.value }))} placeholder="Nome interno do loteamento" disabled={!isWorkspaceReady || isBusy} required minLength={3} maxLength={120} /></label>
+                  </div>
+                </section>
+
+                <section className="subdivision-studio__identity-section" aria-labelledby="identity-framework-title">
+                  <div className="subdivision-studio__identity-section-heading"><span>02 · ENQUADRAMENTO DECLARADO</span><h5 id="identity-framework-title">Classifique sem presumir validade técnica ou jurídica.</h5><p>Escolha o que a equipe sabe hoje. Quando não houver confirmação, mantenha “A confirmar na revisão”.</p></div>
+                  <div className="subdivision-studio__field-grid">
+                    <label>Modalidade declarada<select value={form.parcelingMode} onChange={(event) => setForm((current) => ({ ...current, parcelingMode: event.target.value as ParcelingMode }))} disabled={!isWorkspaceReady || isBusy}>{Object.entries(parcelingModeLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
+                    <label>Classificação interna<select value={form.developmentKind} onChange={(event) => setForm((current) => ({ ...current, developmentKind: event.target.value as DevelopmentKind }))} disabled={!isWorkspaceReady || isBusy}>{Object.entries(kindLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
+                    <label>Uso predominante declarado<select value={form.predominantUse} onChange={(event) => setForm((current) => ({ ...current, predominantUse: event.target.value as PredominantUse }))} disabled={!isWorkspaceReady || isBusy}>{Object.entries(predominantUseLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
+                    <label>Etapas planejadas <small>Estimativa interna</small><input type="number" min={1} max={20} value={form.plannedStageCount} onChange={(event) => setForm((current) => ({ ...current, plannedStageCount: Number(event.target.value) || 1 }))} disabled={!isWorkspaceReady || isBusy} required /></label>
+                  </div>
+                </section>
+
+                <section className="subdivision-studio__identity-section" aria-labelledby="identity-territory-title">
+                  <div className="subdivision-studio__identity-section-heading"><span>03 · TERRITÓRIO DE REFERÊNCIA</span><h5 id="identity-territory-title">Registre o contexto amplo, não o endereço preciso.</h5><p>Município e UF devem ser informados juntos. A referência territorial não deve conter matrícula, coordenada, endereço ou dados de terceiros.</p></div>
+                  <div className="subdivision-studio__field-grid subdivision-studio__field-grid--territory">
+                    <label>Município <small>Preencha junto da UF</small><input value={form.municipality} onChange={(event) => setForm((current) => ({ ...current, municipality: event.target.value }))} placeholder="Município de referência" disabled={!isWorkspaceReady || isBusy} maxLength={80} /></label>
+                    <label>UF <small>Preencha junto do município</small><input value={form.stateCode} onChange={(event) => setForm((current) => ({ ...current, stateCode: event.target.value.toUpperCase().slice(0, 2) }))} placeholder="UF" disabled={!isWorkspaceReady || isBusy} minLength={2} maxLength={2} /></label>
+                    <label>Contexto territorial<select value={form.territorialContext} onChange={(event) => setForm((current) => ({ ...current, territorialContext: event.target.value as TerritorialContext }))} disabled={!isWorkspaceReady || isBusy}>{Object.entries(territorialContextLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
+                    <label>Referência territorial ampla <small>Opcional · sem endereço, coordenada ou matrícula</small><input value={form.territorialReference} onChange={(event) => setForm((current) => ({ ...current, territorialReference: event.target.value }))} placeholder="Ex.: setor, região ou frente de planejamento" disabled={!isWorkspaceReady || isBusy} minLength={2} maxLength={120} /></label>
+                  </div>
+                </section>
+
+                <section className="subdivision-studio__identity-section" aria-labelledby="identity-status-title">
+                  <div className="subdivision-studio__identity-section-heading"><span>04 · SITUAÇÃO E PENDÊNCIAS</span><h5 id="identity-status-title">Diga em que ponto o trabalho está, sem declarar aprovação.</h5><p>As pendências detalhadas de município, cartório, jurídico, obras, ambiente e técnico são tratadas no Dossiê de Documentos.</p></div>
+                  <div className="subdivision-studio__field-grid">
+                    <label>Situação de trabalho<select value={form.workingPhase} onChange={(event) => setForm((current) => ({ ...current, workingPhase: event.target.value as WorkingPhase }))} disabled={!isWorkspaceReady || isBusy}>{Object.entries(phaseLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
+                    <label>Nota de identificação <small>Opcional · sem pessoa, matrícula, processo, contrato ou valor</small><textarea value={form.identificationNote} onChange={(event) => setForm((current) => ({ ...current, identificationNote: event.target.value }))} placeholder="Contexto interno, dúvida de classificação ou próximo passo de identificação" disabled={!isWorkspaceReady || isBusy} maxLength={600} /></label>
+                  </div>
+                </section>
+
+                <p className="subdivision-studio__module-note"><MapPinned size={15} />A identificação organiza o trabalho interno. Ela não representa matrícula, aprovação, estoque, venda, contrato, preço, cobrança ou disponibilidade comercial.</p>
+                <div className="subdivision-studio__module-actions"><button type="submit" disabled={!isWorkspaceReady || isBusy}>{isBusy ? "Validando requisitos" : mode === "create" ? "Criar rascunho de identificação" : "Salvar identificação"}</button>{mode === "edit" && <button type="button" className="subdivision-studio__secondary" onClick={() => openModule("structure")} disabled={isBusy}>Ir para estrutura</button>}</div>
+              </form>
+
+              <section className="subdivision-studio__identity-dossier" aria-labelledby="identity-dossier-title">
+                <div><span>DOSSIÊ INICIAL</span><h5 id="identity-dossier-title">O primeiro documento começa aqui.</h5><p>{selectedDevelopmentId ? "O rascunho já existe. Abra o dossiê privado para anexar uma evidência inicial de identificação, planejamento, município, cartório, implantação ou ambiente." : "Salve a identificação mínima para habilitar o dossiê privado. O sistema não recebe arquivos antes de vincular o anexo a um rascunho autorizado."}</p></div>
+                <div className="subdivision-studio__identity-dossier-status"><b>{selectedDevelopmentId ? activeAttachmentCount : 0}</b><span>{selectedDevelopmentId ? "documento(s) privado(s) registrado(s)" : "documentos após salvar"}</span></div>
+                <button type="button" onClick={() => { setAttachmentCategory("identity"); openModule("documents"); }} disabled={!selectedDevelopmentId || !isWorkspaceReady || isBusy}><FilePlus2 size={16} />{selectedDevelopmentId ? "Adicionar documento inicial" : "Salve o rascunho para anexar"}</button>
+              </section>
+            </div>}
 
             {activeModule === "structure" && <div className="subdivision-studio__structure-module">
               {selectedDevelopmentId && <section className="subdivision-studio__structure-visualization" aria-labelledby="subdivision-structure-chart-title">
@@ -561,19 +649,6 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                 {physicalStructureQuery.isLoading && <p className="subdivision-studio__physical-source-status"><LoaderCircle className="subdivision-foundation-spinner" />Confirmando os atributos físicos autorizados.</p>}
                 {physicalStructureQuery.data && physicalStructureQuery.data.length > 0 && <p className="subdivision-studio__physical-source-status"><CheckCircle2 size={16} />A matriz salva possui {physicalStructureQuery.data.reduce((total, block) => total + block.lots.length, 0)} Lote(s) físicos neste contexto.</p>}
               </section>}
-
-              <form className="subdivision-studio__module-form subdivision-studio__structure-profile" onSubmit={saveDevelopment}>
-                <div className="subdivision-studio__field-grid subdivision-studio__field-grid--three">
-                  <label>Enquadramento<select value={form.developmentKind} onChange={(event) => setForm((current) => ({ ...current, developmentKind: event.target.value as DevelopmentKind }))} disabled={!isWorkspaceReady || isBusy}>{Object.entries(kindLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
-                  <label>Etapas planejadas<input type="number" min={1} max={20} value={form.plannedStageCount} onChange={(event) => setForm((current) => ({ ...current, plannedStageCount: Number(event.target.value) || 1 }))} disabled={!isWorkspaceReady || isBusy} required /></label>
-                  <div className="subdivision-studio__field-callout"><Workflow size={17} /><span>Defina a matriz de Quadras e Lotes abaixo. A quantidade é própria de cada Quadra.</span></div>
-                </div>
-                <div className="subdivision-studio__field-grid subdivision-studio__field-grid--location">
-                  <label>Município de referência <small>Opcional, junto da UF</small><input value={form.municipality} onChange={(event) => setForm((current) => ({ ...current, municipality: event.target.value }))} placeholder="Município" disabled={!isWorkspaceReady || isBusy} maxLength={80} /></label>
-                  <label>UF <small>Opcional, junto do município</small><input value={form.stateCode} onChange={(event) => setForm((current) => ({ ...current, stateCode: event.target.value.toUpperCase().slice(0, 2) }))} placeholder="UF" disabled={!isWorkspaceReady || isBusy} minLength={2} maxLength={2} /></label>
-                </div>
-                <div className="subdivision-studio__module-actions"><button type="submit" disabled={!isWorkspaceReady || isBusy}>{isBusy ? "Validando requisitos" : "Salvar dados estruturais"}</button></div>
-              </form>
 
               {!selectedDevelopmentId && <div className="subdivision-studio__module-empty"><LandPlot size={19} /><p>Salve a identificação do loteamento para montar Quadras e Lotes. A estrutura sempre fica vinculada ao rascunho selecionado.</p></div>}
 
@@ -622,8 +697,8 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
           <div className="subdivision-studio__overview-head"><span>VISÃO OPERACIONAL</span><CheckCircle2 size={18} /></div>
           <div className="subdivision-studio__overview-name"><strong>{mode === "create" ? form.displayName || "Novo loteamento" : selectedDevelopment?.displayName ?? selectedDevelopment?.internalReference}</strong><span>{form.internalReference || "Referência pendente"}</span></div>
           <div className="subdivision-studio__overview-grid">
-            <div><span>BASE</span><b>{identityReady ? "Completa" : "Em preenchimento"}</b></div>
-            <div><span>ESTRUTURA</span><b>{activeSavedStructure.length ? `${activeSavedStructure.length} Q · ${savedLotCount} L` : legacyEmptyBlocks.length ? "Revisão de estrutura" : structureReady ? "Aguardando Quadras" : "Revisar"}</b></div>
+            <div><span>IDENTIFICAÇÃO</span><b>{identificationDetailed ? "Dossiê-base preenchido" : identityReady ? "Base criada · completar" : "Em preenchimento"}</b></div>
+            <div><span>ESTRUTURA</span><b>{activeSavedStructure.length ? `${activeSavedStructure.length} Q · ${savedLotCount} L` : legacyEmptyBlocks.length ? "Revisão de estrutura" : "Aguardando Quadras"}</b></div>
             <div><span>PREPARAÇÃO</span><b>{phaseLabels[form.workingPhase]}</b></div>
             <div><span>DOCUMENTOS</span><b>{selectedDevelopmentId ? `${activeAttachmentCount} privado(s)` : "Após criar"}</b></div>
           </div>

@@ -10,7 +10,33 @@ export const subdivisionDevelopmentKindSchema = z.enum([
   "other",
 ]);
 
+export const subdivisionDevelopmentParcelingModeSchema = z.enum([
+  "loteamento",
+  "desmembramento",
+  "condominio_lotes",
+  "acesso_controlado",
+  "other",
+  "to_review",
+]);
+
+export const subdivisionDevelopmentTerritorialContextSchema = z.enum([
+  "urban",
+  "urban_expansion",
+  "specific_urbanization",
+  "to_review",
+]);
+
+export const subdivisionDevelopmentPredominantUseSchema = z.enum([
+  "residential",
+  "mixed_use",
+  "commercial",
+  "industrial",
+  "institutional",
+  "to_review",
+]);
+
 export const subdivisionDevelopmentAttachmentCategorySchema = z.enum([
+  "identity",
   "planning",
   "municipal",
   "registry",
@@ -24,6 +50,8 @@ const displayNameSchema = z.string().trim().min(3).max(120);
 const municipalitySchema = z.string().trim().min(2).max(80).nullable();
 const stateCodeSchema = z.string().trim().toUpperCase().regex(/^[A-Z]{2}$/).nullable();
 const internalNoteSchema = z.string().trim().max(600).nullable();
+const territorialReferenceSchema = z.string().trim().min(2).max(120).nullable();
+const identificationNoteSchema = z.string().trim().max(600).nullable();
 
 const studioFieldsSchema = z.object({
   internalReference: internalReferenceSchema,
@@ -34,6 +62,11 @@ const studioFieldsSchema = z.object({
   plannedStageCount: z.number().int().min(1).max(20),
   workingPhase: subdivisionDevelopmentPhaseSchema,
   internalNote: internalNoteSchema,
+  parcelingMode: subdivisionDevelopmentParcelingModeSchema,
+  territorialContext: subdivisionDevelopmentTerritorialContextSchema,
+  predominantUse: subdivisionDevelopmentPredominantUseSchema,
+  territorialReference: territorialReferenceSchema,
+  identificationNote: identificationNoteSchema,
 }).superRefine((value, ctx) => {
   if ((value.municipality === null) !== (value.stateCode === null)) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["municipality"], message: "Município e UF devem ser informados juntos ou deixados em branco." });

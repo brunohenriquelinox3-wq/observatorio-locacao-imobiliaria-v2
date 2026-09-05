@@ -76,4 +76,27 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Inconsistência: Quadra sem Lotes ativos");
     expect(studio).toContain("Revisão de estrutura");
   });
+
+  it("organiza a identificação como dossiê progressivo sem campos comerciais", () => {
+    const studio = source();
+    expect(studio).toContain("BASE DO CADASTRO");
+    expect(studio).toContain("ENQUADRAMENTO DECLARADO");
+    expect(studio).toContain("TERRITÓRIO DE REFERÊNCIA");
+    expect(studio).toContain("SITUAÇÃO E PENDÊNCIAS");
+    expect(studio).toContain("parcelingMode");
+    expect(studio).toContain("territorialContext");
+    expect(studio).toContain("predominantUse");
+    expect(studio).toContain("A confirmar na revisão");
+    expect(studio).not.toContain('label>Preço do lote');
+    expect(studio).not.toContain('label>Contrato');
+  });
+
+  it("apresenta o primeiro documento na identificação e preserva o upload privado após salvar o rascunho", () => {
+    const studio = source();
+    expect(studio).toContain("O primeiro documento começa aqui.");
+    expect(studio).toContain("Adicionar documento inicial");
+    expect(studio).toContain('setAttachmentCategory("identity")');
+    expect(studio).toContain('openModule("documents")');
+    expect(studio).toContain('disabled={!selectedDevelopmentId || !isWorkspaceReady || isBusy}');
+  });
 });

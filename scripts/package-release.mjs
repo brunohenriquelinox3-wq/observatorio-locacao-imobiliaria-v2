@@ -25,10 +25,14 @@ const excludedRoots = new Set([
   "dist",
   "coverage",
   "releases",
+  "docs",
 ]);
 
 const excludedFiles = new Set([
   ".project-config.json",
+  "todo.md",
+  "crm_infra_supabase_descoberta.md",
+  "netlify_manual_upload_guide.md",
 ]);
 
 function isIncluded(source) {
