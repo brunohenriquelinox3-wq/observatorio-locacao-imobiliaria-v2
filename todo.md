@@ -2121,4 +2121,4 @@
 - [x] Adicionar filtro local para todos os Lotes, Lotes com atributos pendentes e Lotes fisicamente completos, combinado à busca e ao recorte por Quadra. **A219:** o seletor Situação física usa os mesmos critérios da completude e da pendência por Quadra.
 - [x] Manter o filtro estritamente em memória, sem persistir, alterar Lotes ou criar classificação comercial. **A219:** o estado é reiniciado ao trocar ou iniciar cadastro e não chama procedure de alteração.
 - [x] Cobrir filtragem, revisão visual, validação integral e artefatos saneados. **A219:** leitura autenticada, teste dirigido, suíte integral com 212 arquivos/518 testes, tipagem, build, diff e saneamento de ZIP/HTML foram aprovados.
-- [ ] Salvar checkpoint A219 após a filtragem local, a validação e o saneamento dos artefatos.
+- [x] Salvar checkpoint A219 após a filtragem local, a validação e o saneamento dos artefatos. **A219:** checkpoint `40ea87e0` preserva o filtro local sem classificações comerciais ou persistência.
