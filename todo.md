@@ -1801,3 +1801,11 @@
 - [x] Manter a matriz bloqueada sem contexto ou Quadra, tratar estados ausentes como revisão pendente e não adicionar reserva, venda, preço, mapa externo ou comandos por célula.
 - [x] Cobrir ordenação, fallback de estado, bloqueio e limites não comerciais com testes automatizados antes da validação integral.
 - [x] Confirmar que o 404 ocorreu em caminho manual não canônico; preservar a rota oficial `/estoque-lotes` sem criar alias especulativo ou mudar guardas, contexto ou permissões.
+
+## Atualização setorial: Clientes Loteadora
+- [x] Inventariar a jornada atual de Party, papel comprador, intenção de anexo privado e cobertura opaca, sem visualizar dados pessoais ou arquivos.
+- [x] Pesquisar referências públicas de privacidade e continuidade de ficha de cliente para definir uma melhoria não identificável e sem integração externa.
+- [x] Implementar e validar a próxima melhoria da ficha de cliente, sem documentos, identificadores, proposta, venda, contrato, cobrança ou financeiro.
+- [x] Criar um quadro somente de leitura que sintetize vínculo de cadastro-base, estado opaco de anexo e revisão humana por rótulo ordinal local.
+- [x] Manter o quadro bloqueado sem contexto e sem cliente devolvido, sem mutação, arquivo, download, integração, notificação ou classificação de risco.
+- [x] Cobrir os rótulos, o fallback de estado e a ausência de elementos materiais por testes automatizados antes da validação integral.
