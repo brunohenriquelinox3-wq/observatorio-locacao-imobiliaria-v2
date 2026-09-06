@@ -2282,3 +2282,9 @@
 - [x] Recusar motivo ausente ou fora do catálogo sem alterar estado, linhas, evidências, matriz, condição, preço, venda, contrato ou financeiro. **A247:** a validação ocorre antes da transição e da auditoria de resultado permitido.
 - [x] Exibir a escolha de motivo apenas no fluxo de retirada de política encaminhada, sem abrir nem executar esse fluxo na política real durante a revisão. **A247:** a política atual em Preparação continuou sem ação de retirada ou seletor de motivo.
 - [x] Cobrir serviço, migração e interface; revisar, gerar ZIP/HTML saneados e salvar checkpoint sem retirar política real. **A247:** 219 arquivos/569 testes, tipagem, build Netlify, diff limpo, revisão autenticada e saneamento foram aprovados; checkpoint funcional `e5dccb6d` preserva a ausência de retirada real.
+
+## Evidência privada revalidada na aprovação de política-base — A248
+- [x] Exigir vínculo privado ativo também na aprovação de política-base submetida, mantendo segregação, MFA, contexto, organização, idempotência e auditoria redigida no servidor. **A248:** a função v2 revalida vínculo ativo e anexo registrado antes de aprovar.
+- [x] Bloquear aprovação quando a evidência tiver sido arquivada ou não estiver ativa, sem alterar linhas, matriz, condição, preço, venda, contrato ou financeiro. **A248:** a função retorna erro redigido antes das transições de vigência e aprovação.
+- [x] Exibir a pendência de respaldo antes da aprovação apenas no estado encaminhado, sem aprovar a política real durante a revisão. **A248:** a interface bloqueia a aprovação sem respaldo ativo; a política atual em Preparação continuou sem ação de aprovação.
+- [ ] Cobrir serviço, migração e interface; revisar, gerar ZIP/HTML saneados e salvar checkpoint sem aprovar política real.

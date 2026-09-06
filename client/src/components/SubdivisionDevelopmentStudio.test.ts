@@ -177,6 +177,8 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Motivo da retirada");
     expect(studio).toContain("withdrawPriceBaseReason");
     expect(studio).toContain("Revisão de governança");
+    expect(studio).toContain("policyReadyForApproval");
+    expect(studio).toContain("Mantenha ao menos um respaldo privado ativo antes de aprovar.");
   });
 
   it("oferece condições flexíveis por escopo sem liberar preço antes de política aprovada", () => {

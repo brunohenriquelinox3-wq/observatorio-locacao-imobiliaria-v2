@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
 import { describe, expect, it, vi } from "vitest";
-import { listSubdivisionPriceBasePolicies, prepareManualSubdivisionPriceBaseCorrection, prepareSubdivisionPriceBasePolicy, previewSubdivisionPriceBaseSource, submitSubdivisionPriceBasePolicy, withdrawSubdivisionPriceBasePolicy } from "./subdivisionPriceBasePolicy";
+import { approveSubdivisionPriceBasePolicy, listSubdivisionPriceBasePolicies, prepareManualSubdivisionPriceBaseCorrection, prepareSubdivisionPriceBasePolicy, previewSubdivisionPriceBaseSource, submitSubdivisionPriceBasePolicy, withdrawSubdivisionPriceBasePolicy } from "./subdivisionPriceBasePolicy";
 
 const actor = "00000000-0000-4000-8000-000000000001";
 const developmentId = "00000000-0000-4000-8000-000000000002";
@@ -156,6 +156,17 @@ describe("subdivision price-base policy boundary", () => {
   it("preserves the redacted evidence-required error when the protected function denies submission", async () => {
     const rpc = vi.fn().mockResolvedValue({ data: null, error: { message: "PRICE_BASE_POLICY_EVIDENCE_REQUIRED" } });
     await expect(submitSubdivisionPriceBasePolicy(actor, { ...context, policyId: "00000000-0000-4000-8000-000000000005", correlationId }, { rpc })).rejects.toThrow("PRICE_BASE_POLICY_EVIDENCE_REQUIRED");
+  });
+
+  it("approves only through the evidence-revalidated protected function", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "00000000-0000-4000-8000-000000000005", error: null });
+    await expect(approveSubdivisionPriceBasePolicy(actor, { ...context, policyId: "00000000-0000-4000-8000-000000000005", correlationId }, { rpc })).resolves.toEqual({ policyId: "00000000-0000-4000-8000-000000000005", state: "approved" });
+    expect(rpc).toHaveBeenCalledWith("subdivision_approve_price_base_policy_v2", expect.objectContaining({ p_policy_id: "00000000-0000-4000-8000-000000000005" }));
+  });
+
+  it("preserves the redacted evidence-required error when approval is denied", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: null, error: { message: "PRICE_BASE_POLICY_EVIDENCE_REQUIRED" } });
+    await expect(approveSubdivisionPriceBasePolicy(actor, { ...context, policyId: "00000000-0000-4000-8000-000000000005", correlationId }, { rpc })).rejects.toThrow("PRICE_BASE_POLICY_EVIDENCE_REQUIRED");
   });
 
   it("withdraws only through the protected policy-base RPC", async () => {

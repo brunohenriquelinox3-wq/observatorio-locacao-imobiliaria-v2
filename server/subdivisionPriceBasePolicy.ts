@@ -337,7 +337,8 @@ export async function submitSubdivisionPriceBasePolicy(subjectId: string | undef
 export async function approveSubdivisionPriceBasePolicy(subjectId: string | undefined, rawInput: ApproveSubdivisionPriceBasePolicyInput, client: RpcClient = getSupabaseAdminClient()): Promise<{ policyId: string; state: "approved" }> {
   const actorUserId = requireSubject(subjectId);
   const input = approveSubdivisionPriceBasePolicyInputSchema.parse(rawInput);
-  const { data, error } = await client.rpc("subdivision_approve_price_base_policy_v1", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_policy_id: input.policyId, p_correlation_id: input.correlationId });
+  const { data, error } = await client.rpc("subdivision_approve_price_base_policy_v2", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_policy_id: input.policyId, p_correlation_id: input.correlationId });
+  if (error?.message === "PRICE_BASE_POLICY_EVIDENCE_REQUIRED") throw new Error("PRICE_BASE_POLICY_EVIDENCE_REQUIRED");
   if (error || typeof data !== "string") throw new Error("PRICE_BASE_APPROVE_DENIED");
   return { policyId: data, state: "approved" };
 }
