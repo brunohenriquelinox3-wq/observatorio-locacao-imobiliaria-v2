@@ -185,3 +185,7 @@ O caminho mais seguro e completo é: **unificar primeiro a experiência e o cont
 [8]: [YouTube — The live lot map that sells for you 24/7](https://www.youtube.com/watch?v=6gIDhR3SkDM)
 
 As análises integrais dos dois vídeos foram preservadas em `docs/research/a266-gestao-lotes-video.md` e `docs/research/a266-mapa-externo-video.md`. Esses registros são fontes de estudo; as decisões aplicáveis foram sintetizadas neste documento e continuam sujeitas às restrições de segurança e escopo do CRM.
+
+## Validação e artefatos
+
+A estratégia foi revisada integralmente contra o inventário preservativo, as decisões registradas e as premissas de segurança. A verificação confirmou que o documento não propõe exclusão de dados ou rotas, não antecipa disponibilidade, venda, contrato ou financeiro, e mantém a visualização externa apenas como etapa futura separada. O ZIP de código e o HTML autônomo foram gerados e passaram pela inspeção de presença, exclusões e saneamento. Nenhuma migração, comando de estoque, mudança de rótulo, alteração de rota ou mutação de dado foi executada neste marco estratégico.
