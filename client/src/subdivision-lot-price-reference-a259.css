@@ -1,0 +1,23 @@
+.subdivision-lot-management__price-context[data-internal="internal_prepared"] {
+  border-color: color-mix(in srgb, var(--accent, #0f4c5c) 42%, #d2cab9);
+  background: linear-gradient(135deg, rgba(14, 76, 92, 0.07), rgba(249, 246, 236, 0.78));
+}
+
+.subdivision-lot-management__price-context[data-internal="missing_base_price"] {
+  border-color: #b7864f;
+  background: #fff7e9;
+}
+
+.subdivision-lot-management__price-empty {
+  display: block;
+  color: #805113;
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.subdivision-lot-management__price-context-head button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 1.75rem;
+}

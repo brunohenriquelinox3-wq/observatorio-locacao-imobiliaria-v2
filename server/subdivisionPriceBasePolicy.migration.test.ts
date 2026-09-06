@@ -13,6 +13,7 @@ const policyWithdrawalMigration = () => readFileSync(path.resolve(process.cwd(),
 const manualCorrectionEvidenceMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907112000_subdivision_manual_correction_evidence_a246.sql"), "utf8");
 const policyWithdrawalReasonMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907113000_subdivision_price_base_policy_withdraw_reason_a247.sql"), "utf8");
 const policyApprovalEvidenceMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907114000_subdivision_policy_approval_evidence_a248.sql"), "utf8");
+const internalLotReferenceMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907123000_subdivision_lot_internal_price_reference_a259.sql"), "utf8");
 
 describe("subdivision price-base policy migrations", () => {
   it("keeps price-base separate from contracts and commercial effects", () => {
@@ -141,5 +142,18 @@ describe("subdivision price-base policy migrations", () => {
     expect(sql).toContain("security definer set search_path = ''");
     expect(sql).toContain("revoke all on function public.subdivision_approve_price_base_policy_v2");
     expect(sql).toContain("grant execute on function public.subdivision_approve_price_base_policy_v2");
+  });
+
+  it("returns prepared price references by physical Lot only through the service role function", () => {
+    const sql = internalLotReferenceMigration();
+    expect(sql).toContain("subdivision_list_lot_internal_price_references_v1");
+    expect(sql).toContain("private.require_active_subdivision_draft_authority");
+    expect(sql).toContain("line.lot_id = lot.id");
+    expect(sql).toContain("missing_base_price");
+    expect(sql).toContain("source.base_price_per_sqm_brl * source.lot_area_sqm");
+    expect(sql).toContain("security definer set search_path = ''");
+    expect(sql).toContain("revoke all on function public.subdivision_list_lot_internal_price_references_v1");
+    expect(sql).toContain("grant execute on function public.subdivision_list_lot_internal_price_references_v1");
+    expect(sql).toContain("Não cria disponibilidade, reserva comercial, venda, proposta, contrato, cobrança, pagamento, receita ou repasse.");
   });
 });

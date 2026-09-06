@@ -3,6 +3,7 @@ import * as XLSX from "xlsx";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   approveSubdivisionPriceBasePolicyInputSchema,
+  listSubdivisionLotInternalPriceReferencesInputSchema,
   listSubdivisionPriceBasePoliciesInputSchema,
   prepareManualSubdivisionPriceBaseCorrectionInputSchema,
   prepareSubdivisionPriceBasePolicyInputSchema,
@@ -10,6 +11,7 @@ import {
   submitSubdivisionPriceBasePolicyInputSchema,
   withdrawSubdivisionPriceBasePolicyInputSchema,
   type ApproveSubdivisionPriceBasePolicyInput,
+  type ListSubdivisionLotInternalPriceReferencesInput,
   type ListSubdivisionPriceBasePoliciesInput,
   type PrepareManualSubdivisionPriceBaseCorrectionInput,
   type PrepareSubdivisionPriceBasePolicyInput,
@@ -75,6 +77,21 @@ export type PriceBasePolicySummary = {
   createdAt: string;
   submittedAt: string | null;
   approvedAt: string | null;
+};
+
+export type InternalLotPriceReference = {
+  blockId: string;
+  blockNumber: number;
+  lotNumber: number;
+  policyId: string;
+  policyReference: string;
+  policyState: "prepared" | "submitted" | "approved";
+  policyEffectiveFrom: string;
+  exceptionCount: number;
+  referenceState: "internal_prepared" | "submitted_pending_approval" | "approved_base" | "missing_base_price";
+  basePricePerSqmBrl: number | null;
+  lotAreaSqm: number | null;
+  lotTotalBrl: number | null;
 };
 
 function requireSubject(subjectId: string | undefined) {
@@ -368,4 +385,42 @@ export async function listSubdivisionPriceBasePolicies(subjectId: string | undef
     submittedAt: row.submitted_at ? String(row.submitted_at) : null,
     approvedAt: row.approved_at ? String(row.approved_at) : null,
   }));
+}
+
+export async function listSubdivisionLotInternalPriceReferences(subjectId: string | undefined, rawInput: ListSubdivisionLotInternalPriceReferencesInput, client: RpcClient = getSupabaseAdminClient()): Promise<InternalLotPriceReference[]> {
+  const actorUserId = requireSubject(subjectId);
+  const input = listSubdivisionLotInternalPriceReferencesInputSchema.parse(rawInput);
+  const { data, error } = await client.rpc("subdivision_list_lot_internal_price_references_v1", {
+    p_actor_user_id: actorUserId,
+    p_organization_id: input.organizationId,
+    p_module: input.module,
+    p_purpose_code: input.purposeCode,
+    p_development_id: input.developmentId,
+  });
+  if (error || !Array.isArray(data)) throw new Error("PRICE_BASE_INTERNAL_REFERENCE_DENIED");
+  const allowedStates = ["internal_prepared", "submitted_pending_approval", "approved_base", "missing_base_price"] as const;
+  return data.map((row) => {
+    const referenceState = String(row.reference_state);
+    if (!allowedStates.includes(referenceState as (typeof allowedStates)[number])) throw new Error("PRICE_BASE_INTERNAL_REFERENCE_DENIED");
+    const policyState = String(row.policy_state);
+    if (policyState !== "prepared" && policyState !== "submitted" && policyState !== "approved") throw new Error("PRICE_BASE_INTERNAL_REFERENCE_DENIED");
+    const basePricePerSqmBrl = typeof row.base_price_per_sqm_brl === "number" && row.base_price_per_sqm_brl > 0 ? row.base_price_per_sqm_brl : null;
+    const lotAreaSqm = typeof row.lot_area_sqm === "number" && row.lot_area_sqm > 0 ? row.lot_area_sqm : null;
+    const lotTotalBrl = basePricePerSqmBrl !== null && lotAreaSqm !== null && typeof row.lot_total_brl === "number" && row.lot_total_brl > 0 ? row.lot_total_brl : null;
+    if (referenceState === "missing_base_price" && (basePricePerSqmBrl !== null || lotTotalBrl !== null)) throw new Error("PRICE_BASE_INTERNAL_REFERENCE_DENIED");
+    return {
+      blockId: String(row.block_id),
+      blockNumber: Number(row.block_number),
+      lotNumber: Number(row.lot_number),
+      policyId: String(row.policy_id),
+      policyReference: String(row.policy_reference),
+      policyState,
+      policyEffectiveFrom: String(row.policy_effective_from),
+      exceptionCount: Number(row.exception_count),
+      referenceState: referenceState as InternalLotPriceReference["referenceState"],
+      basePricePerSqmBrl,
+      lotAreaSqm,
+      lotTotalBrl,
+    };
+  });
 }

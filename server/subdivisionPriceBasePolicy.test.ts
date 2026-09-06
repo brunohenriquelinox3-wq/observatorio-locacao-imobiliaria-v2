@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
 import { describe, expect, it, vi } from "vitest";
-import { approveSubdivisionPriceBasePolicy, listSubdivisionPriceBasePolicies, prepareManualSubdivisionPriceBaseCorrection, prepareSubdivisionPriceBasePolicy, previewSubdivisionPriceBaseSource, submitSubdivisionPriceBasePolicy, withdrawSubdivisionPriceBasePolicy } from "./subdivisionPriceBasePolicy";
+import { approveSubdivisionPriceBasePolicy, listSubdivisionLotInternalPriceReferences, listSubdivisionPriceBasePolicies, prepareManualSubdivisionPriceBaseCorrection, prepareSubdivisionPriceBasePolicy, previewSubdivisionPriceBaseSource, submitSubdivisionPriceBasePolicy, withdrawSubdivisionPriceBasePolicy } from "./subdivisionPriceBasePolicy";
 
 const actor = "00000000-0000-4000-8000-000000000001";
 const developmentId = "00000000-0000-4000-8000-000000000002";
@@ -145,6 +145,17 @@ describe("subdivision price-base policy boundary", () => {
     const rpc = vi.fn().mockResolvedValue({ data: [], error: null });
     await expect(listSubdivisionPriceBasePolicies(actor, { ...context, developmentId }, { rpc })).resolves.toEqual([]);
     expect(rpc).toHaveBeenCalledWith("subdivision_list_price_base_policies_v1", expect.objectContaining({ p_development_id: developmentId, p_organization_id: organizationId }));
+  });
+
+  it("returns the prepared per-Lot reference and total only through the protected internal lookup", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: [{ block_id: "00000000-0000-4000-8000-000000000011", block_number: 1, lot_number: 1, policy_id: "00000000-0000-4000-8000-000000000005", policy_reference: "PB_INTERNA_001", policy_state: "prepared", policy_effective_from: "2026-09-05", exception_count: 1, reference_state: "internal_prepared", base_price_per_sqm_brl: 250, lot_area_sqm: 300, lot_total_brl: 75000 }], error: null });
+    await expect(listSubdivisionLotInternalPriceReferences(actor, { ...context, developmentId }, { rpc })).resolves.toEqual([expect.objectContaining({ blockNumber: 1, lotNumber: 1, policyState: "prepared", referenceState: "internal_prepared", basePricePerSqmBrl: 250, lotAreaSqm: 300, lotTotalBrl: 75000 })]);
+    expect(rpc).toHaveBeenCalledWith("subdivision_list_lot_internal_price_references_v1", expect.objectContaining({ p_development_id: developmentId, p_organization_id: organizationId }));
+  });
+
+  it("keeps a missing base price empty even when the policy has other prepared references", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: [{ block_id: "00000000-0000-4000-8000-000000000011", block_number: 1, lot_number: 2, policy_id: "00000000-0000-4000-8000-000000000005", policy_reference: "PB_INTERNA_001", policy_state: "prepared", policy_effective_from: "2026-09-05", exception_count: 1, reference_state: "missing_base_price", base_price_per_sqm_brl: null, lot_area_sqm: 300, lot_total_brl: null }], error: null });
+    await expect(listSubdivisionLotInternalPriceReferences(actor, { ...context, developmentId }, { rpc })).resolves.toEqual([expect.objectContaining({ referenceState: "missing_base_price", basePricePerSqmBrl: null, lotTotalBrl: null })]);
   });
 
   it("submits a prepared policy only through the evidence-gated function", async () => {

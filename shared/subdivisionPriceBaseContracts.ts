@@ -60,6 +60,14 @@ export const listSubdivisionPriceBasePoliciesInputSchema = subdivisionContextSch
   developmentId: z.string().uuid(),
 });
 
+/**
+ * Leitura interna de referência por unidade. A autorização de MFA é aplicada
+ * pelo procedimento do servidor antes de a consulta alcançar a função SQL.
+ */
+export const listSubdivisionLotInternalPriceReferencesInputSchema = subdivisionContextSchema.extend({
+  developmentId: z.string().uuid(),
+});
+
 export type PreviewSubdivisionPriceBaseSourceInput = z.infer<typeof previewSubdivisionPriceBaseSourceInputSchema>;
 export type PrepareSubdivisionPriceBasePolicyInput = z.infer<typeof prepareSubdivisionPriceBasePolicyInputSchema>;
 export type PrepareManualSubdivisionPriceBaseCorrectionInput = z.infer<typeof prepareManualSubdivisionPriceBaseCorrectionInputSchema>;
@@ -67,3 +75,4 @@ export type SubmitSubdivisionPriceBasePolicyInput = z.infer<typeof submitSubdivi
 export type ApproveSubdivisionPriceBasePolicyInput = z.infer<typeof approveSubdivisionPriceBasePolicyInputSchema>;
 export type WithdrawSubdivisionPriceBasePolicyInput = z.infer<typeof withdrawSubdivisionPriceBasePolicyInputSchema>;
 export type ListSubdivisionPriceBasePoliciesInput = z.infer<typeof listSubdivisionPriceBasePoliciesInputSchema>;
+export type ListSubdivisionLotInternalPriceReferencesInput = z.infer<typeof listSubdivisionLotInternalPriceReferencesInputSchema>;

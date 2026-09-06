@@ -212,6 +212,7 @@ import { createSubdivisionEconomicRuleComponent, listSubdivisionEconomicRuleComp
 import { addSubdivisionEconomicRuleComponentRoleReference, listSubdivisionEconomicRuleComponentRoleReferences } from "./subdivisionEconomicRuleComponentRoleReference";
 import {
   approveSubdivisionPriceBasePolicy,
+  listSubdivisionLotInternalPriceReferences,
   listSubdivisionPriceBasePolicies,
   prepareManualSubdivisionPriceBaseCorrection,
   prepareSubdivisionPriceBasePolicy,
@@ -234,6 +235,7 @@ import {
 } from "./subdivisionPriceEvidence";
 import {
   approveSubdivisionPriceBasePolicyInputSchema,
+  listSubdivisionLotInternalPriceReferencesInputSchema,
   listSubdivisionPriceBasePoliciesInputSchema,
   prepareManualSubdivisionPriceBaseCorrectionInputSchema,
   prepareSubdivisionPriceBasePolicyInputSchema,
@@ -659,6 +661,10 @@ export const appRouter = router({
     listEconomicRuleComponents: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionEconomicRuleComponents(ctx.supabaseSubjectId ?? undefined, input)),
     listEconomicRuleComponentRoleReferences: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionEconomicRuleComponentRoleReferences(ctx.supabaseSubjectId ?? undefined, input)),
     listPriceBasePolicies: protectedProcedure.input(listSubdivisionPriceBasePoliciesInputSchema).query(({ ctx, input }) => listSubdivisionPriceBasePolicies(ctx.supabaseSubjectId ?? undefined, input)),
+    listLotInternalPriceReferences: protectedProcedure.input(listSubdivisionLotInternalPriceReferencesInputSchema).query(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return listSubdivisionLotInternalPriceReferences(ctx.supabaseSubjectId ?? undefined, input);
+    }),
     previewPriceBaseSource: protectedProcedure.input(previewSubdivisionPriceBaseSourceInputSchema).mutation(async ({ ctx, input }) => {
       await requireRecentTotpMfa(ctx);
       return previewSubdivisionPriceBaseSource(ctx.supabaseSubjectId ?? undefined, input);

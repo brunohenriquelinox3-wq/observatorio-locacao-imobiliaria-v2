@@ -22,12 +22,15 @@ describe("release package exclusions", () => {
     expect(source).toContain("^[a-z0-9]+(?:-[a-z0-9]+)*$");
   });
 
-  it("redacts injected Supabase and database runtime values from standalone HTML", async () => {
+  it("redacts credenciais, endpoints e variáveis de infraestrutura do HTML autônomo", async () => {
     const source = await readFile(new URL("../scripts/package-release.mjs", import.meta.url), "utf8");
 
     expect(source).toContain("function redactRuntimeValues");
-    expect(source).toContain("REDACTED_SUPABASE_CREDENTIAL");
+    expect(source).toContain("REDACTED_PLATFORM_CREDENTIAL");
     expect(source).toContain("REDACTED_DATABASE_URL");
-    expect(source).toContain("REDACTED_SUPABASE_URL");
+    expect(source).toContain("REDACTED_PLATFORM_ENDPOINT");
+    expect(source).toContain("REDACTED_EXTERNAL_URL");
+    expect(source).toContain("REDACTED_RUNTIME_VARIABLE");
+    expect(source).toContain("REDACTED_PRIVILEGED_ROLE");
   });
 });
