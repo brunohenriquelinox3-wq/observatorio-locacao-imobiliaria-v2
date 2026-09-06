@@ -2258,4 +2258,4 @@
 - [x] Mostrar contagem e orientação de evidência pendente sem expor conteúdo, preço ou aprovação antes da vigência. **A243:** cada condição mostra sua contagem de vínculos e mantém o botão de encaminhar indisponível até haver evidência; o erro server-side também orienta sem revelar documento.
 - [x] Cobrir serviço, migração e interface e revisar sem criar condição ou anexo real. **A243:** testes dirigidos, suíte integral com 219 arquivos/560 testes, tipagem, build Netlify, integridade de diff e revisão autenticada foram aprovados; o build preservou somente o aviso não bloqueante de chunks grandes.
 - [x] Gerar ZIP/HTML saneados. **A243:** os artefatos foram verificados sem ambiente, logs, documentação, checklist, dados de origem, credenciais ou infraestrutura.
-- [ ] Salvar checkpoint A243 após documentação, validação integral e saneamento dos artefatos.
+- [x] Salvar checkpoint A243 após documentação, validação integral e saneamento dos artefatos. **A243:** checkpoint `d3171192` preserva a exigência server-side de evidência privada antes do encaminhamento e a ausência de condição ou anexo real criado.
