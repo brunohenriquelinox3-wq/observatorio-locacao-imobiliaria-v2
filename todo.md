@@ -2237,3 +2237,10 @@
 - [x] Cobrir a leitura contextual e revisar sem alterar dados reais. **A240:** testes de serviço, migração e estúdio foram aprovados; a sessão autenticada confirmou a política em Preparação com uma exceção e nenhum preço renderizado por Lote.
 - [x] Gerar ZIP/HTML saneados. **A240:** os artefatos foram validados sem ambiente, logs, documentação, checklist, dados de origem, credenciais ou infraestrutura.
 - [x] Salvar checkpoint A240 após documentação, validação integral e saneamento dos artefatos. **A240:** checkpoint `16b409e5` preserva os motivos seguros de indisponibilidade por Lote e a ausência de referência não aprovada exibida.
+
+## Anexos privados de respaldo para preço — A241
+- [x] Modelar metadados mínimos, vínculo de política/correção, acesso por autoridade ativa e remoção lógica de anexos privados. **A241:** o fluxo existente de anexos privados do cadastro foi reaproveitado como respaldo sem duplicar armazenamento; o estado de preço continua declarado e não cria vínculo comercial automático.
+- [x] Implementar upload privado em armazenamento de objeto com validação de tipo/tamanho, auditoria redigida e leitura autorizada sem URL pública persistida. **A241:** o encaminhamento reutiliza a intenção, rota privada, MFA, assinaturas de arquivo, armazenamento privado e remoção lógica já protegidos no módulo Documentos.
+- [x] Exibir anexos como respaldo de Preparação, sem anexar arquivos reais, publicar conteúdo, abrir contrato ou criar efeito comercial. **A241:** a central mostra a contagem agregada e oferece encaminhamento explícito a Documentos; nenhuma seleção, upload ou vínculo material foi executado na revisão.
+- [x] Cobrir segurança e interface, revisar e gerar ZIP/HTML saneados. **A241:** teste dirigido, suíte integral com 216 arquivos/551 testes, tipagem, build Netlify, integridade de diff, revisão autenticada e saneamento de artefatos foram aprovados; o build preservou somente o aviso não bloqueante de chunks grandes.
+- [ ] Salvar checkpoint A241 após documentação, validação integral e saneamento dos artefatos.

@@ -162,6 +162,8 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("prepareManualPriceBaseCorrectionMutation");
     expect(studio).toContain('documentState: "declared_complete"');
     expect(studio).toContain("A correção não aprova nem disponibiliza o Lote.");
+    expect(studio).toContain("Anexar respaldo privado");
+    expect(studio).toContain('setAttachmentCategory("other"); openModule("documents");');
   });
 
   it("oferece condições flexíveis por escopo sem liberar preço antes de política aprovada", () => {
@@ -180,6 +182,8 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Término");
     expect(studio).toContain("Obrigatório para desconto");
     expect(studio).toContain("Respaldo documental");
+    expect(studio).toContain("anexo(s) privado(s) no cadastro");
+    expect(studio).toContain("Adicionar respaldo privado");
     expect(studio).toContain("A preparação registra motivo, escopo, vigência e estado documental.");
     expect(studio).toContain("Aprovar como segunda pessoa");
     expect(studio).toContain("Nenhuma política aprovada e vigente libera referência de preço para este Lote.");
