@@ -1068,7 +1068,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   }
 
   return (
-    <section className="subdivision-studio" aria-labelledby="subdivision-studio-title">
+    <section id="subdivision-studio" className="subdivision-studio" aria-labelledby="subdivision-studio-title">
       <header className="subdivision-studio__header">
         <div>
           <p className="subdivision-foundation-eyebrow">SETOR 01 · LOTEAMENTOS</p>

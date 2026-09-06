@@ -12,7 +12,7 @@ export type DashboardNavigationGroup<T extends NavigationItemLike> = {
 
 const groupDefinitions: Array<Pick<DashboardNavigationGroup<NavigationItemLike>, "id" | "label">> = [
   { id: "platform", label: "Plataforma" },
-  { id: "loteadora", label: "Loteadora" },
+  { id: "loteadora", label: "Loteamentos" },
   { id: "urban_sales", label: "Vendas Urbanas" },
   { id: "rental", label: "Locação" },
   { id: "foundation", label: "Fundações" },

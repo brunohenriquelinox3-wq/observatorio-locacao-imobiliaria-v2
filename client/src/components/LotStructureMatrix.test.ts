@@ -20,4 +20,8 @@ describe("LotStructureMatrix", () => {
     expect(source).toContain("Sem comando por célula");
     expect(source).toContain("não representa planta, área, disponibilidade, reserva, venda ou contrato");
   });
+
+  it("usa um estado profissional de preparação quando não há Lotes devolvidos", () => {
+    expect(source).toContain("Nenhum Lote em preparação foi devolvido");
+  });
 });

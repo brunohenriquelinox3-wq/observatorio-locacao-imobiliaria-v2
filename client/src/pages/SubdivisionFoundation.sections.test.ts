@@ -9,7 +9,7 @@ describe("setores da coluna Loteadora", () => {
   it("mantém setores independentes e ordenados na navegação contextual", () => {
     const navigation = navigationSource();
 
-    expect(navigation).toContain('label: "Cadastro de Loteamentos", path: "/loteadora"');
+    expect(navigation).toContain('label: "Loteamentos", path: "/loteadora"');
     expect(navigation).toContain('label: "Estoque/Mapa de Lotes", path: "/estoque-lotes"');
     expect(navigation).toContain('label: "Clientes Loteadora", path: "/loteadora/clientes"');
     expect(navigation).toContain('label: "Sócios e Parceiros", path: "/loteadora/socios-parceiros"');
@@ -33,5 +33,14 @@ describe("setores da coluna Loteadora", () => {
     expect(page).toContain("listBuyerAttachmentIntents.useQuery(context, { enabled: isWorkspaceReady, retry: false })");
     expect(page).toContain("createBuyerClientMutation.mutate({ ...context, correlationId: crypto.randomUUID(), partyRoleAssignmentId: buyerClientRoleId })");
     expect(page).toContain("createAttachmentIntentMutation.mutate({ ...context, correlationId: crypto.randomUUID(), buyerClientId: buyerClientIdForAttachment })");
+  });
+
+  it("apresenta Cadastro e Estoque como áreas complementares sem desmontar o estúdio existente", () => {
+    const page = source();
+
+    expect(page).toContain('LOTEAMENTOS · JORNADA UNIFICADA');
+    expect(page).toContain('href="#subdivision-studio"');
+    expect(page).toContain('href="/estoque-lotes"');
+    expect(page).toContain('<SubdivisionDevelopmentStudio context={context}');
   });
 });

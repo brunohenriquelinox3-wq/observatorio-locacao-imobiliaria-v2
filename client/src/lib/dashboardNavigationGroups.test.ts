@@ -24,7 +24,7 @@ describe("groupDashboardNavigation", () => {
 
   it("mantém os setores internos de Loteadora sob a mesma coluna", () => {
     const groups = groupDashboardNavigation([
-      { path: "/loteadora", label: "Cadastro de Loteamentos" },
+      { path: "/loteadora", label: "Loteamentos" },
       { path: "/estoque-lotes", label: "Estoque/Mapa de Lotes" },
       { path: "/loteadora/clientes", label: "Clientes Loteadora" },
       { path: "/loteadora/socios-parceiros", label: "Sócios e Parceiros" },
@@ -34,9 +34,9 @@ describe("groupDashboardNavigation", () => {
     expect(groups).toEqual([
       {
         id: "loteadora",
-        label: "Loteadora",
+        label: "Loteamentos",
         items: [
-          { path: "/loteadora", label: "Cadastro de Loteamentos" },
+          { path: "/loteadora", label: "Loteamentos" },
           { path: "/estoque-lotes", label: "Estoque/Mapa de Lotes" },
           { path: "/loteadora/clientes", label: "Clientes Loteadora" },
           { path: "/loteadora/socios-parceiros", label: "Sócios e Parceiros" },

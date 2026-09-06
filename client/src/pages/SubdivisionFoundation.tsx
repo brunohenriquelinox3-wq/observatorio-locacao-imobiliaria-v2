@@ -34,7 +34,7 @@ const sectorByPath: Record<string, LoteadoraSector> = {
 };
 
 const sectorPresentation: Record<LoteadoraSector, { index: string; title: string; description: string }> = {
-  developments: { index: "Setor 01", title: "Cadastro de Loteamentos", description: "Estruture loteamentos e Quadras matriz antes de abrir qualquer inventário." },
+  developments: { index: "Setor 01", title: "Loteamentos", description: "Organize cadastro, matriz física e a leitura interna de estoque do mesmo empreendimento." },
   clients: { index: "Setor 03", title: "Clientes Loteadora", description: "Organize o cadastro-base do comprador e as intenções privadas de anexo sem duplicar dados." },
   partners: { index: "Setor 04", title: "Sócios e Parceiros", description: "Vincule papéis internos temporais por loteamento, sem participação econômica ou repasse." },
   sales: { index: "Setor 05", title: "Vendas de Lotes", description: "Prepare os vínculos internos entre lote e comprador sem reserva, contrato ou financeiro." },
@@ -268,6 +268,17 @@ export default function SubdivisionFoundation() {
         </nav>
 
         {activeSector === "developments" && <>
+          <section className="subdivision-unified-entry" aria-labelledby="subdivision-unified-entry-title">
+            <div className="subdivision-unified-entry__intro">
+              <p className="subdivision-foundation-eyebrow">LOTEAMENTOS · JORNADA UNIFICADA</p>
+              <h2 id="subdivision-unified-entry-title">Cadastro e Estoque/Mapa trabalham sobre a mesma estrutura física.</h2>
+              <p>Escolha o empreendimento uma única vez no Cadastro para estruturar Quadras e Lotes. A leitura de Estoque/Mapa continua disponível como área complementar, sob o mesmo contexto autorizado e sem criar uma segunda fonte de dados.</p>
+            </div>
+            <div className="subdivision-unified-entry__actions" aria-label="Áreas de Loteamentos">
+              <a href="#subdivision-studio"><LandPlot size={20} aria-hidden="true" /><span><small>Cadastro e matriz</small><b>Gerenciar a estrutura do empreendimento</b></span></a>
+              <a href="/estoque-lotes"><Map size={20} aria-hidden="true" /><span><small>Estoque e Mapa</small><b>Abrir a leitura interna complementar</b></span></a>
+            </div>
+          </section>
           <SubdivisionDevelopmentStudio context={context} isContextReady={isContextReady} isWorkspaceReady={isWorkspaceReady} />
           <details className="subdivision-preparation-disclosure">
             <summary><span>Preparação operacional avançada</span><small>Planejamento, frentes de preparo e responsável interno</small></summary>

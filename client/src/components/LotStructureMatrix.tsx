@@ -51,7 +51,7 @@ export default function LotStructureMatrix({
       ) : isError ? (
         <p className="lot-structure-map__notice is-blocked">A leitura estrutural não foi liberada. Nenhum Lote de outro contexto é exibido.</p>
       ) : cells.length === 0 ? (
-        <p className="lot-structure-map__notice">Nenhum Lote em rascunho foi devolvido para esta Quadra. Isso não indica estoque comercial.</p>
+        <p className="lot-structure-map__notice">Nenhum Lote em preparação foi devolvido para esta Quadra. Isso não indica estoque comercial.</p>
       ) : (
         <div className="lot-structure-map__canvas" aria-label={`Matriz estrutural da ${blockLabel ?? "Quadra selecionada"}`}>
           {cells.map((cell) => (
