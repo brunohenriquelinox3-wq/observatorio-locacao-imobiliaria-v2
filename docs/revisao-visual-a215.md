@@ -97,3 +97,9 @@ A verificação agregada confirmou uma política em preparação, vinculada ao c
 Após estabilização da consulta, o histórico voltou a refletir a política preparada no cadastro selecionado: uma versão interna em Preparação, com 163 linhas reconciliadas e uma exceção. Os controles de encaminhamento e aprovação continuam bloqueados pela exceção. A central de condições também aparece no mesmo contexto, sem condição registrada e sem exibição de preço no detalhe do Lote enquanto não houver política aprovada e vigente.
 
 Na revisão autenticada seguinte, a política preparada permaneceu visível no cadastro correto com sua vigência inicial, total agregado de linhas e exceção. A central de condições mostrou a hierarquia Loteamento → Quadra → Lote, opções de reajuste e desconto, vigência, motivo e respaldo documental. Nenhum ajuste foi criado. A referência contextual no Lote continua restrita a política aprovada e vigente; até lá, a ausência de preço exibido é intencional e evita usar referência ainda não aprovada como condição de venda.
+
+## A236 — Modalidades de condição comercial
+
+A revisão autenticada confirmou a nova vitrine **“Todas as modalidades disponíveis”** antes do formulário. A composição torna visíveis os três escopos — todo o loteamento, uma Quadra e um Lote — e os três tipos — novo valor por m², reajuste percentual e desconto temporário. O formulário adapta o término para torná-lo obrigatório apenas em desconto temporário e mantém motivo, respaldo documental, vigência, aprovação por segunda pessoa, expiração e retirada.
+
+Nenhuma condição foi criada durante a revisão. A política-base continua em Preparação com uma exceção bloqueadora; por isso o contexto por Lote não apresenta preço vigente e as condições não podem ser encaminhadas ou aprovadas.

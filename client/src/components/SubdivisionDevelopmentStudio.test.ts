@@ -155,9 +155,20 @@ describe("SubdivisionDevelopmentStudio modular", () => {
   it("oferece condições flexíveis por escopo sem liberar preço antes de política aprovada", () => {
     const studio = source();
     expect(studio).toContain("CONDIÇÕES E AJUSTES DE PREÇO");
+    expect(studio).toContain("MODALIDADES DISPONÍVEIS");
+    expect(studio).toContain("ESCOPOS DISPONÍVEIS");
+    expect(studio).toContain("TIPOS DISPONÍVEIS");
+    expect(studio).toContain("CONTROLES OBRIGATÓRIOS");
     expect(studio).toContain("Todo o loteamento");
     expect(studio).toContain("Uma Quadra");
     expect(studio).toContain("Um Lote");
+    expect(studio).toContain("Novo valor por m²");
+    expect(studio).toContain("Reajuste percentual");
+    expect(studio).toContain("Desconto temporário");
+    expect(studio).toContain("Término");
+    expect(studio).toContain("Obrigatório para desconto");
+    expect(studio).toContain("Respaldo documental");
+    expect(studio).toContain("A preparação registra motivo, escopo, vigência e estado documental.");
     expect(studio).toContain("Aprovar como segunda pessoa");
     expect(studio).toContain("Nenhuma política aprovada e vigente libera referência de preço para este Lote.");
     expect(studio).toContain('lotNumber: priceConditionDraft.scope === "lot"');

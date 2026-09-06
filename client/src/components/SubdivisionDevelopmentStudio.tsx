@@ -1005,6 +1005,12 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
 
               {selectedDevelopmentId && <section className="subdivision-price-conditions" aria-labelledby="price-conditions-title">
                 <div className="subdivision-price-conditions__head"><div><span>CONDIÇÕES E AJUSTES DE PREÇO</span><h5 id="price-conditions-title">Planeje ajustes sem perder a referência vigente.</h5><p>Crie uma condição por loteamento, Quadra ou Lote. Nenhuma condição fica vigente até ter política-base aprovada sem exceção, respaldo declarado completo e aprovação por outra pessoa autorizada.</p></div><Workflow size={22} /></div>
+                <section className="subdivision-price-conditions__catalog" aria-label="Modalidades disponíveis de condição de preço">
+                  <p>TODAS AS MODALIDADES DISPONÍVEIS</p>
+                  <article><span>ESCOPOS DISPONÍVEIS</span><b>Geral, Quadra ou Lote</b><p>Defina se a regra vale para todo o loteamento, uma Quadra específica ou um único Lote.</p></article>
+                  <article><span>TIPOS DISPONÍVEIS</span><b>Valor, reajuste ou desconto</b><p>Use novo valor por m², variação percentual positiva ou negativa, ou desconto com prazo definido.</p></article>
+                  <article><span>CONTROLES OBRIGATÓRIOS</span><b>Vigência, motivo e aprovação</b><p>Toda condição registra respaldo, pode expirar ou ser retirada e exige segunda pessoa para vigorar.</p></article>
+                </section>
                 <ol className="subdivision-price-conditions__precedence" aria-label="Ordem de precedência da condição"><li><b>01</b><span>Política-base</span><small>Referência versionada</small></li><li><b>02</b><span>Empreendimento</span><small>Regra geral</small></li><li><b>03</b><span>Quadra</span><small>Ajuste localizado</small></li><li><b>04</b><span>Lote</span><small>Exceção específica</small></li></ol>
                 <form className="subdivision-price-conditions__form" onSubmit={preparePriceCondition}>
                   <label>Política-base<select value={priceConditionDraft.basePolicyId} onChange={(event) => setPriceConditionDraft((current) => ({ ...current, basePolicyId: event.target.value }))} disabled={!isWorkspaceReady || isBusy} required><option value="">Selecione uma política preparada</option>{priceConditionBasePolicies.map((policy) => <option key={policy.policyId} value={policy.policyId}>{policy.versionReference} · {priceConditionStateLabels[policy.state] ?? policy.state}</option>)}</select></label>

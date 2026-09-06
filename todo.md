@@ -2205,3 +2205,14 @@
 ## Correção da listagem de política preparada — A234
 - [x] Corrigir a função de listagem para validar o estado `draft` real do cadastro, eliminando a referência inexistente a ciclo de vida. **A234:** a função foi reaplicada em migração aditiva e não alterou a política existente.
 - [x] Confirmar que a política preparada aparece no histórico do cadastro selecionado, sem revelar valores individuais ou permitir encaminhamento/aprovação com exceção. **A234:** o histórico autenticado exibiu a versão preparada com contagens agregadas; a exceção continuou bloqueando as próximas transições.
+
+## Reconciliação de área da fonte de preço-base — A235
+- [ ] Aceitar área ausente somente quando a mesma Quadra/Lote tiver área física confirmada na matriz salva, sem preencher ou alterar a fonte.
+- [ ] Manter preço-base ausente, divergência de área e Lote não reconciliado como exceções bloqueadoras.
+- [ ] Cobrir a reconciliação, validar a prévia e gerar artefatos saneados antes do checkpoint.
+
+## Consolidação de modalidades de condição comercial — A236
+- [x] Validar na interface as modalidades de ajuste geral, por Quadra, por Lote, desconto temporário e reajuste percentual, com campos estritamente compatíveis com cada tipo. **A236:** a revisão autenticada confirmou a vitrine de três escopos e três tipos, incluindo término obrigatório apenas para desconto temporário.
+- [x] Exibir regras de precedência, vigência, motivo, respaldo, aprovação segregada, expiração e retirada sem criar condições reais automaticamente. **A236:** os controles foram apresentados antes do formulário e nenhuma condição real foi criada.
+- [x] Cobrir as modalidades, revisar a experiência autenticada e gerar ZIP/HTML saneados sem abrir venda, contrato ou financeiro. **A236:** testes dirigidos, suíte integral com 217 arquivos/545 testes, tipagem, build Netlify, integridade de diff, revisão autenticada e artefatos saneados foram concluídos.
+- [ ] Salvar checkpoint A236 após documentação, validação e saneamento dos artefatos.
