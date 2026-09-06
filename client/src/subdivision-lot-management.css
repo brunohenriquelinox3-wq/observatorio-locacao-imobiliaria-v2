@@ -79,3 +79,12 @@
 
 .subdivision-price-conditions__evidence { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .68rem 1.35rem; border-top: 1px dashed #dfd1ea; background: rgba(255,255,255,.55); color: #705f7b; font-size: .68rem; font-weight: 750; }
 @media (max-width: 720px) { .subdivision-price-conditions__evidence { align-items: flex-start; flex-direction: column; padding-inline: 1rem; } }
+
+/* A251: os valores só são renderizados pelo componente após o contexto seguro confirmar política aprovada e vigente. */
+.subdivision-lot-management__price-context { gap: .35rem; }
+.subdivision-lot-management__price-context > span { color: #35706b; font-size: .55rem; font-weight: 850; letter-spacing: .06em; }
+.subdivision-lot-management__price-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .4rem; }
+.subdivision-lot-management__price-values > div { display: grid; gap: .16rem; padding: .42rem; border: 1px solid color-mix(in srgb, var(--primary) 22%, var(--border)); border-radius: .4rem; background: color-mix(in srgb, var(--primary) 5%, var(--background)); }
+.subdivision-lot-management__price-values span { color: #35706b; font-size: .5rem; font-weight: 850; letter-spacing: .05em; }
+.subdivision-lot-management__price-values b { color: #164f4d; font-size: .66rem; line-height: 1.15; }
+@media (max-width: 720px) { .subdivision-lot-management__price-values { grid-template-columns: 1fr; } }

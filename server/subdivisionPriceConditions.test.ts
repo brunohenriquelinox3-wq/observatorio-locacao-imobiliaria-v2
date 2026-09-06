@@ -33,9 +33,14 @@ describe("subdivision price conditions", () => {
   it("returns no price context until an approved policy is actually in force", async () => {
     const rpc = vi.fn().mockResolvedValue({ data: { state: "unavailable", availability_reason: "prepared_with_exceptions" }, error: null });
     await expect(getSubdivisionLotPriceContext(actor, { ...context, developmentId, blockId, lotNumber: 18 }, { rpc })).resolves.toEqual({
-      state: "unavailable", availabilityReason: "prepared_with_exceptions", policyReference: null, conditionReference: null, conditionScope: null, conditionKind: null, effectiveFrom: null, effectiveUntil: null, documentState: null, effectivePricePerSqmBrl: null,
+      state: "unavailable", availabilityReason: "prepared_with_exceptions", policyReference: null, conditionReference: null, conditionScope: null, conditionKind: null, effectiveFrom: null, effectiveUntil: null, documentState: null, effectivePricePerSqmBrl: null, lotAreaSqm: null, effectiveLotTotalBrl: null,
     });
-    expect(rpc).toHaveBeenCalledWith("subdivision_get_lot_price_context_v3", expect.objectContaining({ p_block_id: blockId, p_lot_number: 18 }));
+    expect(rpc).toHaveBeenCalledWith("subdivision_get_lot_price_context_v4", expect.objectContaining({ p_block_id: blockId, p_lot_number: 18 }));
+  });
+
+  it("retorna área e total apenas quando a referência já estiver ativa", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: { state: "active", availability_reason: null, policy_reference: "PB_ATIVA", condition_reference: null, condition_scope: null, condition_kind: null, effective_from: null, effective_until: null, document_state: null, effective_price_per_sqm_brl: 250, lot_area_sqm: 300, effective_lot_total_brl: 75000 }, error: null });
+    await expect(getSubdivisionLotPriceContext(actor, { ...context, developmentId, blockId, lotNumber: 18 }, { rpc })).resolves.toMatchObject({ state: "active", effectivePricePerSqmBrl: 250, lotAreaSqm: 300, effectiveLotTotalBrl: 75000 });
   });
 
   it("requires active private evidence when submitting a prepared condition", async () => {

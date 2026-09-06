@@ -201,8 +201,12 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Adicionar respaldo privado");
     expect(studio).toContain("A preparação registra motivo, escopo, vigência e estado documental.");
     expect(studio).toContain("Aprovar como segunda pessoa");
-    expect(studio).toContain("Nenhuma política aprovada e vigente libera referência de preço para este Lote.");
+    expect(studio).toContain("Nenhuma política aprovada e vigente libera preço por m² ou valor total para este Lote.");
     expect(studio).toContain('lotNumber: priceConditionDraft.scope === "lot"');
     expect(studio).toContain("setFocusedLotPriceTarget({ blockId: lot.blockId, lotNumber: lot.lotNumber })");
+    expect(studio).toContain("PREÇO POR M²");
+    expect(studio).toContain("VALOR TOTAL");
+    expect(studio).toContain("effectiveLotTotalBrl");
+    expect(studio).toContain("Nenhuma política aprovada e vigente libera preço por m² ou valor total para este Lote.");
   });
 });

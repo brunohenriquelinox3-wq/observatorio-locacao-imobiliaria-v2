@@ -50,6 +50,8 @@ export type LotPriceContext = {
   effectiveUntil: string | null;
   documentState: DocumentState | null;
   effectivePricePerSqmBrl: number | null;
+  lotAreaSqm: number | null;
+  effectiveLotTotalBrl: number | null;
 };
 
 function requireSubject(subjectId: string | undefined) {
@@ -91,7 +93,7 @@ export async function listSubdivisionPriceConditions(subjectId: string | undefin
 export async function getSubdivisionLotPriceContext(subjectId: string | undefined, rawInput: GetSubdivisionLotPriceContextInput, client: RpcClient = getSupabaseAdminClient()): Promise<LotPriceContext> {
   const actorUserId = requireSubject(subjectId);
   const input = getSubdivisionLotPriceContextInputSchema.parse(rawInput);
-  const { data, error } = await client.rpc("subdivision_get_lot_price_context_v3", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_development_id: input.developmentId, p_block_id: input.blockId, p_lot_number: input.lotNumber });
+  const { data, error } = await client.rpc("subdivision_get_lot_price_context_v4", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_development_id: input.developmentId, p_block_id: input.blockId, p_lot_number: input.lotNumber });
   if (error) throw new Error("LOT_PRICE_CONTEXT_DENIED");
   const result = requireObject(data, "LOT_PRICE_CONTEXT_DENIED");
   const state = String(result.state);
@@ -109,6 +111,8 @@ export async function getSubdivisionLotPriceContext(subjectId: string | undefine
     effectiveUntil: result.effective_until ? String(result.effective_until) : null,
     documentState: result.document_state ? String(result.document_state) as DocumentState : null,
     effectivePricePerSqmBrl: typeof result.effective_price_per_sqm_brl === "number" ? result.effective_price_per_sqm_brl : null,
+    lotAreaSqm: state === "active" && typeof result.lot_area_sqm === "number" && result.lot_area_sqm > 0 ? result.lot_area_sqm : null,
+    effectiveLotTotalBrl: state === "active" && typeof result.effective_lot_total_brl === "number" && result.effective_lot_total_brl > 0 ? result.effective_lot_total_brl : null,
   };
 }
 

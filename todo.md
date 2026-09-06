@@ -2300,3 +2300,9 @@
 - [x] Recusar motivo ausente ou fora do catálogo sem alterar política-base, matriz, condição vigente, venda, contrato ou financeiro. **A250:** a validação ocorre antes da transição e da auditoria de resultado permitido.
 - [x] Exibir a escolha de motivo somente ao retirar condição não aprovada, sem abrir ou executar o fluxo em condição real durante a revisão. **A250:** não havia condição real registrada na revisão, portanto nenhum seletor ou comando foi acionado.
 - [x] Cobrir serviço, migração e interface; revisar, gerar ZIP/HTML saneados e salvar checkpoint sem retirar condição real. **A250:** 219 arquivos/576 testes, tipagem, build Netlify, diff limpo, revisão autenticada e saneamento foram aprovados; checkpoint funcional `b54f914a` preserva a ausência de retirada real.
+
+## Referência de preço e total por Lote — A251
+- [x] Mostrar na gestão física o campo de preço por m² e o valor total calculado somente quando houver referência aprovada e vigente para o Lote. **A251:** o contexto v4 retorna valor efetivo, área confirmada e total exclusivamente no estado ativo.
+- [x] Distinguir visualmente política em Preparação, exceção, aprovação pendente, vigência futura/expirada e referência ativa, sem expor preço não aprovado. **A251:** o cartão explica o bloqueio e a matriz indica quando os campos serão liberados.
+- [x] Usar apenas área física confirmada e valor por m² retornado pelo contexto seguro; não estimar, preencher ou liberar o único preço-base ausente da fonte. **A251:** o total é calculado no servidor a partir da área confirmada somente após a referência ativa.
+- [ ] Cobrir serviço e interface, revisar desktop/móvel, gerar ZIP/HTML saneados e salvar checkpoint sem aprovar política, criar venda ou alterar a matriz real.
