@@ -2397,4 +2397,5 @@
 - [x] Conferir por Lote o cálculo interno de valor total como preço-base por m² multiplicado pela área física confirmada, sem criar preço comercial, disponibilidade, venda, proposta, contrato ou financeiro. **A264:** leitura MFA confirmou o cálculo referencial no cartão; nenhuma operação comercial foi criada.
 - [x] Validar interface, cálculo, segurança e auditoria; gerar ZIP/HTML saneados após a conclusão factual. **A264:** 219 arquivos/597 testes, tipagem, build, diff, revisão MFA e saneamento de artefatos aprovados.
 - [x] Preservar a linha sem preço-base exatamente como aparece na fonte: campo de valor por m² e total do Lote permanecem vazios, sem estimativa, preenchimento automático ou gravação durante os testes.
-- [ ] Salvar checkpoints funcional e de consolidação A264 após a validação e os artefatos saneados.
+- [x] Salvar checkpoint funcional A264 após a validação e os artefatos saneados. **A264:** checkpoint funcional `df2c15c5` registrado.
+- [ ] Salvar checkpoint de consolidação A264 após registrar o checkpoint funcional no checklist.
