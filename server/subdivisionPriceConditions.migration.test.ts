@@ -3,6 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 const migration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907102000_subdivision_price_condition_lot_resolution_a232.sql"), "utf8");
+const denyPolicyMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907106000_subdivision_price_conditions_deny_policies_a239.sql"), "utf8");
 
 describe("subdivision price condition lot resolution migration", () => {
   it("resolves a Lot number inside the protected server function instead of receiving its identifier from the browser", () => {
@@ -28,5 +29,16 @@ describe("subdivision price condition lot resolution migration", () => {
     expect(sql).toContain("p.exception_count = 0");
     expect(sql).toContain("c.condition_state = 'approved'::public.subdivision_price_base_policy_state");
     expect(sql).toContain("when 'lot'::public.subdivision_price_condition_scope then 3");
+  });
+
+  it("declares explicit fail-closed RLS policies for direct callers", () => {
+    const sql = denyPolicyMigration();
+    expect(sql).toContain("enable row level security");
+    expect(sql).toContain("subdivision_price_conditions_deny_anon");
+    expect(sql).toContain("subdivision_price_conditions_deny_authenticated");
+    expect(sql).toContain("as restrictive");
+    expect(sql).toContain("using (false)");
+    expect(sql).toContain("with check (false)");
+    expect(sql).toContain("revoke all on table public.subdivision_price_conditions from public, anon, authenticated");
   });
 });

@@ -152,6 +152,18 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("policy.exceptionCount > 0");
   });
 
+  it("oferece correção manual governada sem estimar preço nem liberar efeito comercial", () => {
+    const studio = source();
+    expect(studio).toContain("CORRIGIR PREÇO-BASE PENDENTE");
+    expect(studio).toContain("Preparar nova versão com preço explícito");
+    expect(studio).toContain("Linha de origem");
+    expect(studio).toContain("Preço-base por m² (BRL)");
+    expect(studio).toContain("Respaldo declarado completo");
+    expect(studio).toContain("prepareManualPriceBaseCorrectionMutation");
+    expect(studio).toContain('documentState: "declared_complete"');
+    expect(studio).toContain("A correção não aprova nem disponibiliza o Lote.");
+  });
+
   it("oferece condições flexíveis por escopo sem liberar preço antes de política aprovada", () => {
     const studio = source();
     expect(studio).toContain("CONDIÇÕES E AJUSTES DE PREÇO");

@@ -207,6 +207,7 @@ import { addSubdivisionEconomicRuleComponentRoleReference, listSubdivisionEconom
 import {
   approveSubdivisionPriceBasePolicy,
   listSubdivisionPriceBasePolicies,
+  prepareManualSubdivisionPriceBaseCorrection,
   prepareSubdivisionPriceBasePolicy,
   previewSubdivisionPriceBaseSource,
   submitSubdivisionPriceBasePolicy,
@@ -222,6 +223,7 @@ import {
 import {
   approveSubdivisionPriceBasePolicyInputSchema,
   listSubdivisionPriceBasePoliciesInputSchema,
+  prepareManualSubdivisionPriceBaseCorrectionInputSchema,
   prepareSubdivisionPriceBasePolicyInputSchema,
   previewSubdivisionPriceBaseSourceInputSchema,
   submitSubdivisionPriceBasePolicyInputSchema,
@@ -626,6 +628,10 @@ export const appRouter = router({
     preparePriceBasePolicy: protectedProcedure.input(prepareSubdivisionPriceBasePolicyInputSchema).mutation(async ({ ctx, input }) => {
       await requireRecentTotpMfa(ctx);
       return prepareSubdivisionPriceBasePolicy(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    prepareManualPriceBaseCorrection: protectedProcedure.input(prepareManualSubdivisionPriceBaseCorrectionInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return prepareManualSubdivisionPriceBaseCorrection(ctx.supabaseSubjectId ?? undefined, input);
     }),
     submitPriceBasePolicy: protectedProcedure.input(submitSubdivisionPriceBasePolicyInputSchema).mutation(async ({ ctx, input }) => {
       await requireRecentTotpMfa(ctx);

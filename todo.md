@@ -2170,9 +2170,9 @@
 
 ## Ingestão de preço-base com reconciliação física — A228
 - [x] Verificar de forma privada se a única exceção da fonte é ausência de área ou de preço-base, sem registrar seu conteúdo em documentação ou interface. **A228:** a exceção foi classificada como preço-base por m² ausente; a área estava presente.
-- [ ] Aceitar área ausente somente quando a mesma Quadra/Lote já estiver reconciliada e possuir área física confirmada na matriz; manter preço-base ausente como exceção bloqueadora.
+- [x] Aceitar área ausente somente quando a mesma Quadra/Lote já estiver reconciliada e possuir área física confirmada na matriz; manter preço-base ausente como exceção bloqueadora. **A237:** a reconciliação só aceita área física positiva do mesmo par e preserva preço ausente, divergência ou Lote não reconciliado como bloqueador.
 - [ ] Executar somente a prévia e a preparação protegidas quando a fonte estiver integralmente conciliada, mantendo aprovação separada e nenhum efeito de venda ou financeiro.
-- [ ] Cobrir o fluxo, revisar, gerar ZIP/HTML saneados e salvar checkpoint sem expor dados da fonte.
+- [x] Cobrir o fluxo, revisar, gerar ZIP/HTML saneados e salvar checkpoint sem expor dados da fonte. **A230/A237:** prévia, preparação parcial explicitamente bloqueada, MFA, escopo, artefatos e checkpoints foram validados sem expor valores ou dados de origem.
 
 ## Entrada assistida de preço-base por fonte — A229
 - [x] Inspecionar privadamente a linha bloqueada e todas as colunas autorizadas para localizar valor explícito, sem mostrar ou documentar o conteúdo real. **A229:** não havia preço-base explícito em campo autorizado; o total derivado resultava em zero e não foi usado.
@@ -2218,3 +2218,15 @@
 - [x] Exibir regras de precedência, vigência, motivo, respaldo, aprovação segregada, expiração e retirada sem criar condições reais automaticamente. **A236:** os controles foram apresentados antes do formulário e nenhuma condição real foi criada.
 - [x] Cobrir as modalidades, revisar a experiência autenticada e gerar ZIP/HTML saneados sem abrir venda, contrato ou financeiro. **A236:** testes dirigidos, suíte integral com 217 arquivos/545 testes, tipagem, build Netlify, integridade de diff, revisão autenticada e artefatos saneados foram concluídos.
 - [x] Salvar checkpoint A236 após documentação, validação e saneamento dos artefatos. **A236:** checkpoint `6709ee26` preserva a vitrine de modalidades, os controles de escopo/tipo e a ausência de condição real criada.
+
+## Correção manual governada de preço-base pendente — A238
+- [x] Modelar correção por Quadra/Lote com preço-base explícito, área física confirmada, motivo e respaldo declarado, sem estimativa nem fórmulas. **A238:** a correção prepara uma nova versão e exige referência de linha, par físico e preço explícito, sem aceitar cálculo ou estimativa.
+- [x] Exigir identidade, organização, contexto, MFA recente, correlação, idempotência, política em Preparação e resolução física no servidor antes de preparar uma correção. **A238:** contratos, router, serviço e função restrita preservam esses guardas e não registram o valor no evento de auditoria.
+- [x] Manter correção sem efeito até nova validação da política, encaminhamento e aprovação segregada; não criar venda, proposta, contrato, cobrança, pagamento ou repasse. **A238:** o formulário declara o estado de Preparação e o histórico de origem continua bloqueando encaminhamento enquanto existir exceção.
+- [x] Cobrir segurança e UI e revisar sem inserir correção real. **A238/A239:** testes dirigidos, suíte integral com 216 arquivos/551 testes, tipagem, build Netlify, integridade de diff, revisão autenticada e orientador de segurança foram aprovados; somente o aviso não bloqueante de chunks grandes permaneceu no build.
+- [x] Gerar ZIP/HTML saneados. **A238/A239:** os artefatos foram verificados sem ambiente, logs, documentação, checklist, dados de origem, credenciais ou infraestrutura.
+- [ ] Salvar checkpoint A238/A239 após documentação, validação integral e saneamento dos artefatos.
+
+## Reforço explícito de RLS em condições de preço — A239
+- [x] Criar políticas explícitas de negação para anon/authenticated nas condições de preço, preservando somente o caminho de serviço protegido. **A239:** as políticas restritivas `using (false)` e `with check (false)` foram aplicadas sem alterar registros.
+- [x] Validar catálogo, testes e orientadores de segurança sem alterar condição, política, preço ou dado comercial. **A239:** a tabela deixou de aparecer no orientador por ausência de política; nenhum registro de preço ou condição foi criado ou modificado.

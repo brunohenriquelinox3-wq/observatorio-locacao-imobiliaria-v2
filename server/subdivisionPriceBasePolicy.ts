@@ -4,11 +4,13 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   approveSubdivisionPriceBasePolicyInputSchema,
   listSubdivisionPriceBasePoliciesInputSchema,
+  prepareManualSubdivisionPriceBaseCorrectionInputSchema,
   prepareSubdivisionPriceBasePolicyInputSchema,
   previewSubdivisionPriceBaseSourceInputSchema,
   submitSubdivisionPriceBasePolicyInputSchema,
   type ApproveSubdivisionPriceBasePolicyInput,
   type ListSubdivisionPriceBasePoliciesInput,
+  type PrepareManualSubdivisionPriceBaseCorrectionInput,
   type PrepareSubdivisionPriceBasePolicyInput,
   type PreviewSubdivisionPriceBaseSourceInput,
   type SubmitSubdivisionPriceBasePolicyInput,
@@ -271,6 +273,51 @@ export async function prepareSubdivisionPriceBasePolicy(subjectId: string | unde
     p_correlation_id: input.correlationId,
   });
   if (error || !data || typeof data !== "object") throw new Error("PRICE_BASE_PREPARE_DENIED");
+  const result = data as Record<string, unknown>;
+  return { policyId: String(result.policy_id), lineCount: Number(result.line_count), exceptionCount: Number(result.exception_count) };
+}
+
+export async function prepareManualSubdivisionPriceBaseCorrection(subjectId: string | undefined, rawInput: PrepareManualSubdivisionPriceBaseCorrectionInput, client: RpcClient = getSupabaseAdminClient()): Promise<{ policyId: string; lineCount: number; exceptionCount: number }> {
+  const actorUserId = requireSubject(subjectId);
+  const input = prepareManualSubdivisionPriceBaseCorrectionInputSchema.parse(rawInput);
+  const sourceFingerprint = fingerprint({
+    sourcePolicyId: input.sourcePolicyId,
+    developmentId: input.developmentId,
+    sourceRow: input.sourceRow,
+    blockNumber: input.blockNumber,
+    lotNumber: input.lotNumber,
+    pricePerSqmBrl: input.pricePerSqmBrl,
+    effectiveFrom: input.effectiveFrom,
+    reasonCode: input.reasonCode,
+  });
+  const rowFingerprint = fingerprint({
+    kind: "manual-price-base-correction-v1",
+    developmentId: input.developmentId,
+    sourceRow: input.sourceRow,
+    blockNumber: input.blockNumber,
+    lotNumber: input.lotNumber,
+    pricePerSqmBrl: input.pricePerSqmBrl,
+  });
+  const { data, error } = await client.rpc("subdivision_prepare_manual_price_base_correction_v1", {
+    p_actor_user_id: actorUserId,
+    p_organization_id: input.organizationId,
+    p_module: input.module,
+    p_purpose_code: input.purposeCode,
+    p_development_id: input.developmentId,
+    p_source_policy_id: input.sourcePolicyId,
+    p_version_reference: input.versionReference,
+    p_effective_from: input.effectiveFrom,
+    p_source_row: input.sourceRow,
+    p_block_number: input.blockNumber,
+    p_lot_number: input.lotNumber,
+    p_price_per_sqm_brl: input.pricePerSqmBrl,
+    p_source_fingerprint: sourceFingerprint,
+    p_row_fingerprint: rowFingerprint,
+    p_reason_code: input.reasonCode,
+    p_document_state: input.documentState,
+    p_correlation_id: input.correlationId,
+  });
+  if (error || !data || typeof data !== "object") throw new Error("PRICE_BASE_MANUAL_CORRECTION_DENIED");
   const result = data as Record<string, unknown>;
   return { policyId: String(result.policy_id), lineCount: Number(result.line_count), exceptionCount: Number(result.exception_count) };
 }

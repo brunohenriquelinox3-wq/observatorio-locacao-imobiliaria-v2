@@ -26,6 +26,20 @@ export const prepareSubdivisionPriceBasePolicyInputSchema = previewSubdivisionPr
   effectiveFrom: z.string().date(),
 });
 
+export const prepareManualSubdivisionPriceBaseCorrectionInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  developmentId: z.string().uuid(),
+  sourcePolicyId: z.string().uuid(),
+  versionReference: z.string().trim().toUpperCase().regex(/^PB_[A-Z0-9_]{3,72}$/),
+  effectiveFrom: z.string().date(),
+  sourceRow: z.coerce.number().int().min(2).max(5_000),
+  blockNumber: z.coerce.number().int().min(1).max(999),
+  lotNumber: z.coerce.number().int().min(1).max(100),
+  pricePerSqmBrl: z.coerce.number().finite().positive().max(1_000_000_000),
+  reasonCode: z.enum(["source_correction", "internal_validation", "documented_revision"]),
+  documentState: z.literal("declared_complete"),
+});
+
 export const submitSubdivisionPriceBasePolicyInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
   policyId: z.string().uuid(),
@@ -42,6 +56,7 @@ export const listSubdivisionPriceBasePoliciesInputSchema = subdivisionContextSch
 
 export type PreviewSubdivisionPriceBaseSourceInput = z.infer<typeof previewSubdivisionPriceBaseSourceInputSchema>;
 export type PrepareSubdivisionPriceBasePolicyInput = z.infer<typeof prepareSubdivisionPriceBasePolicyInputSchema>;
+export type PrepareManualSubdivisionPriceBaseCorrectionInput = z.infer<typeof prepareManualSubdivisionPriceBaseCorrectionInputSchema>;
 export type SubmitSubdivisionPriceBasePolicyInput = z.infer<typeof submitSubdivisionPriceBasePolicyInputSchema>;
 export type ApproveSubdivisionPriceBasePolicyInput = z.infer<typeof approveSubdivisionPriceBasePolicyInputSchema>;
 export type ListSubdivisionPriceBasePoliciesInput = z.infer<typeof listSubdivisionPriceBasePoliciesInputSchema>;

@@ -264,6 +264,16 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const [priceBaseSourceError, setPriceBaseSourceError] = useState("");
   const [priceBaseVersionReference, setPriceBaseVersionReference] = useState("PB_VISTA_DO_SOL_001");
   const [priceBaseEffectiveFrom, setPriceBaseEffectiveFrom] = useState("");
+  const [manualPriceCorrectionDraft, setManualPriceCorrectionDraft] = useState({
+    sourcePolicyId: "",
+    versionReference: "PB_CORRECAO_001",
+    effectiveFrom: "",
+    sourceRow: "",
+    blockNumber: "",
+    lotNumber: "",
+    pricePerSqmBrl: "",
+    reasonCode: "source_correction" as "source_correction" | "internal_validation" | "documented_revision",
+  });
   const [priceConditionDraft, setPriceConditionDraft] = useState({
     basePolicyId: "",
     conditionReference: "PC_VISTA_DO_SOL_001",
@@ -531,6 +541,16 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       toast.error("Política não preparada", { description: "A fonte precisa estar integralmente reconciliada, sem exceções e com MFA recente. Nenhuma política foi criada." });
     },
   });
+  const prepareManualPriceBaseCorrectionMutation = trpc.subdivisionFoundation.prepareManualPriceBaseCorrection.useMutation({
+    onSuccess(result) {
+      toast.success("Correção preparada", { description: `${result.lineCount} linha(s) integram a nova versão interna. A correção ainda exige encaminhamento e aprovação por segunda pessoa.` });
+      setManualPriceCorrectionDraft((current) => ({ ...current, sourceRow: "", blockNumber: "", lotNumber: "", pricePerSqmBrl: "" }));
+      void utils.subdivisionFoundation.listPriceBasePolicies.invalidate();
+    },
+    onError() {
+      toast.error("Correção não preparada", { description: "Revise preço explícito, linha de origem, matriz física, respaldo declarado, MFA e contexto autorizado." });
+    },
+  });
   const submitPriceBasePolicyMutation = trpc.subdivisionFoundation.submitPriceBasePolicy.useMutation({
     onSuccess() {
       toast.success("Política encaminhada", { description: "A política aguarda aprovação por pessoa distinta de quem a preparou." });
@@ -606,7 +626,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const savedLotCount = activeSavedStructure.reduce((total, block) => total + block.lotCount, 0);
   const draftLotCount = structureRows.reduce((total, block) => total + (Number.isFinite(block.lotCount) ? block.lotCount : 0), 0);
   const completedModules = [identificationDetailed, activeSavedStructure.length > 0, Boolean(form.workingPhase)].filter(Boolean).length;
-  const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || restoreBlockMutation.isPending || applyPhysicalStructureMutation.isPending || upsertRequirementMutation.isPending || previewPriceBaseSourceMutation.isPending || preparePriceBasePolicyMutation.isPending || submitPriceBasePolicyMutation.isPending || approvePriceBasePolicyMutation.isPending || createPriceConditionMutation.isPending || submitPriceConditionMutation.isPending || approvePriceConditionMutation.isPending || withdrawPriceConditionMutation.isPending || isUploading;
+  const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || restoreBlockMutation.isPending || applyPhysicalStructureMutation.isPending || upsertRequirementMutation.isPending || previewPriceBaseSourceMutation.isPending || preparePriceBasePolicyMutation.isPending || prepareManualPriceBaseCorrectionMutation.isPending || submitPriceBasePolicyMutation.isPending || approvePriceBasePolicyMutation.isPending || createPriceConditionMutation.isPending || submitPriceConditionMutation.isPending || approvePriceConditionMutation.isPending || withdrawPriceConditionMutation.isPending || isUploading;
   const selectedModule = studioModules.find((module) => module.id === activeModule) ?? studioModules[0];
 
   function startNew() {
@@ -740,6 +760,25 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   function preparePriceBasePolicy() {
     if (!selectedDevelopmentId || !priceBaseSource || !priceBaseReadyForPreparation) return;
     preparePriceBasePolicyMutation.mutate({ ...context, developmentId: selectedDevelopmentId, sourceFileName: priceBaseSource.fileName, sourceContentBase64: priceBaseSource.contentBase64, versionReference: priceBaseVersionReference.trim().toUpperCase(), effectiveFrom: priceBaseEffectiveFrom, correlationId: crypto.randomUUID() });
+  }
+
+  function prepareManualPriceBaseCorrection(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!selectedDevelopmentId || !manualPriceCorrectionDraft.sourcePolicyId || !manualPriceCorrectionDraft.effectiveFrom || !manualPriceCorrectionDraft.sourceRow || !manualPriceCorrectionDraft.blockNumber || !manualPriceCorrectionDraft.lotNumber || !manualPriceCorrectionDraft.pricePerSqmBrl) return;
+    prepareManualPriceBaseCorrectionMutation.mutate({
+      ...context,
+      developmentId: selectedDevelopmentId,
+      sourcePolicyId: manualPriceCorrectionDraft.sourcePolicyId,
+      versionReference: manualPriceCorrectionDraft.versionReference.trim().toUpperCase(),
+      effectiveFrom: manualPriceCorrectionDraft.effectiveFrom,
+      sourceRow: Number(manualPriceCorrectionDraft.sourceRow),
+      blockNumber: Number(manualPriceCorrectionDraft.blockNumber),
+      lotNumber: Number(manualPriceCorrectionDraft.lotNumber),
+      pricePerSqmBrl: Number(manualPriceCorrectionDraft.pricePerSqmBrl),
+      reasonCode: manualPriceCorrectionDraft.reasonCode,
+      documentState: "declared_complete",
+      correlationId: crypto.randomUUID(),
+    });
   }
 
   function preparePriceCondition(event: React.FormEvent<HTMLFormElement>) {
@@ -1000,6 +1039,21 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                 {priceBaseSourcePreview && <div className="subdivision-price-base-policy__preview"><div className="subdivision-price-base-policy__metrics"><div><b>{priceBaseSourcePreview.sourceRows}</b><span>linhas na fonte</span></div><div><b>{priceBaseSourcePreview.importableLineCount}</b><span>linhas permitidas</span></div><div data-safe={priceBaseSourcePreview.unreconciledLineCount === 0}><b>{priceBaseSourcePreview.reconciledLineCount}</b><span>pares reconciliados</span></div><div data-safe={priceBaseSourcePreview.matrixAreaResolvedLineCount === 0}><b>{priceBaseSourcePreview.matrixAreaResolvedLineCount}</b><span>área confirmada pela matriz</span></div><div data-safe={priceBaseExceptionCount === 0}><b>{priceBaseExceptionCount}</b><span>exceções</span></div></div><div className="subdivision-price-base-policy__preview-note"><ShieldAlert size={16} /><span>{priceBaseSourcePreview.unreconciledLineCount > 0 ? "A preparação fica bloqueada até que todos os pares permitidos coincidam exatamente com a matriz física." : priceBaseExceptionCount > 0 ? "A preparação fica bloqueada: cada linha precisa ter Quadra, Lote, área e preço-base válidos." : priceBaseSourcePreview.matrixAreaResolvedLineCount > 0 ? "A área ausente foi confirmada exclusivamente pela matriz física já salva. A preparação ainda exige MFA recente e não aprova a política." : "A fonte permitida coincide com a matriz física. A preparação ainda exige MFA recente e não aprova a política."}</span></div>{priceBaseSourcePreview.ignoredColumns.length > 0 && <p className="subdivision-price-base-policy__discarded">Coluna(s) descartada(s): {priceBaseSourcePreview.ignoredColumns.join(", ")}. O conteúdo não é importado.</p>}{priceBaseExceptionCount > 0 && <><ul className="subdivision-price-base-policy__exceptions">{Object.entries(priceBaseSourcePreview.exceptionCounts).map(([code, count]) => <li key={code}><b>{count}</b><span>{priceBaseExceptionLabels[code] ?? "Inconsistência na fonte"}</span></li>)}</ul><p className="subdivision-price-base-policy__remediation">Corrija a origem e gere outra prévia. Referência saneada: {priceBaseSourcePreview.exceptionRows.map((item) => `linha ${item.sourceRow} · ${priceBaseExceptionLabels[item.code] ?? "campo obrigatório pendente"}`).join("; ")}. Nenhum valor, Quadra, Lote ou status é exibido.</p></>}</div>}
                 <div className="subdivision-price-base-policy__prepare"><label>Referência da versão<input value={priceBaseVersionReference} onChange={(event) => setPriceBaseVersionReference(normalizePriceBaseVersionReference(event.target.value))} placeholder="PB_VERSAO_001" disabled={!isWorkspaceReady || isBusy} maxLength={75} /></label><label>Início da vigência<input type="date" value={priceBaseEffectiveFrom} onChange={(event) => setPriceBaseEffectiveFrom(event.target.value)} disabled={!isWorkspaceReady || isBusy} /></label><div><span>Estado da preparação</span><b>{priceBaseReadyForPreparation ? priceBaseExceptionCount > 0 ? "Pronto com pendência bloqueadora" : "Pronto para registrar" : "Aguardando prévia conciliada"}</b><small>{priceBaseExceptionCount > 0 ? "As linhas válidas podem ser auditadas; encaminhar e aprovar continuam bloqueados." : "Preparar não disponibiliza Lotes nem cria valor contratual."}</small></div><button type="button" onClick={preparePriceBasePolicy} disabled={!isWorkspaceReady || isBusy || !priceBaseReadyForPreparation}>{preparePriceBasePolicyMutation.isPending ? "Preparando política" : priceBaseExceptionCount > 0 ? "Preparar com pendência" : "Preparar política"}</button></div>
                 <p className="subdivision-price-base-policy__guardrail">Preço-base é referência interna versionada. Ele não é proposta, preço de contrato, receita, recebível, lançamento tributário, cobrança, pagamento ou repasse.</p>
+                <details className="subdivision-price-base-policy__manual-correction">
+                  <summary><span>CORRIGIR PREÇO-BASE PENDENTE</span><b>Preparar nova versão com preço explícito</b><small>Use somente quando houver fonte interna, deliberação ou documento que sustente o valor. A correção não aprova nem disponibiliza o Lote.</small></summary>
+                  <form onSubmit={prepareManualPriceBaseCorrection}>
+                    <label>Política com pendência<select value={manualPriceCorrectionDraft.sourcePolicyId} onChange={(event) => setManualPriceCorrectionDraft((current) => ({ ...current, sourcePolicyId: event.target.value }))} disabled={!isWorkspaceReady || isBusy} required><option value="">Selecione uma política preparada com exceção</option>{priceConditionBasePolicies.filter((policy) => policy.state === "prepared" && policy.exceptionCount === 1).map((policy) => <option key={policy.policyId} value={policy.policyId}>{policy.versionReference} · 1 pendência</option>)}</select></label>
+                    <label>Nova referência<input value={manualPriceCorrectionDraft.versionReference} onChange={(event) => setManualPriceCorrectionDraft((current) => ({ ...current, versionReference: normalizePriceBaseVersionReference(event.target.value) }))} placeholder="PB_CORRECAO_001" disabled={!isWorkspaceReady || isBusy} maxLength={75} required /></label>
+                    <label>Início da vigência<input type="date" value={manualPriceCorrectionDraft.effectiveFrom} onChange={(event) => setManualPriceCorrectionDraft((current) => ({ ...current, effectiveFrom: event.target.value }))} disabled={!isWorkspaceReady || isBusy} required /></label>
+                    <label>Linha de origem<input type="number" min={2} max={5000} value={manualPriceCorrectionDraft.sourceRow} onChange={(event) => setManualPriceCorrectionDraft((current) => ({ ...current, sourceRow: event.target.value }))} disabled={!isWorkspaceReady || isBusy} required /></label>
+                    <label>Quadra<input type="number" min={1} max={999} value={manualPriceCorrectionDraft.blockNumber} onChange={(event) => setManualPriceCorrectionDraft((current) => ({ ...current, blockNumber: event.target.value }))} disabled={!isWorkspaceReady || isBusy} required /></label>
+                    <label>Lote<input type="number" min={1} max={100} value={manualPriceCorrectionDraft.lotNumber} onChange={(event) => setManualPriceCorrectionDraft((current) => ({ ...current, lotNumber: event.target.value }))} disabled={!isWorkspaceReady || isBusy} required /></label>
+                    <label>Preço-base por m² (BRL)<input type="number" min="0.0001" max="1000000000" step="0.0001" value={manualPriceCorrectionDraft.pricePerSqmBrl} onChange={(event) => setManualPriceCorrectionDraft((current) => ({ ...current, pricePerSqmBrl: event.target.value }))} inputMode="decimal" disabled={!isWorkspaceReady || isBusy} required /></label>
+                    <label>Motivo<select value={manualPriceCorrectionDraft.reasonCode} onChange={(event) => setManualPriceCorrectionDraft((current) => ({ ...current, reasonCode: event.target.value as typeof current.reasonCode }))} disabled={!isWorkspaceReady || isBusy}><option value="source_correction">Correção de fonte</option><option value="internal_validation">Validação interna</option><option value="documented_revision">Revisão documentada</option></select></label>
+                    <p><ShieldCheck size={15} />Respaldo declarado completo. O servidor confirma a área física do mesmo par Quadra–Lote, preserva a política anterior e exige MFA recente.</p>
+                    <button type="submit" disabled={!isWorkspaceReady || isBusy || !manualPriceCorrectionDraft.sourcePolicyId || !manualPriceCorrectionDraft.effectiveFrom || !manualPriceCorrectionDraft.sourceRow || !manualPriceCorrectionDraft.blockNumber || !manualPriceCorrectionDraft.lotNumber || !manualPriceCorrectionDraft.pricePerSqmBrl}>{prepareManualPriceBaseCorrectionMutation.isPending ? "Preparando correção" : "Preparar correção de preço-base"}</button>
+                  </form>
+                </details>
                 <div className="subdivision-price-base-policy__history" aria-live="polite"><div><span>VERSÕES REGISTRADAS</span><h6>Histórico auditável de preparação e aprovação</h6></div>{priceBasePoliciesQuery.isLoading && <p><LoaderCircle className="subdivision-foundation-spinner" />Carregando políticas autorizadas.</p>}{!priceBasePoliciesQuery.isLoading && (priceBasePoliciesQuery.data ?? []).length === 0 && <p>Nenhuma política formal registrada neste cadastro.</p>}{(priceBasePoliciesQuery.data ?? []).map((policy) => <article key={policy.policyId} data-state={policy.state}><div><b>{policy.versionReference}</b><span>Vigência inicial: {new Date(`${policy.effectiveFrom}T00:00:00`).toLocaleDateString("pt-BR")}</span></div><dl><div><dt>Linhas</dt><dd>{policy.lineCount}</dd></div><div><dt>Exceções</dt><dd>{policy.exceptionCount}</dd></div><div><dt>Estado</dt><dd>{policy.state === "prepared" ? "Preparada" : policy.state === "submitted" ? "Encaminhada" : policy.state === "approved" ? "Aprovada" : policy.state === "expired" ? "Expirada" : "Retirada"}</dd></div></dl><div className="subdivision-price-base-policy__history-actions">{policy.state === "prepared" && <button type="button" className="subdivision-studio__secondary" onClick={() => submitPriceBasePolicyMutation.mutate({ ...context, policyId: policy.policyId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy || policy.exceptionCount > 0}>Encaminhar</button>}{policy.state === "submitted" && <button type="button" onClick={() => approvePriceBasePolicyMutation.mutate({ ...context, policyId: policy.policyId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy}>Aprovar como segunda pessoa</button>}</div></article>)}</div>
               </section>}
 

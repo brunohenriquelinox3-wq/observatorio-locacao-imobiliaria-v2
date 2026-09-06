@@ -107,3 +107,7 @@ Nenhuma condição foi criada durante a revisão. A política-base continua em P
 ## A237 — Reconciliação de área confirmada
 
 A revisão autenticada confirmou que a matriz física, o histórico da política em Preparação e a central de condições continuam visíveis e separados. A área de prévia permanece sem fonte carregada e não expõe valores. Quando uma nova prévia informar área ausente, a interface reserva uma métrica específica para área confirmada pela matriz, mantendo pares não reconciliados e preço-base ausente como bloqueadores. A política atual segue com 163 linhas agregadas e uma exceção, sem referência vigente apresentada por Lote.
+
+## A238 — Correção manual governada
+
+A revisão autenticada confirmou que o painel de política formal expõe, em seção recolhida, a ação **“Corrigir preço-base pendente”**. Antes de abrir o formulário, a tela explica que a operação prepara uma nova versão com preço explícito e não aprova nem disponibiliza o Lote. O resumo permaneceu compacto e separado do histórico, deixando os campos sensíveis ocultos até uma intenção explícita da pessoa operadora. O histórico mantém a política de origem em Preparação e a ação de encaminhamento segue bloqueada enquanto houver exceção. Nenhum campo foi preenchido, nenhuma correção foi preparada e nenhum valor foi exposto durante a revisão.

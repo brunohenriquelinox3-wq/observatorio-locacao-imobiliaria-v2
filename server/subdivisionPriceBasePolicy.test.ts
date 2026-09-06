@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
 import { describe, expect, it, vi } from "vitest";
-import { listSubdivisionPriceBasePolicies, prepareSubdivisionPriceBasePolicy, previewSubdivisionPriceBaseSource } from "./subdivisionPriceBasePolicy";
+import { listSubdivisionPriceBasePolicies, prepareManualSubdivisionPriceBaseCorrection, prepareSubdivisionPriceBasePolicy, previewSubdivisionPriceBaseSource } from "./subdivisionPriceBasePolicy";
 
 const actor = "00000000-0000-4000-8000-000000000001";
 const developmentId = "00000000-0000-4000-8000-000000000002";
@@ -77,6 +77,50 @@ describe("subdivision price-base policy boundary", () => {
     const rpc = vi.fn().mockResolvedValue({ data: { policy_id: "00000000-0000-4000-8000-000000000005", line_count: 1, exception_count: 0 }, error: null });
     await expect(prepareSubdivisionPriceBasePolicy(actor, { ...context, developmentId, sourceFileName: "fonte.xlsx", sourceContentBase64, correlationId, versionReference: "PB_TESTE_001", effectiveFrom: "2026-09-05" }, { rpc })).resolves.toEqual({ policyId: "00000000-0000-4000-8000-000000000005", lineCount: 1, exceptionCount: 0 });
     expect(rpc).toHaveBeenCalledWith("subdivision_prepare_price_base_policy_v2", expect.objectContaining({ p_exception_count: 0, p_source_row_count: 1, p_lines: [expect.objectContaining({ block_number: 1, lot_number: 1 })] }));
+  });
+
+  it("prepares a manual correction only with an explicit price, declared source row and complete backing state", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: { policy_id: "00000000-0000-4000-8000-000000000006", line_count: 164, exception_count: 0 }, error: null });
+    await expect(prepareManualSubdivisionPriceBaseCorrection(actor, {
+      ...context,
+      developmentId,
+      sourcePolicyId: "00000000-0000-4000-8000-000000000005",
+      versionReference: "PB_CORRECAO_001",
+      effectiveFrom: "2026-09-05",
+      sourceRow: 29,
+      blockNumber: 1,
+      lotNumber: 1,
+      pricePerSqmBrl: 500,
+      reasonCode: "source_correction",
+      documentState: "declared_complete",
+      correlationId,
+    }, { rpc })).resolves.toEqual({ policyId: "00000000-0000-4000-8000-000000000006", lineCount: 164, exceptionCount: 0 });
+    expect(rpc).toHaveBeenCalledWith("subdivision_prepare_manual_price_base_correction_v1", expect.objectContaining({
+      p_source_row: 29,
+      p_block_number: 1,
+      p_lot_number: 1,
+      p_price_per_sqm_brl: 500,
+      p_document_state: "declared_complete",
+    }));
+  });
+
+  it("rejects a manual correction without a positive explicit price", async () => {
+    const rpc = vi.fn();
+    await expect(prepareManualSubdivisionPriceBaseCorrection(actor, {
+      ...context,
+      developmentId,
+      sourcePolicyId: "00000000-0000-4000-8000-000000000005",
+      versionReference: "PB_CORRECAO_001",
+      effectiveFrom: "2026-09-05",
+      sourceRow: 29,
+      blockNumber: 1,
+      lotNumber: 1,
+      pricePerSqmBrl: 0,
+      reasonCode: "source_correction",
+      documentState: "declared_complete",
+      correlationId,
+    }, { rpc })).rejects.toThrow();
+    expect(rpc).not.toHaveBeenCalled();
   });
 
   it("lists policies only through the selected development scope", async () => {

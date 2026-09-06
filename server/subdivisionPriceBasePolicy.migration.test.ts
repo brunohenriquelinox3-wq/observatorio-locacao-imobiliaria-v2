@@ -7,6 +7,7 @@ const rlsMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/mi
 const scopeMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907092000_subdivision_price_base_scope_a225.sql"), "utf8");
 const correctedScopeMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907103000_subdivision_price_base_list_draft_scope_a234.sql"), "utf8");
 const matrixAreaMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907104000_subdivision_price_base_matrix_area_a237.sql"), "utf8");
+const manualCorrectionMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907105000_subdivision_manual_price_base_correction_a238.sql"), "utf8");
 
 describe("subdivision price-base policy migrations", () => {
   it("keeps price-base separate from contracts and commercial effects", () => {
@@ -65,5 +66,19 @@ describe("subdivision price-base policy migrations", () => {
     expect(sql).toContain("security definer set search_path = ''");
     expect(sql).toContain("revoke all on function public.subdivision_prepare_price_base_policy_v2");
     expect(sql).toContain("grant execute on function public.subdivision_prepare_price_base_policy_v2");
+  });
+
+  it("prepares a manual correction only as a derived policy with explicit source row, physical resolution and service-only execution", () => {
+    const sql = manualCorrectionMigration();
+    expect(sql).toContain("p_source_row integer");
+    expect(sql).toContain("p_price_per_sqm_brl numeric");
+    expect(sql).toContain("v_source_policy.exception_count <> 1");
+    expect(sql).toContain("PRICE_BASE_MANUAL_CORRECTION_POLICY_DENIED");
+    expect(sql).toContain("PRICE_BASE_MANUAL_CORRECTION_PHYSICAL_DENIED");
+    expect(sql).toContain("lot.area_sqm");
+    expect(sql).toContain("security definer set search_path = ''");
+    expect(sql).toContain("payload_redacted");
+    expect(sql).toContain("revoke all on function public.subdivision_prepare_manual_price_base_correction_v1");
+    expect(sql).toContain("grant execute on function public.subdivision_prepare_manual_price_base_correction_v1");
   });
 });
