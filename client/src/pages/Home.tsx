@@ -23,11 +23,11 @@ const columns = [
   },
   {
     code: "03",
-    title: "LOTEADORA",
-    label: "Jornadas imobiliárias em setores",
+    title: "LOTEAMENTOS",
+    label: "Cadastro, matriz e estoque interno",
     path: "/loteadora",
     icon: Landmark,
-    sectors: ["Cadastro de Loteamentos", "Estoque/Mapa de Lotes", "Clientes Loteadora", "Sócios e Parceiros", "Vendas de Lotes", "Financeiro bloqueado"],
+    sectors: ["Cadastro, matriz e estoque interno", "Clientes Loteadora", "Sócios e Parceiros", "Vendas de Lotes", "Financeiro bloqueado"],
   },
   {
     code: "04",

@@ -23,3 +23,9 @@ Na primeira revisão posterior ao reenquadramento, foi identificado um seletor l
 Após essa correção, foram aprovados os testes focalizados de navegação e a suíte integral, totalizando 226 arquivos de teste e 614 testes. A tipagem, o build de publicação e a integridade do diff também passaram; o aviso conhecido de tamanho de alguns blocos do build permaneceu não bloqueante. A revisão visual percorreu a entrada unificada e a rota compatível em tela ampla, desktop, tablet e celular, sem clipping, sobreposição ou perda do retorno visível.
 
 O ZIP de código-fonte e o HTML autônomo do marco foram gerados e passaram pela conferência de presença e saneamento. O pacote não contém ambiente, dependências, logs, build, documentação de trabalho ou checklist; o HTML não contém credenciais, hosts, endpoints ou marcadores de infraestrutura. Nenhuma publicação foi executada.
+
+## Fechamento complementar: painel central
+
+Na revisão posterior da entrada geral do CRM, o resumo da coluna ainda reproduzia a lista antiga e apresentava Estoque/Mapa como um setor independente. A composição foi alinhada ao padrão já aplicado à barra lateral e ao seletor local: a coluna passou a se chamar **Loteamentos** e seu primeiro setor reúne cadastro, matriz e estoque interno. Estoque/Mapa deixou de constar como linha autônoma no painel central e continua acessível somente pela rota interna compatível.
+
+A correção complementar foi verificada novamente em tela ampla, tablet e celular, cobrindo a entrada geral, a jornada de Loteamentos e o mapa interno. A validação integral aprovou 226 arquivos de teste e 615 testes, além de tipagem, build de publicação e integridade do diff. Nenhum dado, rota compatível, guarda de acesso ou controle material foi removido ou alterado.

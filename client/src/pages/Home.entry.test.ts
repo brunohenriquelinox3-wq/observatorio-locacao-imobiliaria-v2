@@ -10,10 +10,15 @@ describe("entrada operacional do CRM", () => {
   it("expõe a hierarquia e todas as colunas na sequência aprovada", () => {
     expect(home).toContain('title: "SUPER ADM"');
     expect(home).toContain('title: "ADM"');
-    expect(home).toContain('title: "LOTEADORA"');
+    expect(home).toContain('title: "LOTEAMENTOS"');
     expect(home).toContain('title: "VENDAS URBANAS"');
     expect(home).toContain('title: "LOCAÇÃO"');
     expect(home).toContain("Setores econômicos seguem bloqueados");
+  });
+
+  it("apresenta Estoque/Mapa como parte interna de Loteamentos, não como setor independente", () => {
+    expect(home).toContain('"Cadastro, matriz e estoque interno"');
+    expect(home).not.toContain('"Estoque/Mapa de Lotes"');
   });
   it("usa o layout autenticado e não mantém a estrutura editorial antiga", () => {
     expect(home).toContain("DashboardLayout");
