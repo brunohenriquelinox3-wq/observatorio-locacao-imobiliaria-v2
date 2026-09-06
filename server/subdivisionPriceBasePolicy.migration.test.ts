@@ -10,6 +10,7 @@ const matrixAreaMigration = () => readFileSync(path.resolve(process.cwd(), "supa
 const manualCorrectionMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907105000_subdivision_manual_price_base_correction_a238.sql"), "utf8");
 const policyEvidenceMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907110000_subdivision_policy_submit_evidence_a244.sql"), "utf8");
 const policyWithdrawalMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907111000_subdivision_price_base_policy_withdraw_a245.sql"), "utf8");
+const manualCorrectionEvidenceMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907112000_subdivision_manual_correction_evidence_a246.sql"), "utf8");
 
 describe("subdivision price-base policy migrations", () => {
   it("keeps price-base separate from contracts and commercial effects", () => {
@@ -104,5 +105,17 @@ describe("subdivision price-base policy migrations", () => {
     expect(sql).toContain("payload_redacted");
     expect(sql).toContain("revoke all on function public.subdivision_withdraw_price_base_policy_v1");
     expect(sql).toContain("grant execute on function public.subdivision_withdraw_price_base_policy_v1");
+  });
+
+  it("requires active private evidence on the source policy before preparing a manual correction", () => {
+    const sql = manualCorrectionEvidenceMigration();
+    expect(sql).toContain("subdivision_prepare_manual_price_base_correction_v2");
+    expect(sql).toContain("subdivision_price_evidence_links");
+    expect(sql).toContain("PRICE_BASE_MANUAL_CORRECTION_EVIDENCE_REQUIRED");
+    expect(sql).toContain("attachment.attachment_state = 'recorded'");
+    expect(sql).toContain("security definer set search_path = ''");
+    expect(sql).toContain("payload_redacted");
+    expect(sql).toContain("revoke all on function public.subdivision_prepare_manual_price_base_correction_v2");
+    expect(sql).toContain("grant execute on function public.subdivision_prepare_manual_price_base_correction_v2");
   });
 });

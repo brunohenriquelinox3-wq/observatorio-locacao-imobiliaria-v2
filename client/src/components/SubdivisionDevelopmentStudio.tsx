@@ -563,8 +563,9 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       setManualPriceCorrectionDraft((current) => ({ ...current, sourceRow: "", blockNumber: "", lotNumber: "", pricePerSqmBrl: "" }));
       void utils.subdivisionFoundation.listPriceBasePolicies.invalidate();
     },
-    onError() {
-      toast.error("Correção não preparada", { description: "Revise preço explícito, linha de origem, matriz física, respaldo declarado, MFA e contexto autorizado." });
+    onError(error) {
+      const evidenceRequired = error.message.includes("PRICE_BASE_MANUAL_CORRECTION_EVIDENCE_REQUIRED");
+      toast.error("Correção não preparada", { description: evidenceRequired ? "Vincule um respaldo privado ativo à política-fonte antes de preparar a correção. O conteúdo do anexo permanece protegido." : "Revise preço explícito, linha de origem, matriz física, respaldo declarado, MFA e contexto autorizado." });
     },
   });
   const submitPriceBasePolicyMutation = trpc.subdivisionFoundation.submitPriceBasePolicy.useMutation({
@@ -654,6 +655,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const recordedPrivateAttachments = useMemo(() => (attachmentsQuery.data ?? []).filter((attachment) => attachment.state === "recorded"), [attachmentsQuery.data]);
   const priceEvidenceSummary = priceEvidenceSummaryQuery.data ?? [];
   const priceEvidenceCountFor = (subjectKind: "price_base_policy" | "price_condition", subjectId: string) => priceEvidenceSummary.find((item) => item.subjectKind === subjectKind && item.subjectId === subjectId)?.evidenceCount ?? 0;
+  const manualCorrectionEvidenceCount = manualPriceCorrectionDraft.sourcePolicyId ? priceEvidenceCountFor("price_base_policy", manualPriceCorrectionDraft.sourcePolicyId) : 0;
   const savedStructure = structureQuery.data ?? [];
   const activeSavedStructure = savedStructure.filter((block) => block.lotCount > 0);
   const legacyEmptyBlocks = savedStructure.filter((block) => block.lotCount < 1);
@@ -805,6 +807,10 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   function prepareManualPriceBaseCorrection(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!selectedDevelopmentId || !manualPriceCorrectionDraft.sourcePolicyId || !manualPriceCorrectionDraft.effectiveFrom || !manualPriceCorrectionDraft.sourceRow || !manualPriceCorrectionDraft.blockNumber || !manualPriceCorrectionDraft.lotNumber || !manualPriceCorrectionDraft.pricePerSqmBrl) return;
+    if (manualCorrectionEvidenceCount === 0) {
+      toast.error("Respaldo privado pendente", { description: "Vincule um documento privado ativo à política-fonte antes de preparar a correção. Nenhuma política foi criada." });
+      return;
+    }
     prepareManualPriceBaseCorrectionMutation.mutate({
       ...context,
       developmentId: selectedDevelopmentId,
@@ -1114,9 +1120,10 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                     <label>Lote<input type="number" min={1} max={100} value={manualPriceCorrectionDraft.lotNumber} onChange={(event) => setManualPriceCorrectionDraft((current) => ({ ...current, lotNumber: event.target.value }))} disabled={!isWorkspaceReady || isBusy} required /></label>
                     <label>Preço-base por m² (BRL)<input type="number" min="0.0001" max="1000000000" step="0.0001" value={manualPriceCorrectionDraft.pricePerSqmBrl} onChange={(event) => setManualPriceCorrectionDraft((current) => ({ ...current, pricePerSqmBrl: event.target.value }))} inputMode="decimal" disabled={!isWorkspaceReady || isBusy} required /></label>
                     <label>Motivo<select value={manualPriceCorrectionDraft.reasonCode} onChange={(event) => setManualPriceCorrectionDraft((current) => ({ ...current, reasonCode: event.target.value as typeof current.reasonCode }))} disabled={!isWorkspaceReady || isBusy}><option value="source_correction">Correção de fonte</option><option value="internal_validation">Validação interna</option><option value="documented_revision">Revisão documentada</option></select></label>
-                    <p><ShieldCheck size={15} />Respaldo declarado completo. O servidor confirma a área física do mesmo par Quadra–Lote, preserva a política anterior e exige MFA recente.</p>
+                    <p><ShieldCheck size={15} />Respaldo privado vinculado: {manualCorrectionEvidenceCount} registrado(s) na política-fonte. O servidor confirma a área física do mesmo par Quadra–Lote, preserva a política anterior e exige MFA recente.</p>
                     <button type="button" className="subdivision-studio__secondary" onClick={() => { setAttachmentCategory("other"); openModule("documents"); }} disabled={!isWorkspaceReady || isBusy}>Anexar respaldo privado</button>
-                    <button type="submit" disabled={!isWorkspaceReady || isBusy || !manualPriceCorrectionDraft.sourcePolicyId || !manualPriceCorrectionDraft.effectiveFrom || !manualPriceCorrectionDraft.sourceRow || !manualPriceCorrectionDraft.blockNumber || !manualPriceCorrectionDraft.lotNumber || !manualPriceCorrectionDraft.pricePerSqmBrl}>{prepareManualPriceBaseCorrectionMutation.isPending ? "Preparando correção" : "Preparar correção de preço-base"}</button>
+                    {manualPriceCorrectionDraft.sourcePolicyId && manualCorrectionEvidenceCount === 0 && <p className="subdivision-price-base-policy__submission-note"><ShieldAlert size={15} />Vincule um respaldo privado ativo à política-fonte antes de preparar a correção.</p>}
+                    <button type="submit" disabled={!isWorkspaceReady || isBusy || manualCorrectionEvidenceCount === 0 || !manualPriceCorrectionDraft.sourcePolicyId || !manualPriceCorrectionDraft.effectiveFrom || !manualPriceCorrectionDraft.sourceRow || !manualPriceCorrectionDraft.blockNumber || !manualPriceCorrectionDraft.lotNumber || !manualPriceCorrectionDraft.pricePerSqmBrl}>{prepareManualPriceBaseCorrectionMutation.isPending ? "Preparando correção" : "Preparar correção de preço-base"}</button>
                   </form>
                 </details>
                 <div className="subdivision-price-base-policy__history" aria-live="polite"><div><span>VERSÕES REGISTRADAS</span><h6>Histórico auditável de preparação e aprovação</h6></div>{priceBasePoliciesQuery.isLoading && <p><LoaderCircle className="subdivision-foundation-spinner" />Carregando políticas autorizadas.</p>}{!priceBasePoliciesQuery.isLoading && (priceBasePoliciesQuery.data ?? []).length === 0 && <p>Nenhuma política formal registrada neste cadastro.</p>}{(priceBasePoliciesQuery.data ?? []).map((policy) => { const evidenceCount = priceEvidenceCountFor("price_base_policy", policy.policyId); const policyReadyForSubmission = policy.exceptionCount === 0 && evidenceCount > 0; return <article key={policy.policyId} data-state={policy.state}><div><b>{policy.versionReference}</b><span>Vigência inicial: {new Date(`${policy.effectiveFrom}T00:00:00`).toLocaleDateString("pt-BR")}</span></div><dl><div><dt>Linhas</dt><dd>{policy.lineCount}</dd></div><div><dt>Exceções</dt><dd>{policy.exceptionCount}</dd></div><div><dt>Respaldo privado</dt><dd>{evidenceCount}</dd></div><div><dt>Estado</dt><dd>{policy.state === "prepared" ? "Preparada" : policy.state === "submitted" ? "Encaminhada" : policy.state === "approved" ? "Aprovada" : policy.state === "expired" ? "Expirada" : "Retirada"}</dd></div></dl>{policy.state === "prepared" && !policyReadyForSubmission && <p className="subdivision-price-base-policy__submission-note"><ShieldAlert size={15} />{policy.exceptionCount > 0 ? "Resolva todas as exceções antes de encaminhar." : "Vincule ao menos um respaldo privado antes de encaminhar."}</p>}<div className="subdivision-price-base-policy__history-actions">{policy.state === "prepared" && <button type="button" className="subdivision-studio__secondary" onClick={() => submitPriceBasePolicyMutation.mutate({ ...context, policyId: policy.policyId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy || !policyReadyForSubmission}>Encaminhar</button>}{policy.state === "submitted" && <><button type="button" onClick={() => approvePriceBasePolicyMutation.mutate({ ...context, policyId: policy.policyId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy}>Aprovar como segunda pessoa</button><button type="button" className="subdivision-studio__secondary" onClick={() => withdrawPriceBasePolicyMutation.mutate({ ...context, policyId: policy.policyId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy}>Retirar encaminhamento</button></>}</div></article>; })}</div>

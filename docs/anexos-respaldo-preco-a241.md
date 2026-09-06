@@ -59,3 +59,15 @@ A retirada foi restringida à política **encaminhada** e ainda não aprovada. A
 | Validação dirigida | 3 arquivos e 42 testes aprovados; tipagem e integridade de diff aprovadas. |
 | Validação integral | 219 arquivos de teste e 566 testes aprovados; tipagem, build Netlify e integridade de diff aprovados. |
 | Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |
+
+## Evidência na política-fonte da correção manual A246
+
+A correção manual passou a exigir, no servidor, pelo menos um vínculo ativo de anexo privado registrado na política-fonte. A interface mostra somente a contagem agregada de respaldo e mantém a preparação indisponível quando a política-fonte não tem vínculo. A revisão autenticada confirmou a política em Preparação com **0 respaldos privados** e nenhuma correção preparada; não houve anexo, vínculo, política, linha ou comando material durante a revisão.
+
+| Resultado de validação A246 | Resultado |
+|---|---|
+| Serviço e migração | A correção usa a função v2, que exige evidência ativa e anexo privado registrado na política-fonte antes de criar uma nova versão. |
+| Interface | O formulário mostra somente a contagem agregada de vínculos e bloqueia a preparação sem respaldo ativo. |
+| Validação dirigida | 3 arquivos e 44 testes aprovados; tipagem e integridade de diff aprovadas. |
+| Validação integral | 219 arquivos de teste e 568 testes aprovados; tipagem, build Netlify e integridade de diff aprovados. |
+| Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |

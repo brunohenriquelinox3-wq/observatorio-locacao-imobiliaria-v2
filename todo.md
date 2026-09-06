@@ -2270,3 +2270,9 @@
 - [x] Manter políticas preparadas, aprovadas, expiradas ou já retiradas bloqueadas para retirada; não alterar linhas, evidências, matriz, condição, preço vigente, venda, contrato ou financeiro. **A245:** a função falha fora do estado submetido e somente atualiza o estado lógico e a auditoria redigida.
 - [x] Exibir orientação e ação de retirada apenas quando o estado permitir, sem executar o comando na política real durante a revisão. **A245:** a ação aparece somente no histórico encaminhado; a política atual em Preparação continuou sem ação de retirada e sem mutação.
 - [x] Cobrir serviço, migração e interface; revisar, gerar ZIP/HTML saneados e salvar checkpoint sem retirar política real. **A245:** 219 arquivos/566 testes, tipagem, build Netlify, diff limpo, revisão autenticada e saneamento foram aprovados; checkpoint funcional `db8d7e06` preserva a ausência de retirada real.
+
+## Evidência privada para correção manual de preço-base — A246
+- [x] Exigir vínculo privado ativo na política-fonte antes de preparar correção manual, mantendo MFA, contexto, organização, idempotência e auditoria redigida no servidor. **A246:** a função v2 exige vínculo ativo com anexo privado registrado antes da derivação da nova versão.
+- [x] Bloquear a preparação quando não houver evidência ativa e não criar nova política, linha, correção, venda, contrato ou financeiro. **A246:** a função retorna erro redigido antes das inserções e a interface bloqueia a ação no mesmo estado.
+- [x] Exibir contagem e orientação de respaldo no formulário de correção, sem expor arquivo, valor ou identificadores físicos. **A246:** o formulário mostra somente contagem agregada e orienta o vínculo privado na política-fonte.
+- [ ] Cobrir serviço, migração e interface; revisar, gerar ZIP/HTML saneados e salvar checkpoint sem preparar correção real.

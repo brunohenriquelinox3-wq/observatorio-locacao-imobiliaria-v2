@@ -158,12 +158,14 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Preparar nova versão com preço explícito");
     expect(studio).toContain("Linha de origem");
     expect(studio).toContain("Preço-base por m² (BRL)");
-    expect(studio).toContain("Respaldo declarado completo");
+    expect(studio).toContain("Respaldo privado vinculado:");
     expect(studio).toContain("prepareManualPriceBaseCorrectionMutation");
     expect(studio).toContain('documentState: "declared_complete"');
     expect(studio).toContain("A correção não aprova nem disponibiliza o Lote.");
     expect(studio).toContain("Anexar respaldo privado");
     expect(studio).toContain('setAttachmentCategory("other"); openModule("documents");');
+    expect(studio).toContain("manualCorrectionEvidenceCount === 0");
+    expect(studio).toContain("Vincule um respaldo privado ativo à política-fonte antes de preparar a correção.");
   });
 
   it("restringe a retirada de política-base ao estado encaminhado", () => {

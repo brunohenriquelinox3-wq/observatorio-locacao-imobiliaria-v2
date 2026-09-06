@@ -95,7 +95,7 @@ describe("subdivision price-base policy boundary", () => {
       documentState: "declared_complete",
       correlationId,
     }, { rpc })).resolves.toEqual({ policyId: "00000000-0000-4000-8000-000000000006", lineCount: 164, exceptionCount: 0 });
-    expect(rpc).toHaveBeenCalledWith("subdivision_prepare_manual_price_base_correction_v1", expect.objectContaining({
+    expect(rpc).toHaveBeenCalledWith("subdivision_prepare_manual_price_base_correction_v2", expect.objectContaining({
       p_source_row: 29,
       p_block_number: 1,
       p_lot_number: 1,
@@ -121,6 +121,24 @@ describe("subdivision price-base policy boundary", () => {
       correlationId,
     }, { rpc })).rejects.toThrow();
     expect(rpc).not.toHaveBeenCalled();
+  });
+
+  it("preserves the redacted evidence-required error before a manual correction can be prepared", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: null, error: { message: "PRICE_BASE_MANUAL_CORRECTION_EVIDENCE_REQUIRED" } });
+    await expect(prepareManualSubdivisionPriceBaseCorrection(actor, {
+      ...context,
+      developmentId,
+      sourcePolicyId: "00000000-0000-4000-8000-000000000005",
+      versionReference: "PB_CORRECAO_001",
+      effectiveFrom: "2026-09-05",
+      sourceRow: 29,
+      blockNumber: 1,
+      lotNumber: 1,
+      pricePerSqmBrl: 500,
+      reasonCode: "source_correction",
+      documentState: "declared_complete",
+      correlationId,
+    }, { rpc })).rejects.toThrow("PRICE_BASE_MANUAL_CORRECTION_EVIDENCE_REQUIRED");
   });
 
   it("lists policies only through the selected development scope", async () => {

@@ -300,7 +300,7 @@ export async function prepareManualSubdivisionPriceBaseCorrection(subjectId: str
     lotNumber: input.lotNumber,
     pricePerSqmBrl: input.pricePerSqmBrl,
   });
-  const { data, error } = await client.rpc("subdivision_prepare_manual_price_base_correction_v1", {
+  const { data, error } = await client.rpc("subdivision_prepare_manual_price_base_correction_v2", {
     p_actor_user_id: actorUserId,
     p_organization_id: input.organizationId,
     p_module: input.module,
@@ -319,6 +319,7 @@ export async function prepareManualSubdivisionPriceBaseCorrection(subjectId: str
     p_document_state: input.documentState,
     p_correlation_id: input.correlationId,
   });
+  if (error?.message === "PRICE_BASE_MANUAL_CORRECTION_EVIDENCE_REQUIRED") throw new Error("PRICE_BASE_MANUAL_CORRECTION_EVIDENCE_REQUIRED");
   if (error || !data || typeof data !== "object") throw new Error("PRICE_BASE_MANUAL_CORRECTION_DENIED");
   const result = data as Record<string, unknown>;
   return { policyId: String(result.policy_id), lineCount: Number(result.line_count), exceptionCount: Number(result.exception_count) };
