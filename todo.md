@@ -2244,3 +2244,11 @@
 - [x] Exibir anexos como respaldo de Preparação, sem anexar arquivos reais, publicar conteúdo, abrir contrato ou criar efeito comercial. **A241:** a central mostra a contagem agregada e oferece encaminhamento explícito a Documentos; nenhuma seleção, upload ou vínculo material foi executado na revisão.
 - [x] Cobrir segurança e interface, revisar e gerar ZIP/HTML saneados. **A241:** teste dirigido, suíte integral com 216 arquivos/551 testes, tipagem, build Netlify, integridade de diff, revisão autenticada e saneamento de artefatos foram aprovados; o build preservou somente o aviso não bloqueante de chunks grandes.
 - [x] Salvar checkpoint A241 após documentação, validação integral e saneamento dos artefatos. **A241:** checkpoint `8dc296c0` preserva o encaminhamento a anexos privados, a contagem agregada e a ausência de arquivo real anexado.
+
+## Vínculo auditável de evidência privada — A242
+- [x] Modelar vínculo aditivo entre anexo privado existente e política, condição ou correção de preço, sem duplicar bytes, URL ou conteúdo. **A242:** a tabela aditiva armazena somente referências internas, estado e auditoria; bytes, URL, chaves e conteúdo permanecem no armazenamento privado existente.
+- [x] Exigir autoridade ativa, MFA, organização, contexto, resolução do objeto no servidor, correlação e idempotência para criar ou retirar vínculo. **A242:** service, router e RPC validam o anexo e o objeto no mesmo cadastro antes de vincular ou arquivar uma relação.
+- [x] Exibir apenas contagem e estado agregado de respaldo por objeto, sem permitir leitura pública ou inferir aprovação comercial. **A242:** a central apresenta contagem por política e seleção opaca de documento privado já registrado; nenhum vínculo equivale a aprovação.
+- [x] Cobrir serviço, migração e interface e revisar sem anexar arquivo real. **A242:** teste dirigido, suíte integral com 218 arquivos/557 testes, tipagem, build Netlify, integridade de diff e revisão autenticada foram aprovados; o build preservou somente o aviso não bloqueante de chunks grandes.
+- [x] Gerar ZIP/HTML saneados. **A242:** os artefatos foram verificados sem ambiente, logs, documentação, checklist, dados de origem, credenciais ou infraestrutura.
+- [ ] Salvar checkpoint A242 após documentação, validação integral e saneamento dos artefatos.

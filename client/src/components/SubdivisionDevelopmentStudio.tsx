@@ -284,6 +284,11 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     pricePerSqmBrl: "",
     reasonCode: "source_correction" as "source_correction" | "internal_validation" | "documented_revision",
   });
+  const [priceEvidenceDraft, setPriceEvidenceDraft] = useState({
+    subjectKind: "price_base_policy" as "price_base_policy" | "price_condition",
+    subjectId: "",
+    attachmentId: "",
+  });
   const [priceConditionDraft, setPriceConditionDraft] = useState({
     basePolicyId: "",
     conditionReference: "PC_VISTA_DO_SOL_001",
@@ -323,6 +328,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const requirementsQuery = trpc.subdivisionFoundation.listDraftDevelopmentRequirements.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const priceBasePoliciesQuery = trpc.subdivisionFoundation.listPriceBasePolicies.useQuery(priceBasePolicyInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const priceConditionsQuery = trpc.subdivisionFoundation.listPriceConditions.useQuery(priceConditionInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
+  const priceEvidenceSummaryQuery = trpc.subdivisionFoundation.listPriceEvidenceSummary.useQuery(priceBasePolicyInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const focusedLotPriceContextQuery = trpc.subdivisionFoundation.getLotPriceContext.useQuery(focusedLotPriceContextInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId && focusedLotPriceTarget), retry: false, staleTime: 30_000 });
   const structuralReconciliationState = requirementsQuery.data?.find((requirement) => requirement.requirementCode === "technical_layout")?.requirementState as RequirementState | undefined;
   const structuralReconciliationPending = structuralReconciliationState === "review_required";
@@ -618,12 +624,25 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       toast.error("Retirada bloqueada", { description: "Somente condições em preparação ou encaminhadas podem ser retiradas, com MFA e alçada válidos." });
     },
   });
+  const linkPriceEvidenceMutation = trpc.subdivisionFoundation.linkPriceEvidence.useMutation({
+    onSuccess() {
+      toast.success("Respaldo vinculado", { description: "O vínculo privado foi registrado sem expor conteúdo ou alterar preço, aprovação, venda ou contrato." });
+      setPriceEvidenceDraft((current) => ({ ...current, attachmentId: "" }));
+      void utils.subdivisionFoundation.listPriceEvidenceSummary.invalidate();
+    },
+    onError() {
+      toast.error("Vínculo bloqueado", { description: "Confirme anexo privado registrado, objeto do cadastro selecionado, MFA recente e contexto autorizado." });
+    },
+  });
 
   const identityReady = form.internalReference.length >= 3 && form.displayName.trim().length >= 3;
   const classificationReady = form.parcelingMode !== "to_review" && form.predominantUse !== "to_review";
   const territorialReady = Boolean(form.municipality) && Boolean(form.stateCode) && form.territorialContext !== "to_review";
   const identificationDetailed = identityReady && classificationReady && territorialReady;
   const activeAttachmentCount = attachmentsQuery.data?.filter((attachment) => attachment.state === "recorded").length ?? 0;
+  const recordedPrivateAttachments = useMemo(() => (attachmentsQuery.data ?? []).filter((attachment) => attachment.state === "recorded"), [attachmentsQuery.data]);
+  const priceEvidenceSummary = priceEvidenceSummaryQuery.data ?? [];
+  const priceEvidenceCountFor = (subjectKind: "price_base_policy" | "price_condition", subjectId: string) => priceEvidenceSummary.find((item) => item.subjectKind === subjectKind && item.subjectId === subjectId)?.evidenceCount ?? 0;
   const savedStructure = structureQuery.data ?? [];
   const activeSavedStructure = savedStructure.filter((block) => block.lotCount > 0);
   const legacyEmptyBlocks = savedStructure.filter((block) => block.lotCount < 1);
@@ -636,7 +655,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const savedLotCount = activeSavedStructure.reduce((total, block) => total + block.lotCount, 0);
   const draftLotCount = structureRows.reduce((total, block) => total + (Number.isFinite(block.lotCount) ? block.lotCount : 0), 0);
   const completedModules = [identificationDetailed, activeSavedStructure.length > 0, Boolean(form.workingPhase)].filter(Boolean).length;
-  const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || restoreBlockMutation.isPending || applyPhysicalStructureMutation.isPending || upsertRequirementMutation.isPending || previewPriceBaseSourceMutation.isPending || preparePriceBasePolicyMutation.isPending || prepareManualPriceBaseCorrectionMutation.isPending || submitPriceBasePolicyMutation.isPending || approvePriceBasePolicyMutation.isPending || createPriceConditionMutation.isPending || submitPriceConditionMutation.isPending || approvePriceConditionMutation.isPending || withdrawPriceConditionMutation.isPending || isUploading;
+  const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || restoreBlockMutation.isPending || applyPhysicalStructureMutation.isPending || upsertRequirementMutation.isPending || previewPriceBaseSourceMutation.isPending || preparePriceBasePolicyMutation.isPending || prepareManualPriceBaseCorrectionMutation.isPending || submitPriceBasePolicyMutation.isPending || approvePriceBasePolicyMutation.isPending || createPriceConditionMutation.isPending || submitPriceConditionMutation.isPending || approvePriceConditionMutation.isPending || withdrawPriceConditionMutation.isPending || linkPriceEvidenceMutation.isPending || isUploading;
   const selectedModule = studioModules.find((module) => module.id === activeModule) ?? studioModules[0];
 
   function startNew() {
@@ -787,6 +806,19 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       pricePerSqmBrl: Number(manualPriceCorrectionDraft.pricePerSqmBrl),
       reasonCode: manualPriceCorrectionDraft.reasonCode,
       documentState: "declared_complete",
+      correlationId: crypto.randomUUID(),
+    });
+  }
+
+  function linkPriceEvidence(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!selectedDevelopmentId || !priceEvidenceDraft.subjectId || !priceEvidenceDraft.attachmentId) return;
+    linkPriceEvidenceMutation.mutate({
+      ...context,
+      developmentId: selectedDevelopmentId,
+      subjectKind: priceEvidenceDraft.subjectKind,
+      subjectId: priceEvidenceDraft.subjectId,
+      attachmentId: priceEvidenceDraft.attachmentId,
       correlationId: crypto.randomUUID(),
     });
   }
@@ -1050,6 +1082,16 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                 {priceBaseSourcePreview && <div className="subdivision-price-base-policy__preview"><div className="subdivision-price-base-policy__metrics"><div><b>{priceBaseSourcePreview.sourceRows}</b><span>linhas na fonte</span></div><div><b>{priceBaseSourcePreview.importableLineCount}</b><span>linhas permitidas</span></div><div data-safe={priceBaseSourcePreview.unreconciledLineCount === 0}><b>{priceBaseSourcePreview.reconciledLineCount}</b><span>pares reconciliados</span></div><div data-safe={priceBaseSourcePreview.matrixAreaResolvedLineCount === 0}><b>{priceBaseSourcePreview.matrixAreaResolvedLineCount}</b><span>área confirmada pela matriz</span></div><div data-safe={priceBaseExceptionCount === 0}><b>{priceBaseExceptionCount}</b><span>exceções</span></div></div><div className="subdivision-price-base-policy__preview-note"><ShieldAlert size={16} /><span>{priceBaseSourcePreview.unreconciledLineCount > 0 ? "A preparação fica bloqueada até que todos os pares permitidos coincidam exatamente com a matriz física." : priceBaseExceptionCount > 0 ? "A preparação fica bloqueada: cada linha precisa ter Quadra, Lote, área e preço-base válidos." : priceBaseSourcePreview.matrixAreaResolvedLineCount > 0 ? "A área ausente foi confirmada exclusivamente pela matriz física já salva. A preparação ainda exige MFA recente e não aprova a política." : "A fonte permitida coincide com a matriz física. A preparação ainda exige MFA recente e não aprova a política."}</span></div>{priceBaseSourcePreview.ignoredColumns.length > 0 && <p className="subdivision-price-base-policy__discarded">Coluna(s) descartada(s): {priceBaseSourcePreview.ignoredColumns.join(", ")}. O conteúdo não é importado.</p>}{priceBaseExceptionCount > 0 && <><ul className="subdivision-price-base-policy__exceptions">{Object.entries(priceBaseSourcePreview.exceptionCounts).map(([code, count]) => <li key={code}><b>{count}</b><span>{priceBaseExceptionLabels[code] ?? "Inconsistência na fonte"}</span></li>)}</ul><p className="subdivision-price-base-policy__remediation">Corrija a origem e gere outra prévia. Referência saneada: {priceBaseSourcePreview.exceptionRows.map((item) => `linha ${item.sourceRow} · ${priceBaseExceptionLabels[item.code] ?? "campo obrigatório pendente"}`).join("; ")}. Nenhum valor, Quadra, Lote ou status é exibido.</p></>}</div>}
                 <div className="subdivision-price-base-policy__prepare"><label>Referência da versão<input value={priceBaseVersionReference} onChange={(event) => setPriceBaseVersionReference(normalizePriceBaseVersionReference(event.target.value))} placeholder="PB_VERSAO_001" disabled={!isWorkspaceReady || isBusy} maxLength={75} /></label><label>Início da vigência<input type="date" value={priceBaseEffectiveFrom} onChange={(event) => setPriceBaseEffectiveFrom(event.target.value)} disabled={!isWorkspaceReady || isBusy} /></label><div><span>Estado da preparação</span><b>{priceBaseReadyForPreparation ? priceBaseExceptionCount > 0 ? "Pronto com pendência bloqueadora" : "Pronto para registrar" : "Aguardando prévia conciliada"}</b><small>{priceBaseExceptionCount > 0 ? "As linhas válidas podem ser auditadas; encaminhar e aprovar continuam bloqueados." : "Preparar não disponibiliza Lotes nem cria valor contratual."}</small></div><button type="button" onClick={preparePriceBasePolicy} disabled={!isWorkspaceReady || isBusy || !priceBaseReadyForPreparation}>{preparePriceBasePolicyMutation.isPending ? "Preparando política" : priceBaseExceptionCount > 0 ? "Preparar com pendência" : "Preparar política"}</button></div>
                 <p className="subdivision-price-base-policy__guardrail">Preço-base é referência interna versionada. Ele não é proposta, preço de contrato, receita, recebível, lançamento tributário, cobrança, pagamento ou repasse.</p>
+                <details className="subdivision-price-evidence">
+                  <summary><span>RESPALDO PRIVADO VINCULADO</span><b>Associar documento já registrado</b><small>O vínculo usa somente metadados opacos; não exibe nome, URL, chave ou conteúdo do arquivo.</small></summary>
+                  <form onSubmit={linkPriceEvidence}>
+                    <label>Objeto de preço<select value={priceEvidenceDraft.subjectKind} onChange={(event) => setPriceEvidenceDraft((current) => ({ ...current, subjectKind: event.target.value as "price_base_policy" | "price_condition", subjectId: "" }))} disabled={!isWorkspaceReady || isBusy}><option value="price_base_policy">Política de preço-base</option><option value="price_condition">Condição de preço</option></select></label>
+                    <label>{priceEvidenceDraft.subjectKind === "price_base_policy" ? "Política" : "Condição"}<select value={priceEvidenceDraft.subjectId} onChange={(event) => setPriceEvidenceDraft((current) => ({ ...current, subjectId: event.target.value }))} disabled={!isWorkspaceReady || isBusy} required><option value="">Selecione o objeto</option>{priceEvidenceDraft.subjectKind === "price_base_policy" ? (priceBasePoliciesQuery.data ?? []).map((policy) => <option key={policy.policyId} value={policy.policyId}>{policy.versionReference} · {policy.state}</option>) : (priceConditionsQuery.data ?? []).map((condition) => <option key={condition.conditionId} value={condition.conditionId}>{condition.conditionReference} · {condition.state}</option>)}</select></label>
+                    <label>Anexo privado registrado<select value={priceEvidenceDraft.attachmentId} onChange={(event) => setPriceEvidenceDraft((current) => ({ ...current, attachmentId: event.target.value }))} disabled={!isWorkspaceReady || isBusy || recordedPrivateAttachments.length === 0} required><option value="">{recordedPrivateAttachments.length ? "Selecione o anexo" : "Nenhum anexo privado registrado"}</option>{recordedPrivateAttachments.map((attachment, index) => <option key={attachment.attachmentId} value={attachment.attachmentId}>Documento privado {String(index + 1).padStart(2, "0")} · {attachmentCategoryLabels[attachment.category]}</option>)}</select></label>
+                    <p><ShieldCheck size={15} />O vínculo não declara aprovação documental, não publica o arquivo e não altera preço, vigência ou condição.</p>
+                    <button type="submit" disabled={!isWorkspaceReady || isBusy || !priceEvidenceDraft.subjectId || !priceEvidenceDraft.attachmentId}>{linkPriceEvidenceMutation.isPending ? "Vinculando respaldo" : "Vincular respaldo privado"}</button>
+                  </form>
+                </details>
                 <details className="subdivision-price-base-policy__manual-correction">
                   <summary><span>CORRIGIR PREÇO-BASE PENDENTE</span><b>Preparar nova versão com preço explícito</b><small>Use somente quando houver fonte interna, deliberação ou documento que sustente o valor. A correção não aprova nem disponibiliza o Lote.</small></summary>
                   <form onSubmit={prepareManualPriceBaseCorrection}>
@@ -1066,7 +1108,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                     <button type="submit" disabled={!isWorkspaceReady || isBusy || !manualPriceCorrectionDraft.sourcePolicyId || !manualPriceCorrectionDraft.effectiveFrom || !manualPriceCorrectionDraft.sourceRow || !manualPriceCorrectionDraft.blockNumber || !manualPriceCorrectionDraft.lotNumber || !manualPriceCorrectionDraft.pricePerSqmBrl}>{prepareManualPriceBaseCorrectionMutation.isPending ? "Preparando correção" : "Preparar correção de preço-base"}</button>
                   </form>
                 </details>
-                <div className="subdivision-price-base-policy__history" aria-live="polite"><div><span>VERSÕES REGISTRADAS</span><h6>Histórico auditável de preparação e aprovação</h6></div>{priceBasePoliciesQuery.isLoading && <p><LoaderCircle className="subdivision-foundation-spinner" />Carregando políticas autorizadas.</p>}{!priceBasePoliciesQuery.isLoading && (priceBasePoliciesQuery.data ?? []).length === 0 && <p>Nenhuma política formal registrada neste cadastro.</p>}{(priceBasePoliciesQuery.data ?? []).map((policy) => <article key={policy.policyId} data-state={policy.state}><div><b>{policy.versionReference}</b><span>Vigência inicial: {new Date(`${policy.effectiveFrom}T00:00:00`).toLocaleDateString("pt-BR")}</span></div><dl><div><dt>Linhas</dt><dd>{policy.lineCount}</dd></div><div><dt>Exceções</dt><dd>{policy.exceptionCount}</dd></div><div><dt>Estado</dt><dd>{policy.state === "prepared" ? "Preparada" : policy.state === "submitted" ? "Encaminhada" : policy.state === "approved" ? "Aprovada" : policy.state === "expired" ? "Expirada" : "Retirada"}</dd></div></dl><div className="subdivision-price-base-policy__history-actions">{policy.state === "prepared" && <button type="button" className="subdivision-studio__secondary" onClick={() => submitPriceBasePolicyMutation.mutate({ ...context, policyId: policy.policyId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy || policy.exceptionCount > 0}>Encaminhar</button>}{policy.state === "submitted" && <button type="button" onClick={() => approvePriceBasePolicyMutation.mutate({ ...context, policyId: policy.policyId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy}>Aprovar como segunda pessoa</button>}</div></article>)}</div>
+                <div className="subdivision-price-base-policy__history" aria-live="polite"><div><span>VERSÕES REGISTRADAS</span><h6>Histórico auditável de preparação e aprovação</h6></div>{priceBasePoliciesQuery.isLoading && <p><LoaderCircle className="subdivision-foundation-spinner" />Carregando políticas autorizadas.</p>}{!priceBasePoliciesQuery.isLoading && (priceBasePoliciesQuery.data ?? []).length === 0 && <p>Nenhuma política formal registrada neste cadastro.</p>}{(priceBasePoliciesQuery.data ?? []).map((policy) => <article key={policy.policyId} data-state={policy.state}><div><b>{policy.versionReference}</b><span>Vigência inicial: {new Date(`${policy.effectiveFrom}T00:00:00`).toLocaleDateString("pt-BR")}</span></div><dl><div><dt>Linhas</dt><dd>{policy.lineCount}</dd></div><div><dt>Exceções</dt><dd>{policy.exceptionCount}</dd></div><div><dt>Respaldo privado</dt><dd>{priceEvidenceCountFor("price_base_policy", policy.policyId)}</dd></div><div><dt>Estado</dt><dd>{policy.state === "prepared" ? "Preparada" : policy.state === "submitted" ? "Encaminhada" : policy.state === "approved" ? "Aprovada" : policy.state === "expired" ? "Expirada" : "Retirada"}</dd></div></dl><div className="subdivision-price-base-policy__history-actions">{policy.state === "prepared" && <button type="button" className="subdivision-studio__secondary" onClick={() => submitPriceBasePolicyMutation.mutate({ ...context, policyId: policy.policyId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy || policy.exceptionCount > 0}>Encaminhar</button>}{policy.state === "submitted" && <button type="button" onClick={() => approvePriceBasePolicyMutation.mutate({ ...context, policyId: policy.policyId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy}>Aprovar como segunda pessoa</button>}</div></article>)}</div>
               </section>}
 
               {selectedDevelopmentId && <section className="subdivision-price-conditions" aria-labelledby="price-conditions-title">

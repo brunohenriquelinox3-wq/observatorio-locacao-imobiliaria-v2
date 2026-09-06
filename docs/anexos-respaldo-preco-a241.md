@@ -18,3 +18,7 @@ O respaldo documental deve ser armazenado como objeto privado e associado à pol
 ## Revisão autenticada
 
 A central de condições passou a mostrar a contagem agregada de anexos privados do cadastro e o botão **Adicionar respaldo privado**. O botão encaminha ao módulo Documentos, pré-selecionando a categoria interna `other`, que usa a rota privada existente com MFA, validação de tipo/tamanho/assinatura, armazenamento privado e metadados opacos. A revisão não selecionou nem enviou arquivo.
+
+## Vínculo auditável A242
+
+A revisão autenticada confirmou o painel recolhido **“Respaldo privado vinculado”** dentro da política formal. Ao abrir, ele permite associar somente um anexo privado já registrado a uma política ou condição do cadastro selecionado. A escolha apresenta rótulos opacos de documento, sem nome original, URL, chave, conteúdo ou download. Como não há anexo registrado no cadastro, o seletor permanece sem opção e nenhum vínculo foi criado durante a revisão.
