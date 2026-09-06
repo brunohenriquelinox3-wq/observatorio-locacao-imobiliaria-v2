@@ -17,6 +17,7 @@ type StudioModule = "identity" | "structure" | "preparation" | "documents" | "li
 type PriceConditionScope = "development" | "block" | "lot";
 type PriceConditionKind = "override_per_sqm" | "percentage_adjustment" | "temporary_discount";
 type PriceConditionDocumentState = "pending_evidence" | "under_review" | "declared_complete" | "review_required";
+type LotPriceAvailabilityReason = "no_policy" | "prepared_with_exceptions" | "prepared_pending_validation" | "submitted_pending_approval" | "approved_outside_vigency" | "policy_not_available";
 
 type DevelopmentStudioProps = {
   context: SubdivisionContext;
@@ -114,6 +115,15 @@ const priceConditionStateLabels: Record<string, string> = {
   approved: "Aprovada",
   expired: "Expirada",
   withdrawn: "Retirada",
+};
+
+const lotPriceAvailabilityReasonLabels: Record<LotPriceAvailabilityReason, string> = {
+  no_policy: "Nenhuma política formal foi preparada para este cadastro.",
+  prepared_with_exceptions: "A política está em Preparação e possui pendência; referência de preço permanece bloqueada.",
+  prepared_pending_validation: "A política está em Preparação e aguarda validação antes de qualquer referência operacional.",
+  submitted_pending_approval: "A política aguarda aprovação por segunda pessoa autorizada.",
+  approved_outside_vigency: "Há política aprovada, mas ela não está vigente para a data atual.",
+  policy_not_available: "A política mais recente não está disponível para referência operacional.",
 };
 
 const phaseLabels: Record<WorkingPhase, string> = {
@@ -1022,6 +1032,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                 <p className="subdivision-lot-management__result-count" aria-live="polite"><b>{visibleLotCount}</b> {visibleLotCount === 1 ? "Lote encontrado" : "Lotes encontrados"} em <b>{visibleBlockCount}</b> {visibleBlockCount === 1 ? "Quadra" : "Quadras"}. A contagem reflete apenas os filtros locais de leitura.</p>
                 <div className="subdivision-lot-management__list">{visibleLotBlocks.length === 0 ? <p className="subdivision-lot-management__empty">{emptyLotFilterMessage}</p> : visibleLotBlocks.map((block, index) => <details className="subdivision-lot-management__block" key={block.blockNumber} open={lotBlockFilter !== "all" || Boolean(lotSearch.trim()) || index === 0}><summary><div><span>QUADRA</span><h6>Q{block.blockNumber}</h6></div><dl><div><dt>Lotes exibidos</dt><dd>{block.lots.length}</dd></div><div><dt>Área física</dt><dd>{block.totalAreaSqm.toLocaleString("pt-BR", { maximumFractionDigits: 2 })} m²</dd></div><div><dt>Lotes com pendência</dt><dd>{block.lotsWithPhysicalPending}</dd></div></dl><span className="subdivision-lot-management__toggle">Ver Lotes</span></summary><div className="subdivision-lot-management__lot-grid">{block.lots.map((lot) => <article className="subdivision-lot-management__lot" key={`${lot.blockNumber}-${lot.lotNumber}`} tabIndex={0} onMouseEnter={() => setFocusedLotPriceTarget({ blockId: lot.blockId, lotNumber: lot.lotNumber })} onMouseLeave={() => setFocusedLotPriceTarget(null)} onFocus={() => setFocusedLotPriceTarget({ blockId: lot.blockId, lotNumber: lot.lotNumber })} onBlur={() => setFocusedLotPriceTarget(null)}><div className="subdivision-lot-management__lot-head"><b>L{lot.lotNumber}</b><em>{lot.lotTypology === "standard" ? "Tipologia pendente" : lotTypologyLabels[lot.lotTypology] ?? "Não informada"}</em></div><dl><div><dt>Área</dt><dd>{typeof lot.areaSqm === "number" ? `${lot.areaSqm.toLocaleString("pt-BR")} m²` : "Pendente"}</dd></div><div><dt>Posição</dt><dd>{lotPositionLabels[lot.positionCode] ?? "Não informada"}</dd></div><div><dt>Frente</dt><dd>{typeof lot.frontageM === "number" ? `${lot.frontageM.toLocaleString("pt-BR")} m` : "Pendente"}</dd></div><div><dt>Profundidade</dt><dd>{typeof lot.depthM === "number" ? `${lot.depthM.toLocaleString("pt-BR")} m` : "Pendente"}</dd></div></dl>{focusedLotPriceTarget?.blockId === lot.blockId && focusedLotPriceTarget.lotNumber === lot.lotNumber && <aside className="subdivision-lot-management__price-context" aria-live="polite"><span>REFERÊNCIA DE PREÇO</span>{focusedLotPriceContextQuery.isFetching ? <small>Consultando política aprovada…</small> : focusedLotPriceContextQuery.data?.state === "active" && typeof focusedLotPriceContextQuery.data.effectivePricePerSqmBrl === "number" ? <><b>{focusedLotPriceContextQuery.data.effectivePricePerSqmBrl.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} por m²</b><small>{focusedLotPriceContextQuery.data.conditionReference ? `${focusedLotPriceContextQuery.data.conditionReference} · ${priceConditionScopeLabels[focusedLotPriceContextQuery.data.conditionScope ?? "development"]}` : `${focusedLotPriceContextQuery.data.policyReference} · sem ajuste específico`}</small></> : <small>Nenhuma política aprovada e vigente libera referência de preço para este Lote.</small>}</aside>}</article>)}</div></details>)}</div>
               </section>}
+              {activeModule === "structure" && focusedLotPriceTarget && focusedLotPriceContextQuery.data?.state === "unavailable" && <p className="subdivision-lot-management__price-guidance" aria-live="polite">{lotPriceAvailabilityReasonLabels[(focusedLotPriceContextQuery.data.availabilityReason ?? "no_policy") as LotPriceAvailabilityReason]}</p>}
 
               {selectedDevelopmentId && <section className="subdivision-lot-pricing" aria-labelledby="lot-pricing-title">
                 <div className="subdivision-lot-pricing__head"><div><span>POLÍTICA DE PREÇO POR M² · PRÉVIA</span><h5 id="lot-pricing-title">Simule o valor-base sem misturar preço com a matriz física.</h5><p>Informe um preço por m² para leitura local. A prévia não grava, não aprova tabela, não altera Lotes e não cria proposta, reserva, contrato, cobrança ou financeiro.</p></div><Calculator size={22} /></div>

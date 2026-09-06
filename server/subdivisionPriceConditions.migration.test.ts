@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const migration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907102000_subdivision_price_condition_lot_resolution_a232.sql"), "utf8");
 const denyPolicyMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907106000_subdivision_price_conditions_deny_policies_a239.sql"), "utf8");
+const contextMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907107000_subdivision_lot_price_context_a240.sql"), "utf8");
 
 describe("subdivision price condition lot resolution migration", () => {
   it("resolves a Lot number inside the protected server function instead of receiving its identifier from the browser", () => {
@@ -40,5 +41,16 @@ describe("subdivision price condition lot resolution migration", () => {
     expect(sql).toContain("using (false)");
     expect(sql).toContain("with check (false)");
     expect(sql).toContain("revoke all on table public.subdivision_price_conditions from public, anon, authenticated");
+  });
+
+  it("explains unavailable context without returning an unapproved price", () => {
+    const sql = contextMigration();
+    expect(sql).toContain("subdivision_get_lot_price_context_v3");
+    expect(sql).toContain("prepared_with_exceptions");
+    expect(sql).toContain("submitted_pending_approval");
+    expect(sql).toContain("approved_outside_vigency");
+    expect(sql).toContain("p.policy_state = 'approved'::public.subdivision_price_base_policy_state");
+    expect(sql).toContain("p.exception_count = 0");
+    expect(sql).toContain("revoke all on function public.subdivision_get_lot_price_context_v3");
   });
 });

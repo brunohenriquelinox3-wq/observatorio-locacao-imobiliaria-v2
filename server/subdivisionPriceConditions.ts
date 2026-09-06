@@ -20,6 +20,7 @@ type ConditionState = "prepared" | "submitted" | "approved" | "expired" | "withd
 type ConditionScope = "development" | "block" | "lot";
 type ConditionKind = "override_per_sqm" | "percentage_adjustment" | "temporary_discount";
 type DocumentState = "pending_evidence" | "under_review" | "declared_complete" | "review_required";
+type LotPriceAvailabilityReason = "no_policy" | "prepared_with_exceptions" | "prepared_pending_validation" | "submitted_pending_approval" | "approved_outside_vigency" | "policy_not_available";
 
 export type PriceConditionSummary = {
   conditionId: string;
@@ -40,6 +41,7 @@ export type PriceConditionSummary = {
 
 export type LotPriceContext = {
   state: "unavailable" | "active";
+  availabilityReason: LotPriceAvailabilityReason | null;
   policyReference: string | null;
   conditionReference: string | null;
   conditionScope: ConditionScope | null;
@@ -89,13 +91,16 @@ export async function listSubdivisionPriceConditions(subjectId: string | undefin
 export async function getSubdivisionLotPriceContext(subjectId: string | undefined, rawInput: GetSubdivisionLotPriceContextInput, client: RpcClient = getSupabaseAdminClient()): Promise<LotPriceContext> {
   const actorUserId = requireSubject(subjectId);
   const input = getSubdivisionLotPriceContextInputSchema.parse(rawInput);
-  const { data, error } = await client.rpc("subdivision_get_lot_price_context_v2", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_development_id: input.developmentId, p_block_id: input.blockId, p_lot_number: input.lotNumber });
+  const { data, error } = await client.rpc("subdivision_get_lot_price_context_v3", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_development_id: input.developmentId, p_block_id: input.blockId, p_lot_number: input.lotNumber });
   if (error) throw new Error("LOT_PRICE_CONTEXT_DENIED");
   const result = requireObject(data, "LOT_PRICE_CONTEXT_DENIED");
   const state = String(result.state);
   if (state !== "unavailable" && state !== "active") throw new Error("LOT_PRICE_CONTEXT_DENIED");
+  const availabilityReason = result.availability_reason ? String(result.availability_reason) as LotPriceAvailabilityReason : null;
+  if (availabilityReason && !["no_policy", "prepared_with_exceptions", "prepared_pending_validation", "submitted_pending_approval", "approved_outside_vigency", "policy_not_available"].includes(availabilityReason)) throw new Error("LOT_PRICE_CONTEXT_DENIED");
   return {
     state,
+    availabilityReason,
     policyReference: result.policy_reference ? String(result.policy_reference) : null,
     conditionReference: result.condition_reference ? String(result.condition_reference) : null,
     conditionScope: result.condition_scope ? String(result.condition_scope) as ConditionScope : null,

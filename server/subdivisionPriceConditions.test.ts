@@ -31,10 +31,10 @@ describe("subdivision price conditions", () => {
   });
 
   it("returns no price context until an approved policy is actually in force", async () => {
-    const rpc = vi.fn().mockResolvedValue({ data: { state: "unavailable" }, error: null });
+    const rpc = vi.fn().mockResolvedValue({ data: { state: "unavailable", availability_reason: "prepared_with_exceptions" }, error: null });
     await expect(getSubdivisionLotPriceContext(actor, { ...context, developmentId, blockId, lotNumber: 18 }, { rpc })).resolves.toEqual({
-      state: "unavailable", policyReference: null, conditionReference: null, conditionScope: null, conditionKind: null, effectiveFrom: null, effectiveUntil: null, documentState: null, effectivePricePerSqmBrl: null,
+      state: "unavailable", availabilityReason: "prepared_with_exceptions", policyReference: null, conditionReference: null, conditionScope: null, conditionKind: null, effectiveFrom: null, effectiveUntil: null, documentState: null, effectivePricePerSqmBrl: null,
     });
-    expect(rpc).toHaveBeenCalledWith("subdivision_get_lot_price_context_v2", expect.objectContaining({ p_block_id: blockId, p_lot_number: 18 }));
+    expect(rpc).toHaveBeenCalledWith("subdivision_get_lot_price_context_v3", expect.objectContaining({ p_block_id: blockId, p_lot_number: 18 }));
   });
 });
