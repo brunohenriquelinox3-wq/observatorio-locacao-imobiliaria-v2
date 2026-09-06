@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import "../subdivision-lot-management-a257.css";
 import "../subdivision-lot-price-reference-a259.css";
+import "../subdivision-lot-price-reference-a260.css";
 
 type DevelopmentKind = "residential" | "mixed_use" | "commercial" | "industrial" | "rural" | "other";
 type WorkingPhase = "preliminary_reference" | "structuring" | "review_required";

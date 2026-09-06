@@ -1,0 +1,428 @@
+/* A260: a referência de preço passa a ser uma leitura de campo principal, não um conjunto de caixas comprimidas. */
+.subdivision-lot-management__block summary {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 0.62fr) minmax(0, 1.38fr) auto;
+  align-items: center;
+}
+
+.subdivision-lot-management__block summary dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(6.1rem, 1fr));
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.subdivision-lot-management__block summary dl div {
+  min-width: 0;
+}
+
+.subdivision-lot-management__lot-grid {
+  grid-template-columns: repeat(auto-fill, minmax(14.5rem, 1fr));
+  align-items: stretch;
+  gap: 0.8rem;
+  padding: 0.85rem;
+}
+
+.subdivision-lot-management__lot {
+  display: flex;
+  min-height: 23.5rem;
+  flex-direction: column;
+  padding: 0.9rem;
+  border-color: color-mix(in srgb, var(--primary) 17%, var(--border));
+  border-radius: 0.78rem;
+  background:
+    linear-gradient(150deg, color-mix(in srgb, var(--primary) 5%, var(--background)), var(--background) 38%),
+    var(--background);
+  box-shadow: 0 1px 0 rgba(18, 78, 80, 0.03);
+}
+
+.subdivision-lot-management__lot-head {
+  min-height: 2.45rem;
+  gap: 0.65rem;
+  padding-bottom: 0.7rem;
+}
+
+.subdivision-lot-management__lot-head > div {
+  display: grid;
+  min-width: 0;
+  gap: 0.12rem;
+}
+
+.subdivision-lot-management__lot b {
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+}
+
+.subdivision-lot-management__lot em {
+  overflow: hidden;
+  font-size: 0.67rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subdivision-lot-management__lot-edit {
+  display: inline-flex;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.32rem;
+  flex: 0 0 auto;
+  padding: 0 0.58rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 34%, var(--border));
+  border-radius: 0.46rem;
+  background: color-mix(in srgb, var(--primary) 7%, var(--background));
+  color: var(--primary);
+  font-size: 0.65rem;
+  font-weight: 850;
+  transition: background-color 160ms var(--ease-out, ease-out), border-color 160ms var(--ease-out, ease-out), transform 160ms var(--ease-out, ease-out);
+}
+
+.subdivision-lot-management__lot-edit:hover,
+.subdivision-lot-management__lot-edit:focus-visible {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  outline: none;
+}
+
+.subdivision-lot-management__lot-edit:active,
+.subdivision-lot-management__price-context-head button:active {
+  transform: scale(0.97);
+}
+
+.subdivision-lot-management__lot-measures {
+  gap: 0.62rem 0.85rem;
+  margin-top: 0.75rem;
+}
+
+.subdivision-lot-management__lot dt {
+  color: color-mix(in srgb, var(--muted-foreground) 90%, var(--primary));
+  font-size: 0.57rem;
+  letter-spacing: 0.065em;
+}
+
+.subdivision-lot-management__lot dd {
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  line-height: 1.24;
+}
+
+/* Remove a antiga mensagem decorativa agora que preço e total possuem sua própria área semântica. */
+.subdivision-lot-management__lot dl::after {
+  content: none;
+}
+
+.subdivision-lot-management__price-context {
+  display: grid;
+  gap: 0.62rem;
+  margin-top: auto;
+  padding: 0.78rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 24%, var(--border));
+  border-radius: 0.65rem;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 8%, var(--background)), var(--background));
+}
+
+.subdivision-lot-management__price-context-head {
+  display: flex;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+}
+
+.subdivision-lot-management__price-context-head > span {
+  color: #2c716c;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.095em;
+}
+
+.subdivision-lot-management__price-context-head button {
+  display: inline-flex;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  flex: 0 0 auto;
+  padding: 0 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
+  border-radius: 0.45rem;
+  background: var(--background);
+  color: var(--primary);
+  font-size: 0.64rem;
+  font-weight: 850;
+  transition: background-color 160ms var(--ease-out, ease-out), border-color 160ms var(--ease-out, ease-out), transform 160ms var(--ease-out, ease-out);
+}
+
+.subdivision-lot-management__price-context-head button:hover,
+.subdivision-lot-management__price-context-head button:focus-visible {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, var(--background));
+  outline: none;
+}
+
+.subdivision-lot-management__price-values {
+  grid-template-columns: 1fr;
+  gap: 0.48rem;
+}
+
+.subdivision-lot-management__price-values > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 0.55rem;
+  min-height: 3.4rem;
+  padding: 0.62rem 0.68rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 18%, var(--border));
+  border-radius: 0.52rem;
+  background: color-mix(in srgb, var(--background) 92%, white);
+}
+
+.subdivision-lot-management__price-values > div:first-child {
+  border-color: color-mix(in srgb, #217f73 34%, var(--border));
+  background: linear-gradient(135deg, #edf9f4, #f9fffc);
+}
+
+.subdivision-lot-management__price-values span {
+  max-width: 10.5rem;
+  color: #426d6b;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.045em;
+  line-height: 1.22;
+}
+
+.subdivision-lot-management__price-values b {
+  color: #0f514d;
+  font-size: 0.93rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.subdivision-lot-management__price-values > div:last-child b {
+  color: #305d59;
+  font-size: 0.79rem;
+}
+
+.subdivision-lot-management__price-context > small {
+  min-height: 2.1em;
+  color: #5d7774;
+  font-size: 0.62rem;
+  line-height: 1.36;
+}
+
+.subdivision-lot-management__price-context[data-internal="missing_base_price"] {
+  border-color: #d9ae66;
+  background: linear-gradient(135deg, #fff7e9, #fffdf7);
+}
+
+@media (max-width: 960px) {
+  .subdivision-lot-management__lot-grid {
+    grid-template-columns: repeat(auto-fill, minmax(13.25rem, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .subdivision-lot-management__block summary {
+    display: flex;
+  }
+
+  .subdivision-lot-management__block summary dl {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .subdivision-lot-management__lot-grid {
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  }
+
+  .subdivision-lot-management__lot {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 440px) {
+  .subdivision-lot-management__block summary dl {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .subdivision-lot-management__lot-grid {
+    grid-template-columns: 1fr;
+    padding: 0.68rem;
+  }
+
+  .subdivision-lot-management__price-values > div {
+    gap: 0.4rem;
+  }
+
+  .subdivision-lot-management__price-values b {
+    font-size: 0.86rem;
+  }
+}
+
+/* A260-R1: Área, preço-base e total pertencem à mesma grade operacional do Lote. */
+.subdivision-lot-management__lot {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 0 0.85rem;
+  min-height: 0;
+  padding: 0.88rem;
+}
+
+.subdivision-lot-management__lot-head {
+  grid-column: 1 / -1;
+  order: 0;
+  padding-bottom: 0.65rem;
+}
+
+.subdivision-lot-management__reservation-badge {
+  grid-column: 1 / -1;
+  order: 1;
+  margin: 0 0 0.48rem;
+}
+
+/* Os filhos dos dois grupos passam a participar diretamente da mesma grade do cartão. */
+.subdivision-lot-management__lot-measures,
+.subdivision-lot-management__price-context,
+.subdivision-lot-management__price-context-head,
+.subdivision-lot-management__price-values {
+  display: contents;
+}
+
+.subdivision-lot-management__lot-measures > div,
+.subdivision-lot-management__price-values > div {
+  display: grid;
+  align-content: start;
+  gap: 0.2rem;
+  min-width: 0;
+  min-height: 3.2rem;
+  padding: 0.55rem 0 0.48rem;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--border) 62%, transparent);
+  border-radius: 0;
+  background: transparent;
+}
+
+.subdivision-lot-management__lot-measures > div:nth-child(n + 3) {
+  padding-top: 0.55rem;
+  border-top: 1px solid color-mix(in srgb, var(--border) 62%, transparent);
+}
+
+.subdivision-lot-management__lot-measures > div:nth-child(1) { order: 2; }
+.subdivision-lot-management__price-values > div:first-child { order: 3; }
+.subdivision-lot-management__price-values > div:last-child { order: 4; }
+.subdivision-lot-management__lot-measures > div:nth-child(2) { order: 5; }
+.subdivision-lot-management__lot-measures > div:nth-child(3) { order: 6; }
+.subdivision-lot-management__lot-measures > div:nth-child(4) { order: 7; }
+.subdivision-lot-management__lot-measures > div:nth-child(5) { order: 8; }
+.subdivision-lot-management__lot-measures > div:nth-child(6) { order: 9; }
+.subdivision-lot-management__lot-measures > div:nth-child(7) { order: 10; }
+
+.subdivision-lot-management__lot dt,
+.subdivision-lot-management__price-values span {
+  color: color-mix(in srgb, var(--muted-foreground) 90%, var(--primary));
+  font-size: 0.57rem;
+  font-weight: 850;
+  letter-spacing: 0.065em;
+  line-height: 1.22;
+}
+
+.subdivision-lot-management__lot dd,
+.subdivision-lot-management__price-values b {
+  overflow: hidden;
+  margin-top: 0;
+  color: #174c49;
+  font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.012em;
+  line-height: 1.24;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subdivision-lot-management__price-values > div:first-child span::before {
+  display: inline-grid;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-right: 0.28rem;
+  place-items: center;
+  border-radius: 999px;
+  background: #dff2e8;
+  color: #136457;
+  content: "R$";
+  font-size: 0.47rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  vertical-align: -0.18rem;
+}
+
+.subdivision-lot-management__price-values > div:first-child b {
+  color: #0d6053;
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.subdivision-lot-management__price-values > div:last-child b {
+  color: #2a625d;
+  font-size: 0.79rem;
+}
+
+.subdivision-lot-management__price-context-head > span {
+  display: none;
+}
+
+.subdivision-lot-management__price-context-head button {
+  grid-column: 2;
+  order: 20;
+  justify-self: end;
+  align-self: end;
+  min-height: 2rem;
+  padding: 0 0.55rem;
+}
+
+/* A confirmação de MFA segue obrigatória, porém o aviso é uma nota de apoio e não outro cartão. */
+.subdivision-lot-management__price-context > small,
+.subdivision-lot-management__price-empty {
+  grid-column: 1 / -1;
+  order: 20;
+  min-height: 0;
+  margin: 0.18rem 0 0;
+  padding-top: 0.48rem;
+  border-top: 1px solid color-mix(in srgb, var(--border) 62%, transparent);
+  color: #607572;
+  font-size: 0.61rem;
+  font-weight: 650;
+  line-height: 1.34;
+}
+
+.subdivision-lot-management__price-empty {
+  display: none;
+}
+
+.subdivision-lot-management__price-context:has(.subdivision-lot-management__price-context-head button) > small {
+  grid-column: 1;
+}
+
+@media (max-width: 440px) {
+  .subdivision-lot-management__lot {
+    gap: 0 0.62rem;
+    padding: 0.8rem;
+  }
+
+  .subdivision-lot-management__lot-measures > div,
+  .subdivision-lot-management__price-values > div {
+    min-height: 3.02rem;
+  }
+
+  .subdivision-lot-management__price-values > div:first-child b {
+    font-size: 0.81rem;
+  }
+
+  .subdivision-lot-management__price-values > div:last-child b {
+    font-size: 0.74rem;
+  }
+}

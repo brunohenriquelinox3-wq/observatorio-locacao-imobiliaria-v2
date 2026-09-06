@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 
 const source = () => readFileSync(path.resolve(process.cwd(), "client/src/components/SubdivisionDevelopmentStudio.tsx"), "utf8");
+const priceCardStyles = () => readFileSync(path.resolve(process.cwd(), "client/src/subdivision-lot-price-reference-a260.css"), "utf8");
 
 describe("SubdivisionDevelopmentStudio modular", () => {
   it("organiza o cadastro em cinco módulos independentes", () => {
@@ -238,5 +239,25 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Preparar ajuste governado para este Lote");
     expect(studio).toContain("Ajustar");
     expect(studio).toContain("Você está revisando a unidade física selecionada.");
+  });
+
+  it("organiza a referência de preço como leitura hierárquica e responsiva, sem mensagens decorativas comprimidas", () => {
+    const studio = source();
+    const styles = priceCardStyles();
+
+    expect(studio).toContain('import "../subdivision-lot-price-reference-a260.css";');
+    expect(styles).toContain("grid-template-columns: repeat(auto-fill, minmax(14.5rem, 1fr))");
+    expect(styles).toContain("display: contents;");
+    expect(styles).toContain("A260-R1: Área, preço-base e total pertencem à mesma grade operacional do Lote.");
+    expect(styles).toContain('content: "R$";');
+    expect(styles).toContain(".subdivision-lot-management__lot-measures > div:nth-child(1) { order: 2; }");
+    expect(styles).toContain(".subdivision-lot-management__price-values > div:first-child { order: 3; }");
+    expect(styles).toContain(".subdivision-lot-management__price-values > div:last-child { order: 4; }");
+    expect(styles).toContain("grid-template-columns: 1fr;");
+    expect(styles).toContain("grid-template-columns: minmax(0, 1fr) auto;");
+    expect(styles).toContain("margin-top: auto;");
+    expect(styles).toContain("content: none;");
+    expect(styles).toContain("font-variant-numeric: tabular-nums;");
+    expect(styles).toContain("@media (max-width: 440px)");
   });
 });
