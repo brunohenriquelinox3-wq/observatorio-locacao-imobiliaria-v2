@@ -2211,7 +2211,7 @@
 - [x] Manter preço-base ausente, divergência de área e Lote não reconciliado como exceções bloqueadoras. **A237:** preço continua obrigatório; área declarada divergente, Lote ausente, duplicidade e área não confirmada são recusados pelo RPC protegido.
 - [x] Cobrir a reconciliação e validar a prévia sem persistir a fonte. **A237:** testes dirigidos, testes de migração, tipagem, verificação do catálogo de funções e revisão autenticada foram aprovados; a verificação de segurança não indicou aviso novo para as tabelas de preço-base.
 - [x] Gerar ZIP/HTML saneados. **A237:** os artefatos foram verificados sem ambiente, logs, documentação, checklist, dados de origem, credenciais ou infraestrutura.
-- [ ] Salvar checkpoint A237 após documentação, validação integral e saneamento dos artefatos.
+- [x] Salvar checkpoint A237 após documentação, validação integral e saneamento dos artefatos. **A237:** checkpoint `33556c94` preserva a proveniência de área pela matriz física e os bloqueios de preço/divergência sem persistir nova fonte.
 
 ## Consolidação de modalidades de condição comercial — A236
 - [x] Validar na interface as modalidades de ajuste geral, por Quadra, por Lote, desconto temporário e reajuste percentual, com campos estritamente compatíveis com cada tipo. **A236:** a revisão autenticada confirmou a vitrine de três escopos e três tipos, incluindo término obrigatório apenas para desconto temporário.
