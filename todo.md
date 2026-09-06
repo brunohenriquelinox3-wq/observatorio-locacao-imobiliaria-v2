@@ -2192,7 +2192,7 @@
 - [x] Preparar a política atual com vigência em 05/09/2026, somente quando a fonte estiver reconciliada e a autorização server-side/MFA estiver válida. **A230:** a política interna foi preparada após MFA recente, com a exceção preservada e impedimento de encaminhamento/aprovação.
 - [x] Cobrir regras de precedência, bloqueios, acessibilidade e responsividade. **A231–A234:** as funções e a interface foram cobertas por testes dirigidos e validação integral de 216 arquivos/544 testes; o cursor/foco não expõe preço antes de aprovação/vigência. Nenhuma condição real foi criada. Artefatos e checkpoint foram preparados na consolidação final.
 - [x] Gerar ZIP/HTML saneados da política preparada, das condições flexíveis e das correções A232–A234. **A231–A234:** os dois artefatos foram verificados sem ambiente, documentos, checklist, logs, build, dados de origem, credenciais ou infraestrutura.
-- [ ] Salvar checkpoint após a política preparada, condições flexíveis, correções A232–A234 e saneamento dos artefatos.
+- [x] Salvar checkpoint após a política preparada, condições flexíveis, correções A232–A234 e saneamento dos artefatos. **A230–A234:** checkpoint `b1bdcf69` preserva a política em Preparação, a exceção bloqueadora, a gestão flexível e as correções de escopo/consulta, sem condição real ou efeito material.
 
 ## Resolução protegida de Lote em condições — A232
 - [x] Substituir a dependência de identificador de Lote no navegador por Quadra autorizada e número de Lote, resolvendo o vínculo físico exclusivamente no servidor. **A232:** o formulário mantém somente o número de Lote; a resolução do identificador físico ocorre em função protegida.
