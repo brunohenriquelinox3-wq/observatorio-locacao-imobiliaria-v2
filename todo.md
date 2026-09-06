@@ -2317,3 +2317,8 @@
 - [x] Manter reserva física segregada de disponibilidade, preço, venda, proposta, contrato, cobrança, pagamento e financeiro. **A253:** a migração e a interface não criam nem alteram qualquer trilho comercial.
 - [x] Exigir alçada, MFA, contexto, idempotência e auditoria redigida para alteração de finalidade; não atribuir reserva real sem seleção explícita do Lote autorizado. **A253:** o comando exige seleção de Quadra, Lote e finalidade; nenhuma reserva foi atribuída durante a revisão.
 - [x] Cobrir serviço, migração e interface; revisar desktop/móvel, gerar ZIP/HTML saneados e salvar checkpoint sem alterar Lote real sem seleção autorizada. **A253:** 219 arquivos/582 testes, tipagem, build Netlify, diff limpo, revisão responsiva e saneamento foram aprovados; checkpoint funcional `8124426d` não altera nenhum Lote real.
+
+## Selo de finalidade física no cartão de Lote — A254
+- [x] Exibir no cartão o selo de reserva patrimonial ou de infraestrutura técnica quando a finalidade física estiver registrada. **A254:** o cartão passa a renderizar selo específico para reserva patrimonial, poço artesiano, caixa d’água ou infraestrutura técnica.
+- [x] Permitir filtro local por situação de reserva sem alterar disponibilidade, preço, venda, contrato ou financeiro. **A254:** a leitura pode ser limitada a reservas físicas ou Lotes sem reserva, sem comando material.
+- [ ] Cobrir interface e responsividade, gerar ZIP/HTML saneados e salvar checkpoint sem classificar Lote real sem seleção autorizada.

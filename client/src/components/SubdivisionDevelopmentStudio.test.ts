@@ -214,5 +214,8 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Infraestrutura · poço artesiano");
     expect(studio).toContain("Infraestrutura · caixa d’água");
     expect(studio).toContain("Registrar finalidade física");
+    expect(studio).toContain("Finalidade física");
+    expect(studio).toContain("Somente reservas físicas");
+    expect(studio).toContain("Reserva patrimonial");
   });
 });

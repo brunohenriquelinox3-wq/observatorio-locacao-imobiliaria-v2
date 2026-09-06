@@ -20,3 +20,7 @@ O servidor resolve a combinação de empreendimento, Quadra e Lote, exige alçad
 ## Validação
 
 A validação integral A253 aprovou **219 arquivos de teste** e **582 testes**, além de tipagem, build Netlify e integridade de diff. O build preservou apenas o aviso não bloqueante de chunks grandes. A revisão protegida não concluiu após reinício da prévia; como não há atribuição automática nem comando disparado, não houve alteração material em Lotes, preços ou reservas.
+
+## Selo e filtro local A254
+
+Quando uma finalidade for registrada por fluxo protegido, o cartão do Lote exibirá um selo de reserva patrimonial ou infraestrutura técnica. A matriz também oferece filtro exclusivamente local para reservar a leitura a Lotes com ou sem finalidade física. A validação integral A254 manteve **219 arquivos de teste** e **582 testes** aprovados, sem classificar qualquer Lote real.
