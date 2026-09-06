@@ -2236,4 +2236,4 @@
 - [x] Mostrar somente a causa operacional e os próximos controles permitidos, sem exibir preço não aprovado nem criar disponibilidade, proposta ou venda. **A240:** a interface exibe orientação de bloqueio sem referência, condição ou valor enquanto a política estiver indisponível.
 - [x] Cobrir a leitura contextual e revisar sem alterar dados reais. **A240:** testes de serviço, migração e estúdio foram aprovados; a sessão autenticada confirmou a política em Preparação com uma exceção e nenhum preço renderizado por Lote.
 - [x] Gerar ZIP/HTML saneados. **A240:** os artefatos foram validados sem ambiente, logs, documentação, checklist, dados de origem, credenciais ou infraestrutura.
-- [ ] Salvar checkpoint A240 após documentação, validação integral e saneamento dos artefatos.
+- [x] Salvar checkpoint A240 após documentação, validação integral e saneamento dos artefatos. **A240:** checkpoint `16b409e5` preserva os motivos seguros de indisponibilidade por Lote e a ausência de referência não aprovada exibida.
