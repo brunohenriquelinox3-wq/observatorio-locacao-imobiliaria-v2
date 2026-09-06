@@ -234,6 +234,16 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("O total é recalculado pela área física confirmada.");
     expect(studio).toContain("priceConditionAmountInputRef");
     expect(studio).toContain("Preparar ajuste interno deste Lote");
+    expect(studio).toContain('id="inline-lot-price-editor"');
+    expect(studio).toContain("host={operationalLotProfileRef.current}");
+    expect(studio).toContain('document.getElementById("inline-lot-price-editor-contextual")');
+    expect(studio).toContain("Atualize o valor do Lote selecionado.");
+    expect(studio).toContain("Valor por m² (BRL)");
+    expect(studio).toContain("TOTAL REFERENCIAL PARA CONFERÊNCIA");
+    expect(studio).toContain("Preparar atualização interna");
+    expect(studio).toContain("createLotConditionReference");
+    expect(studio).toContain("inlineLotPricePreviewTotal");
+    expect(lotManagementStyles()).toContain(".subdivision-lot-management__inline-price-editor");
     expect(studio).toContain("FINALIDADE FÍSICA RESERVADA");
     expect(studio).toContain("Reserva de proprietários da área de origem");
     expect(studio).toContain("Infraestrutura · poço artesiano");

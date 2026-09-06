@@ -246,6 +246,140 @@
   padding-inline: 0.85rem;
 }
 
+.subdivision-lot-management__inline-price-editor {
+  display: grid;
+  gap: 0.82rem;
+  scroll-margin-block: 1.25rem;
+  padding: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 38%, var(--border));
+  border-radius: 0.7rem;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 8%, var(--background)), var(--background));
+}
+
+/* A cópia histórica do editor permanece no DOM para compatibilidade do fluxo,
+   mas a instância visível é portada para dentro da ficha física selecionada. */
+.subdivision-studio__structure-module > #inline-lot-price-editor {
+  display: none;
+}
+
+.subdivision-lot-management__operational-profile > .subdivision-lot-management__inline-price-editor {
+  display: grid;
+  width: 100%;
+  margin-top: 0.1rem;
+}
+
+.subdivision-lot-management__inline-price-editor-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.subdivision-lot-management__inline-price-editor-head > div { display: grid; gap: 0.18rem; }
+.subdivision-lot-management__inline-price-editor-head span,
+.subdivision-lot-management__inline-price-preview span {
+  color: #567181;
+  font-size: 0.59rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+}
+.subdivision-lot-management__inline-price-editor h6 { margin: 0; color: #21495f; font-size: 0.9rem; }
+.subdivision-lot-management__inline-price-editor p { margin: 0; color: #5c7775; font-size: 0.68rem; line-height: 1.4; }
+.subdivision-lot-management__inline-price-editor-lot {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 28%, var(--border));
+  border-radius: 999px;
+  background: var(--background);
+  color: #21495f !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.02em !important;
+}
+
+.subdivision-lot-management__inline-price-editor-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(10rem, 1fr));
+  gap: 0.68rem;
+  align-items: end;
+}
+
+.subdivision-lot-management__inline-price-editor-form label {
+  display: grid;
+  gap: 0.24rem;
+  color: #21495f;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.subdivision-lot-management__inline-price-editor-form label small {
+  min-height: 1.65rem;
+  color: #778077;
+  font-size: 0.57rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.subdivision-lot-management__inline-price-editor-form input,
+.subdivision-lot-management__inline-price-editor-form select {
+  width: 100%;
+  min-height: 2.45rem;
+  padding: 0.46rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--border));
+  border-radius: 0.5rem;
+  background: var(--background);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.78rem;
+}
+
+.subdivision-lot-management__inline-price-editor-form input:focus-visible,
+.subdivision-lot-management__inline-price-editor-form select:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.subdivision-lot-management__inline-price-preview {
+  display: grid;
+  gap: 0.24rem;
+  min-height: 6.45rem;
+  padding: 0.65rem;
+  border: 1px dashed color-mix(in srgb, var(--primary) 32%, var(--border));
+  border-radius: 0.56rem;
+  background: color-mix(in srgb, var(--primary) 5%, var(--background));
+}
+
+.subdivision-lot-management__inline-price-preview b { color: #21495f; font-size: 0.92rem; }
+.subdivision-lot-management__inline-price-preview small { color: #5c7775; font-size: 0.61rem; line-height: 1.32; }
+
+.subdivision-lot-management__inline-price-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding-top: 0.72rem;
+  border-top: 1px solid color-mix(in srgb, var(--primary) 18%, var(--border));
+}
+
+.subdivision-lot-management__inline-price-editor-actions p { flex: 1 1 30rem; }
+.subdivision-lot-management__inline-price-editor-actions button {
+  min-height: 2.45rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 45%, var(--border));
+  border-radius: 0.5rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+.subdivision-lot-management__inline-price-editor-actions button:disabled { cursor: not-allowed; opacity: 0.58; }
+.subdivision-lot-management__inline-price-editor-actions button:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+
 .subdivision-price-base-policy__history article {
   align-items: start;
 }
@@ -320,6 +454,9 @@
   .subdivision-lot-management__operational-profile .subdivision-lot-management__physical-reservation-controls button {
     width: 100%;
   }
+
+  .subdivision-lot-management__inline-price-editor-form { grid-template-columns: 1fr; }
+  .subdivision-lot-management__inline-price-editor-actions button { width: 100%; }
 
   .subdivision-price-base-policy__history-actions {
     align-items: stretch;
