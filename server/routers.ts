@@ -188,6 +188,14 @@ import {
   upsertDraftSubdivisionDevelopmentRequirement,
 } from "./subdivisionPhysicalStructure";
 import {
+  listSubdivisionLotInternalInventoryProfiles,
+  upsertSubdivisionLotInternalInventoryProfile,
+} from "./subdivisionLotInternalInventoryProfile";
+import {
+  listSubdivisionLotInternalInventoryProfilesInputSchema,
+  upsertSubdivisionLotInternalInventoryProfileInputSchema,
+} from "../shared/subdivisionInternalInventoryContracts";
+import {
   listDraftSubdivisionDevelopmentPreparationProfiles,
   upsertDraftSubdivisionDevelopmentPreparationProfile,
 } from "./subdivisionDevelopmentPreparation";
@@ -647,6 +655,14 @@ export const appRouter = router({
     upsertDraftLotInventoryState: protectedProcedure.input(draftSubdivisionLotInventoryStateInputSchema).mutation(({ ctx, input }) => upsertDraftLotInventoryState(ctx.supabaseSubjectId ?? undefined, input)),
     transitionDraftLotInventoryState: protectedProcedure.input(subdivisionContextSchema.extend({ inventoryStateId: z.string().uuid(), toPhase: z.enum(["reference_confirmed", "structure_review", "review_required"]), correlationId: z.string().uuid() })).mutation(({ ctx, input }) => transitionDraftLotInventoryState(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftLotInventoryEvents: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftLotInventoryEvents(ctx.supabaseSubjectId ?? undefined, input)),
+    listInternalLotInventoryProfiles: protectedProcedure.input(listSubdivisionLotInternalInventoryProfilesInputSchema).query(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return listSubdivisionLotInternalInventoryProfiles(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    upsertInternalLotInventoryProfile: protectedProcedure.input(upsertSubdivisionLotInternalInventoryProfileInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return upsertSubdivisionLotInternalInventoryProfile(ctx.supabaseSubjectId ?? undefined, input);
+    }),
     listDraftInternalPartyRoles: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionInternalPartyRoles(ctx.supabaseSubjectId ?? undefined, input)),
     linkDraftInternalPartyRole: protectedProcedure.input(subdivisionContextSchema.extend({ developmentId: z.string().uuid(), partyRoleId: z.string().uuid(), correlationId: z.string().uuid() })).mutation(({ ctx, input }) => linkDraftSubdivisionInternalPartyRole(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClients: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClients(ctx.supabaseSubjectId ?? undefined, input)),
