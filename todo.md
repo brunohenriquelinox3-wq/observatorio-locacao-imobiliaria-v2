@@ -2321,4 +2321,4 @@
 ## Selo de finalidade física no cartão de Lote — A254
 - [x] Exibir no cartão o selo de reserva patrimonial ou de infraestrutura técnica quando a finalidade física estiver registrada. **A254:** o cartão passa a renderizar selo específico para reserva patrimonial, poço artesiano, caixa d’água ou infraestrutura técnica.
 - [x] Permitir filtro local por situação de reserva sem alterar disponibilidade, preço, venda, contrato ou financeiro. **A254:** a leitura pode ser limitada a reservas físicas ou Lotes sem reserva, sem comando material.
-- [ ] Cobrir interface e responsividade, gerar ZIP/HTML saneados e salvar checkpoint sem classificar Lote real sem seleção autorizada.
+- [x] Cobrir interface e responsividade, gerar ZIP/HTML saneados e salvar checkpoint sem classificar Lote real sem seleção autorizada. **A254:** 219 arquivos/582 testes, tipagem, build Netlify, diff limpo e saneamento foram aprovados; checkpoint funcional `347a0e44` não altera nenhum Lote real.
