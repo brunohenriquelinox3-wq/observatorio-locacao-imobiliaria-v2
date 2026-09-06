@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import "../subdivision-lot-management-a257.css";
 import "../subdivision-lot-price-reference-a259.css";
 import "../subdivision-lot-price-reference-a260.css";
+import "../subdivision-operational-entry-a261.css";
 
 type DevelopmentKind = "residential" | "mixed_use" | "commercial" | "industrial" | "rural" | "other";
 type WorkingPhase = "preliminary_reference" | "structuring" | "review_required";
@@ -261,6 +262,7 @@ function toBase64(bytes: ArrayBuffer) {
 export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorkspaceReady }: DevelopmentStudioProps) {
   const [selectedDevelopmentId, setSelectedDevelopmentId] = useState("");
   const [mode, setMode] = useState<"create" | "edit">("create");
+  const [studioView, setStudioView] = useState<"overview" | "workspace">("overview");
   const [hasExplicitDraftChoice, setHasExplicitDraftChoice] = useState(false);
   const [activeModule, setActiveModule] = useState<StudioModule>("identity");
   const [form, setForm] = useState<StudioForm>(emptyForm);
@@ -719,11 +721,14 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const completedModules = [identificationDetailed, activeSavedStructure.length > 0, Boolean(form.workingPhase)].filter(Boolean).length;
   const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || restoreBlockMutation.isPending || applyPhysicalStructureMutation.isPending || upsertRequirementMutation.isPending || previewPriceBaseSourceMutation.isPending || preparePriceBasePolicyMutation.isPending || prepareManualPriceBaseCorrectionMutation.isPending || submitPriceBasePolicyMutation.isPending || approvePriceBasePolicyMutation.isPending || withdrawPriceBasePolicyMutation.isPending || createPriceConditionMutation.isPending || submitPriceConditionMutation.isPending || approvePriceConditionMutation.isPending || withdrawPriceConditionMutation.isPending || linkPriceEvidenceMutation.isPending || isUploading;
   const selectedModule = studioModules.find((module) => module.id === activeModule) ?? studioModules[0];
+  const largestBlockLotCount = Math.max(...activeSavedStructure.map((block) => block.lotCount), 1);
+  const areaCoveragePercent = physicalLots.length ? Math.round((lotsWithArea.length / physicalLots.length) * 100) : 0;
 
   function startNew() {
     setHasExplicitDraftChoice(true);
     setSelectedDevelopmentId("");
     setMode("create");
+    setStudioView("workspace");
     setActiveModule("identity");
     setForm(emptyForm);
     setAttachmentFile(null);
@@ -750,6 +755,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     setHasExplicitDraftChoice(true);
     setSelectedDevelopmentId(id);
     setMode("edit");
+    setStudioView("overview");
     setActiveModule("structure");
     setStructureRows([]);
     setStructureLoadedFor("");
@@ -1032,9 +1038,9 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     <section className="subdivision-studio" aria-labelledby="subdivision-studio-title">
       <header className="subdivision-studio__header">
         <div>
-          <p className="subdivision-foundation-eyebrow">02 · ESTÚDIO OPERACIONAL</p>
-          <h2 id="subdivision-studio-title">Cadastro de Loteamentos em uma área de trabalho, não em uma página linear.</h2>
-          <p>Selecione um cadastro em estruturação e trabalhe em um módulo por vez. A interface organiza a leitura, mas o servidor continua decidindo contexto, MFA, alçada e autorização.</p>
+          <p className="subdivision-foundation-eyebrow">SETOR 01 · LOTEAMENTOS</p>
+          <h2 id="subdivision-studio-title">Operação do portfólio de loteamentos.</h2>
+          <p>Escolha um empreendimento para acompanhar a estrutura física ou abrir o cadastro de trabalho. A interface organiza a leitura; o servidor continua decidindo contexto, MFA, alçada e autorização.</p>
         </div>
         <div className={`subdivision-studio__trust ${isWorkspaceReady ? "is-ready" : ""}`}><ShieldCheck size={18} /><span>{isWorkspaceReady ? "Cada comando será revalidado pelo servidor." : "Defina o contexto autorizado para iniciar o cadastro."}</span></div>
       </header>
@@ -1043,7 +1049,36 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       {isWorkspaceReady && developmentsQuery.isError && <div className="subdivision-foundation-empty is-error"><ShieldAlert size={18} /><p>A leitura foi negada. O sistema não revela loteamentos de outro contexto.</p></div>}
       {isWorkspaceReady && developmentsQuery.isLoading && <div className="subdivision-foundation-empty"><LoaderCircle className="subdivision-foundation-spinner" /><p>Confirmando o contexto antes de organizar o cadastro.</p></div>}
 
-      <div className="subdivision-studio__workbench">
+      <section className="subdivision-studio__operational-entry" aria-label="Entrada operacional de Loteamentos">
+        <div className="subdivision-studio__development-picker">
+          <div><span>EMPREENDIMENTO EM FOCO</span><strong>{mode === "create" ? "Novo cadastro" : selectedDevelopment?.displayName ?? selectedDevelopment?.internalReference ?? "Selecione um empreendimento"}</strong><small>{mode === "create" ? "Defina a identificação antes de estruturar." : "A leitura permanece limitada ao contexto autorizado."}</small></div>
+          <label><span>Escolher empreendimento</span><select value={selectedDevelopmentId} onChange={(event) => { if (event.target.value) selectDevelopment(event.target.value); }} disabled={!isWorkspaceReady || developmentsQuery.isLoading}><option value="">Selecione um empreendimento</option>{(developmentsQuery.data ?? []).map((development) => <option key={development.developmentId} value={development.developmentId}>{development.displayName ?? development.internalReference}</option>)}</select></label>
+          <button type="button" className="subdivision-studio__new-record" onClick={startNew} data-active={mode === "create"} disabled={!isWorkspaceReady}><Plus size={16} />Novo loteamento</button>
+        </div>
+        <nav className="subdivision-studio__view-switcher" aria-label="Destino de trabalho" role="tablist">
+          <button type="button" role="tab" aria-selected={studioView === "overview"} data-active={studioView === "overview"} onClick={() => setStudioView("overview")}><ClipboardCheck size={18} /><span><b>Visão Operacional</b><small>Indicadores e gráficos físicos</small></span></button>
+          <button type="button" role="tab" aria-selected={studioView === "workspace"} data-active={studioView === "workspace"} onClick={() => setStudioView("workspace")}><TableProperties size={18} /><span><b>Cadastro do Empreendimento</b><small>Identificação, matriz e documentos</small></span></button>
+        </nav>
+      </section>
+
+      {studioView === "overview" && <section className="subdivision-studio__operational-overview" aria-labelledby="operational-overview-title">
+        <header className="subdivision-studio__operational-overview-head"><div><span>VISÃO OPERACIONAL</span><h3 id="operational-overview-title">{mode === "create" ? "Selecione um empreendimento para iniciar a leitura." : "Leitura física agregada do empreendimento."}</h3><p>{mode === "create" ? "A seleção limita a consulta ao contexto autorizado e não executa nenhuma alteração." : "Os indicadores resumem apenas a matriz autorizada; não representam preço comercial, disponibilidade, venda, contrato ou financeiro."}</p></div>{selectedDevelopmentId && <button type="button" onClick={() => { setActiveModule("structure"); setStudioView("workspace"); }} disabled={!isWorkspaceReady}><Workflow size={16} />Abrir cadastro</button>}</header>
+        {mode === "create" ? <div className="subdivision-studio__operational-empty"><LandPlot size={21} /><div><b>Nenhum empreendimento em foco</b><span>Escolha um cadastro acima para abrir a visão agregada ou inicie um novo cadastro de identificação.</span></div></div> : <>
+          <dl className="subdivision-studio__operational-metrics">
+            <div><dt>Quadras estruturadas</dt><dd>{activeSavedStructure.length}</dd><small>na matriz autorizada</small></div>
+            <div><dt>Lotes físicos</dt><dd>{physicalLots.length}</dd><small>sem disponibilidade comercial</small></div>
+            <div><dt>Área com fonte</dt><dd>{areaCoveragePercent}%</dd><small>cobertura física confirmada</small></div>
+            <div><dt>Atributos completos</dt><dd>{physicalCoverageComplete}/{physicalCoverage.length}</dd><small>campos físicos cobertos</small></div>
+          </dl>
+          <div className="subdivision-studio__operational-charts">
+            <article className="subdivision-studio__operational-chart" aria-labelledby="operational-block-chart-title"><header><span>ESTRUTURA POR QUADRA</span><h4 id="operational-block-chart-title">Distribuição da matriz física</h4><p>Comparação de volume por Quadra, sem inferir disponibilidade.</p></header>{activeSavedStructure.length ? <div className="subdivision-studio__operational-bars" role="img" aria-label={`Distribuição física em ${activeSavedStructure.length} Quadras autorizadas`}>{activeSavedStructure.map((block) => <div key={block.blockId}><span style={{ height: `${Math.max(10, Math.round((block.lotCount / largestBlockLotCount) * 100))}%` }} /><b>Q{block.blockNumber}</b></div>)}</div> : <div className="subdivision-studio__operational-chart-empty">A matriz física aparecerá após a estruturação autorizada.</div>}</article>
+            <article className="subdivision-studio__operational-chart" aria-labelledby="operational-coverage-chart-title"><header><span>COBERTURA FÍSICA</span><h4 id="operational-coverage-chart-title">Completude da matriz</h4><p>Campos ausentes permanecem vazios até nova fonte física revisada.</p></header><div className="subdivision-studio__operational-coverage">{physicalCoverage.map((item) => { const percentage = physicalLots.length ? Math.round((item.available / physicalLots.length) * 100) : 0; return <div key={item.key}><span>{item.label}</span><i><b style={{ width: `${percentage}%` }} /></i><strong>{percentage}%</strong></div>; })}</div></article>
+          </div>
+          <footer className="subdivision-studio__operational-boundary"><ShieldCheck size={16} /><p>Esta visão é somente de leitura agregada. Para editar identificação, matriz, ficha física, pendências ou anexos, use “Cadastro do Empreendimento”.</p></footer>
+        </>}
+      </section>}
+
+      <div className="subdivision-studio__workbench" data-view={studioView}>
         <aside className="subdivision-studio__records" aria-label="Cadastros de loteamentos em estruturação">
           <div className="subdivision-studio__records-head">
             <div><LandPlot size={18} /><div><span>CADASTROS</span><strong>Loteamentos em estruturação</strong></div></div>

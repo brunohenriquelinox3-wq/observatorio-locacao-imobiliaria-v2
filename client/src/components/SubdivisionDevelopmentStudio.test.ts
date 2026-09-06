@@ -4,6 +4,7 @@ import path from "node:path";
 
 const source = () => readFileSync(path.resolve(process.cwd(), "client/src/components/SubdivisionDevelopmentStudio.tsx"), "utf8");
 const priceCardStyles = () => readFileSync(path.resolve(process.cwd(), "client/src/subdivision-lot-price-reference-a260.css"), "utf8");
+const operationalEntryStyles = () => readFileSync(path.resolve(process.cwd(), "client/src/subdivision-operational-entry-a261.css"), "utf8");
 
 describe("SubdivisionDevelopmentStudio modular", () => {
   it("organiza o cadastro em cinco módulos independentes", () => {
@@ -259,5 +260,32 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(styles).toContain("content: none;");
     expect(styles).toContain("font-variant-numeric: tabular-nums;");
     expect(styles).toContain("@media (max-width: 440px)");
+  });
+
+  it("prioriza uma entrada operacional de portfólio sem manter barras laterais concorrentes", () => {
+    const studio = source();
+    const styles = operationalEntryStyles();
+
+    expect(studio).toContain('import "../subdivision-operational-entry-a261.css";');
+    expect(studio).toContain('const [studioView, setStudioView] = useState<"overview" | "workspace">("overview")');
+    expect(studio).toContain("EMPREENDIMENTO EM FOCO");
+    expect(studio).toContain("Escolher empreendimento");
+    expect(studio).toContain("Visão Operacional");
+    expect(studio).toContain("Cadastro do Empreendimento");
+    expect(studio).toContain('aria-selected={studioView === "overview"}');
+    expect(studio).toContain('aria-selected={studioView === "workspace"}');
+    expect(studio).toContain("Quadras estruturadas");
+    expect(studio).toContain("Lotes físicos");
+    expect(studio).toContain("ESTRUTURA POR QUADRA");
+    expect(studio).toContain("COBERTURA FÍSICA");
+    expect(studio).toContain("sem inferir disponibilidade");
+    expect(studio).toContain("não representam preço comercial, disponibilidade, venda, contrato ou financeiro");
+    expect(studio).toContain('setStudioView("overview")');
+    expect(studio).toContain('setStudioView("workspace")');
+    expect(styles).toContain(".subdivision-foundation-page { max-width: none; }");
+    expect(styles).toContain(".subdivision-studio__workbench { display: block;");
+    expect(styles).toContain('.subdivision-studio__workbench[data-view="overview"] { display: none; }');
+    expect(styles).toContain(".subdivision-studio__workbench > .subdivision-studio__records, .subdivision-studio__workbench > .subdivision-studio__overview { display: none; }");
+    expect(styles).toContain("@media (max-width: 780px)");
   });
 });
