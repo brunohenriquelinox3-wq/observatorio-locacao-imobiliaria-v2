@@ -211,6 +211,7 @@ import {
   prepareSubdivisionPriceBasePolicy,
   previewSubdivisionPriceBaseSource,
   submitSubdivisionPriceBasePolicy,
+  withdrawSubdivisionPriceBasePolicy,
 } from "./subdivisionPriceBasePolicy";
 import {
   approveSubdivisionPriceCondition,
@@ -232,6 +233,7 @@ import {
   prepareSubdivisionPriceBasePolicyInputSchema,
   previewSubdivisionPriceBaseSourceInputSchema,
   submitSubdivisionPriceBasePolicyInputSchema,
+  withdrawSubdivisionPriceBasePolicyInputSchema,
 } from "../shared/subdivisionPriceBaseContracts";
 import {
   approveSubdivisionPriceConditionInputSchema,
@@ -650,6 +652,10 @@ export const appRouter = router({
     approvePriceBasePolicy: protectedProcedure.input(approveSubdivisionPriceBasePolicyInputSchema).mutation(async ({ ctx, input }) => {
       await requireRecentTotpMfa(ctx);
       return approveSubdivisionPriceBasePolicy(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    withdrawPriceBasePolicy: protectedProcedure.input(withdrawSubdivisionPriceBasePolicyInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return withdrawSubdivisionPriceBasePolicy(ctx.supabaseSubjectId ?? undefined, input);
     }),
     listPriceConditions: protectedProcedure.input(listSubdivisionPriceConditionsInputSchema).query(({ ctx, input }) => listSubdivisionPriceConditions(ctx.supabaseSubjectId ?? undefined, input)),
     listPriceEvidenceSummary: protectedProcedure.input(listSubdivisionPriceEvidenceSummaryInputSchema).query(({ ctx, input }) => listSubdivisionPriceEvidenceSummary(ctx.supabaseSubjectId ?? undefined, input)),

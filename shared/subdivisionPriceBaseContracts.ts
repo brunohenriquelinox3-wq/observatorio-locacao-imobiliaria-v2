@@ -50,6 +50,11 @@ export const approveSubdivisionPriceBasePolicyInputSchema = subdivisionContextSc
   policyId: z.string().uuid(),
 });
 
+export const withdrawSubdivisionPriceBasePolicyInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  policyId: z.string().uuid(),
+});
+
 export const listSubdivisionPriceBasePoliciesInputSchema = subdivisionContextSchema.extend({
   developmentId: z.string().uuid(),
 });
@@ -59,4 +64,5 @@ export type PrepareSubdivisionPriceBasePolicyInput = z.infer<typeof prepareSubdi
 export type PrepareManualSubdivisionPriceBaseCorrectionInput = z.infer<typeof prepareManualSubdivisionPriceBaseCorrectionInputSchema>;
 export type SubmitSubdivisionPriceBasePolicyInput = z.infer<typeof submitSubdivisionPriceBasePolicyInputSchema>;
 export type ApproveSubdivisionPriceBasePolicyInput = z.infer<typeof approveSubdivisionPriceBasePolicyInputSchema>;
+export type WithdrawSubdivisionPriceBasePolicyInput = z.infer<typeof withdrawSubdivisionPriceBasePolicyInputSchema>;
 export type ListSubdivisionPriceBasePoliciesInput = z.infer<typeof listSubdivisionPriceBasePoliciesInputSchema>;

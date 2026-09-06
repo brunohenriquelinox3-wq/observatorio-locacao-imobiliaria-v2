@@ -8,12 +8,14 @@ import {
   prepareSubdivisionPriceBasePolicyInputSchema,
   previewSubdivisionPriceBaseSourceInputSchema,
   submitSubdivisionPriceBasePolicyInputSchema,
+  withdrawSubdivisionPriceBasePolicyInputSchema,
   type ApproveSubdivisionPriceBasePolicyInput,
   type ListSubdivisionPriceBasePoliciesInput,
   type PrepareManualSubdivisionPriceBaseCorrectionInput,
   type PrepareSubdivisionPriceBasePolicyInput,
   type PreviewSubdivisionPriceBaseSourceInput,
   type SubmitSubdivisionPriceBasePolicyInput,
+  type WithdrawSubdivisionPriceBasePolicyInput,
 } from "../shared/subdivisionPriceBaseContracts";
 import { getSupabaseAdminClient } from "./supabase";
 
@@ -337,6 +339,14 @@ export async function approveSubdivisionPriceBasePolicy(subjectId: string | unde
   const { data, error } = await client.rpc("subdivision_approve_price_base_policy_v1", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_policy_id: input.policyId, p_correlation_id: input.correlationId });
   if (error || typeof data !== "string") throw new Error("PRICE_BASE_APPROVE_DENIED");
   return { policyId: data, state: "approved" };
+}
+
+export async function withdrawSubdivisionPriceBasePolicy(subjectId: string | undefined, rawInput: WithdrawSubdivisionPriceBasePolicyInput, client: RpcClient = getSupabaseAdminClient()): Promise<{ policyId: string; state: "withdrawn" }> {
+  const actorUserId = requireSubject(subjectId);
+  const input = withdrawSubdivisionPriceBasePolicyInputSchema.parse(rawInput);
+  const { data, error } = await client.rpc("subdivision_withdraw_price_base_policy_v1", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_policy_id: input.policyId, p_correlation_id: input.correlationId });
+  if (error || typeof data !== "string") throw new Error("PRICE_BASE_POLICY_WITHDRAW_DENIED");
+  return { policyId: data, state: "withdrawn" };
 }
 
 export async function listSubdivisionPriceBasePolicies(subjectId: string | undefined, rawInput: ListSubdivisionPriceBasePoliciesInput, client: RpcClient = getSupabaseAdminClient()): Promise<PriceBasePolicySummary[]> {

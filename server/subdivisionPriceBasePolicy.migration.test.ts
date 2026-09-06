@@ -9,6 +9,7 @@ const correctedScopeMigration = () => readFileSync(path.resolve(process.cwd(), "
 const matrixAreaMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907104000_subdivision_price_base_matrix_area_a237.sql"), "utf8");
 const manualCorrectionMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907105000_subdivision_manual_price_base_correction_a238.sql"), "utf8");
 const policyEvidenceMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907110000_subdivision_policy_submit_evidence_a244.sql"), "utf8");
+const policyWithdrawalMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907111000_subdivision_price_base_policy_withdraw_a245.sql"), "utf8");
 
 describe("subdivision price-base policy migrations", () => {
   it("keeps price-base separate from contracts and commercial effects", () => {
@@ -92,5 +93,16 @@ describe("subdivision price-base policy migrations", () => {
     expect(sql).toContain("payload_redacted");
     expect(sql).toContain("revoke all on function public.subdivision_submit_price_base_policy_v2");
     expect(sql).toContain("grant execute on function public.subdivision_submit_price_base_policy_v2");
+  });
+
+  it("allows logical withdrawal only from submitted policy with protected authority and redacted audit", () => {
+    const sql = policyWithdrawalMigration();
+    expect(sql).toContain("subdivision_withdraw_price_base_policy_v1");
+    expect(sql).toContain("policy_state <> 'submitted'");
+    expect(sql).toContain("PRICE_BASE_POLICY_WITHDRAW_DENIED");
+    expect(sql).toContain("security definer set search_path = ''");
+    expect(sql).toContain("payload_redacted");
+    expect(sql).toContain("revoke all on function public.subdivision_withdraw_price_base_policy_v1");
+    expect(sql).toContain("grant execute on function public.subdivision_withdraw_price_base_policy_v1");
   });
 });

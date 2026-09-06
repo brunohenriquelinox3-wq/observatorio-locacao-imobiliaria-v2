@@ -166,6 +166,14 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain('setAttachmentCategory("other"); openModule("documents");');
   });
 
+  it("restringe a retirada de política-base ao estado encaminhado", () => {
+    const studio = source();
+    expect(studio).toContain("withdrawPriceBasePolicyMutation");
+    expect(studio).toContain('policy.state === "submitted" && <>');
+    expect(studio).toContain("Retirar encaminhamento");
+    expect(studio).toContain("Somente política encaminhada e ainda não aprovada pode ser retirada");
+  });
+
   it("oferece condições flexíveis por escopo sem liberar preço antes de política aprovada", () => {
     const studio = source();
     expect(studio).toContain("CONDIÇÕES E AJUSTES DE PREÇO");

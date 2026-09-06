@@ -47,3 +47,15 @@ A revisão autenticada confirmou que a política-base em Preparação exibe a co
 | Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |
 
 A prévia foi reiniciada e a revisão autenticada repetida após o reinício. A política permaneceu em Preparação com **163 linhas**, **1 exceção** e **0 respaldos privados**; a mensagem de exceção continuou anterior ao encaminhamento e nenhum comando material foi disparado. Os registros posteriores ao reinício não apresentaram o antigo erro de exportação de correção manual. O ZIP de código e o HTML autônomo A244 foram gerados e saneados; a verificação confirmou as exclusões operacionais e a ausência de padrões concretos de credencial, conexão, chave privada ou endpoint no HTML.
+
+## Retirada governada de política-base A245
+
+A retirada foi restringida à política **encaminhada** e ainda não aprovada. A revisão autenticada confirmou que a política atual segue em Preparação, com sua exceção pendente, sem ação de retirada disponível e sem mutação executada. A função protegida registra somente a transição lógica de `submitted` para `withdrawn`, preserva linhas, vínculos de evidência, matriz e histórico, e depende de autoridade ativa, MFA, contexto, organização, correlação e auditoria redigida.
+
+| Resultado de validação A245 | Resultado |
+|---|---|
+| Serviço e migração | A retirada chama exclusivamente a função protegida e aceita somente política submetida, ainda não aprovada e do cadastro em estruturação autorizado. |
+| Interface | A ação aparece exclusivamente em política encaminhada; a política preparada com exceção permanece sem retirada e sem encaminhamento disponível. |
+| Validação dirigida | 3 arquivos e 42 testes aprovados; tipagem e integridade de diff aprovadas. |
+| Validação integral | 219 arquivos de teste e 566 testes aprovados; tipagem, build Netlify e integridade de diff aprovados. |
+| Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |

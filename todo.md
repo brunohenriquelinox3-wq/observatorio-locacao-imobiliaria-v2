@@ -2264,3 +2264,9 @@
 - [x] Exigir ao menos um vínculo ativo de respaldo privado antes de encaminhar política de preço-base preparada e sem exceções. **A244:** a função v2 mantém todos os guardas da submissão e bloqueia a política sem vínculo ativo a anexo privado registrado.
 - [x] Mostrar contagem e orientação de evidência pendente na política, sem expor conteúdo de anexo ou preço não aprovado. **A244:** o histórico mostra a contagem, mantém o encaminhamento indisponível e explica se faltam exceções resolvidas ou respaldo privado.
 - [x] Cobrir serviço, migração e interface, revisar, gerar ZIP/HTML saneados e salvar checkpoint sem criar anexo ou política real. **A244:** 219 arquivos/563 testes, tipagem, build Netlify e integridade de diff aprovados; revisão autenticada pós-reinício e saneamento confirmados. O checkpoint é registrado nesta consolidação sem criar anexo, vínculo, política, condição, venda, contrato ou financeiro.
+
+## Retirada governada de política-base submetida — A245
+- [x] Permitir retirada somente de política-base submetida e ainda não aprovada, com autoridade, MFA, contexto, organização, idempotência e auditoria redigida no servidor. **A245:** a função protegida transiciona exclusivamente `submitted` para `withdrawn`, com execução apenas por serviço.
+- [x] Manter políticas preparadas, aprovadas, expiradas ou já retiradas bloqueadas para retirada; não alterar linhas, evidências, matriz, condição, preço vigente, venda, contrato ou financeiro. **A245:** a função falha fora do estado submetido e somente atualiza o estado lógico e a auditoria redigida.
+- [x] Exibir orientação e ação de retirada apenas quando o estado permitir, sem executar o comando na política real durante a revisão. **A245:** a ação aparece somente no histórico encaminhado; a política atual em Preparação continuou sem ação de retirada e sem mutação.
+- [ ] Cobrir serviço, migração e interface; revisar, gerar ZIP/HTML saneados e salvar checkpoint sem retirar política real.
