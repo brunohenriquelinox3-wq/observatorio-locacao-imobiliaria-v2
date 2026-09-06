@@ -7,6 +7,7 @@ const optionalDimension = z.number().finite().positive().max(1_000_000).nullable
 export const subdivisionBlockTypologySchema = z.enum(["regular", "mixed", "irregular", "other"]);
 export const subdivisionLotTypologySchema = z.enum(["standard", "corner", "irregular", "other"]);
 export const subdivisionLotPositionSchema = z.enum(["not_declared", "internal", "corner", "end"]);
+export const subdivisionLotPhysicalReservationPurposeSchema = z.enum(["landowner_reserve", "technical_artesian_well", "technical_water_tank", "technical_other"]);
 
 export const subdivisionPhysicalLotSchema = z.object({
   lotNumber: z.number().int().min(1).max(100),
@@ -69,7 +70,16 @@ export const upsertSubdivisionDevelopmentRequirementInputSchema = subdivisionCon
   requirementState: subdivisionRequirementStateSchema,
 });
 
+export const upsertSubdivisionLotPhysicalReservationInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  developmentId: z.string().uuid(),
+  blockId: z.string().uuid(),
+  lotNumber: z.number().int().min(1).max(100),
+  reservationPurpose: subdivisionLotPhysicalReservationPurposeSchema,
+});
+
 export type ApplySubdivisionPhysicalStructureInput = z.infer<typeof applySubdivisionPhysicalStructureInputSchema>;
 export type SubdivisionPhysicalBlock = z.infer<typeof subdivisionPhysicalBlockSchema>;
 export type SubdivisionPhysicalLot = z.infer<typeof subdivisionPhysicalLotSchema>;
 export type UpsertSubdivisionDevelopmentRequirementInput = z.infer<typeof upsertSubdivisionDevelopmentRequirementInputSchema>;
+export type UpsertSubdivisionLotPhysicalReservationInput = z.infer<typeof upsertSubdivisionLotPhysicalReservationInputSchema>;

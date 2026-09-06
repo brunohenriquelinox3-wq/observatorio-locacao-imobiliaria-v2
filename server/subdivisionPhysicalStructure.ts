@@ -3,8 +3,10 @@ import { subdivisionContextSchema } from "../shared/subdivisionContracts";
 import {
   applySubdivisionPhysicalStructureInputSchema,
   upsertSubdivisionDevelopmentRequirementInputSchema,
+  upsertSubdivisionLotPhysicalReservationInputSchema,
   type ApplySubdivisionPhysicalStructureInput,
   type UpsertSubdivisionDevelopmentRequirementInput,
+  type UpsertSubdivisionLotPhysicalReservationInput,
 } from "../shared/subdivisionPhysicalStructureContracts";
 import { getSupabaseAdminClient } from "./supabase";
 
@@ -17,6 +19,7 @@ export type PhysicalStructureLot = {
   depthM: number | null;
   lotTypology: "standard" | "corner" | "irregular" | "other";
   positionCode: "not_declared" | "internal" | "corner" | "end";
+  reservationPurpose: "landowner_reserve" | "technical_artesian_well" | "technical_water_tank" | "technical_other" | null;
 };
 
 export type PhysicalStructureBlock = {
@@ -44,14 +47,16 @@ function asLot(value: unknown): PhysicalStructureLot {
   if (!Number.isInteger(lotNumber) || lotNumber < 1) throw new Error("SUBDIVISION_PHYSICAL_STRUCTURE_READ_DENIED");
   const lotTypology = String(lot.lot_typology);
   const positionCode = String(lot.position_code);
-  if (!(["standard", "corner", "irregular", "other"] as string[]).includes(lotTypology) || !(["not_declared", "internal", "corner", "end"] as string[]).includes(positionCode)) throw new Error("SUBDIVISION_PHYSICAL_STRUCTURE_READ_DENIED");
-  return { lotNumber, areaSqm: asPositiveNumber(lot.area_sqm), frontageM: asPositiveNumber(lot.frontage_m), depthM: asPositiveNumber(lot.depth_m), lotTypology: lotTypology as PhysicalStructureLot["lotTypology"], positionCode: positionCode as PhysicalStructureLot["positionCode"] };
+  if (!( ["standard", "corner", "irregular", "other"] as string[]).includes(lotTypology) || !( ["not_declared", "internal", "corner", "end"] as string[]).includes(positionCode)) throw new Error("SUBDIVISION_PHYSICAL_STRUCTURE_READ_DENIED");
+  const reservationPurpose = lot.reservation_purpose === null || lot.reservation_purpose === undefined ? null : String(lot.reservation_purpose);
+  if (reservationPurpose !== null && !(["landowner_reserve", "technical_artesian_well", "technical_water_tank", "technical_other"] as string[]).includes(reservationPurpose)) throw new Error("SUBDIVISION_PHYSICAL_STRUCTURE_READ_DENIED");
+  return { lotNumber, areaSqm: asPositiveNumber(lot.area_sqm), frontageM: asPositiveNumber(lot.frontage_m), depthM: asPositiveNumber(lot.depth_m), lotTypology: lotTypology as PhysicalStructureLot["lotTypology"], positionCode: positionCode as PhysicalStructureLot["positionCode"], reservationPurpose: reservationPurpose as PhysicalStructureLot["reservationPurpose"] };
 }
 
 export async function listDraftSubdivisionPhysicalStructure(subjectId: string | undefined, rawContext: unknown, developmentId: string, client: RpcClient = getSupabaseAdminClient()): Promise<PhysicalStructureBlock[]> {
   const actorUserId = requireSubject(subjectId);
   const context = subdivisionContextSchema.parse(rawContext);
-  const { data, error } = await client.rpc("subdivision_list_draft_physical_structure_v1", { p_actor_user_id: actorUserId, p_organization_id: context.organizationId, p_module: context.module, p_purpose_code: context.purposeCode, p_development_id: developmentId });
+  const { data, error } = await client.rpc("subdivision_list_draft_physical_structure_v2", { p_actor_user_id: actorUserId, p_organization_id: context.organizationId, p_module: context.module, p_purpose_code: context.purposeCode, p_development_id: developmentId });
   if (error || !Array.isArray(data)) throw new Error("SUBDIVISION_PHYSICAL_STRUCTURE_READ_DENIED");
   return data.map((row) => {
     const record = row as Record<string, unknown>;
@@ -100,4 +105,14 @@ export async function upsertDraftSubdivisionDevelopmentRequirement(subjectId: st
   const result = data as Record<string, unknown>;
   if (typeof result.requirement_code !== "string" || typeof result.requirement_state !== "string") throw new Error("SUBDIVISION_REQUIREMENT_COMMAND_DENIED");
   return { requirementCode: result.requirement_code, requirementState: result.requirement_state };
+}
+
+export async function upsertDraftSubdivisionLotPhysicalReservation(subjectId: string | undefined, rawInput: UpsertSubdivisionLotPhysicalReservationInput, client: RpcClient = getSupabaseAdminClient()): Promise<{ reservationPurpose: PhysicalStructureLot["reservationPurpose"] }> {
+  const actorUserId = requireSubject(subjectId);
+  const input = upsertSubdivisionLotPhysicalReservationInputSchema.parse(rawInput);
+  const { data, error } = await client.rpc("subdivision_upsert_draft_lot_physical_reservation_v1", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_development_id: input.developmentId, p_block_id: input.blockId, p_lot_number: input.lotNumber, p_reservation_purpose: input.reservationPurpose, p_correlation_id: input.correlationId });
+  if (error || !data || typeof data !== "object" || Array.isArray(data)) throw new Error("SUBDIVISION_LOT_PHYSICAL_RESERVATION_DENIED");
+  const purpose = String((data as Record<string, unknown>).reservation_purpose);
+  if (!( ["landowner_reserve", "technical_artesian_well", "technical_water_tank", "technical_other"] as string[]).includes(purpose)) throw new Error("SUBDIVISION_LOT_PHYSICAL_RESERVATION_DENIED");
+  return { reservationPurpose: purpose as PhysicalStructureLot["reservationPurpose"] };
 }

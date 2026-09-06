@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const source = readFileSync(new URL("../supabase/migrations/20260906193000_subdivision_physical_dossier_a202.sql", import.meta.url), "utf8");
+const reservationSource = readFileSync(new URL("../supabase/migrations/20260907119000_subdivision_lot_physical_reservation_a253.sql", import.meta.url), "utf8");
 
 describe("migração A202 de estrutura física e dossiê", () => {
   it("mantém somente atributos físicos e estados de pendência no escopo", () => {
@@ -22,5 +23,22 @@ describe("migração A202 de estrutura física e dossiê", () => {
     expect(source).toContain("SUBDIVISION_PHYSICAL_STRUCTURE_REPLACEMENT_CONFIRMATION_REQUIRED");
     expect(source).toContain("incoming.lots");
     expect(source).toContain("state = 'archived'");
+  });
+
+  it("mantém a finalidade reservada segregada de disponibilidade e preço", () => {
+    expect(reservationSource).toContain("subdivision_lot_physical_reservations");
+    expect(reservationSource).toContain("landowner_reserve");
+    expect(reservationSource).toContain("technical_artesian_well");
+    expect(reservationSource).toContain("technical_water_tank");
+    expect(reservationSource).not.toMatch(/availability|price|sale|contract|payment|financial/i);
+  });
+
+  it("exige autoridade, idempotência, RLS e execução exclusiva ao servidor", () => {
+    expect(reservationSource).toContain("require_active_subdivision_draft_authority");
+    expect(reservationSource).toContain("correlation_id");
+    expect(reservationSource).toContain("payload_redacted");
+    expect(reservationSource).toContain("enable row level security");
+    expect(reservationSource).toContain("security definer set search_path = ''");
+    expect(reservationSource).toContain("grant execute on function public.subdivision_upsert_draft_lot_physical_reservation_v1");
   });
 });

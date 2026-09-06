@@ -2311,3 +2311,9 @@
 - [x] Exibir permanentemente em cada cartão os rótulos de preço por m² e valor total, mesmo quando bloqueados por política ainda não aprovada. **A252:** os rótulos agora integram todos os cartões, sem depender de hover ou foco.
 - [x] Manter números ocultos no estado bloqueado e orientar que a referência só surge após aprovação, vigência e ausência de exceção. **A252:** o cartão direciona à referência aprovada e não recebe valores enquanto a política atual permanece em Preparação.
 - [x] Cobrir interface e responsividade, gerar ZIP/HTML saneados e salvar checkpoint sem alterar política, preço, venda, contrato ou financeiro real. **A252:** 219 arquivos/579 testes, tipagem, build Netlify, diff limpo e saneamento foram aprovados; checkpoint funcional `3162ad9c` preserva todos os dados materiais inalterados.
+
+## Finalidade física reservada por Lote — A253
+- [x] Adicionar classificação física não comercial para reserva patrimonial de proprietários da área de origem e reserva de infraestrutura técnica, incluindo poço artesiano e caixa d’água. **A253:** a finalidade possui catálogo fechado e tabela segregada por Lote.
+- [x] Manter reserva física segregada de disponibilidade, preço, venda, proposta, contrato, cobrança, pagamento e financeiro. **A253:** a migração e a interface não criam nem alteram qualquer trilho comercial.
+- [x] Exigir alçada, MFA, contexto, idempotência e auditoria redigida para alteração de finalidade; não atribuir reserva real sem seleção explícita do Lote autorizado. **A253:** o comando exige seleção de Quadra, Lote e finalidade; nenhuma reserva foi atribuída durante a revisão.
+- [ ] Cobrir serviço, migração e interface; revisar desktop/móvel, gerar ZIP/HTML saneados e salvar checkpoint sem alterar Lote real sem seleção autorizada.

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { applySubdivisionPhysicalStructure, listDraftSubdivisionPhysicalStructure } from "./subdivisionPhysicalStructure";
+import { applySubdivisionPhysicalStructure, listDraftSubdivisionPhysicalStructure, upsertDraftSubdivisionLotPhysicalReservation } from "./subdivisionPhysicalStructure";
 
 const context = { organizationId: "00000000-0000-4000-8000-000000000001", module: "loteadora" as const, purposeCode: "CADASTRO_INICIAL" };
 const subject = "00000000-0000-4000-8000-000000000010";
@@ -16,5 +16,12 @@ describe("serviço de estrutura física", () => {
 
   it("não busca nem retorna estrutura sem identidade válida", async () => {
     await expect(listDraftSubdivisionPhysicalStructure(undefined, context, developmentId, { rpc: vi.fn() })).rejects.toThrow("SUBDIVISION_IDENTITY_REQUIRED");
+  });
+
+  it("classifica reserva física por Quadra e Lote sem enviar identificador de Lote pelo navegador", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: { reservation_purpose: "technical_artesian_well" }, error: null });
+    await expect(upsertDraftSubdivisionLotPhysicalReservation(subject, { ...context, developmentId, blockId: "00000000-0000-4000-8000-000000000004", lotNumber: 8, reservationPurpose: "technical_artesian_well", correlationId: "00000000-0000-4000-8000-000000000003" }, { rpc })).resolves.toEqual({ reservationPurpose: "technical_artesian_well" });
+    expect(rpc).toHaveBeenCalledWith("subdivision_upsert_draft_lot_physical_reservation_v1", expect.objectContaining({ p_block_id: "00000000-0000-4000-8000-000000000004", p_lot_number: 8, p_reservation_purpose: "technical_artesian_well" }));
+    expect(rpc.mock.calls[0]?.[1]).not.toHaveProperty("p_lot_id");
   });
 });

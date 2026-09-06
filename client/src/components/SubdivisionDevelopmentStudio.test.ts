@@ -209,5 +209,10 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("effectiveLotTotalBrl");
     expect(studio).toContain("Nenhuma política aprovada e vigente libera preço por m² ou valor total para este Lote.");
     expect(studio).toContain("Ao apontar ou focar uma unidade, a referência por m² e o valor total aparecem somente após política aprovada e vigente");
+    expect(studio).toContain("FINALIDADE FÍSICA RESERVADA");
+    expect(studio).toContain("Reserva de proprietários da área de origem");
+    expect(studio).toContain("Infraestrutura · poço artesiano");
+    expect(studio).toContain("Infraestrutura · caixa d’água");
+    expect(studio).toContain("Registrar finalidade física");
   });
 });
