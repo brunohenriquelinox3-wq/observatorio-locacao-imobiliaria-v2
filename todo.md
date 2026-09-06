@@ -2225,7 +2225,7 @@
 - [x] Manter correção sem efeito até nova validação da política, encaminhamento e aprovação segregada; não criar venda, proposta, contrato, cobrança, pagamento ou repasse. **A238:** o formulário declara o estado de Preparação e o histórico de origem continua bloqueando encaminhamento enquanto existir exceção.
 - [x] Cobrir segurança e UI e revisar sem inserir correção real. **A238/A239:** testes dirigidos, suíte integral com 216 arquivos/551 testes, tipagem, build Netlify, integridade de diff, revisão autenticada e orientador de segurança foram aprovados; somente o aviso não bloqueante de chunks grandes permaneceu no build.
 - [x] Gerar ZIP/HTML saneados. **A238/A239:** os artefatos foram verificados sem ambiente, logs, documentação, checklist, dados de origem, credenciais ou infraestrutura.
-- [ ] Salvar checkpoint A238/A239 após documentação, validação integral e saneamento dos artefatos.
+- [x] Salvar checkpoint A238/A239 após documentação, validação integral e saneamento dos artefatos. **A238/A239:** checkpoint `68eca2d9` preserva a correção manual governada, o reforço explícito de RLS e a ausência de correção real criada.
 
 ## Reforço explícito de RLS em condições de preço — A239
 - [x] Criar políticas explícitas de negação para anon/authenticated nas condições de preço, preservando somente o caminho de serviço protegido. **A239:** as políticas restritivas `using (false)` e `with check (false)` foram aplicadas sem alterar registros.
