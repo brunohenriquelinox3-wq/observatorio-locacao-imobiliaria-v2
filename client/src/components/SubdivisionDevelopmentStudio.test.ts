@@ -218,6 +218,8 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Referência interna preparada. Não gera disponibilidade, venda ou preço contratual.");
     expect(studio).toContain("Confirmação de MFA necessária");
     expect(studio).toContain("Confirme a sessão em Segurança e MFA e use Atualizar valores.");
+    expect(studio).toContain('href="/seguranca-mfa"');
+    expect(studio).toContain("Confirmar MFA");
     expect(studio).toContain("internalPriceReferenceRequiresMfa");
     expect(studio).toContain("Atualizar valores");
     expect(studio).toContain("O cálculo permanece preservado e não foi alterado.");
@@ -301,10 +303,10 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(styles).toContain("display: contents !important;");
     expect(styles).toContain("A referência não pode recuperar uma caixa própria por ordem de carregamento.");
     expect(styles).toContain("grid-column: 1 / -1;");
-    expect(styles).toContain("O cartão não repete a advertência de MFA");
+    expect(styles).toContain("nomeia o bloqueio de forma visível");
     expect(styles).toContain('content: "VALOR POR M²";');
     expect(styles).toContain('content: "VALOR TOTAL DO LOTE";');
-    expect(styles).toContain('content: "—";');
+    expect(styles).toContain("white-space: normal;");
     expect(styles).toContain("repeat(auto-fit, minmax(min(100%, 21.25rem), 1fr))");
     expect(styles).toContain("grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr)");
     expect(styles).toContain("font-size: clamp(0.82rem, 1vw, 0.98rem)");

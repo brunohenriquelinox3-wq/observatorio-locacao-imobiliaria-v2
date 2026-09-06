@@ -93,7 +93,12 @@ export default function SecurityMfa() {
     setBusy("enroll");
     setErrorMessage(null);
     try {
-      const { data, error } = await client.auth.mfa.enroll({ factorType: "totp", friendlyName: "CRM · Segurança" });
+      // O provedor exige unicidade por fator. O rótulo aleatório é criado
+      // somente no momento da inscrição e evita colisão com fatores existentes.
+      const { data, error } = await client.auth.mfa.enroll({
+        factorType: "totp",
+        friendlyName: `CRM · Autenticador ${crypto.randomUUID()}`,
+      });
       if (error || !data?.id || !data.totp?.qr_code || !data.totp.secret) throw new Error("MFA_ENROLLMENT_DENIED");
       setEnrollment({ factorId: data.id, qrCode: data.totp.qr_code, secret: data.totp.secret });
       setFactorId(data.id);

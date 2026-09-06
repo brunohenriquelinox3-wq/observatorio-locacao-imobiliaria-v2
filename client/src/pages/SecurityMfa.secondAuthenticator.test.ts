@@ -8,7 +8,9 @@ describe("segunda vinculação de autenticador MFA", () => {
     expect(source).toContain("Vincular outro autenticador");
     expect(source).toContain("sem remover o fator já existente");
     expect(source).toContain('status === "challenge_required"');
-    expect(source).toContain('client.auth.mfa.enroll({ factorType: "totp"');
+    expect(source).toContain('factorType: "totp"');
+    expect(source).toContain("friendlyName: `CRM · Autenticador ${crypto.randomUUID()}`");
+    expect(source).not.toContain('friendlyName: "CRM · Segurança"');
     expect(source).not.toMatch(/challenge_required[\s\S]{0,900}client\.auth\.mfa\.unenroll/);
   });
 });
