@@ -201,13 +201,13 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Adicionar respaldo privado");
     expect(studio).toContain("A preparação registra motivo, escopo, vigência e estado documental.");
     expect(studio).toContain("Aprovar como segunda pessoa");
-    expect(studio).toContain("Nenhuma política aprovada e vigente libera preço por m² ou valor total para este Lote.");
+    expect(studio).toContain("Consulte a referência aprovada deste Lote.");
     expect(studio).toContain('lotNumber: priceConditionDraft.scope === "lot"');
     expect(studio).toContain("setFocusedLotPriceTarget({ blockId: lot.blockId, lotNumber: lot.lotNumber })");
     expect(studio).toContain("PREÇO POR M²");
     expect(studio).toContain("VALOR TOTAL");
     expect(studio).toContain("effectiveLotTotalBrl");
-    expect(studio).toContain("Nenhuma política aprovada e vigente libera preço por m² ou valor total para este Lote.");
+    expect(studio).toContain("Consulte a referência aprovada deste Lote.");
     expect(studio).toContain("Ao apontar ou focar uma unidade, a referência por m² e o valor total aparecem somente após política aprovada e vigente");
     expect(studio).toContain("FINALIDADE FÍSICA RESERVADA");
     expect(studio).toContain("Reserva de proprietários da área de origem");
@@ -229,5 +229,9 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("A área física é um atributo próprio");
     expect(studio).toContain("Motivo da retirada");
     expect(studio).toContain("upsertDraftBlockOperationalProfile");
+    expect(studio).toContain("selectLotForOperationalEdit");
+    expect(studio).toContain("Editar ficha física deste Lote");
+    expect(studio).toContain("Consultar a política de preço-base");
+    expect(studio).toContain("Você está revisando a unidade física selecionada.");
   });
 });
