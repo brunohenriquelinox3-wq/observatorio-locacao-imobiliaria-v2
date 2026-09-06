@@ -9,3 +9,7 @@ Uma remoção, desativação, arquivamento, exclusão ou substituição material
 ## Verificação antes de concluir atualizações
 
 Antes de declarar uma alteração pronta, conferir no navegador a continuidade da jornada inteira — da entrada aos estados posteriores — e registrar que as funções já existentes permanecem acessíveis. A validação deve abranger desktop e celular, testes automatizados e revisão de integridade sem mutação não autorizada de dados.
+
+## Preservação de conhecimento
+
+Não descartar conhecimento adquirido em estudos, inspeções, validações, decisões de UX, contratos de interface ou evidências de segurança. Registrar cada achado reutilizável em documentação versionada e manter um índice de consulta no projeto. Ao iniciar nova atualização, revisar essas referências antes de decidir, implementar ou remover qualquer coisa.

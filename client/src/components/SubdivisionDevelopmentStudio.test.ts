@@ -210,10 +210,14 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("VALOR TOTAL");
     expect(studio).toContain("effectiveLotTotalBrl");
     expect(studio).toContain("Referência interna preparada. Não gera disponibilidade, venda ou preço contratual.");
-    expect(studio).toContain("Revalidação de MFA necessária");
-    expect(studio).toContain("Confirme a sessão em Segurança e MFA");
+    expect(studio).toContain("Confirmação de MFA necessária");
+    expect(studio).toContain("Confirme a sessão em Segurança e MFA e use Atualizar valores.");
+    expect(studio).toContain("internalPriceReferenceRequiresMfa");
+    expect(studio).toContain("Atualizar valores");
+    expect(studio).toContain("O cálculo permanece preservado e não foi alterado.");
     expect(studio).toContain("Cada cartão reúne a ficha física, o preço-base interno por m² e o valor total calculado pela área confirmada.");
-    expect(studio).toContain("Preço-base não informado");
+    expect(studio).toContain("Não informado");
+    expect(studio).toContain("Nenhum cálculo é estimado.");
     expect(studio).toContain("selectLotForPriceAdjustment");
     expect(studio).toContain("FINALIDADE FÍSICA RESERVADA");
     expect(studio).toContain("Reserva de proprietários da área de origem");
@@ -260,6 +264,31 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(styles).toContain("content: none;");
     expect(styles).toContain("font-variant-numeric: tabular-nums;");
     expect(styles).toContain("@media (max-width: 440px)");
+  });
+
+  it("mantém as células de preço estáveis e distingue MFA de uma falha de consulta", () => {
+    const studio = source();
+    const styles = readFileSync(path.resolve(process.cwd(), "client/src/subdivision-lot-price-stability-a263.css"), "utf8");
+
+    expect(studio).toContain('import "../subdivision-lot-price-stability-a263.css";');
+    expect(studio).toContain('data-read-state={internalPriceReferenceReadState}');
+    expect(studio).toContain('data-placeholder="true"');
+    expect(studio).toContain("Protegido por MFA");
+    expect(studio).toContain("Consulta indisponível");
+    expect(studio).toContain("refreshInternalLotPriceReferences");
+    expect(styles).toContain("MFA controla a leitura, não desmonta o cartão");
+    expect(styles).toContain("display: contents !important;");
+    expect(styles).toContain("A referência não pode recuperar uma caixa própria por ordem de carregamento.");
+    expect(styles).toContain("grid-column: 1 / -1;");
+    expect(styles).toContain("O cartão não repete a advertência de MFA");
+    expect(styles).toContain('content: "VALOR POR M²";');
+    expect(styles).toContain('content: "VALOR TOTAL DO LOTE";');
+    expect(styles).toContain('content: "—";');
+    expect(styles).toContain("repeat(auto-fit, minmax(min(100%, 21.25rem), 1fr))");
+    expect(styles).toContain("grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr)");
+    expect(styles).toContain("font-size: clamp(0.82rem, 1vw, 0.98rem)");
+    expect(styles).toContain("@media (min-width: 1100px)");
+    expect(styles).toContain('@media (max-width: 640px)');
   });
 
   it("prioriza uma entrada operacional de portfólio sem manter barras laterais concorrentes", () => {

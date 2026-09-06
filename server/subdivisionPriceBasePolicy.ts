@@ -406,7 +406,20 @@ export async function listSubdivisionLotInternalPriceReferences(subjectId: strin
     if (policyState !== "prepared" && policyState !== "submitted" && policyState !== "approved") throw new Error("PRICE_BASE_INTERNAL_REFERENCE_DENIED");
     const basePricePerSqmBrl = typeof row.base_price_per_sqm_brl === "number" && row.base_price_per_sqm_brl > 0 ? row.base_price_per_sqm_brl : null;
     const lotAreaSqm = typeof row.lot_area_sqm === "number" && row.lot_area_sqm > 0 ? row.lot_area_sqm : null;
-    const lotTotalBrl = basePricePerSqmBrl !== null && lotAreaSqm !== null && typeof row.lot_total_brl === "number" && row.lot_total_brl > 0 ? row.lot_total_brl : null;
+    // O total é sempre derivado no servidor a partir das duas entradas confirmadas.
+    // O valor retornado pela RPC é usado apenas como verificação de integridade, nunca
+    // como fonte independente para a tela.
+    const calculatedLotTotalBrl = basePricePerSqmBrl !== null && lotAreaSqm !== null
+      ? Number((basePricePerSqmBrl * lotAreaSqm).toFixed(2))
+      : null;
+    const returnedLotTotalBrl = typeof row.lot_total_brl === "number" && row.lot_total_brl > 0
+      ? row.lot_total_brl
+      : null;
+    if (calculatedLotTotalBrl !== null && returnedLotTotalBrl !== null && Math.abs(returnedLotTotalBrl - calculatedLotTotalBrl) > 0.005) {
+      throw new Error("PRICE_BASE_INTERNAL_REFERENCE_DENIED");
+    }
+    if (calculatedLotTotalBrl === null && returnedLotTotalBrl !== null) throw new Error("PRICE_BASE_INTERNAL_REFERENCE_DENIED");
+    const lotTotalBrl = calculatedLotTotalBrl;
     if (referenceState === "missing_base_price" && (basePricePerSqmBrl !== null || lotTotalBrl !== null)) throw new Error("PRICE_BASE_INTERNAL_REFERENCE_DENIED");
     return {
       blockId: String(row.block_id),

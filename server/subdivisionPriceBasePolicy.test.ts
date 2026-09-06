@@ -153,6 +153,16 @@ describe("subdivision price-base policy boundary", () => {
     expect(rpc).toHaveBeenCalledWith("subdivision_list_lot_internal_price_references_v1", expect.objectContaining({ p_development_id: developmentId, p_organization_id: organizationId }));
   });
 
+  it("derives the internal total from confirmed base price and physical area even if the RPC total is absent", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: [{ block_id: "00000000-0000-4000-8000-000000000011", block_number: 1, lot_number: 1, policy_id: "00000000-0000-4000-8000-000000000005", policy_reference: "PB_INTERNA_001", policy_state: "prepared", policy_effective_from: "2026-09-05", exception_count: 0, reference_state: "internal_prepared", base_price_per_sqm_brl: 250, lot_area_sqm: 300, lot_total_brl: null }], error: null });
+    await expect(listSubdivisionLotInternalPriceReferences(actor, { ...context, developmentId }, { rpc })).resolves.toEqual([expect.objectContaining({ basePricePerSqmBrl: 250, lotAreaSqm: 300, lotTotalBrl: 75000 })]);
+  });
+
+  it("rejects a divergent RPC total instead of showing an untraceable calculation", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: [{ block_id: "00000000-0000-4000-8000-000000000011", block_number: 1, lot_number: 1, policy_id: "00000000-0000-4000-8000-000000000005", policy_reference: "PB_INTERNA_001", policy_state: "prepared", policy_effective_from: "2026-09-05", exception_count: 0, reference_state: "internal_prepared", base_price_per_sqm_brl: 250, lot_area_sqm: 300, lot_total_brl: 1 }], error: null });
+    await expect(listSubdivisionLotInternalPriceReferences(actor, { ...context, developmentId }, { rpc })).rejects.toThrow("PRICE_BASE_INTERNAL_REFERENCE_DENIED");
+  });
+
   it("keeps a missing base price empty even when the policy has other prepared references", async () => {
     const rpc = vi.fn().mockResolvedValue({ data: [{ block_id: "00000000-0000-4000-8000-000000000011", block_number: 1, lot_number: 2, policy_id: "00000000-0000-4000-8000-000000000005", policy_reference: "PB_INTERNA_001", policy_state: "prepared", policy_effective_from: "2026-09-05", exception_count: 1, reference_state: "missing_base_price", base_price_per_sqm_brl: null, lot_area_sqm: 300, lot_total_brl: null }], error: null });
     await expect(listSubdivisionLotInternalPriceReferences(actor, { ...context, developmentId }, { rpc })).resolves.toEqual([expect.objectContaining({ referenceState: "missing_base_price", basePricePerSqmBrl: null, lotTotalBrl: null })]);

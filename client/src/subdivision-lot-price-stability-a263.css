@@ -1,0 +1,195 @@
+/* A263: a área de preço permanece estável; MFA controla a leitura, não desmonta o cartão. */
+.subdivision-lot-management__price-read-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.85rem 0;
+  padding: 0.78rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 22%, var(--border));
+  border-radius: 0.7rem;
+  background: color-mix(in srgb, var(--primary) 5%, var(--background));
+}
+
+.subdivision-lot-management__price-read-status > div {
+  display: grid;
+  min-width: 0;
+  gap: 0.18rem;
+}
+
+.subdivision-lot-management__price-read-status span {
+  color: color-mix(in srgb, var(--muted-foreground) 90%, var(--primary));
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.subdivision-lot-management__price-read-status b {
+  color: #164e49;
+  font-size: 0.79rem;
+}
+
+.subdivision-lot-management__price-read-status small {
+  color: #55716e;
+  font-size: 0.67rem;
+  line-height: 1.35;
+}
+
+.subdivision-lot-management__price-read-status[data-state="mfa_required"] {
+  border-color: #d3a45a;
+  background: #fffaf0;
+}
+
+.subdivision-lot-management__price-read-status[data-state="unavailable"] {
+  border-color: #d7b47d;
+  background: #fffdf7;
+}
+
+.subdivision-lot-management__refresh-price {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  flex: 0 0 auto;
+  padding: 0 0.72rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 38%, var(--border));
+  border-radius: 0.5rem;
+  background: var(--background);
+  color: var(--primary);
+  font-size: 0.68rem;
+  font-weight: 850;
+}
+
+.subdivision-lot-management__refresh-price:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.subdivision-lot-management__refresh-price:not(:disabled):hover,
+.subdivision-lot-management__refresh-price:not(:disabled):focus-visible {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  outline: none;
+}
+
+.subdivision-lot-management__price-values > div[data-placeholder="true"] b {
+  color: #58706d;
+  font-size: 0.7rem;
+  font-weight: 750;
+}
+
+/* A referência não pode recuperar uma caixa própria por ordem de carregamento.
+   Seus dois valores participam da mesma grade de medidas físicas. */
+.subdivision-lot-management__lot > .subdivision-lot-management__price-context,
+.subdivision-lot-management__lot > .subdivision-lot-management__price-context > .subdivision-lot-management__price-context-head,
+.subdivision-lot-management__lot > .subdivision-lot-management__price-context > .subdivision-lot-management__price-values {
+  display: contents !important;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.subdivision-lot-management__lot > .subdivision-lot-management__price-context > small {
+  grid-column: 1 / -1;
+  order: 12;
+  margin-top: 0.16rem;
+}
+
+.subdivision-lot-management__lot > .subdivision-lot-management__price-context .subdivision-lot-management__price-values > div {
+  min-width: 0;
+  background: transparent;
+}
+
+/* O cartão não repete a advertência de MFA: mantém somente os campos de valor
+   na grade; a orientação de segurança fica concentrada no status da matriz. */
+.subdivision-lot-management__price-context[data-read-state="mfa_required"] .subdivision-lot-management__price-values > div[data-placeholder="true"] b {
+  font-size: 0;
+}
+
+.subdivision-lot-management__price-context[data-read-state="mfa_required"] .subdivision-lot-management__price-values > div[data-placeholder="true"] b::after {
+  color: #58706d;
+  content: "—";
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.subdivision-lot-management__price-context[data-read-state="mfa_required"] > small {
+  display: none;
+}
+
+/* Rótulos curtos e operacionais: preço-base interno e total calculado pelo Lote. */
+.subdivision-lot-management__price-values > div:first-child span {
+  font-size: 0;
+}
+
+.subdivision-lot-management__price-values > div:first-child span::after {
+  content: "VALOR POR M²";
+  font-size: 0.57rem;
+}
+
+.subdivision-lot-management__price-values > div:last-child span {
+  font-size: 0;
+}
+
+.subdivision-lot-management__price-values > div:last-child span::after {
+  content: "VALOR TOTAL DO LOTE";
+  font-size: 0.57rem;
+}
+
+/* Em telas amplas, três cartões utilizam a largura disponível e mantêm os números
+   monetários em células com espaço suficiente, sem reintroduzir painéis laterais. */
+@media (min-width: 1100px) {
+  .subdivision-lot-management__lot-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 21.25rem), 1fr));
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .subdivision-lot-management__lot {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 0 1.1rem;
+    padding: 1rem;
+  }
+
+  .subdivision-lot-management__lot-measures > div,
+  .subdivision-lot-management__price-values > div {
+    min-height: 3.55rem;
+    padding: 0.7rem 0 0.6rem;
+  }
+
+  .subdivision-lot-management__price-values b {
+    font-size: clamp(0.82rem, 1vw, 0.98rem);
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .subdivision-lot-management__price-values > div:last-child b {
+    font-size: clamp(0.78rem, 0.92vw, 0.9rem);
+  }
+
+  .subdivision-lot-management__price-values > div[data-placeholder="true"] b {
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+}
+
+.subdivision-lot-management__price-context[data-read-state="mfa_required"] .subdivision-lot-management__price-values > div[data-placeholder="true"] {
+  border-top-color: color-mix(in srgb, #bc8237 36%, var(--border));
+}
+
+@media (max-width: 640px) {
+  .subdivision-lot-management__price-read-status {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .subdivision-lot-management__refresh-price {
+    width: 100%;
+    min-height: 2.75rem;
+  }
+}
