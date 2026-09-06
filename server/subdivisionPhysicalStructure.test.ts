@@ -25,10 +25,10 @@ describe("serviço de estrutura física", () => {
     expect(rpc.mock.calls[0]?.[1]).not.toHaveProperty("p_lot_id");
   });
 
-  it("atualiza ficha física com nota interna saneada sem enviar preço ou dados comerciais", async () => {
+  it("atualiza ficha física com quatro divisas e nota interna saneada sem enviar dados comerciais", async () => {
     const rpc = vi.fn().mockResolvedValue({ data: null, error: null });
-    await expect(upsertDraftSubdivisionLotOperationalProfile(subject, { ...context, developmentId, blockId: "00000000-0000-4000-8000-000000000004", lotNumber: 8, areaSqm: 300, frontageM: 12, depthM: 25, lotTypology: "corner", positionCode: "corner", reservationPurpose: "technical_artesian_well", internalNote: "Área técnica com acesso de obra.", correlationId: "00000000-0000-4000-8000-000000000003" }, { rpc })).resolves.toBeUndefined();
-    expect(rpc).toHaveBeenCalledWith("subdivision_upsert_draft_lot_operational_profile_v1", expect.objectContaining({ p_lot_number: 8, p_internal_note: "Área técnica com acesso de obra." }));
+    await expect(upsertDraftSubdivisionLotOperationalProfile(subject, { ...context, developmentId, blockId: "00000000-0000-4000-8000-000000000004", lotNumber: 8, areaSqm: 300, frontageM: 12, depthM: 25, rearM: 13, leftSideM: 26, rightSideM: 24, lotTypology: "corner", positionCode: "corner", reservationPurpose: "technical_artesian_well", internalNote: "Área técnica com acesso de obra.", correlationId: "00000000-0000-4000-8000-000000000003" }, { rpc })).resolves.toBeUndefined();
+    expect(rpc).toHaveBeenCalledWith("subdivision_upsert_draft_lot_operational_profile_v2", expect.objectContaining({ p_lot_number: 8, p_rear_m: 13, p_left_side_m: 26, p_right_side_m: 24, p_internal_note: "Área técnica com acesso de obra." }));
     expect(JSON.stringify(rpc.mock.calls[0]?.[1])).not.toMatch(/price|sale|customer|contract|payment/i);
   });
 
@@ -39,9 +39,9 @@ describe("serviço de estrutura física", () => {
     expect(JSON.stringify(rpc.mock.calls[0]?.[1])).not.toMatch(/price|sale|customer|contract|payment/i);
   });
 
-  it("lê a observação interna da Quadra somente no retorno físico protegido", async () => {
-    const rpc = vi.fn().mockResolvedValue({ data: [{ block_id: "00000000-0000-4000-8000-000000000004", block_number: 1, sector_reference: "Setor técnico", block_typology: "regular", internal_note: "Acesso operacional em revisão.", lots: [] }], error: null });
-    await expect(listDraftSubdivisionPhysicalStructure(subject, context, developmentId, { rpc })).resolves.toEqual([expect.objectContaining({ internalNote: "Acesso operacional em revisão." })]);
-    expect(rpc).toHaveBeenCalledWith("subdivision_list_draft_physical_structure_v4", expect.any(Object));
+  it("lê observação de Quadra e quatro divisas somente no retorno físico protegido", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: [{ block_id: "00000000-0000-4000-8000-000000000004", block_number: 1, sector_reference: "Setor técnico", block_typology: "regular", internal_note: "Acesso operacional em revisão.", lots: [{ lot_number: 1, area_sqm: 300, frontage_m: 10, depth_m: null, rear_m: 10, left_side_m: 30, right_side_m: 30, lot_typology: "standard", position_code: "internal", reservation_purpose: null, internal_note: null }] }], error: null });
+    await expect(listDraftSubdivisionPhysicalStructure(subject, context, developmentId, { rpc })).resolves.toEqual([expect.objectContaining({ internalNote: "Acesso operacional em revisão.", lots: [expect.objectContaining({ rearM: 10, leftSideM: 30, rightSideM: 30 })] })]);
+    expect(rpc).toHaveBeenCalledWith("subdivision_list_draft_physical_structure_v5", expect.any(Object));
   });
 });

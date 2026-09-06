@@ -21,6 +21,9 @@ export type PhysicalStructureLot = {
   areaSqm: number | null;
   frontageM: number | null;
   depthM: number | null;
+  rearM: number | null;
+  leftSideM: number | null;
+  rightSideM: number | null;
   lotTypology: "standard" | "corner" | "irregular" | "other";
   positionCode: "not_declared" | "internal" | "corner" | "end";
   reservationPurpose: "landowner_reserve" | "technical_artesian_well" | "technical_water_tank" | "technical_other" | null;
@@ -58,13 +61,13 @@ function asLot(value: unknown): PhysicalStructureLot {
   if (reservationPurpose !== null && !(["landowner_reserve", "technical_artesian_well", "technical_water_tank", "technical_other"] as string[]).includes(reservationPurpose)) throw new Error("SUBDIVISION_PHYSICAL_STRUCTURE_READ_DENIED");
   const internalNote = lot.internal_note === null || lot.internal_note === undefined ? null : String(lot.internal_note);
   if (internalNote !== null && internalNote.length > 280) throw new Error("SUBDIVISION_PHYSICAL_STRUCTURE_READ_DENIED");
-  return { lotNumber, areaSqm: asPositiveNumber(lot.area_sqm), frontageM: asPositiveNumber(lot.frontage_m), depthM: asPositiveNumber(lot.depth_m), lotTypology: lotTypology as PhysicalStructureLot["lotTypology"], positionCode: positionCode as PhysicalStructureLot["positionCode"], reservationPurpose: reservationPurpose as PhysicalStructureLot["reservationPurpose"], internalNote };
+  return { lotNumber, areaSqm: asPositiveNumber(lot.area_sqm), frontageM: asPositiveNumber(lot.frontage_m), depthM: asPositiveNumber(lot.depth_m), rearM: asPositiveNumber(lot.rear_m), leftSideM: asPositiveNumber(lot.left_side_m), rightSideM: asPositiveNumber(lot.right_side_m), lotTypology: lotTypology as PhysicalStructureLot["lotTypology"], positionCode: positionCode as PhysicalStructureLot["positionCode"], reservationPurpose: reservationPurpose as PhysicalStructureLot["reservationPurpose"], internalNote };
 }
 
 export async function listDraftSubdivisionPhysicalStructure(subjectId: string | undefined, rawContext: unknown, developmentId: string, client: RpcClient = getSupabaseAdminClient()): Promise<PhysicalStructureBlock[]> {
   const actorUserId = requireSubject(subjectId);
   const context = subdivisionContextSchema.parse(rawContext);
-  const { data, error } = await client.rpc("subdivision_list_draft_physical_structure_v4", { p_actor_user_id: actorUserId, p_organization_id: context.organizationId, p_module: context.module, p_purpose_code: context.purposeCode, p_development_id: developmentId });
+  const { data, error } = await client.rpc("subdivision_list_draft_physical_structure_v5", { p_actor_user_id: actorUserId, p_organization_id: context.organizationId, p_module: context.module, p_purpose_code: context.purposeCode, p_development_id: developmentId });
   if (error || !Array.isArray(data)) throw new Error("SUBDIVISION_PHYSICAL_STRUCTURE_READ_DENIED");
   return data.map((row) => {
     const record = row as Record<string, unknown>;
@@ -86,7 +89,7 @@ export async function applySubdivisionPhysicalStructure(subjectId: string | unde
     p_module: input.module,
     p_purpose_code: input.purposeCode,
     p_development_id: input.developmentId,
-    p_blocks: input.blocks.map((block) => ({ block_number: block.blockNumber, sector_reference: block.sectorReference ?? null, block_typology: block.blockTypology, lots: block.lots.map((lot) => ({ lot_number: lot.lotNumber, area_sqm: lot.areaSqm ?? null, frontage_m: lot.frontageM ?? null, depth_m: lot.depthM ?? null, lot_typology: lot.lotTypology, position_code: lot.positionCode })) })),
+    p_blocks: input.blocks.map((block) => ({ block_number: block.blockNumber, sector_reference: block.sectorReference ?? null, block_typology: block.blockTypology, lots: block.lots.map((lot) => ({ lot_number: lot.lotNumber, area_sqm: lot.areaSqm ?? null, frontage_m: lot.frontageM ?? null, depth_m: lot.depthM ?? null, rear_m: lot.rearM ?? null, left_side_m: lot.leftSideM ?? null, right_side_m: lot.rightSideM ?? null, lot_typology: lot.lotTypology, position_code: lot.positionCode })) })),
     p_replace_existing: input.replaceExisting,
     p_correlation_id: input.correlationId,
   });
@@ -129,7 +132,7 @@ export async function upsertDraftSubdivisionLotPhysicalReservation(subjectId: st
 
 export async function upsertDraftSubdivisionLotOperationalProfile(subjectId: string | undefined, rawInput: UpsertSubdivisionLotOperationalProfileInput, client: RpcClient = getSupabaseAdminClient()): Promise<void> {
   const actorUserId = requireSubject(subjectId); const input = upsertSubdivisionLotOperationalProfileInputSchema.parse(rawInput);
-  const { error } = await client.rpc("subdivision_upsert_draft_lot_operational_profile_v1", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_development_id: input.developmentId, p_block_id: input.blockId, p_lot_number: input.lotNumber, p_area_sqm: input.areaSqm ?? null, p_frontage_m: input.frontageM ?? null, p_depth_m: input.depthM ?? null, p_lot_typology: input.lotTypology, p_position_code: input.positionCode, p_reservation_purpose: input.reservationPurpose, p_internal_note: input.internalNote, p_correlation_id: input.correlationId });
+  const { error } = await client.rpc("subdivision_upsert_draft_lot_operational_profile_v2", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_development_id: input.developmentId, p_block_id: input.blockId, p_lot_number: input.lotNumber, p_area_sqm: input.areaSqm ?? null, p_frontage_m: input.frontageM ?? null, p_depth_m: input.depthM ?? null, p_rear_m: input.rearM ?? null, p_left_side_m: input.leftSideM ?? null, p_right_side_m: input.rightSideM ?? null, p_lot_typology: input.lotTypology, p_position_code: input.positionCode, p_reservation_purpose: input.reservationPurpose, p_internal_note: input.internalNote, p_correlation_id: input.correlationId });
   if (error) throw new Error("SUBDIVISION_LOT_OPERATIONAL_PROFILE_DENIED");
 }
 

@@ -14,6 +14,9 @@ export const subdivisionPhysicalLotSchema = z.object({
   areaSqm: optionalDimension,
   frontageM: optionalDimension,
   depthM: optionalDimension,
+  rearM: optionalDimension,
+  leftSideM: optionalDimension,
+  rightSideM: optionalDimension,
   lotTypology: subdivisionLotTypologySchema.default("standard"),
   positionCode: subdivisionLotPositionSchema.default("not_declared"),
 });
@@ -79,7 +82,7 @@ export const upsertSubdivisionLotPhysicalReservationInputSchema = subdivisionCon
 });
 export const upsertSubdivisionLotOperationalProfileInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(), developmentId: z.string().uuid(), blockId: z.string().uuid(), lotNumber: z.number().int().min(1).max(100),
-  areaSqm: optionalDimension, frontageM: optionalDimension, depthM: optionalDimension,
+  areaSqm: optionalDimension, frontageM: optionalDimension, depthM: optionalDimension, rearM: optionalDimension, leftSideM: optionalDimension, rightSideM: optionalDimension,
   lotTypology: subdivisionLotTypologySchema, positionCode: subdivisionLotPositionSchema,
   reservationPurpose: subdivisionLotPhysicalReservationPurposeSchema.nullable(),
   internalNote: z.string().trim().max(280).nullable().refine((value) => value === null || !/(\bcpf\b|\bcnpj\b|\br\$\b|@|\bcontrato\b|\bcobrança\b|\bpagamento\b)/i.test(value), "SUBDIVISION_INTERNAL_NOTE_CONTENT_DENIED"),

@@ -6,6 +6,7 @@ const reservationSource = readFileSync(new URL("../supabase/migrations/202609071
 const operationalProfileSource = readFileSync(new URL("../supabase/migrations/20260907120000_subdivision_lot_operational_profile_a255.sql", import.meta.url), "utf8");
 const blockOperationalProfileSource = readFileSync(new URL("../supabase/migrations/20260907121000_subdivision_block_operational_profile_a256.sql", import.meta.url), "utf8");
 const blockOperationalReadSource = readFileSync(new URL("../supabase/migrations/20260907121100_subdivision_block_operational_profile_read_a256.sql", import.meta.url), "utf8");
+const fourBoundariesSource = readFileSync(new URL("../supabase/migrations/20260907122000_subdivision_lot_four_boundaries_a257.sql", import.meta.url), "utf8");
 
 describe("migração A202 de estrutura física e dossiê", () => {
   it("mantém somente atributos físicos e estados de pendência no escopo", () => {
@@ -63,5 +64,17 @@ describe("migração A202 de estrutura física e dossiê", () => {
     expect(blockOperationalReadSource).toContain("subdivision_list_draft_physical_structure_v4");
     expect(blockOperationalReadSource).toContain("note.internal_note");
     expect(blockOperationalReadSource).toContain("grant execute on function public.subdivision_list_draft_physical_structure_v4");
+  });
+
+  it("mantém as quatro divisas no escopo físico, com leitura e edição protegidas", () => {
+    expect(fourBoundariesSource).toContain("add column if not exists rear_m numeric");
+    expect(fourBoundariesSource).toContain("add column if not exists left_side_m numeric");
+    expect(fourBoundariesSource).toContain("add column if not exists right_side_m numeric");
+    expect(fourBoundariesSource).toContain("subdivision_list_draft_physical_structure_v5");
+    expect(fourBoundariesSource).toContain("subdivision_upsert_draft_lot_operational_profile_v2");
+    expect(fourBoundariesSource).toContain("require_active_subdivision_draft_authority");
+    expect(fourBoundariesSource).toContain("security definer set search_path=''");
+    expect(fourBoundariesSource).toContain("payload_redacted");
+    expect(fourBoundariesSource).not.toMatch(/availability|price|sale|contract|payment|financial/i);
   });
 });
