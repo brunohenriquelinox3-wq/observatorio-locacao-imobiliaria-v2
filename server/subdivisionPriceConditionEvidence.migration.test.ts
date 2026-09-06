@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 describe("subdivision condition evidence submission migration", () => {
   const sql = readFileSync(resolve(process.cwd(), "supabase/migrations/20260907109000_subdivision_condition_submit_evidence_a243.sql"), "utf8");
+  const approvalSql = readFileSync(resolve(process.cwd(), "supabase/migrations/20260907115000_subdivision_condition_approval_evidence_a249.sql"), "utf8");
 
   it("requires an active private evidence link before submission", () => {
     expect(sql).toContain("subdivision_submit_price_condition_v2");
@@ -18,5 +19,16 @@ describe("subdivision condition evidence submission migration", () => {
     expect(sql).toContain("grant execute on function public.subdivision_submit_price_condition_v2");
     expect(sql).not.toContain("storage_key");
     expect(sql).not.toContain("original_name");
+  });
+
+  it("revalidates active private evidence before approval with protected execution", () => {
+    expect(approvalSql).toContain("subdivision_approve_price_condition_v2");
+    expect(approvalSql).toContain("subdivision_price_evidence_links");
+    expect(approvalSql).toContain("PRICE_CONDITION_EVIDENCE_REQUIRED");
+    expect(approvalSql).toContain("security definer set search_path = ''");
+    expect(approvalSql).toContain("revoke all on function public.subdivision_approve_price_condition_v2");
+    expect(approvalSql).toContain("grant execute on function public.subdivision_approve_price_condition_v2");
+    expect(approvalSql).not.toContain("storage_key");
+    expect(approvalSql).not.toContain("original_name");
   });
 });

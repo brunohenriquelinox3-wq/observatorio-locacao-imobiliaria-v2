@@ -2288,3 +2288,9 @@
 - [x] Bloquear aprovação quando a evidência tiver sido arquivada ou não estiver ativa, sem alterar linhas, matriz, condição, preço, venda, contrato ou financeiro. **A248:** a função retorna erro redigido antes das transições de vigência e aprovação.
 - [x] Exibir a pendência de respaldo antes da aprovação apenas no estado encaminhado, sem aprovar a política real durante a revisão. **A248:** a interface bloqueia a aprovação sem respaldo ativo; a política atual em Preparação continuou sem ação de aprovação.
 - [x] Cobrir serviço, migração e interface; revisar, gerar ZIP/HTML saneados e salvar checkpoint sem aprovar política real. **A248:** 219 arquivos/572 testes, tipagem, build Netlify, diff limpo, revisão autenticada e saneamento foram aprovados; checkpoint funcional `3d4d0cf7` preserva a ausência de aprovação real.
+
+## Evidência privada revalidada na aprovação de condição — A249
+- [x] Exigir vínculo privado ativo também na aprovação de condição submetida, mantendo segregação, MFA, contexto, organização, idempotência e auditoria redigida no servidor. **A249:** a função v2 revalida vínculo ativo e anexo registrado antes de aprovar.
+- [x] Bloquear aprovação quando a evidência tiver sido arquivada ou não estiver ativa, sem alterar política-base, matriz, preço vigente, venda, contrato ou financeiro. **A249:** a função retorna erro redigido antes da aprovação da condição.
+- [x] Exibir a pendência de respaldo antes da aprovação apenas no estado encaminhado, sem aprovar condição real durante a revisão. **A249:** a interface bloqueia a aprovação sem respaldo ativo; não havia condição real registrada na revisão.
+- [ ] Cobrir serviço, migração e interface; revisar, gerar ZIP/HTML saneados e salvar checkpoint sem aprovar condição real.

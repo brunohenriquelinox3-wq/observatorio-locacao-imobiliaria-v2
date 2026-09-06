@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createSubdivisionPriceCondition, getSubdivisionLotPriceContext, submitSubdivisionPriceCondition } from "./subdivisionPriceConditions";
+import { approveSubdivisionPriceCondition, createSubdivisionPriceCondition, getSubdivisionLotPriceContext, submitSubdivisionPriceCondition } from "./subdivisionPriceConditions";
 
 const actor = "00000000-0000-4000-8000-000000000001";
 const organizationId = "00000000-0000-4000-8000-000000000002";
@@ -42,5 +42,11 @@ describe("subdivision price conditions", () => {
     const rpc = vi.fn().mockResolvedValue({ data: null, error: { message: "PRICE_CONDITION_EVIDENCE_REQUIRED" } });
     await expect(submitSubdivisionPriceCondition(actor, { ...context, conditionId, correlationId }, { rpc })).rejects.toThrow("PRICE_CONDITION_EVIDENCE_REQUIRED");
     expect(rpc).toHaveBeenCalledWith("subdivision_submit_price_condition_v2", expect.objectContaining({ p_condition_id: conditionId }));
+  });
+
+  it("revalidates active private evidence when approving a submitted condition", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: null, error: { message: "PRICE_CONDITION_EVIDENCE_REQUIRED" } });
+    await expect(approveSubdivisionPriceCondition(actor, { ...context, conditionId, correlationId }, { rpc })).rejects.toThrow("PRICE_CONDITION_EVIDENCE_REQUIRED");
+    expect(rpc).toHaveBeenCalledWith("subdivision_approve_price_condition_v2", expect.objectContaining({ p_condition_id: conditionId }));
   });
 });

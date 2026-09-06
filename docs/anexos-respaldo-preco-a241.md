@@ -95,3 +95,15 @@ A aprovação de política-base submetida passou a exigir novamente um vínculo 
 | Validação dirigida | 3 arquivos e 48 testes aprovados; tipagem e integridade de diff aprovadas. |
 | Validação integral | 219 arquivos de teste e 572 testes aprovados; tipagem, build Netlify e integridade de diff aprovados. |
 | Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |
+
+## Evidência revalidada antes da aprovação de condição A249
+
+A aprovação de condição submetida passou a exigir novamente um vínculo ativo de anexo privado registrado. A revisão autenticada confirmou que não há condição registrada na política atual e que nenhum encaminhamento, aprovação, vínculo ou outro comando material foi executado.
+
+| Resultado de validação A249 | Resultado |
+|---|---|
+| Serviço e migração | A aprovação de condição usa função v2, preserva segregação e exige evidência privada ativa no momento da decisão. |
+| Interface | O botão de aprovação fica indisponível sem respaldo ativo e informa a pendência sem expor conteúdo privado. |
+| Validação dirigida | 3 arquivos e 28 testes aprovados; tipagem e integridade de diff aprovadas. |
+| Validação integral | 219 arquivos de teste e 574 testes aprovados; tipagem, build Netlify e integridade de diff aprovados. |
+| Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |
