@@ -2276,3 +2276,9 @@
 - [x] Bloquear a preparação quando não houver evidência ativa e não criar nova política, linha, correção, venda, contrato ou financeiro. **A246:** a função retorna erro redigido antes das inserções e a interface bloqueia a ação no mesmo estado.
 - [x] Exibir contagem e orientação de respaldo no formulário de correção, sem expor arquivo, valor ou identificadores físicos. **A246:** o formulário mostra somente contagem agregada e orienta o vínculo privado na política-fonte.
 - [x] Cobrir serviço, migração e interface; revisar, gerar ZIP/HTML saneados e salvar checkpoint sem preparar correção real. **A246:** 219 arquivos/568 testes, tipagem, build Netlify, diff limpo, revisão autenticada e saneamento foram aprovados; checkpoint funcional `2cb0b180` preserva a ausência de correção real.
+
+## Motivo governado de retirada de política-base — A247
+- [x] Exigir motivo interno padronizado na retirada de política-base submetida, mantendo autoridade, MFA, contexto, organização, idempotência e auditoria redigida no servidor. **A247:** a função v2 aceita apenas um código do catálogo antes de retirar política encaminhada.
+- [x] Recusar motivo ausente ou fora do catálogo sem alterar estado, linhas, evidências, matriz, condição, preço, venda, contrato ou financeiro. **A247:** a validação ocorre antes da transição e da auditoria de resultado permitido.
+- [x] Exibir a escolha de motivo apenas no fluxo de retirada de política encaminhada, sem abrir nem executar esse fluxo na política real durante a revisão. **A247:** a política atual em Preparação continuou sem ação de retirada ou seletor de motivo.
+- [ ] Cobrir serviço, migração e interface; revisar, gerar ZIP/HTML saneados e salvar checkpoint sem retirar política real.

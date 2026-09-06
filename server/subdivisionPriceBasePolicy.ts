@@ -345,7 +345,7 @@ export async function approveSubdivisionPriceBasePolicy(subjectId: string | unde
 export async function withdrawSubdivisionPriceBasePolicy(subjectId: string | undefined, rawInput: WithdrawSubdivisionPriceBasePolicyInput, client: RpcClient = getSupabaseAdminClient()): Promise<{ policyId: string; state: "withdrawn" }> {
   const actorUserId = requireSubject(subjectId);
   const input = withdrawSubdivisionPriceBasePolicyInputSchema.parse(rawInput);
-  const { data, error } = await client.rpc("subdivision_withdraw_price_base_policy_v1", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_policy_id: input.policyId, p_correlation_id: input.correlationId });
+  const { data, error } = await client.rpc("subdivision_withdraw_price_base_policy_v2", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_policy_id: input.policyId, p_reason_code: input.reasonCode, p_correlation_id: input.correlationId });
   if (error || typeof data !== "string") throw new Error("PRICE_BASE_POLICY_WITHDRAW_DENIED");
   return { policyId: data, state: "withdrawn" };
 }

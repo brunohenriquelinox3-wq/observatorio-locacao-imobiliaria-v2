@@ -160,7 +160,7 @@ describe("subdivision price-base policy boundary", () => {
 
   it("withdraws only through the protected policy-base RPC", async () => {
     const rpc = vi.fn().mockResolvedValue({ data: "00000000-0000-4000-8000-000000000005", error: null });
-    await expect(withdrawSubdivisionPriceBasePolicy(actor, { ...context, policyId: "00000000-0000-4000-8000-000000000005", correlationId }, { rpc })).resolves.toEqual({ policyId: "00000000-0000-4000-8000-000000000005", state: "withdrawn" });
-    expect(rpc).toHaveBeenCalledWith("subdivision_withdraw_price_base_policy_v1", expect.objectContaining({ p_policy_id: "00000000-0000-4000-8000-000000000005", p_correlation_id: correlationId }));
+    await expect(withdrawSubdivisionPriceBasePolicy(actor, { ...context, policyId: "00000000-0000-4000-8000-000000000005", reasonCode: "governance_review", correlationId }, { rpc })).resolves.toEqual({ policyId: "00000000-0000-4000-8000-000000000005", state: "withdrawn" });
+    expect(rpc).toHaveBeenCalledWith("subdivision_withdraw_price_base_policy_v2", expect.objectContaining({ p_policy_id: "00000000-0000-4000-8000-000000000005", p_reason_code: "governance_review", p_correlation_id: correlationId }));
   });
 });

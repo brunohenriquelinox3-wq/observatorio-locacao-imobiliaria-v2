@@ -174,6 +174,9 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain('policy.state === "submitted" && <>');
     expect(studio).toContain("Retirar encaminhamento");
     expect(studio).toContain("Somente política encaminhada e ainda não aprovada pode ser retirada");
+    expect(studio).toContain("Motivo da retirada");
+    expect(studio).toContain("withdrawPriceBaseReason");
+    expect(studio).toContain("Revisão de governança");
   });
 
   it("oferece condições flexíveis por escopo sem liberar preço antes de política aprovada", () => {

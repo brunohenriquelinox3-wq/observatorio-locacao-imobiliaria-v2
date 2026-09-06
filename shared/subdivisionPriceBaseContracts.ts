@@ -53,6 +53,7 @@ export const approveSubdivisionPriceBasePolicyInputSchema = subdivisionContextSc
 export const withdrawSubdivisionPriceBasePolicyInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
   policyId: z.string().uuid(),
+  reasonCode: z.enum(["source_superseded", "governance_review", "effective_date_reassessment", "documentary_reconciliation"]),
 });
 
 export const listSubdivisionPriceBasePoliciesInputSchema = subdivisionContextSchema.extend({

@@ -11,6 +11,7 @@ const manualCorrectionMigration = () => readFileSync(path.resolve(process.cwd(),
 const policyEvidenceMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907110000_subdivision_policy_submit_evidence_a244.sql"), "utf8");
 const policyWithdrawalMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907111000_subdivision_price_base_policy_withdraw_a245.sql"), "utf8");
 const manualCorrectionEvidenceMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907112000_subdivision_manual_correction_evidence_a246.sql"), "utf8");
+const policyWithdrawalReasonMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907113000_subdivision_price_base_policy_withdraw_reason_a247.sql"), "utf8");
 
 describe("subdivision price-base policy migrations", () => {
   it("keeps price-base separate from contracts and commercial effects", () => {
@@ -117,5 +118,16 @@ describe("subdivision price-base policy migrations", () => {
     expect(sql).toContain("payload_redacted");
     expect(sql).toContain("revoke all on function public.subdivision_prepare_manual_price_base_correction_v2");
     expect(sql).toContain("grant execute on function public.subdivision_prepare_manual_price_base_correction_v2");
+  });
+
+  it("requires a cataloged reason before withdrawing a submitted policy", () => {
+    const sql = policyWithdrawalReasonMigration();
+    expect(sql).toContain("subdivision_withdraw_price_base_policy_v2");
+    expect(sql).toContain("p_reason_code text");
+    expect(sql).toContain("PRICE_BASE_POLICY_WITHDRAW_REASON_INVALID");
+    expect(sql).toContain("withdraw_reason_code");
+    expect(sql).toContain("security definer set search_path = ''");
+    expect(sql).toContain("revoke all on function public.subdivision_withdraw_price_base_policy_v2");
+    expect(sql).toContain("grant execute on function public.subdivision_withdraw_price_base_policy_v2");
   });
 });

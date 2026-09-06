@@ -71,3 +71,15 @@ A correção manual passou a exigir, no servidor, pelo menos um vínculo ativo d
 | Validação dirigida | 3 arquivos e 44 testes aprovados; tipagem e integridade de diff aprovadas. |
 | Validação integral | 219 arquivos de teste e 568 testes aprovados; tipagem, build Netlify e integridade de diff aprovados. |
 | Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |
+
+## Motivo governado para retirada A247
+
+A retirada de política-base passou a exigir um motivo interno pertencente ao catálogo controlado. A interface apresenta a escolha apenas para política encaminhada; a revisão autenticada confirmou que a política preparada atual continua bloqueada, sem ação de retirada, sem motivo selecionável e sem comando material executado. A auditoria guarda somente o código padronizado do motivo, sem descrição livre, conteúdo privado ou valor.
+
+| Resultado de validação A247 | Resultado |
+|---|---|
+| Serviço e migração | A retirada usa função v2, valida o catálogo de motivos antes da transição e grava somente o código do motivo na auditoria redigida. |
+| Interface | A seleção de motivo existe exclusivamente junto à ação de retirada de política encaminhada. |
+| Validação dirigida | 3 arquivos e 45 testes aprovados; tipagem e integridade de diff aprovadas. |
+| Validação integral | 219 arquivos de teste e 569 testes aprovados; tipagem, build Netlify e integridade de diff aprovados. |
+| Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |
