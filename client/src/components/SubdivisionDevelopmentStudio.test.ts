@@ -227,6 +227,13 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Não informado");
     expect(studio).toContain("Nenhum cálculo é estimado.");
     expect(studio).toContain("selectLotForPriceAdjustment");
+    expect(studio).toContain("Editar referência interna por m² deste Lote");
+    expect(studio).toContain('id="physical-lot-cards"');
+    expect(studio).toContain("Editar valor interno por m²");
+    expect(studio).toContain("AJUSTE DIRETO DO CARTÃO");
+    expect(studio).toContain("O total é recalculado pela área física confirmada.");
+    expect(studio).toContain("priceConditionAmountInputRef");
+    expect(studio).toContain("Preparar ajuste interno deste Lote");
     expect(studio).toContain("FINALIDADE FÍSICA RESERVADA");
     expect(studio).toContain("Reserva de proprietários da área de origem");
     expect(studio).toContain("Infraestrutura · poço artesiano");
@@ -264,8 +271,7 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("focus({ preventScroll: true })");
     expect(lotManagementStyles()).toContain("scroll-margin-block: 1.25rem");
     expect(lotManagementStyles()).toContain(".subdivision-lot-management__operational-profile:focus-within");
-    expect(studio).toContain("Preparar ajuste governado para este Lote");
-    expect(studio).toContain("Ajustar");
+    expect(studio).toContain("Editar preço");
     expect(studio).toContain("Você está revisando a unidade física selecionada.");
   });
 

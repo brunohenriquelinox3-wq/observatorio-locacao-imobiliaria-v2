@@ -114,6 +114,94 @@
   font-size: 0.59rem;
 }
 
+.subdivision-lot-management__edit-routing,
+.subdivision-price-conditions__lot-target {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  padding: 0.68rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 28%, var(--border));
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--primary) 5%, var(--background));
+}
+
+.subdivision-lot-management__edit-routing > div,
+.subdivision-price-conditions__lot-target > div {
+  display: grid;
+  min-width: 0;
+  gap: 0.12rem;
+}
+
+.subdivision-lot-management__edit-routing span,
+.subdivision-price-conditions__lot-target span {
+  color: #567181;
+  font-size: 0.58rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+}
+
+.subdivision-lot-management__edit-routing b,
+.subdivision-price-conditions__lot-target b {
+  color: #21495f;
+  font-size: 0.78rem;
+}
+
+.subdivision-lot-management__edit-routing small,
+.subdivision-price-conditions__lot-target small,
+.subdivision-lot-management__edit-routing-status {
+  color: #5c7775;
+  font-size: 0.64rem;
+  line-height: 1.35;
+}
+
+.subdivision-lot-management__edit-routing button,
+.subdivision-lot-management__edit-routing a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.38rem;
+  min-height: 2.35rem;
+  padding: 0.42rem 0.66rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 40%, var(--border));
+  border-radius: 0.48rem;
+  background: var(--background);
+  color: var(--primary);
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.subdivision-lot-management__edit-routing button:focus-visible,
+.subdivision-lot-management__edit-routing a:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.subdivision-price-conditions__lot-target dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(8.5rem, 1fr));
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.subdivision-price-conditions__lot-target dt {
+  color: #61756f;
+  font-size: 0.55rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.subdivision-price-conditions__lot-target dd {
+  margin: 0.12rem 0 0;
+  color: #21495f;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
 .subdivision-lot-management__physical-reservation-controls {
   grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
   align-items: end;
@@ -209,6 +297,20 @@
 
   .subdivision-lot-management__profile-cues {
     display: grid;
+  }
+
+  .subdivision-lot-management__edit-routing,
+  .subdivision-price-conditions__lot-target {
+    align-items: stretch;
+  }
+
+  .subdivision-lot-management__edit-routing button,
+  .subdivision-lot-management__edit-routing a {
+    width: 100%;
+  }
+
+  .subdivision-price-conditions__lot-target dl {
+    grid-template-columns: 1fr;
   }
 
   .subdivision-lot-management__profile-note {

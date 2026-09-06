@@ -16,5 +16,6 @@ Este índice concentra decisões reutilizáveis do CRM para que atualizações f
 | Perfil interno de estoque por Lote | `estoque-interno-moderno-a269.md` | Antes de alterar classificação interna, revisão operacional, legenda de mapa, nota interna, MFA ou futura projeção externa. |
 | Hierarquia interna de Estoque/Mapa | `correcao-hierarquia-estoque-loteamentos-a270.md` | Antes de modificar a navegação, os atalhos ou a rota compatível de Estoque/Mapa dentro de Loteamentos. |
 | Leitura protegida de valores e MFA | `regressao-valores-internos-a271.md` | Antes de alterar expiração MFA, inscrição de autenticador, leitura de preço-base interno, total referencial ou estados visuais de bloqueio. |
+| Edição física e referência interna por Lote | `edicao-por-lote-a272.md` | Antes de alterar atalhos de edição no cartão, ficha física, ajuste de valor por m², total derivado ou controles de segurança da jornada. |
 
 > Não substituir este índice por resumos efêmeros. Atualize-o somente ao adicionar uma referência versionada que descreva uma decisão validada, sem incluir PII, preços individuais, conteúdo de fonte, segredos ou URLs de infraestrutura.
