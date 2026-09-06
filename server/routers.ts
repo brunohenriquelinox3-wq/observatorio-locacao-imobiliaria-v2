@@ -212,12 +212,28 @@ import {
   submitSubdivisionPriceBasePolicy,
 } from "./subdivisionPriceBasePolicy";
 import {
+  approveSubdivisionPriceCondition,
+  createSubdivisionPriceCondition,
+  getSubdivisionLotPriceContext,
+  listSubdivisionPriceConditions,
+  submitSubdivisionPriceCondition,
+  withdrawSubdivisionPriceCondition,
+} from "./subdivisionPriceConditions";
+import {
   approveSubdivisionPriceBasePolicyInputSchema,
   listSubdivisionPriceBasePoliciesInputSchema,
   prepareSubdivisionPriceBasePolicyInputSchema,
   previewSubdivisionPriceBaseSourceInputSchema,
   submitSubdivisionPriceBasePolicyInputSchema,
 } from "../shared/subdivisionPriceBaseContracts";
+import {
+  approveSubdivisionPriceConditionInputSchema,
+  createSubdivisionPriceConditionInputSchema,
+  getSubdivisionLotPriceContextInputSchema,
+  listSubdivisionPriceConditionsInputSchema,
+  submitSubdivisionPriceConditionInputSchema,
+  withdrawSubdivisionPriceConditionInputSchema,
+} from "../shared/subdivisionPriceConditionContracts";
 import { authorizedOrganizationContextInputSchema, listAuthorizedOrganizationContexts } from "./organizationContext";
 import { clientImportCommitInputSchema } from "../shared/clientImportContracts";
 import { commitClientImport } from "./clientImport";
@@ -618,6 +634,24 @@ export const appRouter = router({
     approvePriceBasePolicy: protectedProcedure.input(approveSubdivisionPriceBasePolicyInputSchema).mutation(async ({ ctx, input }) => {
       await requireRecentTotpMfa(ctx);
       return approveSubdivisionPriceBasePolicy(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    listPriceConditions: protectedProcedure.input(listSubdivisionPriceConditionsInputSchema).query(({ ctx, input }) => listSubdivisionPriceConditions(ctx.supabaseSubjectId ?? undefined, input)),
+    getLotPriceContext: protectedProcedure.input(getSubdivisionLotPriceContextInputSchema).query(({ ctx, input }) => getSubdivisionLotPriceContext(ctx.supabaseSubjectId ?? undefined, input)),
+    createPriceCondition: protectedProcedure.input(createSubdivisionPriceConditionInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return createSubdivisionPriceCondition(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    submitPriceCondition: protectedProcedure.input(submitSubdivisionPriceConditionInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return submitSubdivisionPriceCondition(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    approvePriceCondition: protectedProcedure.input(approveSubdivisionPriceConditionInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return approveSubdivisionPriceCondition(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    withdrawPriceCondition: protectedProcedure.input(withdrawSubdivisionPriceConditionInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return withdrawSubdivisionPriceCondition(ctx.supabaseSubjectId ?? undefined, input);
     }),
     createSaleDraft: protectedProcedure.input(draftSubdivisionSaleDraftInputSchema).mutation(({ ctx, input }) => createSubdivisionSaleDraft(ctx.supabaseSubjectId ?? undefined, input)),
     createEconomicRuleSet: protectedProcedure.input(draftSubdivisionEconomicRuleSetInputSchema).mutation(({ ctx, input }) => createSubdivisionEconomicRuleSet(ctx.supabaseSubjectId ?? undefined, input)),

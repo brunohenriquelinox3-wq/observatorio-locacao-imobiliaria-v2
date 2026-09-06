@@ -199,7 +199,7 @@ function extractParsedSource(sourceContentBase64: string): ParsedSource {
       continue;
     }
     if (!areaSqm || !pricePerSqm) {
-      increment("AREA_OR_PRICE_REQUIRED", row + 1);
+      increment(!areaSqm && !pricePerSqm ? "AREA_AND_PRICE_REQUIRED" : !areaSqm ? "AREA_REQUIRED" : "BASE_PRICE_REQUIRED", row + 1);
       continue;
     }
     const pair = `${blockNumber}:${lotNumber}`;

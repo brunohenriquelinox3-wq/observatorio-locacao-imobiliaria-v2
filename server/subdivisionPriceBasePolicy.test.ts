@@ -58,7 +58,7 @@ describe("subdivision price-base policy boundary", () => {
     const sourceContentBase64 = makeSource([["Quadra", "Lote", "Área (m²)", "Valor (m²)"], [1, 1, 100, 500], [1, 2, 100, ""]]);
     const rpc = vi.fn().mockResolvedValue({ data: { reconciled_line_count: 1, unreconciled_line_count: 0 }, error: null });
     const result = await previewSubdivisionPriceBaseSource(actor, { ...context, developmentId, sourceFileName: "fonte.xlsx", sourceContentBase64 }, { rpc });
-    expect(result.exceptionRows).toEqual([{ sourceRow: 3, code: "AREA_OR_PRICE_REQUIRED" }]);
+    expect(result.exceptionRows).toEqual([{ sourceRow: 3, code: "BASE_PRICE_REQUIRED" }]);
     expect(JSON.stringify(result.exceptionRows)).not.toContain("500");
   });
 

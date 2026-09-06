@@ -2167,3 +2167,41 @@
 - [x] Manter a exceção bloqueadora e a preparação indisponível até a planilha ser corrigida na origem e reenviada para nova prévia. **A227:** a verificação efêmera confirmou uma pendência de área ou preço-base na linha de origem 29; não houve banco, política ou linha persistida.
 - [x] Cobrir a orientação, validar e gerar ZIP e HTML sem persistir dados da fonte. **A227:** teste dirigido, suíte integral com 214 arquivos/535 testes, tipagem, build Netlify, integridade de diff e saneamento de ZIP/HTML foram aprovados.
 - [x] Salvar checkpoint A227 após documentação, validação e saneamento dos artefatos. **A227:** checkpoint `a1320510` preserva a orientação saneada e o bloqueio de preparação sem persistir a fonte.
+
+## Ingestão de preço-base com reconciliação física — A228
+- [x] Verificar de forma privada se a única exceção da fonte é ausência de área ou de preço-base, sem registrar seu conteúdo em documentação ou interface. **A228:** a exceção foi classificada como preço-base por m² ausente; a área estava presente.
+- [ ] Aceitar área ausente somente quando a mesma Quadra/Lote já estiver reconciliada e possuir área física confirmada na matriz; manter preço-base ausente como exceção bloqueadora.
+- [ ] Executar somente a prévia e a preparação protegidas quando a fonte estiver integralmente conciliada, mantendo aprovação separada e nenhum efeito de venda ou financeiro.
+- [ ] Cobrir o fluxo, revisar, gerar ZIP/HTML saneados e salvar checkpoint sem expor dados da fonte.
+
+## Entrada assistida de preço-base por fonte — A229
+- [x] Inspecionar privadamente a linha bloqueada e todas as colunas autorizadas para localizar valor explícito, sem mostrar ou documentar o conteúdo real. **A229:** não havia preço-base explícito em campo autorizado; o total derivado resultava em zero e não foi usado.
+- [x] Se existir valor explícito em campo compatível, mapear e registrar no CRM sem usar fórmula, média, estimativa ou cópia de outro Lote; se não existir, manter o bloqueio e informar somente a ação necessária. **A229:** a ausência foi preservada como pendência sem estimativa, média ou cópia.
+- [x] Cobrir o caminho assistido, validar permissões e MFA e revisar a interface. **A229–A234:** o caminho foi negado com MFA expirado e aceito somente após revalidação pessoal; o histórico recuperou a política preparada no cadastro correto. A geração de artefatos e checkpoint integra a consolidação final deste marco.
+
+## Política de preço-base com pendência bloqueadora — A230
+- [x] Permitir preparar somente as linhas com valor explícito e área reconciliada, mantendo a contagem e a categoria de exceções na política. **A230:** foi preparada uma política interna com 163 linhas reconciliadas e uma exceção de preço-base ausente.
+- [x] Bloquear encaminhamento e aprovação de qualquer política que contenha exceção, sem liberar disponibilidade, venda, contrato, cobrança, pagamento ou repasse. **A230:** o estado ficou em Preparação e a exceção mantém as próximas etapas bloqueadas.
+- [x] Exigir MFA recente, contexto, grant, finalidade, correlação e auditoria redigida na preparação; validar o fluxo com a fonte autorizada sem expor valores. **A230:** a primeira tentativa foi negada por MFA expirado e a preparação foi aceita somente após revalidação pessoal.
+- [x] Cobrir o fluxo e revisar. **A230–A234:** parser, política, funções protegidas, resolução server-side de Lote, listagem escopada e interface foram validados em 216 arquivos/544 testes, tipagem, build e diff limpo; artefatos e checkpoint serão gerados na consolidação final.
+
+## Gestão flexível de preço e condição comercial — A231
+- [x] Modelar precedência explícita entre preço-base do loteamento, ajuste de Quadra, exceção de Lote e condição temporária, sem modificar contratos, vendas, cobranças, pagamentos ou repasses. **A231:** o modelo versionado define política-base, ajuste de empreendimento, ajuste de Quadra, exceção de Lote e condição temporária com uma única regra efetiva.
+- [x] Definir vigência, motivo, documento de respaldo pendente, estado de preparação, encaminhamento, aprovação segregada, retirada e expiração de cada condição. **A231:** o desenho foi registrado antes de qualquer ajuste real e mantém aprovação por pessoa distinta.
+- [x] Exibir no detalhe do Lote a referência aplicável, condição vigente e pendências documentais, sem criar disponibilidade ou proposta comercial. **A231:** a consulta contextual é acionada por foco/cursor e só revela referência após política aprovada e vigente; antes disso mantém indisponibilidade segura.
+- [x] Preparar a política atual com vigência em 05/09/2026, somente quando a fonte estiver reconciliada e a autorização server-side/MFA estiver válida. **A230:** a política interna foi preparada após MFA recente, com a exceção preservada e impedimento de encaminhamento/aprovação.
+- [x] Cobrir regras de precedência, bloqueios, acessibilidade e responsividade. **A231–A234:** as funções e a interface foram cobertas por testes dirigidos e validação integral de 216 arquivos/544 testes; o cursor/foco não expõe preço antes de aprovação/vigência. Nenhuma condição real foi criada. Artefatos e checkpoint foram preparados na consolidação final.
+- [x] Gerar ZIP/HTML saneados da política preparada, das condições flexíveis e das correções A232–A234. **A231–A234:** os dois artefatos foram verificados sem ambiente, documentos, checklist, logs, build, dados de origem, credenciais ou infraestrutura.
+- [ ] Salvar checkpoint após a política preparada, condições flexíveis, correções A232–A234 e saneamento dos artefatos.
+
+## Resolução protegida de Lote em condições — A232
+- [x] Substituir a dependência de identificador de Lote no navegador por Quadra autorizada e número de Lote, resolvendo o vínculo físico exclusivamente no servidor. **A232:** o formulário mantém somente o número de Lote; a resolução do identificador físico ocorre em função protegida.
+- [x] Reaplicar apenas as funções de condição e contexto em migração aditiva, sem alterar políticas, linhas de preço-base ou criar condição real. **A232:** as funções v2 foram aplicadas sem inserir condição nem alterar linhas de preço-base.
+
+## Estabilização de consultas de preço — A233
+- [x] Memorizar as entradas de consulta de política-base, condições e contexto de Lote para impedir recarga contínua em sessão autenticada. **A233:** as entradas dependentes de contexto e cadastro selecionado foram estabilizadas.
+- [x] Validar a recuperação visual sem alterar políticas, linhas, condições ou qualquer dado comercial. **A233:** após recuperação, a central voltou a renderizar e não houve criação de condição nem nova linha de preço.
+
+## Correção da listagem de política preparada — A234
+- [x] Corrigir a função de listagem para validar o estado `draft` real do cadastro, eliminando a referência inexistente a ciclo de vida. **A234:** a função foi reaplicada em migração aditiva e não alterou a política existente.
+- [x] Confirmar que a política preparada aparece no histórico do cadastro selecionado, sem revelar valores individuais ou permitir encaminhamento/aprovação com exceção. **A234:** o histórico autenticado exibiu a versão preparada com contagens agregadas; a exceção continuou bloqueando as próximas transições.

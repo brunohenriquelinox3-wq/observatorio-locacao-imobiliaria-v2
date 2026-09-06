@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 const policyMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907090000_subdivision_price_base_policy_a223.sql"), "utf8");
 const rlsMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907091000_subdivision_price_base_deny_policies_a224.sql"), "utf8");
 const scopeMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907092000_subdivision_price_base_scope_a225.sql"), "utf8");
+const correctedScopeMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907103000_subdivision_price_base_list_draft_scope_a234.sql"), "utf8");
 
 describe("subdivision price-base policy migrations", () => {
   it("keeps price-base separate from contracts and commercial effects", () => {
@@ -41,5 +42,14 @@ describe("subdivision price-base policy migrations", () => {
     expect(sql).toContain("policy.development_id = p_development_id");
     expect(sql).toContain("PRICE_BASE_DEVELOPMENT_SCOPE_DENIED");
     expect(sql).toContain("drop function if exists public.subdivision_list_price_base_policies_v1");
+  });
+
+  it("uses the real draft lifecycle field when validating the selected development", () => {
+    const sql = correctedScopeMigration();
+    expect(sql).toContain("development.state = 'draft'::public.party_lifecycle_state");
+    expect(sql).not.toContain("development.lifecycle_state");
+    expect(sql).toContain("security definer");
+    expect(sql).toContain("set search_path = ''");
+    expect(sql).toContain("PRICE_BASE_DEVELOPMENT_SCOPE_DENIED");
   });
 });

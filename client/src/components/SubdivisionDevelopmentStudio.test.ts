@@ -144,4 +144,23 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Referência saneada: {priceBaseSourcePreview.exceptionRows.map");
     expect(studio).toContain("Nenhum valor, Quadra, Lote ou status é exibido.");
   });
+
+  it("permite preparar linhas válidas com pendência bloqueadora sem permitir aprovação por atalho", () => {
+    const studio = source();
+    expect(studio).toContain('"Pronto com pendência bloqueadora"');
+    expect(studio).toContain('"Preparar com pendência"');
+    expect(studio).toContain("policy.exceptionCount > 0");
+  });
+
+  it("oferece condições flexíveis por escopo sem liberar preço antes de política aprovada", () => {
+    const studio = source();
+    expect(studio).toContain("CONDIÇÕES E AJUSTES DE PREÇO");
+    expect(studio).toContain("Todo o loteamento");
+    expect(studio).toContain("Uma Quadra");
+    expect(studio).toContain("Um Lote");
+    expect(studio).toContain("Aprovar como segunda pessoa");
+    expect(studio).toContain("Nenhuma política aprovada e vigente libera referência de preço para este Lote.");
+    expect(studio).toContain('lotNumber: priceConditionDraft.scope === "lot"');
+    expect(studio).toContain("setFocusedLotPriceTarget({ blockId: lot.blockId, lotNumber: lot.lotNumber })");
+  });
 });

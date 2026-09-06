@@ -14,6 +14,9 @@ type TerritorialContext = "urban" | "urban_expansion" | "specific_urbanization" 
 type PredominantUse = "residential" | "mixed_use" | "commercial" | "industrial" | "institutional" | "to_review";
 type AttachmentCategory = "identity" | "planning" | "municipal" | "registry" | "implementation" | "environmental" | "other";
 type StudioModule = "identity" | "structure" | "preparation" | "documents" | "lifecycle";
+type PriceConditionScope = "development" | "block" | "lot";
+type PriceConditionKind = "override_per_sqm" | "percentage_adjustment" | "temporary_discount";
+type PriceConditionDocumentState = "pending_evidence" | "under_review" | "declared_complete" | "review_required";
 
 type DevelopmentStudioProps = {
   context: SubdivisionContext;
@@ -70,9 +73,47 @@ const lotPositionLabels: Record<string, string> = {
 };
 
 const priceBaseExceptionLabels: Record<string, string> = {
-  AREA_OR_PRICE_REQUIRED: "Área ou preço-base ausente",
+  AREA_REQUIRED: "Área ausente",
+  BASE_PRICE_REQUIRED: "Preço-base por m² ausente",
+  AREA_AND_PRICE_REQUIRED: "Área e preço-base por m² ausentes",
   PHYSICAL_IDENTIFIER_REQUIRED: "Quadra ou Lote ausente",
   PHYSICAL_IDENTIFIER_DUPLICATE: "Par Quadra–Lote repetido",
+};
+
+const priceConditionScopeLabels: Record<PriceConditionScope, string> = {
+  development: "Todo o loteamento",
+  block: "Uma Quadra",
+  lot: "Um Lote",
+};
+
+const priceConditionKindLabels: Record<PriceConditionKind, string> = {
+  override_per_sqm: "Novo valor por m²",
+  percentage_adjustment: "Reajuste percentual",
+  temporary_discount: "Desconto temporário",
+};
+
+const priceConditionDocumentStateLabels: Record<PriceConditionDocumentState, string> = {
+  pending_evidence: "Respaldo pendente",
+  under_review: "Respaldo em revisão",
+  declared_complete: "Respaldo declarado completo",
+  review_required: "Revisão do respaldo",
+};
+
+const priceConditionReasonLabels: Record<string, string> = {
+  internal_review: "Decisão interna",
+  work_progress: "Evolução de obras",
+  market_response: "Resposta de mercado",
+  campaign: "Campanha temporária",
+  specific_condition: "Condição específica",
+  other: "Outro motivo interno",
+};
+
+const priceConditionStateLabels: Record<string, string> = {
+  prepared: "Preparada",
+  submitted: "Encaminhada",
+  approved: "Aprovada",
+  expired: "Expirada",
+  withdrawn: "Retirada",
 };
 
 const phaseLabels: Record<WorkingPhase, string> = {
@@ -223,6 +264,20 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const [priceBaseSourceError, setPriceBaseSourceError] = useState("");
   const [priceBaseVersionReference, setPriceBaseVersionReference] = useState("PB_VISTA_DO_SOL_001");
   const [priceBaseEffectiveFrom, setPriceBaseEffectiveFrom] = useState("");
+  const [priceConditionDraft, setPriceConditionDraft] = useState({
+    basePolicyId: "",
+    conditionReference: "PC_VISTA_DO_SOL_001",
+    scope: "development" as PriceConditionScope,
+    blockId: "",
+    lotNumber: "",
+    adjustmentKind: "override_per_sqm" as PriceConditionKind,
+    amount: "",
+    effectiveFrom: "",
+    effectiveUntil: "",
+    reasonCode: "internal_review",
+    documentState: "pending_evidence" as PriceConditionDocumentState,
+  });
+  const [focusedLotPriceTarget, setFocusedLotPriceTarget] = useState<{ blockId: string; lotNumber: number } | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const attachmentInput = useRef<HTMLInputElement>(null);
   const physicalSourceInput = useRef<HTMLInputElement>(null);
@@ -239,14 +294,19 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const attachmentInputContext = useMemo(() => ({ ...context, developmentId: selectedDevelopmentId }), [context, selectedDevelopmentId]);
   const attachmentsQuery = trpc.subdivisionFoundation.listDevelopmentAttachments.useQuery(attachmentInputContext, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const structureInput = useMemo(() => ({ ...context, developmentId: selectedDevelopmentId }), [context, selectedDevelopmentId]);
+  const priceBasePolicyInput = useMemo(() => ({ ...context, developmentId: selectedDevelopmentId || "00000000-0000-4000-8000-000000000000" }), [context, selectedDevelopmentId]);
+  const priceConditionInput = useMemo(() => ({ ...context, developmentId: selectedDevelopmentId || "00000000-0000-4000-8000-000000000000" }), [context, selectedDevelopmentId]);
+  const focusedLotPriceContextInput = useMemo(() => ({ ...context, developmentId: selectedDevelopmentId || "00000000-0000-4000-8000-000000000000", blockId: focusedLotPriceTarget?.blockId ?? "00000000-0000-4000-8000-000000000000", lotNumber: focusedLotPriceTarget?.lotNumber ?? 1 }), [context, focusedLotPriceTarget?.blockId, focusedLotPriceTarget?.lotNumber, selectedDevelopmentId]);
   const structureQuery = trpc.subdivisionFoundation.listDraftStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const archivedStructureQuery = trpc.subdivisionFoundation.listArchivedDraftStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const physicalStructureQuery = trpc.subdivisionFoundation.listDraftPhysicalStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const requirementsQuery = trpc.subdivisionFoundation.listDraftDevelopmentRequirements.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
-  const priceBasePoliciesQuery = trpc.subdivisionFoundation.listPriceBasePolicies.useQuery({ ...context, developmentId: selectedDevelopmentId || "00000000-0000-4000-8000-000000000000" }, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
+  const priceBasePoliciesQuery = trpc.subdivisionFoundation.listPriceBasePolicies.useQuery(priceBasePolicyInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
+  const priceConditionsQuery = trpc.subdivisionFoundation.listPriceConditions.useQuery(priceConditionInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
+  const focusedLotPriceContextQuery = trpc.subdivisionFoundation.getLotPriceContext.useQuery(focusedLotPriceContextInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId && focusedLotPriceTarget), retry: false, staleTime: 30_000 });
   const structuralReconciliationState = requirementsQuery.data?.find((requirement) => requirement.requirementCode === "technical_layout")?.requirementState as RequirementState | undefined;
   const structuralReconciliationPending = structuralReconciliationState === "review_required";
-  const physicalLots = useMemo(() => (physicalStructureQuery.data ?? []).flatMap((block) => block.lots.map((lot) => ({ ...lot, blockNumber: block.blockNumber }))), [physicalStructureQuery.data]);
+  const physicalLots = useMemo(() => (physicalStructureQuery.data ?? []).flatMap((block) => block.lots.map((lot) => ({ ...lot, blockId: block.blockId, blockNumber: block.blockNumber }))), [physicalStructureQuery.data]);
   const searchedLots = useMemo(() => {
     const query = lotSearch.trim().toLocaleLowerCase("pt-BR");
     const blockNumber = lotBlockFilter === "all" ? null : Number(lotBlockFilter);
@@ -294,7 +354,10 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const previewPriceEligibleLots = selectedPriceLots.filter((lot) => typeof lot.areaSqm === "number");
   const previewBaseTotal = Number.isFinite(pricePerSqmNumber) && pricePerSqmNumber > 0 ? previewPriceEligibleLots.reduce((total, lot) => total + ((lot.areaSqm ?? 0) * pricePerSqmNumber), 0) : null;
   const priceBaseExceptionCount = Object.values(priceBaseSourcePreview?.exceptionCounts ?? {}).reduce((total, count) => total + count, 0);
-  const priceBaseReadyForPreparation = Boolean(priceBaseSource && priceBaseSourcePreview && priceBaseSourcePreview.reconciledLineCount === priceBaseSourcePreview.importableLineCount && priceBaseSourcePreview.unreconciledLineCount === 0 && priceBaseExceptionCount === 0 && priceBaseEffectiveFrom);
+  const priceBaseReadyForPreparation = Boolean(priceBaseSource && priceBaseSourcePreview && priceBaseSourcePreview.reconciledLineCount === priceBaseSourcePreview.importableLineCount && priceBaseSourcePreview.unreconciledLineCount === 0 && priceBaseEffectiveFrom);
+  const priceConditionLots = useMemo(() => priceConditionDraft.blockId ? physicalLots.filter((lot) => lot.blockId === priceConditionDraft.blockId) : [], [physicalLots, priceConditionDraft.blockId]);
+  const priceConditionBasePolicies = priceBasePoliciesQuery.data ?? [];
+  const priceConditionCanPrepare = Boolean(priceConditionDraft.basePolicyId && priceConditionDraft.conditionReference && priceConditionDraft.amount && priceConditionDraft.effectiveFrom && (priceConditionDraft.scope === "development" || priceConditionDraft.blockId) && (priceConditionDraft.scope !== "lot" || priceConditionDraft.lotNumber));
 
   useEffect(() => {
     setHasExplicitDraftChoice(false);
@@ -486,6 +549,45 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       toast.error("Aprovação bloqueada", { description: "A aprovação exige pessoa distinta do preparador, MFA recente, alçada e vigência sem sobreposição." });
     },
   });
+  const createPriceConditionMutation = trpc.subdivisionFoundation.createPriceCondition.useMutation({
+    onSuccess() {
+      toast.success("Condição preparada", { description: "A condição ainda não é vigente: precisa de respaldo, política-base aprovada e aprovação por outra pessoa autorizada." });
+      setPriceConditionDraft((current) => ({ ...current, conditionReference: "", amount: "", effectiveFrom: "", effectiveUntil: "", documentState: "pending_evidence" }));
+      void utils.subdivisionFoundation.listPriceConditions.invalidate();
+    },
+    onError() {
+      toast.error("Condição não preparada", { description: "Revise MFA recente, escopo físico, vigência, referência única e dados obrigatórios. Nenhuma condição foi registrada." });
+    },
+  });
+  const submitPriceConditionMutation = trpc.subdivisionFoundation.submitPriceCondition.useMutation({
+    onSuccess() {
+      toast.success("Condição encaminhada", { description: "A condição agora aguarda aprovação por pessoa distinta do preparador." });
+      void utils.subdivisionFoundation.listPriceConditions.invalidate();
+    },
+    onError() {
+      toast.error("Encaminhamento bloqueado", { description: "Respaldo declarado completo, política-base aprovada sem exceções, MFA e alçada são obrigatórios." });
+    },
+  });
+  const approvePriceConditionMutation = trpc.subdivisionFoundation.approvePriceCondition.useMutation({
+    onSuccess() {
+      toast.success("Condição aprovada", { description: "A condição pode orientar a leitura de referência na vigência, sem criar venda, contrato ou financeiro." });
+      void utils.subdivisionFoundation.listPriceConditions.invalidate();
+      void utils.subdivisionFoundation.getLotPriceContext.invalidate();
+    },
+    onError() {
+      toast.error("Aprovação bloqueada", { description: "Aprovação segregada, política-base aprovada, vigência sem sobreposição e MFA recente são obrigatórios." });
+    },
+  });
+  const withdrawPriceConditionMutation = trpc.subdivisionFoundation.withdrawPriceCondition.useMutation({
+    onSuccess() {
+      toast.success("Condição retirada", { description: "A retirada preserva o histórico e não reverte venda, contrato ou movimento financeiro." });
+      void utils.subdivisionFoundation.listPriceConditions.invalidate();
+      void utils.subdivisionFoundation.getLotPriceContext.invalidate();
+    },
+    onError() {
+      toast.error("Retirada bloqueada", { description: "Somente condições em preparação ou encaminhadas podem ser retiradas, com MFA e alçada válidos." });
+    },
+  });
 
   const identityReady = form.internalReference.length >= 3 && form.displayName.trim().length >= 3;
   const classificationReady = form.parcelingMode !== "to_review" && form.predominantUse !== "to_review";
@@ -504,7 +606,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const savedLotCount = activeSavedStructure.reduce((total, block) => total + block.lotCount, 0);
   const draftLotCount = structureRows.reduce((total, block) => total + (Number.isFinite(block.lotCount) ? block.lotCount : 0), 0);
   const completedModules = [identificationDetailed, activeSavedStructure.length > 0, Boolean(form.workingPhase)].filter(Boolean).length;
-  const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || restoreBlockMutation.isPending || applyPhysicalStructureMutation.isPending || upsertRequirementMutation.isPending || previewPriceBaseSourceMutation.isPending || preparePriceBasePolicyMutation.isPending || submitPriceBasePolicyMutation.isPending || approvePriceBasePolicyMutation.isPending || isUploading;
+  const isBusy = createMutation.isPending || updateMutation.isPending || archiveMutation.isPending || applyStructureMutation.isPending || archiveBlockMutation.isPending || restoreBlockMutation.isPending || applyPhysicalStructureMutation.isPending || upsertRequirementMutation.isPending || previewPriceBaseSourceMutation.isPending || preparePriceBasePolicyMutation.isPending || submitPriceBasePolicyMutation.isPending || approvePriceBasePolicyMutation.isPending || createPriceConditionMutation.isPending || submitPriceConditionMutation.isPending || approvePriceConditionMutation.isPending || withdrawPriceConditionMutation.isPending || isUploading;
   const selectedModule = studioModules.find((module) => module.id === activeModule) ?? studioModules[0];
 
   function startNew() {
@@ -526,6 +628,8 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     setPriceBaseSourcePreview(null);
     setPriceBaseSourceError("");
     setPriceBaseEffectiveFrom("");
+    setPriceConditionDraft({ basePolicyId: "", conditionReference: "PC_VISTA_DO_SOL_001", scope: "development", blockId: "", lotNumber: "", adjustmentKind: "override_per_sqm", amount: "", effectiveFrom: "", effectiveUntil: "", reasonCode: "internal_review", documentState: "pending_evidence" });
+    setFocusedLotPriceTarget(null);
     if (attachmentInput.current) attachmentInput.current.value = "";
     if (physicalSourceInput.current) physicalSourceInput.current.value = "";
     if (priceBaseSourceInput.current) priceBaseSourceInput.current.value = "";
@@ -548,6 +652,8 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     setPriceBaseSourcePreview(null);
     setPriceBaseSourceError("");
     setPriceBaseEffectiveFrom("");
+    setPriceConditionDraft({ basePolicyId: "", conditionReference: "PC_VISTA_DO_SOL_001", scope: "development", blockId: "", lotNumber: "", adjustmentKind: "override_per_sqm", amount: "", effectiveFrom: "", effectiveUntil: "", reasonCode: "internal_review", documentState: "pending_evidence" });
+    setFocusedLotPriceTarget(null);
     if (physicalSourceInput.current) physicalSourceInput.current.value = "";
     if (priceBaseSourceInput.current) priceBaseSourceInput.current.value = "";
   }
@@ -634,6 +740,27 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   function preparePriceBasePolicy() {
     if (!selectedDevelopmentId || !priceBaseSource || !priceBaseReadyForPreparation) return;
     preparePriceBasePolicyMutation.mutate({ ...context, developmentId: selectedDevelopmentId, sourceFileName: priceBaseSource.fileName, sourceContentBase64: priceBaseSource.contentBase64, versionReference: priceBaseVersionReference.trim().toUpperCase(), effectiveFrom: priceBaseEffectiveFrom, correlationId: crypto.randomUUID() });
+  }
+
+  function preparePriceCondition(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!selectedDevelopmentId || !priceConditionCanPrepare) return;
+    createPriceConditionMutation.mutate({
+      ...context,
+      developmentId: selectedDevelopmentId,
+      basePolicyId: priceConditionDraft.basePolicyId,
+      conditionReference: priceConditionDraft.conditionReference.trim().toUpperCase(),
+      scope: priceConditionDraft.scope,
+      blockId: priceConditionDraft.scope === "development" ? null : priceConditionDraft.blockId,
+      lotNumber: priceConditionDraft.scope === "lot" && priceConditionDraft.lotNumber ? Number(priceConditionDraft.lotNumber) : null,
+      adjustmentKind: priceConditionDraft.adjustmentKind,
+      amount: Number(priceConditionDraft.amount),
+      effectiveFrom: priceConditionDraft.effectiveFrom,
+      effectiveUntil: priceConditionDraft.effectiveUntil || null,
+      reasonCode: priceConditionDraft.reasonCode as "internal_review" | "work_progress" | "market_response" | "campaign" | "specific_condition" | "other",
+      documentState: priceConditionDraft.documentState,
+      correlationId: crypto.randomUUID(),
+    });
   }
 
   function applyPhysicalSource() {
@@ -854,7 +981,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                 <section className="subdivision-lot-management__completeness" aria-labelledby="physical-completeness-title"><div className="subdivision-lot-management__completeness-head"><div><span>COMPLETUDE FÍSICA</span><h6 id="physical-completeness-title">O que a matriz já informa — e o que ainda precisa de fonte.</h6></div><b>{physicalCoverageComplete}/{physicalCoverage.length} atributo(s) completo(s)</b></div><div className="subdivision-lot-management__completeness-grid">{physicalCoverage.map((item) => { const pending = physicalLots.length - item.available; return <article key={item.key} data-complete={pending === 0}><span>{item.label}</span><b>{item.available}/{physicalLots.length}</b><small>{pending === 0 ? "Cobertura confirmada" : `${pending} pendência(s) de fonte`}</small></article>; })}</div><p>Campos pendentes continuam vazios até uma fonte física revisada ser aplicada. Esta leitura não preenche, estima nem modifica Lotes.</p></section>
                 <div className="subdivision-lot-management__toolbar"><label className="subdivision-lot-management__search"><Search size={15} /><span className="sr-only">Buscar Lote por Quadra, número, tipologia ou posição</span><input value={lotSearch} onChange={(event) => setLotSearch(event.target.value)} placeholder="Buscar Q1, L15, esquina ou tipologia" /></label><label className="subdivision-lot-management__block-filter"><span>Filtrar Quadra</span><select value={lotBlockFilter} onChange={(event) => setLotBlockFilter(event.target.value)}><option value="all">Todas as Quadras</option>{activeSavedStructure.map((block) => <option key={block.blockId} value={String(block.blockNumber)}>Q{block.blockNumber}</option>)}</select></label><label className="subdivision-lot-management__block-filter"><span>Situação física</span><select value={lotPhysicalStatusFilter} onChange={(event) => setLotPhysicalStatusFilter(event.target.value as "all" | "pending" | "complete")}><option value="all">Todos os Lotes</option><option value="pending">Com pendência física</option><option value="complete">Completos na fonte</option></select></label></div>
                 <p className="subdivision-lot-management__result-count" aria-live="polite"><b>{visibleLotCount}</b> {visibleLotCount === 1 ? "Lote encontrado" : "Lotes encontrados"} em <b>{visibleBlockCount}</b> {visibleBlockCount === 1 ? "Quadra" : "Quadras"}. A contagem reflete apenas os filtros locais de leitura.</p>
-                <div className="subdivision-lot-management__list">{visibleLotBlocks.length === 0 ? <p className="subdivision-lot-management__empty">{emptyLotFilterMessage}</p> : visibleLotBlocks.map((block, index) => <details className="subdivision-lot-management__block" key={block.blockNumber} open={lotBlockFilter !== "all" || Boolean(lotSearch.trim()) || index === 0}><summary><div><span>QUADRA</span><h6>Q{block.blockNumber}</h6></div><dl><div><dt>Lotes exibidos</dt><dd>{block.lots.length}</dd></div><div><dt>Área física</dt><dd>{block.totalAreaSqm.toLocaleString("pt-BR", { maximumFractionDigits: 2 })} m²</dd></div><div><dt>Lotes com pendência</dt><dd>{block.lotsWithPhysicalPending}</dd></div></dl><span className="subdivision-lot-management__toggle">Ver Lotes</span></summary><div className="subdivision-lot-management__lot-grid">{block.lots.map((lot) => <article className="subdivision-lot-management__lot" key={`${lot.blockNumber}-${lot.lotNumber}`}><div className="subdivision-lot-management__lot-head"><b>L{lot.lotNumber}</b><em>{lot.lotTypology === "standard" ? "Tipologia pendente" : lotTypologyLabels[lot.lotTypology] ?? "Não informada"}</em></div><dl><div><dt>Área</dt><dd>{typeof lot.areaSqm === "number" ? `${lot.areaSqm.toLocaleString("pt-BR")} m²` : "Pendente"}</dd></div><div><dt>Posição</dt><dd>{lotPositionLabels[lot.positionCode] ?? "Não informada"}</dd></div><div><dt>Frente</dt><dd>{typeof lot.frontageM === "number" ? `${lot.frontageM.toLocaleString("pt-BR")} m` : "Pendente"}</dd></div><div><dt>Profundidade</dt><dd>{typeof lot.depthM === "number" ? `${lot.depthM.toLocaleString("pt-BR")} m` : "Pendente"}</dd></div></dl></article>)}</div></details>)}</div>
+                <div className="subdivision-lot-management__list">{visibleLotBlocks.length === 0 ? <p className="subdivision-lot-management__empty">{emptyLotFilterMessage}</p> : visibleLotBlocks.map((block, index) => <details className="subdivision-lot-management__block" key={block.blockNumber} open={lotBlockFilter !== "all" || Boolean(lotSearch.trim()) || index === 0}><summary><div><span>QUADRA</span><h6>Q{block.blockNumber}</h6></div><dl><div><dt>Lotes exibidos</dt><dd>{block.lots.length}</dd></div><div><dt>Área física</dt><dd>{block.totalAreaSqm.toLocaleString("pt-BR", { maximumFractionDigits: 2 })} m²</dd></div><div><dt>Lotes com pendência</dt><dd>{block.lotsWithPhysicalPending}</dd></div></dl><span className="subdivision-lot-management__toggle">Ver Lotes</span></summary><div className="subdivision-lot-management__lot-grid">{block.lots.map((lot) => <article className="subdivision-lot-management__lot" key={`${lot.blockNumber}-${lot.lotNumber}`} tabIndex={0} onMouseEnter={() => setFocusedLotPriceTarget({ blockId: lot.blockId, lotNumber: lot.lotNumber })} onMouseLeave={() => setFocusedLotPriceTarget(null)} onFocus={() => setFocusedLotPriceTarget({ blockId: lot.blockId, lotNumber: lot.lotNumber })} onBlur={() => setFocusedLotPriceTarget(null)}><div className="subdivision-lot-management__lot-head"><b>L{lot.lotNumber}</b><em>{lot.lotTypology === "standard" ? "Tipologia pendente" : lotTypologyLabels[lot.lotTypology] ?? "Não informada"}</em></div><dl><div><dt>Área</dt><dd>{typeof lot.areaSqm === "number" ? `${lot.areaSqm.toLocaleString("pt-BR")} m²` : "Pendente"}</dd></div><div><dt>Posição</dt><dd>{lotPositionLabels[lot.positionCode] ?? "Não informada"}</dd></div><div><dt>Frente</dt><dd>{typeof lot.frontageM === "number" ? `${lot.frontageM.toLocaleString("pt-BR")} m` : "Pendente"}</dd></div><div><dt>Profundidade</dt><dd>{typeof lot.depthM === "number" ? `${lot.depthM.toLocaleString("pt-BR")} m` : "Pendente"}</dd></div></dl>{focusedLotPriceTarget?.blockId === lot.blockId && focusedLotPriceTarget.lotNumber === lot.lotNumber && <aside className="subdivision-lot-management__price-context" aria-live="polite"><span>REFERÊNCIA DE PREÇO</span>{focusedLotPriceContextQuery.isFetching ? <small>Consultando política aprovada…</small> : focusedLotPriceContextQuery.data?.state === "active" && typeof focusedLotPriceContextQuery.data.effectivePricePerSqmBrl === "number" ? <><b>{focusedLotPriceContextQuery.data.effectivePricePerSqmBrl.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} por m²</b><small>{focusedLotPriceContextQuery.data.conditionReference ? `${focusedLotPriceContextQuery.data.conditionReference} · ${priceConditionScopeLabels[focusedLotPriceContextQuery.data.conditionScope ?? "development"]}` : `${focusedLotPriceContextQuery.data.policyReference} · sem ajuste específico`}</small></> : <small>Nenhuma política aprovada e vigente libera referência de preço para este Lote.</small>}</aside>}</article>)}</div></details>)}</div>
               </section>}
 
               {selectedDevelopmentId && <section className="subdivision-lot-pricing" aria-labelledby="lot-pricing-title">
@@ -871,9 +998,30 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
                 {priceBaseSource && <p className="subdivision-price-base-policy__source-state"><CheckCircle2 size={15} />Fonte selecionada localmente. Nenhuma linha foi persistida.</p>}
                 {priceBaseSourceError && <p className="subdivision-studio__structure-error" role="alert">{priceBaseSourceError}</p>}
                 {priceBaseSourcePreview && <div className="subdivision-price-base-policy__preview"><div className="subdivision-price-base-policy__metrics"><div><b>{priceBaseSourcePreview.sourceRows}</b><span>linhas na fonte</span></div><div><b>{priceBaseSourcePreview.importableLineCount}</b><span>linhas permitidas</span></div><div data-safe={priceBaseSourcePreview.unreconciledLineCount === 0}><b>{priceBaseSourcePreview.reconciledLineCount}</b><span>pares reconciliados</span></div><div data-safe={priceBaseExceptionCount === 0}><b>{priceBaseExceptionCount}</b><span>exceções</span></div></div><div className="subdivision-price-base-policy__preview-note"><ShieldAlert size={16} /><span>{priceBaseSourcePreview.unreconciledLineCount > 0 ? "A preparação fica bloqueada até que todos os pares permitidos coincidam exatamente com a matriz física." : priceBaseExceptionCount > 0 ? "A preparação fica bloqueada: cada linha precisa ter Quadra, Lote, área e preço-base válidos." : "A fonte permitida coincide com a matriz física. A preparação ainda exige MFA recente e não aprova a política."}</span></div>{priceBaseSourcePreview.ignoredColumns.length > 0 && <p className="subdivision-price-base-policy__discarded">Coluna(s) descartada(s): {priceBaseSourcePreview.ignoredColumns.join(", ")}. O conteúdo não é importado.</p>}{priceBaseExceptionCount > 0 && <><ul className="subdivision-price-base-policy__exceptions">{Object.entries(priceBaseSourcePreview.exceptionCounts).map(([code, count]) => <li key={code}><b>{count}</b><span>{priceBaseExceptionLabels[code] ?? "Inconsistência na fonte"}</span></li>)}</ul><p className="subdivision-price-base-policy__remediation">Corrija a origem e gere outra prévia. Referência saneada: {priceBaseSourcePreview.exceptionRows.map((item) => `linha ${item.sourceRow} · ${priceBaseExceptionLabels[item.code] ?? "campo obrigatório pendente"}`).join("; ")}. Nenhum valor, Quadra, Lote ou status é exibido.</p></>}</div>}
-                <div className="subdivision-price-base-policy__prepare"><label>Referência da versão<input value={priceBaseVersionReference} onChange={(event) => setPriceBaseVersionReference(normalizePriceBaseVersionReference(event.target.value))} placeholder="PB_VERSAO_001" disabled={!isWorkspaceReady || isBusy} maxLength={75} /></label><label>Início da vigência<input type="date" value={priceBaseEffectiveFrom} onChange={(event) => setPriceBaseEffectiveFrom(event.target.value)} disabled={!isWorkspaceReady || isBusy} /></label><div><span>Estado da preparação</span><b>{priceBaseReadyForPreparation ? "Pronto para registrar" : "Aguardando prévia sem exceções"}</b><small>Preparar não disponibiliza Lotes nem cria valor contratual.</small></div><button type="button" onClick={preparePriceBasePolicy} disabled={!isWorkspaceReady || isBusy || !priceBaseReadyForPreparation}>{preparePriceBasePolicyMutation.isPending ? "Preparando política" : "Preparar política"}</button></div>
+                <div className="subdivision-price-base-policy__prepare"><label>Referência da versão<input value={priceBaseVersionReference} onChange={(event) => setPriceBaseVersionReference(normalizePriceBaseVersionReference(event.target.value))} placeholder="PB_VERSAO_001" disabled={!isWorkspaceReady || isBusy} maxLength={75} /></label><label>Início da vigência<input type="date" value={priceBaseEffectiveFrom} onChange={(event) => setPriceBaseEffectiveFrom(event.target.value)} disabled={!isWorkspaceReady || isBusy} /></label><div><span>Estado da preparação</span><b>{priceBaseReadyForPreparation ? priceBaseExceptionCount > 0 ? "Pronto com pendência bloqueadora" : "Pronto para registrar" : "Aguardando prévia conciliada"}</b><small>{priceBaseExceptionCount > 0 ? "As linhas válidas podem ser auditadas; encaminhar e aprovar continuam bloqueados." : "Preparar não disponibiliza Lotes nem cria valor contratual."}</small></div><button type="button" onClick={preparePriceBasePolicy} disabled={!isWorkspaceReady || isBusy || !priceBaseReadyForPreparation}>{preparePriceBasePolicyMutation.isPending ? "Preparando política" : priceBaseExceptionCount > 0 ? "Preparar com pendência" : "Preparar política"}</button></div>
                 <p className="subdivision-price-base-policy__guardrail">Preço-base é referência interna versionada. Ele não é proposta, preço de contrato, receita, recebível, lançamento tributário, cobrança, pagamento ou repasse.</p>
                 <div className="subdivision-price-base-policy__history" aria-live="polite"><div><span>VERSÕES REGISTRADAS</span><h6>Histórico auditável de preparação e aprovação</h6></div>{priceBasePoliciesQuery.isLoading && <p><LoaderCircle className="subdivision-foundation-spinner" />Carregando políticas autorizadas.</p>}{!priceBasePoliciesQuery.isLoading && (priceBasePoliciesQuery.data ?? []).length === 0 && <p>Nenhuma política formal registrada neste cadastro.</p>}{(priceBasePoliciesQuery.data ?? []).map((policy) => <article key={policy.policyId} data-state={policy.state}><div><b>{policy.versionReference}</b><span>Vigência inicial: {new Date(`${policy.effectiveFrom}T00:00:00`).toLocaleDateString("pt-BR")}</span></div><dl><div><dt>Linhas</dt><dd>{policy.lineCount}</dd></div><div><dt>Exceções</dt><dd>{policy.exceptionCount}</dd></div><div><dt>Estado</dt><dd>{policy.state === "prepared" ? "Preparada" : policy.state === "submitted" ? "Encaminhada" : policy.state === "approved" ? "Aprovada" : policy.state === "expired" ? "Expirada" : "Retirada"}</dd></div></dl><div className="subdivision-price-base-policy__history-actions">{policy.state === "prepared" && <button type="button" className="subdivision-studio__secondary" onClick={() => submitPriceBasePolicyMutation.mutate({ ...context, policyId: policy.policyId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy || policy.exceptionCount > 0}>Encaminhar</button>}{policy.state === "submitted" && <button type="button" onClick={() => approvePriceBasePolicyMutation.mutate({ ...context, policyId: policy.policyId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy}>Aprovar como segunda pessoa</button>}</div></article>)}</div>
+              </section>}
+
+              {selectedDevelopmentId && <section className="subdivision-price-conditions" aria-labelledby="price-conditions-title">
+                <div className="subdivision-price-conditions__head"><div><span>CONDIÇÕES E AJUSTES DE PREÇO</span><h5 id="price-conditions-title">Planeje ajustes sem perder a referência vigente.</h5><p>Crie uma condição por loteamento, Quadra ou Lote. Nenhuma condição fica vigente até ter política-base aprovada sem exceção, respaldo declarado completo e aprovação por outra pessoa autorizada.</p></div><Workflow size={22} /></div>
+                <ol className="subdivision-price-conditions__precedence" aria-label="Ordem de precedência da condição"><li><b>01</b><span>Política-base</span><small>Referência versionada</small></li><li><b>02</b><span>Empreendimento</span><small>Regra geral</small></li><li><b>03</b><span>Quadra</span><small>Ajuste localizado</small></li><li><b>04</b><span>Lote</span><small>Exceção específica</small></li></ol>
+                <form className="subdivision-price-conditions__form" onSubmit={preparePriceCondition}>
+                  <label>Política-base<select value={priceConditionDraft.basePolicyId} onChange={(event) => setPriceConditionDraft((current) => ({ ...current, basePolicyId: event.target.value }))} disabled={!isWorkspaceReady || isBusy} required><option value="">Selecione uma política preparada</option>{priceConditionBasePolicies.map((policy) => <option key={policy.policyId} value={policy.policyId}>{policy.versionReference} · {priceConditionStateLabels[policy.state] ?? policy.state}</option>)}</select></label>
+                  <label>Escopo<select value={priceConditionDraft.scope} onChange={(event) => setPriceConditionDraft((current) => ({ ...current, scope: event.target.value as PriceConditionScope, blockId: "", lotNumber: "" }))} disabled={!isWorkspaceReady || isBusy}><option value="development">Todo o loteamento</option><option value="block">Uma Quadra</option><option value="lot">Um Lote</option></select></label>
+                  {priceConditionDraft.scope !== "development" && <label>Quadra<select value={priceConditionDraft.blockId} onChange={(event) => setPriceConditionDraft((current) => ({ ...current, blockId: event.target.value, lotNumber: "" }))} disabled={!isWorkspaceReady || isBusy} required><option value="">Selecione a Quadra</option>{(physicalStructureQuery.data ?? []).map((block) => <option key={block.blockId} value={block.blockId}>Q{block.blockNumber}</option>)}</select></label>}
+                  {priceConditionDraft.scope === "lot" && <label>Lote<select value={priceConditionDraft.lotNumber} onChange={(event) => setPriceConditionDraft((current) => ({ ...current, lotNumber: event.target.value }))} disabled={!isWorkspaceReady || isBusy || !priceConditionDraft.blockId} required><option value="">Selecione o Lote</option>{priceConditionLots.map((lot) => <option key={lot.lotNumber} value={String(lot.lotNumber)}>L{lot.lotNumber}</option>)}</select></label>}
+                  <label>Tipo de ajuste<select value={priceConditionDraft.adjustmentKind} onChange={(event) => setPriceConditionDraft((current) => ({ ...current, adjustmentKind: event.target.value as PriceConditionKind }))} disabled={!isWorkspaceReady || isBusy}><option value="override_per_sqm">Novo valor por m²</option><option value="percentage_adjustment">Reajuste percentual</option><option value="temporary_discount">Desconto temporário</option></select></label>
+                  <label>{priceConditionDraft.adjustmentKind === "override_per_sqm" ? "Novo valor por m² (BRL)" : priceConditionDraft.adjustmentKind === "temporary_discount" ? "Desconto (%)" : "Variação (%)"}<input type="number" min={priceConditionDraft.adjustmentKind === "percentage_adjustment" ? "-99.99" : "0.0001"} max={priceConditionDraft.adjustmentKind === "temporary_discount" ? "100" : "1000000000"} step="0.0001" value={priceConditionDraft.amount} onChange={(event) => setPriceConditionDraft((current) => ({ ...current, amount: event.target.value }))} placeholder={priceConditionDraft.adjustmentKind === "percentage_adjustment" ? "Ex.: -5 ou 8" : "Informe o valor"} inputMode="decimal" disabled={!isWorkspaceReady || isBusy} required /></label>
+                  <label>Referência interna<input value={priceConditionDraft.conditionReference} onChange={(event) => setPriceConditionDraft((current) => ({ ...current, conditionReference: `PC_${normalizeReference(event.target.value).replace(/^PC_?/, "")}`.slice(0, 75) }))} placeholder="PC_AJUSTE_001" disabled={!isWorkspaceReady || isBusy} required maxLength={75} /></label>
+                  <label>Início da vigência<input type="date" value={priceConditionDraft.effectiveFrom} onChange={(event) => setPriceConditionDraft((current) => ({ ...current, effectiveFrom: event.target.value }))} disabled={!isWorkspaceReady || isBusy} required /></label>
+                  <label>Término <small>{priceConditionDraft.adjustmentKind === "temporary_discount" ? "Obrigatório para desconto" : "Opcional"}</small><input type="date" value={priceConditionDraft.effectiveUntil} onChange={(event) => setPriceConditionDraft((current) => ({ ...current, effectiveUntil: event.target.value }))} disabled={!isWorkspaceReady || isBusy} required={priceConditionDraft.adjustmentKind === "temporary_discount"} /></label>
+                  <label>Motivo<select value={priceConditionDraft.reasonCode} onChange={(event) => setPriceConditionDraft((current) => ({ ...current, reasonCode: event.target.value }))} disabled={!isWorkspaceReady || isBusy}>{Object.entries(priceConditionReasonLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+                  <label>Respaldo documental<select value={priceConditionDraft.documentState} onChange={(event) => setPriceConditionDraft((current) => ({ ...current, documentState: event.target.value as PriceConditionDocumentState }))} disabled={!isWorkspaceReady || isBusy}>{Object.entries(priceConditionDocumentStateLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+                  <button type="submit" disabled={!isWorkspaceReady || isBusy || !priceConditionCanPrepare}>{createPriceConditionMutation.isPending ? "Preparando condição" : "Preparar condição"}</button>
+                </form>
+                <p className="subdivision-price-conditions__guardrail">A preparação registra motivo, escopo, vigência e estado documental. Ela não publica preço, não altera a política-base, não cria disponibilidade e não gera venda, proposta, contrato, cobrança, pagamento, repasse ou receita.</p>
+                <div className="subdivision-price-conditions__history" aria-live="polite"><div><span>CONDIÇÕES REGISTRADAS</span><h6>Histórico por escopo, vigência e estado.</h6></div>{priceConditionsQuery.isLoading && <p><LoaderCircle className="subdivision-foundation-spinner" />Carregando condições autorizadas.</p>}{!priceConditionsQuery.isLoading && (priceConditionsQuery.data ?? []).length === 0 && <p>Nenhuma condição registrada neste cadastro. Use os campos acima apenas quando houver decisão interna e referência documental a organizar.</p>}{(priceConditionsQuery.data ?? []).map((condition) => { const basePolicy = priceConditionBasePolicies.find((policy) => policy.policyId === condition.basePolicyId); const canSubmit = condition.state === "prepared" && condition.documentState === "declared_complete" && basePolicy?.state === "approved" && basePolicy.exceptionCount === 0; return <article key={condition.conditionId} data-state={condition.state}><div><b>{condition.conditionReference}</b><span>{priceConditionScopeLabels[condition.scope]} · {priceConditionKindLabels[condition.adjustmentKind]}</span></div><dl><div><dt>Vigência</dt><dd>{new Date(`${condition.effectiveFrom}T00:00:00`).toLocaleDateString("pt-BR")}{condition.effectiveUntil ? ` — ${new Date(`${condition.effectiveUntil}T00:00:00`).toLocaleDateString("pt-BR")}` : ""}</dd></div><div><dt>Respaldo</dt><dd>{priceConditionDocumentStateLabels[condition.documentState]}</dd></div><div><dt>Estado</dt><dd>{priceConditionStateLabels[condition.state] ?? condition.state}</dd></div></dl><div className="subdivision-price-conditions__actions">{condition.state === "prepared" && <button type="button" className="subdivision-studio__secondary" onClick={() => submitPriceConditionMutation.mutate({ ...context, conditionId: condition.conditionId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy || !canSubmit}>Encaminhar</button>}{condition.state === "submitted" && <button type="button" onClick={() => approvePriceConditionMutation.mutate({ ...context, conditionId: condition.conditionId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy}>Aprovar como segunda pessoa</button>}{(condition.state === "prepared" || condition.state === "submitted") && <button type="button" className="subdivision-studio__secondary" onClick={() => withdrawPriceConditionMutation.mutate({ ...context, conditionId: condition.conditionId, correlationId: crypto.randomUUID() })} disabled={!isWorkspaceReady || isBusy}>Retirar</button>}</div></article>; })}</div>
               </section>}
 
               {!selectedDevelopmentId && <div className="subdivision-studio__module-empty"><LandPlot size={19} /><p>Salve a identificação do loteamento para montar Quadras e Lotes. A estrutura sempre fica vinculada ao cadastro selecionado.</p></div>}
