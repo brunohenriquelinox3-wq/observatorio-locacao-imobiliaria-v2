@@ -107,3 +107,15 @@ A aprovação de condição submetida passou a exigir novamente um vínculo ativ
 | Validação dirigida | 3 arquivos e 28 testes aprovados; tipagem e integridade de diff aprovadas. |
 | Validação integral | 219 arquivos de teste e 574 testes aprovados; tipagem, build Netlify e integridade de diff aprovados. |
 | Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |
+
+## Motivo governado para retirada de condição A250
+
+A retirada de condição preparada ou encaminhada passou a exigir motivo interno pertencente ao catálogo controlado. A revisão autenticada confirmou que não há condição registrada no contexto atual, portanto não houve seletor acionado, retirada, vínculo ou qualquer outro comando material.
+
+| Resultado de validação A250 | Resultado |
+|---|---|
+| Serviço e migração | A retirada de condição usa função v2, valida o catálogo de motivos antes da transição e grava somente o código do motivo na auditoria redigida. |
+| Interface | A seleção de motivo existe somente junto à ação de retirada de condição não aprovada. |
+| Validação dirigida | 3 arquivos e 30 testes aprovados; tipagem e integridade de diff aprovadas. |
+| Validação integral | 219 arquivos de teste e 576 testes aprovados; tipagem, build Netlify e integridade de diff aprovados. |
+| Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |

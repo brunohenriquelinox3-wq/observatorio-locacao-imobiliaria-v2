@@ -2294,3 +2294,9 @@
 - [x] Bloquear aprovação quando a evidência tiver sido arquivada ou não estiver ativa, sem alterar política-base, matriz, preço vigente, venda, contrato ou financeiro. **A249:** a função retorna erro redigido antes da aprovação da condição.
 - [x] Exibir a pendência de respaldo antes da aprovação apenas no estado encaminhado, sem aprovar condição real durante a revisão. **A249:** a interface bloqueia a aprovação sem respaldo ativo; não havia condição real registrada na revisão.
 - [x] Cobrir serviço, migração e interface; revisar, gerar ZIP/HTML saneados e salvar checkpoint sem aprovar condição real. **A249:** 219 arquivos/574 testes, tipagem, build Netlify, diff limpo, revisão autenticada e saneamento foram aprovados; checkpoint funcional `7035f87e` preserva a ausência de condição aprovada.
+
+## Motivo governado de retirada de condição de preço — A250
+- [x] Exigir motivo interno padronizado na retirada de condição em Preparação ou Encaminhada, mantendo autoridade, MFA, contexto, organização, idempotência e auditoria redigida no servidor. **A250:** a função v2 aceita apenas um código do catálogo antes de retirar condição não aprovada.
+- [x] Recusar motivo ausente ou fora do catálogo sem alterar política-base, matriz, condição vigente, venda, contrato ou financeiro. **A250:** a validação ocorre antes da transição e da auditoria de resultado permitido.
+- [x] Exibir a escolha de motivo somente ao retirar condição não aprovada, sem abrir ou executar o fluxo em condição real durante a revisão. **A250:** não havia condição real registrada na revisão, portanto nenhum seletor ou comando foi acionado.
+- [ ] Cobrir serviço, migração e interface; revisar, gerar ZIP/HTML saneados e salvar checkpoint sem retirar condição real.

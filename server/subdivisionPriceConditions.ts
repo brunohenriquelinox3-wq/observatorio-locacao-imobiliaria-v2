@@ -116,8 +116,10 @@ async function transitionPriceCondition(subjectId: string | undefined, rawInput:
   const actorUserId = requireSubject(subjectId);
   const schema = operation === "submit" ? submitSubdivisionPriceConditionInputSchema : operation === "approve" ? approveSubdivisionPriceConditionInputSchema : withdrawSubdivisionPriceConditionInputSchema;
   const input = schema.parse(rawInput);
-  const rpcName = operation === "submit" ? "subdivision_submit_price_condition_v2" : operation === "approve" ? "subdivision_approve_price_condition_v2" : "subdivision_withdraw_price_condition_v1";
-  const { data, error } = await client.rpc(rpcName, { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_condition_id: input.conditionId, p_correlation_id: input.correlationId });
+  const rpcName = operation === "submit" ? "subdivision_submit_price_condition_v2" : operation === "approve" ? "subdivision_approve_price_condition_v2" : "subdivision_withdraw_price_condition_v2";
+  const rpcInput = { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_condition_id: input.conditionId, p_correlation_id: input.correlationId } as Record<string, unknown>;
+  if (operation === "withdraw") rpcInput.p_reason_code = (input as WithdrawSubdivisionPriceConditionInput).reasonCode;
+  const { data, error } = await client.rpc(rpcName, rpcInput);
   if (error?.message === "PRICE_CONDITION_EVIDENCE_REQUIRED") throw new Error("PRICE_CONDITION_EVIDENCE_REQUIRED");
   if (error || typeof data !== "string") throw new Error(`PRICE_CONDITION_${operation.toUpperCase()}_DENIED`);
   return { conditionId: data };

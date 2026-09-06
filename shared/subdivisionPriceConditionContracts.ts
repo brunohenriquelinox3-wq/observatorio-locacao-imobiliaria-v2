@@ -40,7 +40,11 @@ export const listSubdivisionPriceConditionsInputSchema = subdivisionContextSchem
 export const getSubdivisionLotPriceContextInputSchema = subdivisionContextSchema.extend({ developmentId: z.string().uuid(), blockId: z.string().uuid(), lotNumber: z.number().int().positive().max(999) });
 export const submitSubdivisionPriceConditionInputSchema = subdivisionContextSchema.extend({ correlationId: z.string().uuid(), conditionId: z.string().uuid() });
 export const approveSubdivisionPriceConditionInputSchema = subdivisionContextSchema.extend({ correlationId: z.string().uuid(), conditionId: z.string().uuid() });
-export const withdrawSubdivisionPriceConditionInputSchema = subdivisionContextSchema.extend({ correlationId: z.string().uuid(), conditionId: z.string().uuid() });
+export const withdrawSubdivisionPriceConditionInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  conditionId: z.string().uuid(),
+  reasonCode: z.enum(["source_superseded", "governance_review", "effective_date_reassessment", "documentary_reconciliation"]),
+});
 
 export type CreateSubdivisionPriceConditionInput = z.infer<typeof createSubdivisionPriceConditionInputSchema>;
 export type ListSubdivisionPriceConditionsInput = z.infer<typeof listSubdivisionPriceConditionsInputSchema>;
