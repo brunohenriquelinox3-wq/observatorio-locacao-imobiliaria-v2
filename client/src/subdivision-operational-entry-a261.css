@@ -61,3 +61,7 @@
 .subdivision-foundation-page .subdivision-studio__module-nav { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 @media (max-width: 960px) { .subdivision-foundation-page .subdivision-studio__module-nav { grid-template-columns: repeat(5, minmax(118px, 1fr)); } }
 @media (max-width: 780px) { .subdivision-foundation-page .subdivision-studio__workbench > .subdivision-studio__canvas { padding: 16px; }.subdivision-foundation-page .subdivision-studio__module-nav { grid-template-columns: repeat(5, minmax(112px, 1fr)); } }
+
+/* A262 — os destinos acima orientam e deslocam a leitura; não ocultam conteúdo existente. */
+#subdivision-operational-overview, #subdivision-development-workspace { scroll-margin-top: 18px; }
+.subdivision-foundation-page .subdivision-studio__workbench[data-view="overview"] { display: block; }

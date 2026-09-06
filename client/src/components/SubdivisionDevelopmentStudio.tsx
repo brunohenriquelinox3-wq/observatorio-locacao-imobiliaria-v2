@@ -775,6 +775,13 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     if (priceBaseSourceInput.current) priceBaseSourceInput.current.value = "";
   }
 
+  function focusStudioSection(view: "overview" | "workspace") {
+    setStudioView(view);
+    requestAnimationFrame(() => {
+      document.getElementById(view === "overview" ? "subdivision-operational-overview" : "subdivision-development-workspace")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
   function addStructureRows(amount: number) {
     setStructureRows((current) => {
       if (current.length >= 50) return current;
@@ -1056,12 +1063,12 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
           <button type="button" className="subdivision-studio__new-record" onClick={startNew} data-active={mode === "create"} disabled={!isWorkspaceReady}><Plus size={16} />Novo loteamento</button>
         </div>
         <nav className="subdivision-studio__view-switcher" aria-label="Destino de trabalho" role="tablist">
-          <button type="button" role="tab" aria-selected={studioView === "overview"} data-active={studioView === "overview"} onClick={() => setStudioView("overview")}><ClipboardCheck size={18} /><span><b>Visão Operacional</b><small>Indicadores e gráficos físicos</small></span></button>
-          <button type="button" role="tab" aria-selected={studioView === "workspace"} data-active={studioView === "workspace"} onClick={() => setStudioView("workspace")}><TableProperties size={18} /><span><b>Cadastro do Empreendimento</b><small>Identificação, matriz e documentos</small></span></button>
+          <button type="button" role="tab" aria-selected={studioView === "overview"} data-active={studioView === "overview"} onClick={() => focusStudioSection("overview")}><ClipboardCheck size={18} /><span><b>Visão Operacional</b><small>Indicadores e gráficos físicos</small></span></button>
+          <button type="button" role="tab" aria-selected={studioView === "workspace"} data-active={studioView === "workspace"} onClick={() => focusStudioSection("workspace")}><TableProperties size={18} /><span><b>Cadastro do Empreendimento</b><small>Identificação, matriz e documentos</small></span></button>
         </nav>
       </section>
 
-      {studioView === "overview" && <section className="subdivision-studio__operational-overview" aria-labelledby="operational-overview-title">
+      <section id="subdivision-operational-overview" className="subdivision-studio__operational-overview" aria-labelledby="operational-overview-title">
         <header className="subdivision-studio__operational-overview-head"><div><span>VISÃO OPERACIONAL</span><h3 id="operational-overview-title">{mode === "create" ? "Selecione um empreendimento para iniciar a leitura." : "Leitura física agregada do empreendimento."}</h3><p>{mode === "create" ? "A seleção limita a consulta ao contexto autorizado e não executa nenhuma alteração." : "Os indicadores resumem apenas a matriz autorizada; não representam preço comercial, disponibilidade, venda, contrato ou financeiro."}</p></div>{selectedDevelopmentId && <button type="button" onClick={() => { setActiveModule("structure"); setStudioView("workspace"); }} disabled={!isWorkspaceReady}><Workflow size={16} />Abrir cadastro</button>}</header>
         {mode === "create" ? <div className="subdivision-studio__operational-empty"><LandPlot size={21} /><div><b>Nenhum empreendimento em foco</b><span>Escolha um cadastro acima para abrir a visão agregada ou inicie um novo cadastro de identificação.</span></div></div> : <>
           <dl className="subdivision-studio__operational-metrics">
@@ -1076,9 +1083,9 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
           </div>
           <footer className="subdivision-studio__operational-boundary"><ShieldCheck size={16} /><p>Esta visão é somente de leitura agregada. Para editar identificação, matriz, ficha física, pendências ou anexos, use “Cadastro do Empreendimento”.</p></footer>
         </>}
-      </section>}
+      </section>
 
-      <div className="subdivision-studio__workbench" data-view={studioView}>
+      <div id="subdivision-development-workspace" className="subdivision-studio__workbench" data-view={studioView}>
         <aside className="subdivision-studio__records" aria-label="Cadastros de loteamentos em estruturação">
           <div className="subdivision-studio__records-head">
             <div><LandPlot size={18} /><div><span>CADASTROS</span><strong>Loteamentos em estruturação</strong></div></div>

@@ -280,12 +280,25 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("COBERTURA FÍSICA");
     expect(studio).toContain("sem inferir disponibilidade");
     expect(studio).toContain("não representam preço comercial, disponibilidade, venda, contrato ou financeiro");
-    expect(studio).toContain('setStudioView("overview")');
-    expect(studio).toContain('setStudioView("workspace")');
+    expect(studio).toContain('focusStudioSection("overview")');
+    expect(studio).toContain('focusStudioSection("workspace")');
     expect(styles).toContain(".subdivision-foundation-page { max-width: none; }");
     expect(styles).toContain(".subdivision-studio__workbench { display: block;");
-    expect(styles).toContain('.subdivision-studio__workbench[data-view="overview"] { display: none; }');
+    expect(styles).toContain('.subdivision-foundation-page .subdivision-studio__workbench[data-view="overview"] { display: block; }');
     expect(styles).toContain(".subdivision-studio__workbench > .subdivision-studio__records, .subdivision-studio__workbench > .subdivision-studio__overview { display: none; }");
     expect(styles).toContain("@media (max-width: 780px)");
+  });
+
+  it("mantém a visão operacional e todo o cadastro visíveis em fluxo contínuo", () => {
+    const studio = source();
+    const styles = operationalEntryStyles();
+
+    expect(studio).toContain('id="subdivision-operational-overview"');
+    expect(studio).toContain('id="subdivision-development-workspace"');
+    expect(studio).not.toContain('{studioView === "overview" && <section className="subdivision-studio__operational-overview"');
+    expect(studio).toContain("function focusStudioSection(view: \"overview\" | \"workspace\")");
+    expect(studio).toContain("scrollIntoView({ behavior: \"smooth\", block: \"start\" })");
+    expect(styles).toContain("os destinos acima orientam e deslocam a leitura; não ocultam conteúdo existente");
+    expect(styles).toContain("#subdivision-operational-overview, #subdivision-development-workspace { scroll-margin-top: 18px; }");
   });
 });
