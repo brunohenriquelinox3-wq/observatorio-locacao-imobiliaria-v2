@@ -6,6 +6,7 @@ const policyMigration = () => readFileSync(path.resolve(process.cwd(), "supabase
 const rlsMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907091000_subdivision_price_base_deny_policies_a224.sql"), "utf8");
 const scopeMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907092000_subdivision_price_base_scope_a225.sql"), "utf8");
 const correctedScopeMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907103000_subdivision_price_base_list_draft_scope_a234.sql"), "utf8");
+const matrixAreaMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907104000_subdivision_price_base_matrix_area_a237.sql"), "utf8");
 
 describe("subdivision price-base policy migrations", () => {
   it("keeps price-base separate from contracts and commercial effects", () => {
@@ -51,5 +52,18 @@ describe("subdivision price-base policy migrations", () => {
     expect(sql).toContain("security definer");
     expect(sql).toContain("set search_path = ''");
     expect(sql).toContain("PRICE_BASE_DEVELOPMENT_SCOPE_DENIED");
+  });
+
+  it("uses a confirmed matrix area only for a missing source area and preserves fail-closed functions", () => {
+    const sql = matrixAreaMigration();
+    expect(sql).toContain("area_provenance");
+    expect(sql).toContain("matrix_physical");
+    expect(sql).toContain("source.area_sqm is null and lot.area_sqm is not null and lot.area_sqm > 0");
+    expect(sql).toContain("coalesce(source.area_sqm, lot.area_sqm)");
+    expect(sql).toContain("subdivision_preview_price_base_source_v2");
+    expect(sql).toContain("subdivision_prepare_price_base_policy_v2");
+    expect(sql).toContain("security definer set search_path = ''");
+    expect(sql).toContain("revoke all on function public.subdivision_prepare_price_base_policy_v2");
+    expect(sql).toContain("grant execute on function public.subdivision_prepare_price_base_policy_v2");
   });
 });

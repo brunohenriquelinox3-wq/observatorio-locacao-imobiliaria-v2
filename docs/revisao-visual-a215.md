@@ -103,3 +103,7 @@ Na revisão autenticada seguinte, a política preparada permaneceu visível no c
 A revisão autenticada confirmou a nova vitrine **“Todas as modalidades disponíveis”** antes do formulário. A composição torna visíveis os três escopos — todo o loteamento, uma Quadra e um Lote — e os três tipos — novo valor por m², reajuste percentual e desconto temporário. O formulário adapta o término para torná-lo obrigatório apenas em desconto temporário e mantém motivo, respaldo documental, vigência, aprovação por segunda pessoa, expiração e retirada.
 
 Nenhuma condição foi criada durante a revisão. A política-base continua em Preparação com uma exceção bloqueadora; por isso o contexto por Lote não apresenta preço vigente e as condições não podem ser encaminhadas ou aprovadas.
+
+## A237 — Reconciliação de área confirmada
+
+A revisão autenticada confirmou que a matriz física, o histórico da política em Preparação e a central de condições continuam visíveis e separados. A área de prévia permanece sem fonte carregada e não expõe valores. Quando uma nova prévia informar área ausente, a interface reserva uma métrica específica para área confirmada pela matriz, mantendo pares não reconciliados e preço-base ausente como bloqueadores. A política atual segue com 163 linhas agregadas e uma exceção, sem referência vigente apresentada por Lote.

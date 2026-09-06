@@ -62,11 +62,21 @@ describe("subdivision price-base policy boundary", () => {
     expect(JSON.stringify(result.exceptionRows)).not.toContain("500");
   });
 
+  it("encaminha área ausente somente como candidata à confirmação da matriz física", async () => {
+    const sourceContentBase64 = makeSource([["Quadra", "Lote", "Área (m²)", "Valor (m²)"], [1, 1, "", 500]]);
+    const rpc = vi.fn().mockResolvedValue({ data: { reconciled_line_count: 1, unreconciled_line_count: 0, matrix_area_resolved_line_count: 1 }, error: null });
+    const result = await previewSubdivisionPriceBaseSource(actor, { ...context, developmentId, sourceFileName: "fonte.xlsx", sourceContentBase64 }, { rpc });
+    const payload = rpc.mock.calls[0]?.[1] as { p_lines: Array<Record<string, unknown>> };
+    expect(rpc).toHaveBeenCalledWith("subdivision_preview_price_base_source_v2", expect.any(Object));
+    expect(payload.p_lines[0]).toMatchObject({ block_number: 1, lot_number: 1, area_sqm: null, base_price_per_sqm_brl: 500 });
+    expect(result).toMatchObject({ importableLineCount: 1, reconciledLineCount: 1, matrixAreaResolvedLineCount: 1 });
+  });
+
   it("prepares only reconciled source rows and returns aggregate policy metadata", async () => {
     const sourceContentBase64 = makeSource([["Quadra", "Lote", "Área (m²)", "Valor (m²)"], [1, 1, 100, 500]]);
     const rpc = vi.fn().mockResolvedValue({ data: { policy_id: "00000000-0000-4000-8000-000000000005", line_count: 1, exception_count: 0 }, error: null });
     await expect(prepareSubdivisionPriceBasePolicy(actor, { ...context, developmentId, sourceFileName: "fonte.xlsx", sourceContentBase64, correlationId, versionReference: "PB_TESTE_001", effectiveFrom: "2026-09-05" }, { rpc })).resolves.toEqual({ policyId: "00000000-0000-4000-8000-000000000005", lineCount: 1, exceptionCount: 0 });
-    expect(rpc).toHaveBeenCalledWith("subdivision_prepare_price_base_policy_v1", expect.objectContaining({ p_exception_count: 0, p_source_row_count: 1, p_lines: [expect.objectContaining({ block_number: 1, lot_number: 1 })] }));
+    expect(rpc).toHaveBeenCalledWith("subdivision_prepare_price_base_policy_v2", expect.objectContaining({ p_exception_count: 0, p_source_row_count: 1, p_lines: [expect.objectContaining({ block_number: 1, lot_number: 1 })] }));
   });
 
   it("lists policies only through the selected development scope", async () => {

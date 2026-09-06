@@ -111,3 +111,7 @@ O histórico também foi corrigido para ser consultado por **cadastro selecionad
 ### Orientação saneada de correção A227
 
 Quando a prévia encontra campo obrigatório ausente, a interface passa a mostrar somente a **linha de origem** e a **categoria de pendência**, limitada a dez referências. Ela não mostra valor, Quadra, Lote, status, cliente ou qualquer outro conteúdo da planilha. Na verificação efêmera da fonte autorizada, a única pendência foi classificada como `AREA_OR_PRICE_REQUIRED` na linha de origem 29; por isso a preparação continua bloqueada até que a planilha seja corrigida e reenviada para uma nova prévia.
+
+### Reconciliação física de área A237
+
+Uma área ausente na fonte pode ser usada **somente** se a mesma combinação de Quadra e Lote já possuir área positiva confirmada na matriz física salva. A função protegida atribui a proveniência `matrix_physical`; não reescreve a planilha, não estima área e não aceita divergência entre a área declarada e a área física. Preço-base ausente, identificador físico inválido, duplicidade e qualquer par não reconciliado continuam como exceções bloqueadoras. As funções de prévia e preparação v2 permanecem com execução exclusiva do serviço e auditoria redigida.

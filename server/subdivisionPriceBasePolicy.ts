@@ -32,7 +32,7 @@ type ParsedLine = {
   source_row: number;
   block_number: number;
   lot_number: number;
-  area_sqm: number;
+  area_sqm: number | null;
   base_price_per_sqm_brl: number;
   row_fingerprint: string;
 };
@@ -57,6 +57,7 @@ export type PriceBasePreview = {
   sourceFingerprint: string;
   reconciledLineCount: number;
   unreconciledLineCount: number;
+  matrixAreaResolvedLineCount: number;
 };
 
 export type PriceBasePolicySummary = {
@@ -198,8 +199,8 @@ function extractParsedSource(sourceContentBase64: string): ParsedSource {
       increment("PHYSICAL_IDENTIFIER_REQUIRED", row + 1);
       continue;
     }
-    if (!areaSqm || !pricePerSqm) {
-      increment(!areaSqm && !pricePerSqm ? "AREA_AND_PRICE_REQUIRED" : !areaSqm ? "AREA_REQUIRED" : "BASE_PRICE_REQUIRED", row + 1);
+    if (!pricePerSqm) {
+      increment(!areaSqm ? "AREA_AND_PRICE_REQUIRED" : "BASE_PRICE_REQUIRED", row + 1);
       continue;
     }
     const pair = `${blockNumber}:${lotNumber}`;
@@ -227,7 +228,7 @@ export async function previewSubdivisionPriceBaseSource(subjectId: string | unde
   const actorUserId = requireSubject(subjectId);
   const input = previewSubdivisionPriceBaseSourceInputSchema.parse(rawInput);
   const parsed = extractParsedSource(input.sourceContentBase64);
-  const { data, error } = await client.rpc("subdivision_preview_price_base_source_v1", {
+  const { data, error } = await client.rpc("subdivision_preview_price_base_source_v2", {
     p_actor_user_id: actorUserId,
     p_organization_id: input.organizationId,
     p_module: input.module,
@@ -247,6 +248,7 @@ export async function previewSubdivisionPriceBaseSource(subjectId: string | unde
     sourceFingerprint: parsed.sourceFingerprint,
     reconciledLineCount: Number(preview.reconciled_line_count ?? 0),
     unreconciledLineCount: Number(preview.unreconciled_line_count ?? 0),
+    matrixAreaResolvedLineCount: Number(preview.matrix_area_resolved_line_count ?? 0),
   };
 }
 
@@ -254,7 +256,7 @@ export async function prepareSubdivisionPriceBasePolicy(subjectId: string | unde
   const actorUserId = requireSubject(subjectId);
   const input = prepareSubdivisionPriceBasePolicyInputSchema.parse(rawInput);
   const parsed = extractParsedSource(input.sourceContentBase64);
-  const { data, error } = await client.rpc("subdivision_prepare_price_base_policy_v1", {
+  const { data, error } = await client.rpc("subdivision_prepare_price_base_policy_v2", {
     p_actor_user_id: actorUserId,
     p_organization_id: input.organizationId,
     p_module: input.module,

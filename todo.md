@@ -2207,9 +2207,11 @@
 - [x] Confirmar que a política preparada aparece no histórico do cadastro selecionado, sem revelar valores individuais ou permitir encaminhamento/aprovação com exceção. **A234:** o histórico autenticado exibiu a versão preparada com contagens agregadas; a exceção continuou bloqueando as próximas transições.
 
 ## Reconciliação de área da fonte de preço-base — A235
-- [ ] Aceitar área ausente somente quando a mesma Quadra/Lote tiver área física confirmada na matriz salva, sem preencher ou alterar a fonte.
-- [ ] Manter preço-base ausente, divergência de área e Lote não reconciliado como exceções bloqueadoras.
-- [ ] Cobrir a reconciliação, validar a prévia e gerar artefatos saneados antes do checkpoint.
+- [x] Aceitar área ausente somente quando a mesma Quadra/Lote tiver área física confirmada na matriz salva, sem preencher ou alterar a fonte. **A237:** o parser envia área ausente apenas como candidata; as funções v2 confirmam o mesmo par na matriz e gravam proveniência `matrix_physical` quando a política for preparada.
+- [x] Manter preço-base ausente, divergência de área e Lote não reconciliado como exceções bloqueadoras. **A237:** preço continua obrigatório; área declarada divergente, Lote ausente, duplicidade e área não confirmada são recusados pelo RPC protegido.
+- [x] Cobrir a reconciliação e validar a prévia sem persistir a fonte. **A237:** testes dirigidos, testes de migração, tipagem, verificação do catálogo de funções e revisão autenticada foram aprovados; a verificação de segurança não indicou aviso novo para as tabelas de preço-base.
+- [x] Gerar ZIP/HTML saneados. **A237:** os artefatos foram verificados sem ambiente, logs, documentação, checklist, dados de origem, credenciais ou infraestrutura.
+- [ ] Salvar checkpoint A237 após documentação, validação integral e saneamento dos artefatos.
 
 ## Consolidação de modalidades de condição comercial — A236
 - [x] Validar na interface as modalidades de ajuste geral, por Quadra, por Lote, desconto temporário e reajuste percentual, com campos estritamente compatíveis com cada tipo. **A236:** a revisão autenticada confirmou a vitrine de três escopos e três tipos, incluindo término obrigatório apenas para desconto temporário.
