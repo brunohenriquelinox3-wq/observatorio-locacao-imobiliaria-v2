@@ -88,3 +88,6 @@
 .subdivision-lot-management__price-values span { color: #35706b; font-size: .5rem; font-weight: 850; letter-spacing: .05em; }
 .subdivision-lot-management__price-values b { color: #164f4d; font-size: .66rem; line-height: 1.15; }
 @media (max-width: 720px) { .subdivision-lot-management__price-values { grid-template-columns: 1fr; } }
+
+/* A252: rótulos persistentes tornam os campos visíveis sem divulgar referência ainda bloqueada. */
+.subdivision-lot-management__lot dl::after { content: "PREÇO POR M² · consultar referência aprovada\A VALOR TOTAL · consultar referência aprovada"; white-space: pre-line; display: block; grid-column: 1 / -1; margin-top: .12rem; padding: .46rem .5rem; border: 1px dashed color-mix(in srgb, var(--primary) 25%, var(--border)); border-radius: .42rem; color: #5c7775; background: color-mix(in srgb, var(--primary) 4%, var(--background)); font-size: .56rem; font-weight: 800; letter-spacing: .025em; line-height: 1.55; }

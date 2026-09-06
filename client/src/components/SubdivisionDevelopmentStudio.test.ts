@@ -208,5 +208,6 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("VALOR TOTAL");
     expect(studio).toContain("effectiveLotTotalBrl");
     expect(studio).toContain("Nenhuma política aprovada e vigente libera preço por m² ou valor total para este Lote.");
+    expect(studio).toContain("Ao apontar ou focar uma unidade, a referência por m² e o valor total aparecem somente após política aprovada e vigente");
   });
 });

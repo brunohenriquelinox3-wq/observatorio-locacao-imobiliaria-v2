@@ -2306,3 +2306,8 @@
 - [x] Distinguir visualmente política em Preparação, exceção, aprovação pendente, vigência futura/expirada e referência ativa, sem expor preço não aprovado. **A251:** o cartão explica o bloqueio e a matriz indica quando os campos serão liberados.
 - [x] Usar apenas área física confirmada e valor por m² retornado pelo contexto seguro; não estimar, preencher ou liberar o único preço-base ausente da fonte. **A251:** o total é calculado no servidor a partir da área confirmada somente após a referência ativa.
 - [x] Cobrir serviço e interface, revisar desktop/móvel, gerar ZIP/HTML saneados e salvar checkpoint sem aprovar política, criar venda ou alterar a matriz real. **A251:** 219 arquivos/579 testes, tipagem, build Netlify, diff limpo, revisão autenticada desktop/móvel e saneamento foram aprovados; checkpoint funcional `64587273` preserva a política em Preparação.
+
+## Campos persistentes de preço por Lote — A252
+- [x] Exibir permanentemente em cada cartão os rótulos de preço por m² e valor total, mesmo quando bloqueados por política ainda não aprovada. **A252:** os rótulos agora integram todos os cartões, sem depender de hover ou foco.
+- [x] Manter números ocultos no estado bloqueado e orientar que a referência só surge após aprovação, vigência e ausência de exceção. **A252:** o cartão direciona à referência aprovada e não recebe valores enquanto a política atual permanece em Preparação.
+- [ ] Cobrir interface e responsividade, gerar ZIP/HTML saneados e salvar checkpoint sem alterar política, preço, venda, contrato ou financeiro real.

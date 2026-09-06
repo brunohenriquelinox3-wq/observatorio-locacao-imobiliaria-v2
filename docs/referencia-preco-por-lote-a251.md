@@ -23,3 +23,7 @@ A revisão do Vista do Sol confirmou a matriz com 14 Quadras e 164 Lotes físico
 | Revisão de interface | Desktop e móvel exibem a orientação de preço por m² e valor total no fluxo da matriz, sem revelar números da política preparada. |
 | Validação integral | 219 arquivos de teste e 579 testes aprovados; tipagem, build Netlify e integridade de diff aprovados. |
 | Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |
+
+## Campos persistentes A252
+
+Os cartões de Lote agora exibem permanentemente os rótulos **Preço por m²** e **Valor total**, mesmo quando o valor está bloqueado. A apresentação direciona a consulta à referência aprovada, sem preencher números enquanto a política estiver em Preparação, possuir exceção, aguardar aprovação ou estiver fora da vigência. A validação integral A252 aprovou 219 arquivos de teste e 579 testes, tipagem, build Netlify e integridade de diff; permaneceu apenas o aviso não bloqueante de chunks grandes. Nenhuma política, preço, venda, contrato ou financeiro foi alterado.
