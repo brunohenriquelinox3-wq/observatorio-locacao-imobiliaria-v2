@@ -2310,4 +2310,4 @@
 ## Campos persistentes de preço por Lote — A252
 - [x] Exibir permanentemente em cada cartão os rótulos de preço por m² e valor total, mesmo quando bloqueados por política ainda não aprovada. **A252:** os rótulos agora integram todos os cartões, sem depender de hover ou foco.
 - [x] Manter números ocultos no estado bloqueado e orientar que a referência só surge após aprovação, vigência e ausência de exceção. **A252:** o cartão direciona à referência aprovada e não recebe valores enquanto a política atual permanece em Preparação.
-- [ ] Cobrir interface e responsividade, gerar ZIP/HTML saneados e salvar checkpoint sem alterar política, preço, venda, contrato ou financeiro real.
+- [x] Cobrir interface e responsividade, gerar ZIP/HTML saneados e salvar checkpoint sem alterar política, preço, venda, contrato ou financeiro real. **A252:** 219 arquivos/579 testes, tipagem, build Netlify, diff limpo e saneamento foram aprovados; checkpoint funcional `3162ad9c` preserva todos os dados materiais inalterados.
