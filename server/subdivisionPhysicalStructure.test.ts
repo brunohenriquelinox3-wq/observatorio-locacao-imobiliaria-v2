@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { applySubdivisionPhysicalStructure, listDraftSubdivisionPhysicalStructure, upsertDraftSubdivisionLotPhysicalReservation } from "./subdivisionPhysicalStructure";
+import { applySubdivisionPhysicalStructure, listDraftSubdivisionPhysicalStructure, upsertDraftSubdivisionLotOperationalProfile, upsertDraftSubdivisionLotPhysicalReservation } from "./subdivisionPhysicalStructure";
 
 const context = { organizationId: "00000000-0000-4000-8000-000000000001", module: "loteadora" as const, purposeCode: "CADASTRO_INICIAL" };
 const subject = "00000000-0000-4000-8000-000000000010";
@@ -23,5 +23,12 @@ describe("serviço de estrutura física", () => {
     await expect(upsertDraftSubdivisionLotPhysicalReservation(subject, { ...context, developmentId, blockId: "00000000-0000-4000-8000-000000000004", lotNumber: 8, reservationPurpose: "technical_artesian_well", correlationId: "00000000-0000-4000-8000-000000000003" }, { rpc })).resolves.toEqual({ reservationPurpose: "technical_artesian_well" });
     expect(rpc).toHaveBeenCalledWith("subdivision_upsert_draft_lot_physical_reservation_v1", expect.objectContaining({ p_block_id: "00000000-0000-4000-8000-000000000004", p_lot_number: 8, p_reservation_purpose: "technical_artesian_well" }));
     expect(rpc.mock.calls[0]?.[1]).not.toHaveProperty("p_lot_id");
+  });
+
+  it("atualiza ficha física com nota interna saneada sem enviar preço ou dados comerciais", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: null, error: null });
+    await expect(upsertDraftSubdivisionLotOperationalProfile(subject, { ...context, developmentId, blockId: "00000000-0000-4000-8000-000000000004", lotNumber: 8, areaSqm: 300, frontageM: 12, depthM: 25, lotTypology: "corner", positionCode: "corner", reservationPurpose: "technical_artesian_well", internalNote: "Área técnica com acesso de obra.", correlationId: "00000000-0000-4000-8000-000000000003" }, { rpc })).resolves.toBeUndefined();
+    expect(rpc).toHaveBeenCalledWith("subdivision_upsert_draft_lot_operational_profile_v1", expect.objectContaining({ p_lot_number: 8, p_internal_note: "Área técnica com acesso de obra." }));
+    expect(JSON.stringify(rpc.mock.calls[0]?.[1])).not.toMatch(/price|sale|customer|contract|payment/i);
   });
 });

@@ -174,6 +174,7 @@ import { applySubdivisionDraftStructureInputSchema, archiveSubdivisionDraftBlock
 import {
   applySubdivisionPhysicalStructureInputSchema,
   upsertSubdivisionLotPhysicalReservationInputSchema,
+  upsertSubdivisionLotOperationalProfileInputSchema,
   upsertSubdivisionDevelopmentRequirementInputSchema,
 } from "../shared/subdivisionPhysicalStructureContracts";
 import {
@@ -181,6 +182,7 @@ import {
   listDraftSubdivisionDevelopmentRequirements,
   listDraftSubdivisionPhysicalStructure,
   upsertDraftSubdivisionLotPhysicalReservation,
+  upsertDraftSubdivisionLotOperationalProfile,
   upsertDraftSubdivisionDevelopmentRequirement,
 } from "./subdivisionPhysicalStructure";
 import {
@@ -595,6 +597,13 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         await requireRecentTotpMfa(ctx);
         return upsertDraftSubdivisionLotPhysicalReservation(ctx.supabaseSubjectId ?? undefined, input);
+      }),
+    upsertDraftLotOperationalProfile: protectedProcedure
+      .input(upsertSubdivisionLotOperationalProfileInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        await requireRecentTotpMfa(ctx);
+        await upsertDraftSubdivisionLotOperationalProfile(ctx.supabaseSubjectId ?? undefined, input);
+        return { ok: true } as const;
       }),
     listDraftDevelopmentRequirements: protectedProcedure
       .input(subdivisionContextSchema.extend({ developmentId: z.string().uuid() }))

@@ -77,9 +77,17 @@ export const upsertSubdivisionLotPhysicalReservationInputSchema = subdivisionCon
   lotNumber: z.number().int().min(1).max(100),
   reservationPurpose: subdivisionLotPhysicalReservationPurposeSchema,
 });
+export const upsertSubdivisionLotOperationalProfileInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(), developmentId: z.string().uuid(), blockId: z.string().uuid(), lotNumber: z.number().int().min(1).max(100),
+  areaSqm: optionalDimension, frontageM: optionalDimension, depthM: optionalDimension,
+  lotTypology: subdivisionLotTypologySchema, positionCode: subdivisionLotPositionSchema,
+  reservationPurpose: subdivisionLotPhysicalReservationPurposeSchema.nullable(),
+  internalNote: z.string().trim().max(280).nullable().refine((value) => value === null || !/(\bcpf\b|\bcnpj\b|\br\$\b|@|\bcontrato\b|\bcobrança\b|\bpagamento\b)/i.test(value), "SUBDIVISION_INTERNAL_NOTE_CONTENT_DENIED"),
+});
 
 export type ApplySubdivisionPhysicalStructureInput = z.infer<typeof applySubdivisionPhysicalStructureInputSchema>;
 export type SubdivisionPhysicalBlock = z.infer<typeof subdivisionPhysicalBlockSchema>;
 export type SubdivisionPhysicalLot = z.infer<typeof subdivisionPhysicalLotSchema>;
 export type UpsertSubdivisionDevelopmentRequirementInput = z.infer<typeof upsertSubdivisionDevelopmentRequirementInputSchema>;
 export type UpsertSubdivisionLotPhysicalReservationInput = z.infer<typeof upsertSubdivisionLotPhysicalReservationInputSchema>;
+export type UpsertSubdivisionLotOperationalProfileInput = z.infer<typeof upsertSubdivisionLotOperationalProfileInputSchema>;

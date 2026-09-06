@@ -2322,3 +2322,9 @@
 - [x] Exibir no cartão o selo de reserva patrimonial ou de infraestrutura técnica quando a finalidade física estiver registrada. **A254:** o cartão passa a renderizar selo específico para reserva patrimonial, poço artesiano, caixa d’água ou infraestrutura técnica.
 - [x] Permitir filtro local por situação de reserva sem alterar disponibilidade, preço, venda, contrato ou financeiro. **A254:** a leitura pode ser limitada a reservas físicas ou Lotes sem reserva, sem comando material.
 - [x] Cobrir interface e responsividade, gerar ZIP/HTML saneados e salvar checkpoint sem classificar Lote real sem seleção autorizada. **A254:** 219 arquivos/582 testes, tipagem, build Netlify, diff limpo e saneamento foram aprovados; checkpoint funcional `347a0e44` não altera nenhum Lote real.
+
+## Ficha operacional editável por Lote — A255
+- [x] Criar ficha editável para atributos físicos permitidos, tipologia, posição e finalidade reservada, sempre resolvidos no servidor por empreendimento, Quadra e Lote. **A255:** a ficha carrega apenas o Lote escolhido e atualiza atributos físicos pelo comando protegido.
+- [x] Adicionar observação interna curta e saneada, bloqueando dados pessoais, documentos, preço, venda, contrato, cobrança, pagamento e financeiro. **A255:** cliente e banco aplicam limite, vocabulário proibido e auditoria sem conteúdo da nota.
+- [x] Exigir alçada, MFA, contexto, idempotência e auditoria redigida; não preencher ou alterar Lote real durante o desenvolvimento. **A255:** nenhum Lote foi selecionado, preenchido ou alterado na revisão.
+- [ ] Cobrir serviço, migração e interface; revisar desktop/móvel, gerar ZIP/HTML saneados e salvar checkpoint sem editar Lote real.

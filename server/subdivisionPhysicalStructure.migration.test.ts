@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 const source = readFileSync(new URL("../supabase/migrations/20260906193000_subdivision_physical_dossier_a202.sql", import.meta.url), "utf8");
 const reservationSource = readFileSync(new URL("../supabase/migrations/20260907119000_subdivision_lot_physical_reservation_a253.sql", import.meta.url), "utf8");
+const operationalProfileSource = readFileSync(new URL("../supabase/migrations/20260907120000_subdivision_lot_operational_profile_a255.sql", import.meta.url), "utf8");
 
 describe("migração A202 de estrutura física e dossiê", () => {
   it("mantém somente atributos físicos e estados de pendência no escopo", () => {
@@ -40,5 +41,14 @@ describe("migração A202 de estrutura física e dossiê", () => {
     expect(reservationSource).toContain("enable row level security");
     expect(reservationSource).toContain("security definer set search_path = ''");
     expect(reservationSource).toContain("grant execute on function public.subdivision_upsert_draft_lot_physical_reservation_v1");
+  });
+
+  it("mantém a ficha operacional em escopo físico e filtra observação interna sensível", () => {
+    expect(operationalProfileSource).toContain("subdivision_lot_internal_notes");
+    expect(operationalProfileSource).toContain("subdivision_upsert_draft_lot_operational_profile_v1");
+    expect(operationalProfileSource).toContain("internal_note !~*");
+    expect(operationalProfileSource).toContain("has_internal_note");
+    expect(operationalProfileSource).toContain("require_active_subdivision_draft_authority");
+    expect(operationalProfileSource).toContain("security definer set search_path=''");
   });
 });
