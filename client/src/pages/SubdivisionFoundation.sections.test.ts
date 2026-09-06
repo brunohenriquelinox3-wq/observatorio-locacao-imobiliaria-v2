@@ -6,11 +6,11 @@ const source = () => readFileSync(resolve(process.cwd(), "client/src/pages/Subdi
 const navigationSource = () => readFileSync(resolve(process.cwd(), "client/src/lib/crmNavigation.ts"), "utf8");
 
 describe("setores da coluna Loteadora", () => {
-  it("mantém setores independentes e ordenados na navegação contextual", () => {
+  it("mantém Loteamentos como única entrada lateral, preservando Estoque/Mapa como rota interna", () => {
     const navigation = navigationSource();
 
     expect(navigation).toContain('label: "Loteamentos", path: "/loteadora"');
-    expect(navigation).toContain('label: "Estoque/Mapa de Lotes", path: "/estoque-lotes"');
+    expect(navigation).not.toContain('path: "/estoque-lotes"');
     expect(navigation).toContain('label: "Clientes Loteadora", path: "/loteadora/clientes"');
     expect(navigation).toContain('label: "Sócios e Parceiros", path: "/loteadora/socios-parceiros"');
     expect(navigation).toContain('label: "Financeiro", path: "/loteadora/financeiro", disabled: true');
@@ -42,5 +42,15 @@ describe("setores da coluna Loteadora", () => {
     expect(page).toContain('href="#subdivision-studio"');
     expect(page).toContain('href="/estoque-lotes"');
     expect(page).toContain('<SubdivisionDevelopmentStudio context={context}');
+  });
+
+  it("deriva o seletor local apenas das rotas da coluna Loteamentos, sem depender de posições globais", () => {
+    const page = source();
+
+    expect(page).toContain('aria-label="Setores da coluna Loteamentos"');
+    expect(page).toContain('item.path === "/loteadora" || item.path.startsWith("/loteadora/")');
+    expect(page).not.toContain('crmNavigationItems.slice(2, 8)');
+    expect(page).toContain('clients: { index: "Setor 02"');
+    expect(page).toContain('finance: { index: "Setor 05"');
   });
 });

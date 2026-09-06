@@ -49,4 +49,12 @@ describe("rotas da aplicação", () => {
       expect(appSource).toContain(`path={"${path}"}`);
     });
   });
+
+  it("mantém Estoque/Mapa como rota compatível interna sem expô-lo como setor irmão de Loteamentos", () => {
+    const appSource = readFileSync(resolve(process.cwd(), "client/src/App.tsx"), "utf8");
+
+    expect(appSource).toContain('path={"/estoque-lotes"}');
+    expect(crmNavigationItems.some((item) => item.path === "/estoque-lotes")).toBe(false);
+    expect(crmNavigationItems.find((item) => item.path === "/loteadora")?.label).toBe("Loteamentos");
+  });
 });

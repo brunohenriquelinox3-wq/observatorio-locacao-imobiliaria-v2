@@ -39,7 +39,7 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Q1 com 15 Lotes e Q2 com 25 Lotes");
     expect(studio).toContain("applyDraftStructure");
     expect(studio).toContain("archiveDraftBlock");
-    expect(studio).toContain("Abrir Estoque/Mapa de Lotes");
+    expect(studio).toContain("Abrir mapa interno de Loteamentos");
   });
 
   it("exige confirmação antes de arquivar parte da estrutura já salva", () => {

@@ -5,9 +5,10 @@ import { describe, expect, it } from "vitest";
 const source = readFileSync(path.resolve(process.cwd(), "client/src/pages/LotInventory.tsx"), "utf8");
 
 describe("LotInventory", () => {
-  it("se apresenta como área complementar de Loteamentos com linguagem profissional", () => {
-    expect(source).toContain("LOTEAMENTOS · ESTOQUE INTERNO");
-    expect(source).toContain("Área complementar de Loteamentos");
+  it("se apresenta como área interna compatível de Loteamentos com linguagem profissional", () => {
+    expect(source).toContain("LOTEAMENTOS · ÁREA INTERNA");
+    expect(source).toContain("Mapa interno de Loteamentos");
+    expect(source).toContain("Voltar a Loteamentos");
     expect(source).toContain("Registros internos em preparação");
     expect(source).toContain("PREPARAÇÃO AVANÇADA");
     expect(source).not.toContain('"Rascunhos internos"');

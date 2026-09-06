@@ -35,10 +35,10 @@ const sectorByPath: Record<string, LoteadoraSector> = {
 
 const sectorPresentation: Record<LoteadoraSector, { index: string; title: string; description: string }> = {
   developments: { index: "Setor 01", title: "Loteamentos", description: "Organize cadastro, matriz física e a leitura interna de estoque do mesmo empreendimento." },
-  clients: { index: "Setor 03", title: "Clientes Loteadora", description: "Organize o cadastro-base do comprador e as intenções privadas de anexo sem duplicar dados." },
-  partners: { index: "Setor 04", title: "Sócios e Parceiros", description: "Vincule papéis internos temporais por loteamento, sem participação econômica ou repasse." },
-  sales: { index: "Setor 05", title: "Vendas de Lotes", description: "Prepare os vínculos internos entre lote e comprador sem reserva, contrato ou financeiro." },
-  finance: { index: "Setor 06", title: "Financeiro", description: "Este setor permanece bloqueado até autorização explícita e revisão jurídica-contábil." },
+  clients: { index: "Setor 02", title: "Clientes Loteadora", description: "Organize o cadastro-base do comprador e as intenções privadas de anexo sem duplicar dados." },
+  partners: { index: "Setor 03", title: "Sócios e Parceiros", description: "Vincule papéis internos temporais por loteamento, sem participação econômica ou repasse." },
+  sales: { index: "Setor 04", title: "Vendas de Lotes", description: "Prepare os vínculos internos entre lote e comprador sem reserva, contrato ou financeiro." },
+  finance: { index: "Setor 05", title: "Financeiro", description: "Este setor permanece bloqueado até autorização explícita e revisão jurídica-contábil." },
 };
 
 const workingPhases = {
@@ -263,8 +263,8 @@ export default function SubdivisionFoundation() {
           <div className={`subdivision-foundation-context__status ${isContextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} /><span>{isContextReady ? "Contexto autorizado selecionado. O servidor ainda verificará identidade, membership, grant, vigência, módulo e finalidade antes de qualquer leitura ou alteração." : authorizedContextsQuery.isError ? "O contexto não foi liberado. O sistema não revela organizações ou escopos externos." : "Selecione um contexto Loteadora devolvido pela política para liberar ações do cadastro em estruturação."}</span></div>
         </section>
 
-        <nav className="subdivision-sector-switcher" aria-label="Setores da coluna Loteadora">
-          {crmNavigationItems.slice(2, 8).map((item, index) => item.disabled ? <span key={item.path} aria-disabled="true"><item.icon size={16} aria-hidden="true" /><b>{String(index + 1).padStart(2, "0")}</b>{item.label}<small>Bloqueado</small></span> : <a key={item.path} href={item.path} aria-current={item.path === location ? "page" : undefined}><item.icon size={16} aria-hidden="true" /><b>{String(index + 1).padStart(2, "0")}</b>{item.label}</a>)}
+        <nav className="subdivision-sector-switcher" aria-label="Setores da coluna Loteamentos">
+          {crmNavigationItems.filter((item) => item.path === "/loteadora" || item.path.startsWith("/loteadora/")).map((item, index) => item.disabled ? <span key={item.path} aria-disabled="true"><item.icon size={16} aria-hidden="true" /><b>{String(index + 1).padStart(2, "0")}</b>{item.label}<small>Bloqueado</small></span> : <a key={item.path} href={item.path} aria-current={item.path === location ? "page" : undefined}><item.icon size={16} aria-hidden="true" /><b>{String(index + 1).padStart(2, "0")}</b>{item.label}</a>)}
         </nav>
 
         {activeSector === "developments" && <>

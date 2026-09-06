@@ -14,5 +14,6 @@ Este índice concentra decisões reutilizáveis do CRM para que atualizações f
 | Unificação preservativa de Loteamentos e Estoque | `estrategia-unificacao-loteamentos-a266.md` | Antes de renomear, integrar ou evoluir Cadastro de Loteamentos, Estoque/Mapa de Lotes, estado de estoque ou projeção externa. |
 | Autonomia de testes seguros e gráfico operacional | `autonomia-testes-grafico-operacional-a267.md` | Antes de validar jornadas de interface ou alterar a apresentação física agregada por Quadra. |
 | Perfil interno de estoque por Lote | `estoque-interno-moderno-a269.md` | Antes de alterar classificação interna, revisão operacional, legenda de mapa, nota interna, MFA ou futura projeção externa. |
+| Hierarquia interna de Estoque/Mapa | `correcao-hierarquia-estoque-loteamentos-a270.md` | Antes de modificar a navegação, os atalhos ou a rota compatível de Estoque/Mapa dentro de Loteamentos. |
 
 > Não substituir este índice por resumos efêmeros. Atualize-o somente ao adicionar uma referência versionada que descreva uma decisão validada, sem incluir PII, preços individuais, conteúdo de fonte, segredos ou URLs de infraestrutura.

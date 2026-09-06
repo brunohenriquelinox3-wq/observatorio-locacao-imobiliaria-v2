@@ -7,20 +7,20 @@ import { validateLotNumber } from "@/lib/lotNumberValidation";
 import { initialAuthorizedSubdivisionContextId, resolveAuthorizedSubdivisionContext } from "@/lib/subdivisionContextSelection";
 import { trpc } from "@/lib/trpc";
 import { crmNavigationItems } from "@/lib/crmNavigation";
-import { ArrowUpRight, Boxes, CircleAlert, Compass, House, LandPlot, LockKeyhole, ShieldCheck, UsersRound, Workflow } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Boxes, CircleAlert, Compass, House, LandPlot, LockKeyhole, ShieldCheck, UsersRound, Workflow } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import "../lot-inventory.css";
 
 
 const accessGate: DashboardAccessGate = {
-  eyebrow: "ESTOQUE E MAPA · CONTEXTO ANTES DE LEITURA",
-  title: "Construa o inventário de lotes somente no contexto autorizado.",
-  description: "Esta área separa a matriz de Quadras do inventário de Lotes. O servidor confirma identidade, membership, grant, vigência, finalidade e policy antes de qualquer leitura ou preparação.",
+  eyebrow: "LOTEAMENTOS · ÁREA INTERNA",
+  title: "Acesse a leitura interna de Estoque/Mapa no contexto autorizado.",
+  description: "Esta rota compatível integra a jornada de Loteamentos sem duplicar a matriz física. O servidor confirma identidade, membership, grant, vigência, finalidade e policy antes de qualquer leitura ou preparação.",
   routeTitle: "Rota de acesso",
-  routeDetail: "Autenticação → organização → Loteadora → policy",
-  actionLabel: "Acessar Estoque e Mapa",
-  footerLabel: "INVENTÁRIO",
+  routeDetail: "Autenticação → organização → Loteamentos → área interna",
+  actionLabel: "Acessar área interna de Loteamentos",
+  footerLabel: "ESTOQUE INTERNO",
   footerValue: "CONTEXTO · PREPARAÇÃO",
   footerNote: "Nenhum lote, reserva, venda ou registro de outro contexto é exposto antes da autorização.",
   railTop: "LOTEADORA",
@@ -83,7 +83,7 @@ export default function LotInventory() {
     setLotNumberError(validation.message);
   }
   return <DashboardLayout navigationItems={crmNavigationItems} navigationTitle="Núcleo CRM" accessGate={accessGate}><main className="lot-inventory-page" onSubmitCapture={handleLotSubmitCapture}>
-    <header className="lot-inventory-hero"><div><p className="lot-inventory-eyebrow">LOTEAMENTOS · ESTOQUE INTERNO</p><h1>Estoque e Mapa de Lotes</h1><p>Área complementar de Loteamentos para estruturar Lotes, revisar referências e preparar o mapa de trabalho com controle.</p></div><aside><ShieldCheck size={20} /><span>Escopo atual</span><b>Registros internos em preparação</b><small>Sem preço, reserva, cliente, contrato ou financeiro</small></aside></header>
+    <header className="lot-inventory-hero"><div><p className="lot-inventory-eyebrow">LOTEAMENTOS · ÁREA INTERNA</p><a className="lot-inventory-back-link" href="/loteadora"><ArrowLeft size={16} />Voltar a Loteamentos</a><h1>Mapa interno de Loteamentos</h1><p>Rota compatível para consultar a matriz e os estados internos do mesmo setor, sem criar uma área paralela ou uma segunda fonte de Lotes.</p></div><aside><ShieldCheck size={20} /><span>Escopo atual</span><b>Registros internos em preparação</b><small>Sem preço, reserva, cliente, contrato ou financeiro</small></aside></header>
 
     <section className="lot-inventory-context" aria-labelledby="lot-context-title"><div><p className="lot-inventory-eyebrow">CONTEXTO AUTORIZADO</p><h2 id="lot-context-title">Escolha a organização, não um identificador técnico.</h2></div><div className="lot-inventory-context__fields"><label htmlFor="lot-organization">Organização autorizada<select id="lot-organization" value={selectedOrganizationId} onChange={(event) => setSelectedOrganizationId(event.target.value)} disabled={!isAuthenticated || authorizedContextsQuery.isLoading}><option value="">{authorizedContextsQuery.isLoading ? "Carregando contextos autorizados" : "Selecione uma organização autorizada"}</option>{authorizedContextsQuery.data?.map((organization) => <option key={organization.organizationId} value={organization.organizationId}>{organization.organizationLabel}</option>)}</select></label><label htmlFor="lot-module">Módulo<input id="lot-module" value="Loteadora" readOnly aria-readonly="true" /></label><label htmlFor="lot-purpose">Finalidade<input id="lot-purpose" value={context.purposeCode || "—"} readOnly aria-readonly="true" /></label></div><p className={`lot-inventory-context__status ${contextReady ? "is-ready" : "is-blocked"}`}><CircleAlert size={16} />{contextReady ? "Contexto autorizado selecionado. O servidor ainda valida identidade, membership, grant, vigência, módulo e finalidade." : authorizedContextsQuery.isError ? "O contexto não foi liberado. A interface não revela organizações ou escopos externos." : "Selecione um contexto autorizado antes de abrir a preparação de inventário."}</p></section>
 

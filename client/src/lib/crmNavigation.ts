@@ -1,12 +1,11 @@
 import type { DashboardNavigationItem } from "@/components/DashboardLayout";
-import { Building2, CalendarClock, ClipboardCheck, Compass, FileText, House, LandPlot, Layers3, LockKeyhole, Map, Search, ShieldCheck, UsersRound, Workflow } from "lucide-react";
+import { Building2, CalendarClock, ClipboardCheck, Compass, FileText, House, LandPlot, Layers3, LockKeyhole, Search, ShieldCheck, UsersRound, Workflow } from "lucide-react";
 
 export const crmNavigationItems: DashboardNavigationItem[] = [
   { icon: Compass, label: "Central de plataforma", path: "/administracao" },
   { icon: ShieldCheck, label: "Painel ADM", path: "/adm" },
   { icon: LockKeyhole, label: "Segurança e MFA", path: "/seguranca-mfa", description: "Inscrição e revalidação TOTP" },
   { icon: LandPlot, label: "Loteamentos", path: "/loteadora", description: "Loteamentos · cadastro, matriz e estoque" },
-  { icon: Map, label: "Estoque/Mapa de Lotes", path: "/estoque-lotes", description: "Loteamentos · área complementar" },
   { icon: UsersRound, label: "Clientes Loteadora", path: "/loteadora/clientes", description: "Loteadora · setor 03" },
   { icon: Building2, label: "Sócios e Parceiros", path: "/loteadora/socios-parceiros", description: "Loteadora · setor 04" },
   { icon: Workflow, label: "Vendas de Lotes", path: "/loteadora/vendas", description: "Loteadora · setor 05" },
