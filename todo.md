@@ -1904,11 +1904,11 @@
 - [x] Validar o reforço com testes, catálogo, build e novo checkpoint, sem importar dados reais. **A193:** testes dirigidos, suíte integral, tipagem, build e catálogo aprovados; não foram criados registros de clientes.
 
 ## Governança ampliada para importação de clientes
-- [ ] Definir uma matriz de campos pessoais mínimos, finalidades, classes de retenção e proibições para importação de clientes, sem processar dados reais.
-- [ ] Modelar uma prévia local que classifique colunas pessoais permitidas, exija aviso de privacidade e rejeite documentos, anexos, contratos, valores e campos fora da matriz.
-- [ ] Aplicar persistência minimizada, criptografia em trânsito, RLS, MFA, autorização por contexto e auditoria redigida para os campos liberados.
-- [ ] Criar controles de retenção, expurgo e revisão humana que não eliminem dados por automação nem alterem registros reais durante o desenvolvimento.
-- [ ] Cobrir permissões, minimização, deduplicação, prévia, retenção, build e responsividade com testes e revisão técnica sem importar dados reais.
+- [x] Definir uma matriz de campos pessoais mínimos, finalidades, classes de retenção e proibições para importação de clientes, sem processar dados reais. **A194:** Nome, Tipo e Perfil são os únicos campos permitidos; identificação fiscal, contato, endereço, documentos, contratos, valores e financeiro seguem proibidos.
+- [x] Modelar uma prévia local que classifique colunas pessoais permitidas, exija aviso de privacidade e rejeite documentos, anexos, contratos, valores e campos fora da matriz. **A194:** a prévia mantém a classificação local e exige reconhecimento explícito da matriz antes do comando.
+- [x] Aplicar persistência minimizada, criptografia em trânsito, RLS, MFA, autorização por contexto e auditoria redigida para os campos liberados. **A194:** a função v2 exige versão de privacidade e finalidade controladas antes de delegar a RPC já protegida; a auditoria segue redigida.
+- [x] Criar controles de retenção, expurgo e revisão humana que não eliminem dados por automação nem alterem registros reais durante o desenvolvimento. **A194:** a finalidade é cadastro em rascunho com revisão humana e não existe expurgo automático.
+- [x] Cobrir permissões, minimização, deduplicação, prévia, retenção, build e responsividade com testes e revisão técnica sem importar dados reais. **A194:** 219 arquivos/577 testes, tipagem, build, diff limpo e revisão autenticada sem arquivo ou gravação real.
 - [ ] Gerar documentação, ZIP e HTML saneados e salvar checkpoint sem publicar ou realizar importação real.
 
 ## Reconstrução do Cadastro de Loteamentos

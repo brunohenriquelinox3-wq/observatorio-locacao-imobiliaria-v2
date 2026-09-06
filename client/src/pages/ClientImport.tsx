@@ -3,6 +3,8 @@ import { ReportExportActions } from "@/components/ReportExportActions";
 import { useAuth } from "@/_core/hooks/useAuth";
 import {
   buildClientImportPreview,
+  clientImportFieldPolicy,
+  clientImportProhibitedData,
   clientImportTemplateRows,
   MAX_CLIENT_IMPORT_FILE_BYTES,
   MAX_CLIENT_IMPORT_ROWS,
@@ -71,6 +73,7 @@ export default function ClientImport() {
   const [fileLabel, setFileLabel] = useState("");
   const [isParsing, setIsParsing] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [privacyAcknowledged, setPrivacyAcknowledged] = useState(false);
   const identityQuery = trpc.foundation.identity.useQuery(undefined, { enabled: isAuthenticated, retry: false });
   const loteadoraContexts = trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "loteadora" }, { enabled: isAuthenticated, retry: false });
   const urbanContexts = trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "vendas_urbanas" }, { enabled: isAuthenticated, retry: false });
@@ -90,6 +93,7 @@ export default function ClientImport() {
       setFileFingerprint("");
       setFileLabel("");
       setConfirmed(false);
+      setPrivacyAcknowledged(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
       if (selectedContext) {
         void utils.domainFoundation.listDraftParties.invalidate(selectedContext);
@@ -151,13 +155,14 @@ export default function ClientImport() {
     setFileFingerprint("");
     setFileLabel("");
     setConfirmed(false);
+    setPrivacyAcknowledged(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   function commitImport() {
-    if (!selectedContext || !preview?.isReady || !confirmed || !fileFingerprint) return;
+    if (!selectedContext || !preview?.isReady || !confirmed || !privacyAcknowledged || !fileFingerprint) return;
     const rows: ClientImportRow[] = preview.rows.map(({ displayName, kind, role }) => ({ displayName, kind, role }));
-    importMutation.mutate({ ...selectedContext, rows, fileFingerprint, confirmation: "CONFIRMO_IMPORTACAO", correlationId: crypto.randomUUID() });
+    importMutation.mutate({ ...selectedContext, rows, fileFingerprint, confirmation: "CONFIRMO_IMPORTACAO", privacyNoticeVersion: "IMPORTACAO_MINIMA_V1", retentionPurpose: "CADASTRO_RASCUNHO_COM_REVISAO_HUMANA", correlationId: crypto.randomUUID() });
   }
 
   const reportRows = [
@@ -187,6 +192,12 @@ export default function ClientImport() {
         </div>
       </section>
 
+      <section className="client-import-page__context client-import-page__field-policy" aria-labelledby="client-import-policy-title">
+        <div><p>02A · MATRIZ MÍNIMA E RETENÇÃO</p><h2 id="client-import-policy-title">Somente três campos sustentam esta etapa.</h2><span>A prévia classifica os cabeçalhos localmente, rejeita qualquer coluna fora da matriz e não envia o arquivo ao servidor.</span></div>
+        <div className="client-import-page__table-wrap"><table><thead><tr><th>Campo</th><th>Classe</th><th>Finalidade</th><th>Retenção</th></tr></thead><tbody>{clientImportFieldPolicy.map((field) => <tr key={field.field}><td>{field.field}</td><td>{field.classification}</td><td>{field.purpose}</td><td>{field.retention}</td></tr>)}</tbody></table></div>
+        <div className="client-import-page__context-state"><Info size={18} /><span><b>Proibidos nesta etapa:</b> {clientImportProhibitedData}. Não há expurgo automático; qualquer retenção ou descarte exige revisão humana e não ocorre durante a prévia.</span></div>
+      </section>
+
       {preview && <section className={`client-import-page__preview ${preview.isReady ? "is-ready" : "is-blocked"}`} aria-labelledby="client-import-preview-title">
         <div className="client-import-page__preview-heading"><div><p>03 · PRÉVIA EM MEMÓRIA</p><h2 id="client-import-preview-title">{preview.isReady ? "A planilha passou pela validação estrutural." : "A planilha precisa de correção antes da importação."}</h2></div><button type="button" className="client-import-page__clear" onClick={clearPreview}><X size={15} />Limpar prévia</button></div>
         {preview.fileIssues.length > 0 && <div className="client-import-page__issues" role="alert"><Info size={18} /><ul>{preview.fileIssues.map((issue) => <li key={issue}>{issue}</li>)}</ul></div>}
@@ -197,8 +208,9 @@ export default function ClientImport() {
 
       <section className="client-import-page__confirmation" aria-labelledby="client-import-confirmation-title">
         <div className="client-import-page__step"><span>04</span><div><p>CONFIRMAÇÃO HUMANA · MFA NO SERVIDOR</p><h2 id="client-import-confirmation-title">A prévia só vira rascunho depois da sua decisão explícita.</h2></div></div>
+        <label className="client-import-page__confirm"><input type="checkbox" checked={privacyAcknowledged} onChange={(event) => setPrivacyAcknowledged(event.target.checked)} disabled={!preview?.isReady || !canImport || importMutation.isPending} />Reconheço a matriz mínima IMPORTACAO_MINIMA_V1, a finalidade de cadastro em rascunho com revisão humana e a proibição de campos fora da lista.</label>
         <label className="client-import-page__confirm"><input type="checkbox" checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} disabled={!preview?.isReady || !canImport || importMutation.isPending} />Confirmo que possuo autorização para cadastrar estes clientes no contexto selecionado e que revisei a prévia.</label>
-        <div className="client-import-page__confirmation-actions"><button type="button" onClick={commitImport} disabled={!preview?.isReady || !confirmed || !canImport || !fileFingerprint || importMutation.isPending}>{importMutation.isPending ? "Confirmando requisitos" : "Confirmar importação em rascunho"}</button><span><LockKeyhole size={15} />O servidor verifica MFA TOTP recente, identidade, organização ativa, papel administrativo, escopo, deduplicação e correlação.</span></div>
+        <div className="client-import-page__confirmation-actions"><button type="button" onClick={commitImport} disabled={!preview?.isReady || !confirmed || !privacyAcknowledged || !canImport || !fileFingerprint || importMutation.isPending}>{importMutation.isPending ? "Confirmando requisitos" : "Confirmar importação em rascunho"}</button><span><LockKeyhole size={15} />O servidor verifica MFA TOTP recente, identidade, organização ativa, papel administrativo, escopo, confirmação de privacidade, deduplicação e correlação.</span></div>
       </section>
 
       <ReportExportActions report={{ title: "Resumo da importação de clientes", scopeLabel: selectedContext ? `${moduleLabels[selectedContext.module]} · contexto autorizado` : "Sem contexto selecionado", rows: reportRows }} isAuthorized={canImport} description="Exporte somente a situação redigida da prévia; o relatório não inclui nomes nem conteúdo do arquivo." />

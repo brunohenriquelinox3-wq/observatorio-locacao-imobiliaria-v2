@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const source = readFileSync(resolve(process.cwd(), "supabase/migrations/20260906120000_client_import_a192.sql"), "utf8");
+const privacySource = readFileSync(resolve(process.cwd(), "supabase/migrations/20260907117000_client_import_minimization_a194.sql"), "utf8");
 
 describe("migração A192 de importação de clientes", () => {
   it("mantém o lote de importação sob RLS e sem privilégios diretos", () => {
@@ -27,5 +28,16 @@ describe("migração A192 de importação de clientes", () => {
     expect(source).toContain("grant execute on function public.client_import_draft_parties");
     expect(source).toContain("sem conteúdo, documento, identificador fiscal, contato, contrato ou financeiro");
     expect(source).toContain("p_rows jsonb");
+  });
+
+  it("exige confirmação de privacidade e retenção minimizada antes de delegar a gravação", () => {
+    expect(privacySource).toContain("client_import_draft_parties_v2");
+    expect(privacySource).toContain("IMPORTACAO_MINIMA_V1");
+    expect(privacySource).toContain("CADASTRO_RASCUNHO_COM_REVISAO_HUMANA");
+    expect(privacySource).toContain("CLIENT_IMPORT_PRIVACY_ACK_REQUIRED");
+    expect(privacySource).toContain("security definer set search_path = ''");
+    expect(privacySource).toContain("revoke all on function public.client_import_draft_parties_v2");
+    expect(privacySource).toContain("grant execute on function public.client_import_draft_parties_v2");
+    expect(privacySource).toContain("não processa documentos, contatos, contratos, valores ou financeiro");
   });
 });

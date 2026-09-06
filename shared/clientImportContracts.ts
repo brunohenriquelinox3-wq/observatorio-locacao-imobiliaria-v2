@@ -28,6 +28,8 @@ export const clientImportCommitInputSchema = domainContextSchema.extend({
   correlationId: z.string().uuid(),
   fileFingerprint: z.string().regex(/^[a-f0-9]{64}$/),
   confirmation: z.literal("CONFIRMO_IMPORTACAO"),
+  privacyNoticeVersion: z.literal("IMPORTACAO_MINIMA_V1"),
+  retentionPurpose: z.literal("CADASTRO_RASCUNHO_COM_REVISAO_HUMANA"),
   rows: clientImportRowsSchema,
 });
 

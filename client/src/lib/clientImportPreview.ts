@@ -3,6 +3,14 @@ import type { ClientImportRow } from "@shared/clientImportContracts";
 export const MAX_CLIENT_IMPORT_FILE_BYTES = 512 * 1024;
 export const MAX_CLIENT_IMPORT_ROWS = 200;
 
+export const clientImportFieldPolicy = [
+  { field: "Nome", classification: "Identificação mínima", purpose: "Criar rascunho de parte", retention: "Até revisão humana do rascunho" },
+  { field: "Tipo", classification: "Classificação cadastral", purpose: "Diferenciar pessoa física ou jurídica", retention: "Até revisão humana do rascunho" },
+  { field: "Perfil", classification: "Classificação operacional", purpose: "Definir Cliente ou Comprador", retention: "Até revisão humana do rascunho" },
+] as const;
+
+export const clientImportProhibitedData = "CPF/CNPJ, contatos, endereço, documentos, anexos, contratos, valores, cobranças, pagamentos e campos não listados";
+
 type ImportedKind = ClientImportRow["kind"];
 type ImportedRole = ClientImportRow["role"];
 
@@ -75,7 +83,7 @@ export function buildClientImportPreview(rawRows: Array<Record<string, unknown>>
     }
   }
   if (unexpectedHeaders.length > 0) {
-    fileIssues.push("A planilha contém coluna não permitida. Use apenas Nome, Tipo e Perfil; identificadores, contatos e documentos não são aceitos nesta etapa.");
+    fileIssues.push("A planilha contém coluna não permitida. Use apenas Nome, Tipo e Perfil; identificadores, contatos, documentos, contratos, valores e campos fora da matriz mínima não são aceitos nesta etapa.");
   }
   if (rawRows.length > MAX_CLIENT_IMPORT_ROWS) {
     fileIssues.push(`O limite é de ${MAX_CLIENT_IMPORT_ROWS} linhas por importação.`);

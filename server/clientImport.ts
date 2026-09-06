@@ -22,13 +22,15 @@ export async function commitClientImport(
 ): Promise<ClientImportCommitResult> {
   const actorUserId = requireSubject(subjectId);
   const input = clientImportCommitInputSchema.parse(rawInput);
-  const { data, error } = await client.rpc("client_import_draft_parties", {
+  const { data, error } = await client.rpc("client_import_draft_parties_v2", {
     p_actor_user_id: actorUserId,
     p_organization_id: input.organizationId,
     p_module: input.module,
     p_purpose_code: input.purposeCode,
     p_rows: input.rows,
     p_file_fingerprint: input.fileFingerprint,
+    p_privacy_notice_version: input.privacyNoticeVersion,
+    p_retention_purpose: input.retentionPurpose,
     p_correlation_id: input.correlationId,
   });
 

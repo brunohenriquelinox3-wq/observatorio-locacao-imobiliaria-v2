@@ -8,6 +8,8 @@ const base = {
   correlationId: "7ba7b810-9dad-11d1-80b4-00c04fd430c8",
   fileFingerprint: "a".repeat(64),
   confirmation: "CONFIRMO_IMPORTACAO" as const,
+  privacyNoticeVersion: "IMPORTACAO_MINIMA_V1" as const,
+  retentionPurpose: "CADASTRO_RASCUNHO_COM_REVISAO_HUMANA" as const,
 };
 
 describe("contrato de importação de clientes", () => {
@@ -19,5 +21,10 @@ describe("contrato de importação de clientes", () => {
     expect(() => clientImportCommitInputSchema.parse({ ...base, confirmation: "confirmar", rows: [{ displayName: "Cliente de teste", kind: "individual", role: "client" }] })).toThrow();
     expect(() => clientImportCommitInputSchema.parse({ ...base, fileFingerprint: "invalido", rows: [{ displayName: "Cliente de teste", kind: "individual", role: "client" }] })).toThrow();
     expect(() => clientImportCommitInputSchema.parse({ ...base, rows: [{ displayName: "Cliente de teste", kind: "individual", role: "client" }, { displayName: "cliente de teste", kind: "individual", role: "client" }] })).toThrow("repetido");
+  });
+
+  it("exige a versão de privacidade e a finalidade de retenção controlada", () => {
+    expect(() => clientImportCommitInputSchema.parse({ ...base, privacyNoticeVersion: "OUTRA_VERSAO", rows: [{ displayName: "Cliente de teste", kind: "individual", role: "client" }] })).toThrow();
+    expect(() => clientImportCommitInputSchema.parse({ ...base, retentionPurpose: "RETENCAO_INDEFINIDA", rows: [{ displayName: "Cliente de teste", kind: "individual", role: "client" }] })).toThrow();
   });
 });
