@@ -8,6 +8,7 @@ const scopeMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/
 const correctedScopeMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907103000_subdivision_price_base_list_draft_scope_a234.sql"), "utf8");
 const matrixAreaMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907104000_subdivision_price_base_matrix_area_a237.sql"), "utf8");
 const manualCorrectionMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907105000_subdivision_manual_price_base_correction_a238.sql"), "utf8");
+const policyEvidenceMigration = () => readFileSync(path.resolve(process.cwd(), "supabase/migrations/20260907110000_subdivision_policy_submit_evidence_a244.sql"), "utf8");
 
 describe("subdivision price-base policy migrations", () => {
   it("keeps price-base separate from contracts and commercial effects", () => {
@@ -80,5 +81,16 @@ describe("subdivision price-base policy migrations", () => {
     expect(sql).toContain("payload_redacted");
     expect(sql).toContain("revoke all on function public.subdivision_prepare_manual_price_base_correction_v1");
     expect(sql).toContain("grant execute on function public.subdivision_prepare_manual_price_base_correction_v1");
+  });
+
+  it("requires an active private evidence link before policy submission and keeps the function service-only", () => {
+    const sql = policyEvidenceMigration();
+    expect(sql).toContain("subdivision_submit_price_base_policy_v2");
+    expect(sql).toContain("subdivision_price_evidence_links");
+    expect(sql).toContain("PRICE_BASE_POLICY_EVIDENCE_REQUIRED");
+    expect(sql).toContain("security definer set search_path = ''");
+    expect(sql).toContain("payload_redacted");
+    expect(sql).toContain("revoke all on function public.subdivision_submit_price_base_policy_v2");
+    expect(sql).toContain("grant execute on function public.subdivision_submit_price_base_policy_v2");
   });
 });

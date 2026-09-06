@@ -2259,3 +2259,8 @@
 - [x] Cobrir serviço, migração e interface e revisar sem criar condição ou anexo real. **A243:** testes dirigidos, suíte integral com 219 arquivos/560 testes, tipagem, build Netlify, integridade de diff e revisão autenticada foram aprovados; o build preservou somente o aviso não bloqueante de chunks grandes.
 - [x] Gerar ZIP/HTML saneados. **A243:** os artefatos foram verificados sem ambiente, logs, documentação, checklist, dados de origem, credenciais ou infraestrutura.
 - [x] Salvar checkpoint A243 após documentação, validação integral e saneamento dos artefatos. **A243:** checkpoint `d3171192` preserva a exigência server-side de evidência privada antes do encaminhamento e a ausência de condição ou anexo real criado.
+
+## Evidência vinculada para encaminhar política de preço-base — A244
+- [x] Exigir ao menos um vínculo ativo de respaldo privado antes de encaminhar política de preço-base preparada e sem exceções. **A244:** a função v2 mantém todos os guardas da submissão e bloqueia a política sem vínculo ativo a anexo privado registrado.
+- [x] Mostrar contagem e orientação de evidência pendente na política, sem expor conteúdo de anexo ou preço não aprovado. **A244:** o histórico mostra a contagem, mantém o encaminhamento indisponível e explica se faltam exceções resolvidas ou respaldo privado.
+- [x] Cobrir serviço, migração e interface, revisar, gerar ZIP/HTML saneados e salvar checkpoint sem criar anexo ou política real. **A244:** 219 arquivos/563 testes, tipagem, build Netlify e integridade de diff aprovados; revisão autenticada pós-reinício e saneamento confirmados. O checkpoint é registrado nesta consolidação sem criar anexo, vínculo, política, condição, venda, contrato ou financeiro.

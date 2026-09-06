@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
 import { describe, expect, it, vi } from "vitest";
-import { listSubdivisionPriceBasePolicies, prepareManualSubdivisionPriceBaseCorrection, prepareSubdivisionPriceBasePolicy, previewSubdivisionPriceBaseSource } from "./subdivisionPriceBasePolicy";
+import { listSubdivisionPriceBasePolicies, prepareManualSubdivisionPriceBaseCorrection, prepareSubdivisionPriceBasePolicy, previewSubdivisionPriceBaseSource, submitSubdivisionPriceBasePolicy } from "./subdivisionPriceBasePolicy";
 
 const actor = "00000000-0000-4000-8000-000000000001";
 const developmentId = "00000000-0000-4000-8000-000000000002";
@@ -127,5 +127,16 @@ describe("subdivision price-base policy boundary", () => {
     const rpc = vi.fn().mockResolvedValue({ data: [], error: null });
     await expect(listSubdivisionPriceBasePolicies(actor, { ...context, developmentId }, { rpc })).resolves.toEqual([]);
     expect(rpc).toHaveBeenCalledWith("subdivision_list_price_base_policies_v1", expect.objectContaining({ p_development_id: developmentId, p_organization_id: organizationId }));
+  });
+
+  it("submits a prepared policy only through the evidence-gated function", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "00000000-0000-4000-8000-000000000005", error: null });
+    await expect(submitSubdivisionPriceBasePolicy(actor, { ...context, policyId: "00000000-0000-4000-8000-000000000005", correlationId }, { rpc })).resolves.toEqual({ policyId: "00000000-0000-4000-8000-000000000005", state: "submitted" });
+    expect(rpc).toHaveBeenCalledWith("subdivision_submit_price_base_policy_v2", expect.objectContaining({ p_policy_id: "00000000-0000-4000-8000-000000000005" }));
+  });
+
+  it("preserves the redacted evidence-required error when the protected function denies submission", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: null, error: { message: "PRICE_BASE_POLICY_EVIDENCE_REQUIRED" } });
+    await expect(submitSubdivisionPriceBasePolicy(actor, { ...context, policyId: "00000000-0000-4000-8000-000000000005", correlationId }, { rpc })).rejects.toThrow("PRICE_BASE_POLICY_EVIDENCE_REQUIRED");
   });
 });

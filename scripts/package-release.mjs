@@ -66,6 +66,7 @@ function redactRuntimeValues(html) {
     .replace(/\bsb_(?:secret|publishable)_[A-Za-z0-9_-]*/g, "REDACTED_SUPABASE_CREDENTIAL")
     .replace(/postgresql:\/\/[^\s"'<>]+/g, "REDACTED_DATABASE_URL")
     .replace(/https:\/\/[a-z0-9-]+\.supabase\.co(?:\/[^\s"'<>]*)?/gi, "REDACTED_SUPABASE_URL")
+    .replace(/https?:\/\/[^\s"'<>]+/gi, "REDACTED_EXTERNAL_URL")
     .replace(/\b(?:SUPABASE_SERVICE_ROLE_KEY|JWT_SECRET|BUILT_IN_FORGE_API_KEY|VITE_FRONTEND_FORGE_API_KEY)\b/g, "REDACTED_RUNTIME_VARIABLE")
     .replace(/\bservice_role\b/g, "REDACTED_PRIVILEGED_ROLE");
 }

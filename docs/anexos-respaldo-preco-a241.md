@@ -33,3 +33,17 @@ A revisão autenticada confirmou que o cadastro mantém **0 anexos privados**, n
 | Interface | A condição exibe a contagem de vínculos e o aviso de respaldo pendente antes do encaminhamento. |
 | Validação integral | 219 arquivos de teste e 560 testes aprovados; tipagem, build e integridade de diff aprovados. |
 | Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |
+
+## Política-base com evidência obrigatória A244
+
+A revisão autenticada confirmou que a política-base em Preparação exibe a contagem de **0 respaldos privados**, sua exceção pendente e a orientação **“Resolva todas as exceções antes de encaminhar.”** O botão permanece indisponível. Quando não houver exceções, a mesma função protegida exigirá ao menos um vínculo ativo de evidência privada antes do encaminhamento. Nenhum anexo, vínculo, encaminhamento ou aprovação foi acionado durante a revisão.
+
+| Resultado de validação A244 | Resultado |
+|---|---|
+| Serviço e migração | A função protegida de encaminhamento v2 exige vínculo privado ativo, preservando MFA, contexto, idempotência e auditoria redigida. |
+| Interface | A política mostra a contagem de respaldos e explica, sem expor arquivo ou preço, se a pendência decorre de exceção ou de evidência ausente. |
+| Validação dirigida | 3 arquivos e 39 testes aprovados; tipagem e integridade de diff aprovadas. |
+| Validação integral | 219 arquivos de teste e 563 testes aprovados; tipagem, build Netlify e integridade de diff aprovados. |
+| Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |
+
+A prévia foi reiniciada e a revisão autenticada repetida após o reinício. A política permaneceu em Preparação com **163 linhas**, **1 exceção** e **0 respaldos privados**; a mensagem de exceção continuou anterior ao encaminhamento e nenhum comando material foi disparado. Os registros posteriores ao reinício não apresentaram o antigo erro de exportação de correção manual. O ZIP de código e o HTML autônomo A244 foram gerados e saneados; a verificação confirmou as exclusões operacionais e a ausência de padrões concretos de credencial, conexão, chave privada ou endpoint no HTML.
