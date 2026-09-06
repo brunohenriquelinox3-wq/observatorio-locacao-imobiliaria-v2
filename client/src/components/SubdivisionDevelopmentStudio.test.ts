@@ -5,6 +5,7 @@ import path from "node:path";
 const source = () => readFileSync(path.resolve(process.cwd(), "client/src/components/SubdivisionDevelopmentStudio.tsx"), "utf8");
 const priceCardStyles = () => readFileSync(path.resolve(process.cwd(), "client/src/subdivision-lot-price-reference-a260.css"), "utf8");
 const operationalEntryStyles = () => readFileSync(path.resolve(process.cwd(), "client/src/subdivision-operational-entry-a261.css"), "utf8");
+const lotManagementStyles = () => readFileSync(path.resolve(process.cwd(), "client/src/subdivision-lot-management-a257.css"), "utf8");
 
 describe("SubdivisionDevelopmentStudio modular", () => {
   it("organiza o cadastro em cinco módulos independentes", () => {
@@ -75,6 +76,11 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Quadras e Lotes já estruturados");
     expect(studio).toContain("Estruture a primeira Quadra abaixo");
     expect(studio).toContain("Matriz com ${activeSavedStructure.length} Quadras e ${savedLotCount} Lotes em estruturação");
+    expect(studio).toContain("subdivision-studio__operational-block-scale");
+    expect(studio).toContain("Leitura proporcional de Lotes por Quadra");
+    expect(operationalEntryStyles()).toContain("grid-template-columns: repeat(2, minmax(0, 1fr))");
+    expect(operationalEntryStyles()).toContain("subdivision-studio__operational-block-row");
+    expect(operationalEntryStyles()).toContain("@media (max-width: 780px)");
   });
 
   it("não representa Quadra legada sem Lotes ativos como matriz pronta", () => {
@@ -241,6 +247,21 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("upsertDraftBlockOperationalProfile");
     expect(studio).toContain("selectLotForOperationalEdit");
     expect(studio).toContain("Editar ficha física deste Lote");
+    expect(studio).toContain("flushSync");
+    expect(studio).toContain("canonicalBlockId");
+    expect(studio).toContain("buildOperationalLotDraft");
+    expect(studio).toContain("const canonicalLot = physicalLots.find");
+    expect(studio).toContain("const nextDraft = buildOperationalLotDraft(canonicalLot)");
+    expect(studio).toContain("lotNumber: String(canonicalLot.lotNumber)");
+    expect(studio).toContain("blockId: canonicalBlockId");
+    expect(studio).toContain('type="button" className="subdivision-lot-management__lot-edit"');
+    expect(studio).toContain("String(block.blockNumber) === String(lot.blockNumber)");
+    expect(studio).toContain("blockId: String(block.blockId)");
+    expect(studio).toContain('scrollIntoView({ behavior: "smooth", block: "center" })');
+    expect(studio).toContain('querySelectorAll<HTMLSelectElement>("select")[1]');
+    expect(studio).toContain("focus({ preventScroll: true })");
+    expect(lotManagementStyles()).toContain("scroll-margin-block: 1.25rem");
+    expect(lotManagementStyles()).toContain(".subdivision-lot-management__operational-profile:focus-within");
     expect(studio).toContain("Preparar ajuste governado para este Lote");
     expect(studio).toContain("Ajustar");
     expect(studio).toContain("Você está revisando a unidade física selecionada.");

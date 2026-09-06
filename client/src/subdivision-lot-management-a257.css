@@ -67,8 +67,14 @@
 
 .subdivision-lot-management__operational-profile {
   gap: 0.85rem;
+  scroll-margin-block: 1.25rem;
   border-color: color-mix(in srgb, #795d21 36%, var(--border));
   box-shadow: 0 10px 24px color-mix(in srgb, #795d21 7%, transparent);
+}
+
+.subdivision-lot-management__operational-profile:focus-within {
+  border-color: color-mix(in srgb, var(--primary) 48%, #795d21);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent), 0 10px 24px color-mix(in srgb, #795d21 7%, transparent);
 }
 
 .subdivision-lot-management__operational-profile h6 {

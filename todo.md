@@ -2399,3 +2399,19 @@
 - [x] Preservar a linha sem preço-base exatamente como aparece na fonte: campo de valor por m² e total do Lote permanecem vazios, sem estimativa, preenchimento automático ou gravação durante os testes.
 - [x] Salvar checkpoint funcional A264 após a validação e os artefatos saneados. **A264:** checkpoint funcional `df2c15c5` registrado.
 - [x] Salvar checkpoint de consolidação A264 após registrar o checkpoint funcional no checklist. **A264:** checkpoint de consolidação `0ee0a5e5` registrado.
+
+## Correção de edição contextual por cartão de Lote — A265
+- [x] Corrigir o botão Editar do cartão para selecionar automaticamente Quadra e Lote na ficha física, levar o operador ao formulário correto e posicionar o foco sem gravar alteração. **A265:** uma chave canônica e uma única atualização de estado preenchem a ficha antes da rolagem e do foco; o atalho não chama mutação.
+- [x] Cobrir seleção contextual, rolagem, foco e ausência de mutação em testes; validar em sessão autenticada, desktop e móvel antes de gerar ZIP/HTML e checkpoints. **A265:** testes dirigidos e validação integral aprovaram 219 arquivos e 597 testes; a navegação autenticada, o bloqueio seguro de gravação e a responsividade foram revisados. ZIP/HTML saneados gerados; checkpoint pendente de registro.
+
+## Autonomia de testes seguros e revisão do gráfico operacional — A267
+- [x] Registrar como regra permanente a autonomia para navegar e testar fluxos sem mutação, preservando MFA, contexto, alçada, correlação e auditoria para qualquer gravação. **A267:** a regra foi registrada em `AGENTS.md` e aplicada às revisões de seleção, rolagem, foco, filtros e responsividade.
+- [x] Redesenhar o gráfico de estrutura por Quadra para uma leitura operacional moderna, legível e proporcional, sem remover indicadores, dados físicos ou a separação de domínios. **A267:** barras horizontais proporcionais e contagens explícitas substituíram a composição de colunas estreitas; a leitura foi revisada em desktop e móvel.
+- [x] Validar o fluxo Editar, o novo gráfico e os estados de bloqueio de gravação em desktop e móvel; gerar ZIP/HTML saneados e checkpoints apenas após a verificação factual. **A267:** validação integral com 219 arquivos e 597 testes, tipagem, build Netlify, diff, revisão autenticada e responsividade aprovada; ZIP/HTML saneados gerados. Checkpoint pendente de registro.
+
+## Estratégia de unificação do setor Loteamentos — A266
+- [x] Inventariar integralmente Cadastro de Loteamentos, Estoque/Mapa de Lotes, matriz física, referências internas, controles de segurança e todos os fluxos já desenvolvidos, sem descartar nenhum recurso. **A266:** inventário documentado e rotas/serviços duplicados identificados.
+- [x] Pesquisar padrões atuais de estoque imobiliário/loteamentos, modelagem de banco, governança de dados e separação entre operação interna e futura visualização externa. **A266:** fontes de mercado, segurança, eventos e duas demonstrações de mapa analisadas e citadas.
+- [x] Definir a arquitetura preservativa do setor unificado **Loteamentos**, incluindo nomenclatura, navegação, domínios de dados, transição sem perda, permissões, auditoria e limites entre estrutura, estoque, preço, venda, contratos e financeiro. **A266:** arquitetura por composição, fonte canônica, estado/evento e projeções separados documentados.
+- [x] Produzir uma estratégia de implementação faseada com critérios de aceite, testes, checkpoints, reversão e documentação de conhecimento preservado antes de qualquer migração ou alteração estrutural. **A266:** plano faseado, validação e contingência documentados; nenhuma migração ou alteração estrutural foi executada.
+- [ ] Validar o documento, gerar ZIP/HTML saneados e salvar checkpoints da estratégia A266 antes de iniciar qualquer implementação.

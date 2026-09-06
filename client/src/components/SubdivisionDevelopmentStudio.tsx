@@ -2,6 +2,7 @@ import type { SubdivisionContext } from "@shared/subdivisionContracts";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { trpc } from "@/lib/trpc";
 import { parsePhysicalSourceFile, type PhysicalSourcePreview } from "@/lib/subdivisionPhysicalSourcePreview";
+import { flushSync } from "react-dom";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Archive, ArchiveRestore, BookOpenCheck, Calculator, CheckCircle2, ClipboardCheck, FilePlus2, FileText, LandPlot, LoaderCircle, MapPinned, PencilLine, Plus, RefreshCw, Ruler, Search, ShieldAlert, ShieldCheck, TableProperties, Trash2, Upload, Workflow } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -353,7 +354,21 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const focusedLotPriceContextQuery = trpc.subdivisionFoundation.getLotPriceContext.useQuery(focusedLotPriceContextInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId && focusedLotPriceTarget), retry: false, staleTime: 30_000 });
   const structuralReconciliationState = requirementsQuery.data?.find((requirement) => requirement.requirementCode === "technical_layout")?.requirementState as RequirementState | undefined;
   const structuralReconciliationPending = structuralReconciliationState === "review_required";
-  const physicalLots = useMemo(() => (physicalStructureQuery.data ?? []).flatMap((block) => block.lots.map((lot) => ({ ...lot, blockId: block.blockId, blockNumber: block.blockNumber }))), [physicalStructureQuery.data]);
+  const physicalLots = useMemo(() => (physicalStructureQuery.data ?? []).flatMap((block) => block.lots.map((lot) => ({ ...lot, blockId: String(block.blockId), blockNumber: Number(block.blockNumber) }))), [physicalStructureQuery.data]);
+  const buildOperationalLotDraft = (lot: (typeof physicalLots)[number]) => ({
+    blockId: String(lot.blockId),
+    lotNumber: String(lot.lotNumber),
+    areaSqm: lot.areaSqm?.toString() ?? "",
+    frontageM: lot.frontageM?.toString() ?? "",
+    depthM: lot.depthM?.toString() ?? "",
+    rearM: lot.rearM?.toString() ?? "",
+    leftSideM: lot.leftSideM?.toString() ?? "",
+    rightSideM: lot.rightSideM?.toString() ?? "",
+    lotTypology: lot.lotTypology ?? "standard",
+    positionCode: lot.positionCode ?? "not_declared",
+    reservationPurpose: (lot.reservationPurpose ?? "none") as typeof operationalLotDraft.reservationPurpose,
+    internalNote: lot.internalNote ?? "",
+  });
   const searchedLots = useMemo(() => {
     const query = lotSearch.trim().toLocaleLowerCase("pt-BR");
     const blockNumber = lotBlockFilter === "all" ? null : Number(lotBlockFilter);
@@ -409,6 +424,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const priceConditionLots = useMemo(() => priceConditionDraft.blockId ? physicalLots.filter((lot) => lot.blockId === priceConditionDraft.blockId) : [], [physicalLots, priceConditionDraft.blockId]);
   const physicalReservationLots = useMemo(() => physicalReservationDraft.blockId ? physicalLots.filter((lot) => lot.blockId === physicalReservationDraft.blockId) : [], [physicalLots, physicalReservationDraft.blockId]);
   const operationalLotOptions = useMemo(() => operationalLotDraft.blockId ? physicalLots.filter((lot) => lot.blockId === operationalLotDraft.blockId) : [], [physicalLots, operationalLotDraft.blockId]);
+  const selectedOperationalLot = useMemo(() => physicalLots.find((lot) => lot.blockId === operationalLotDraft.blockId && lot.lotNumber === Number(operationalLotDraft.lotNumber)) ?? null, [operationalLotDraft.blockId, operationalLotDraft.lotNumber, physicalLots]);
   const priceConditionBasePolicies = priceBasePoliciesQuery.data ?? [];
   const internalLotPriceByKey = useMemo(() => new Map((internalLotPriceReferencesQuery.data ?? []).map((reference) => [`${reference.blockId}:${reference.lotNumber}`, reference])), [internalLotPriceReferencesQuery.data]);
   const internalPriceReferenceErrorMessage = internalLotPriceReferencesQuery.error?.message ?? "";
@@ -935,23 +951,21 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     });
   }
 
-  function selectLotForOperationalEdit(lot: (typeof physicalLots)[number]) {
-    setOperationalLotDraft({
-      blockId: lot.blockId,
-      lotNumber: String(lot.lotNumber),
-      areaSqm: lot.areaSqm?.toString() ?? "",
-      frontageM: lot.frontageM?.toString() ?? "",
-      depthM: lot.depthM?.toString() ?? "",
-      rearM: lot.rearM?.toString() ?? "",
-      leftSideM: lot.leftSideM?.toString() ?? "",
-      rightSideM: lot.rightSideM?.toString() ?? "",
-      lotTypology: lot.lotTypology ?? "standard",
-      positionCode: lot.positionCode ?? "not_declared",
-      reservationPurpose: lot.reservationPurpose ?? "none",
-      internalNote: lot.internalNote ?? "",
+  function selectLotForOperationalEdit(lot: (typeof physicalLots)[number], options: { navigate?: boolean } = {}) {
+    const canonicalBlockId = String((physicalStructureQuery.data ?? []).find((block) => String(block.blockId) === String(lot.blockId) || String(block.blockNumber) === String(lot.blockNumber))?.blockId ?? lot.blockId);
+    const canonicalLot = physicalLots.find((candidate) => candidate.blockId === canonicalBlockId && candidate.lotNumber === lot.lotNumber) ?? lot;
+    const nextDraft = buildOperationalLotDraft(canonicalLot);
+    flushSync(() => {
+      setOperationalLotDraft({ ...nextDraft, blockId: canonicalBlockId, lotNumber: String(canonicalLot.lotNumber) });
+      setFocusedLotPriceTarget({ blockId: canonicalBlockId, lotNumber: lot.lotNumber });
     });
-    setFocusedLotPriceTarget({ blockId: lot.blockId, lotNumber: lot.lotNumber });
-    window.requestAnimationFrame(() => operationalLotProfileRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+
+    if (options.navigate !== false) {
+      window.requestAnimationFrame(() => {
+        operationalLotProfileRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        window.setTimeout(() => operationalLotProfileRef.current?.querySelectorAll<HTMLSelectElement>("select")[1]?.focus({ preventScroll: true }), 80);
+      });
+    }
   }
 
   function selectLotForPriceAdjustment(lot: (typeof physicalLots)[number], policyId: string) {
@@ -1090,7 +1104,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
             <div><dt>Atributos completos</dt><dd>{physicalCoverageComplete}/{physicalCoverage.length}</dd><small>campos físicos cobertos</small></div>
           </dl>
           <div className="subdivision-studio__operational-charts">
-            <article className="subdivision-studio__operational-chart" aria-labelledby="operational-block-chart-title"><header><span>ESTRUTURA POR QUADRA</span><h4 id="operational-block-chart-title">Distribuição da matriz física</h4><p>Comparação de volume por Quadra, sem inferir disponibilidade.</p></header>{activeSavedStructure.length ? <div className="subdivision-studio__operational-bars" role="img" aria-label={`Distribuição física em ${activeSavedStructure.length} Quadras autorizadas`}>{activeSavedStructure.map((block) => <div key={block.blockId}><span style={{ height: `${Math.max(10, Math.round((block.lotCount / largestBlockLotCount) * 100))}%` }} /><b>Q{block.blockNumber}</b></div>)}</div> : <div className="subdivision-studio__operational-chart-empty">A matriz física aparecerá após a estruturação autorizada.</div>}</article>
+            <article className="subdivision-studio__operational-chart" aria-labelledby="operational-block-chart-title"><header><span>ESTRUTURA POR QUADRA</span><h4 id="operational-block-chart-title">Distribuição da matriz física</h4><p>Leitura proporcional de Lotes por Quadra, sem inferir disponibilidade comercial.</p></header>{activeSavedStructure.length ? <div className="subdivision-studio__operational-block-scale" role="img" aria-label={`Distribuição física em ${activeSavedStructure.length} Quadras autorizadas`}>{activeSavedStructure.map((block) => { const proportion = Math.max(4, Math.round((block.lotCount / largestBlockLotCount) * 100)); return <div key={block.blockId} className="subdivision-studio__operational-block-row"><span>Q{block.blockNumber}</span><i aria-hidden="true"><b style={{ width: `${proportion}%` }} /></i><strong>{block.lotCount}<small> Lotes</small></strong></div>; })}</div> : <div className="subdivision-studio__operational-chart-empty">A matriz física aparecerá após a estruturação autorizada.</div>}</article>
             <article className="subdivision-studio__operational-chart" aria-labelledby="operational-coverage-chart-title"><header><span>COBERTURA FÍSICA</span><h4 id="operational-coverage-chart-title">Completude da matriz</h4><p>Campos ausentes permanecem vazios até nova fonte física revisada.</p></header><div className="subdivision-studio__operational-coverage">{physicalCoverage.map((item) => { const percentage = physicalLots.length ? Math.round((item.available / physicalLots.length) * 100) : 0; return <div key={item.key}><span>{item.label}</span><i><b style={{ width: `${percentage}%` }} /></i><strong>{percentage}%</strong></div>; })}</div></article>
           </div>
           <footer className="subdivision-studio__operational-boundary"><ShieldCheck size={16} /><p>Esta visão é somente de leitura agregada. Para editar identificação, matriz, ficha física, pendências ou anexos, use “Cadastro do Empreendimento”.</p></footer>

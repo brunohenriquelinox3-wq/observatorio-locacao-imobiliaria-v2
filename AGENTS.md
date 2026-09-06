@@ -10,6 +10,12 @@ Uma remoção, desativação, arquivamento, exclusão ou substituição material
 
 Antes de declarar uma alteração pronta, conferir no navegador a continuidade da jornada inteira — da entrada aos estados posteriores — e registrar que as funções já existentes permanecem acessíveis. A validação deve abranger desktop e celular, testes automatizados e revisão de integridade sem mutação não autorizada de dados.
 
+## Autonomia para testes seguros
+
+O agente tem autonomia permanente para navegar pelo CRM, percorrer jornadas completas, acionar controles estritamente não materiais e testar fluxos de leitura, filtro, seleção, rolagem, foco, retorno, mensagens de bloqueio e responsividade. Essa autonomia existe para detectar e corrigir falhas antes da entrega, sem exigir nova autorização para cada teste seguro.
+
+Nenhum teste pode confirmar, enviar, salvar, criar, editar, arquivar, restaurar, importar, exportar, publicar ou alterar dados sem a autorização específica já aplicável. Operações materiais continuam condicionadas a identidade, organização, membership, grant, escopo, finalidade, MFA recente, correlação, idempotência e auditoria; falhas de precondição devem ser preservadas e tratadas como controles corretos, nunca contornadas.
+
 ## Preservação de conhecimento
 
 Não descartar conhecimento adquirido em estudos, inspeções, validações, decisões de UX, contratos de interface ou evidências de segurança. Registrar cada achado reutilizável em documentação versionada e manter um índice de consulta no projeto. Ao iniciar nova atualização, revisar essas referências antes de decidir, implementar ou remover qualquer coisa.
