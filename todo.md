@@ -2251,4 +2251,4 @@
 - [x] Exibir apenas contagem e estado agregado de respaldo por objeto, sem permitir leitura pública ou inferir aprovação comercial. **A242:** a central apresenta contagem por política e seleção opaca de documento privado já registrado; nenhum vínculo equivale a aprovação.
 - [x] Cobrir serviço, migração e interface e revisar sem anexar arquivo real. **A242:** teste dirigido, suíte integral com 218 arquivos/557 testes, tipagem, build Netlify, integridade de diff e revisão autenticada foram aprovados; o build preservou somente o aviso não bloqueante de chunks grandes.
 - [x] Gerar ZIP/HTML saneados. **A242:** os artefatos foram verificados sem ambiente, logs, documentação, checklist, dados de origem, credenciais ou infraestrutura.
-- [ ] Salvar checkpoint A242 após documentação, validação integral e saneamento dos artefatos.
+- [x] Salvar checkpoint A242 após documentação, validação integral e saneamento dos artefatos. **A242:** checkpoint `30552f17` preserva o vínculo opaco de evidência privada, os controles server-side e a ausência de anexo ou vínculo real criado.
