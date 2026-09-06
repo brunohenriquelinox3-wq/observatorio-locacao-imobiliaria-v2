@@ -5,10 +5,12 @@ import {
   upsertSubdivisionDevelopmentRequirementInputSchema,
   upsertSubdivisionLotPhysicalReservationInputSchema,
   upsertSubdivisionLotOperationalProfileInputSchema,
+  upsertSubdivisionBlockOperationalProfileInputSchema,
   type ApplySubdivisionPhysicalStructureInput,
   type UpsertSubdivisionDevelopmentRequirementInput,
   type UpsertSubdivisionLotPhysicalReservationInput,
   type UpsertSubdivisionLotOperationalProfileInput,
+  type UpsertSubdivisionBlockOperationalProfileInput,
 } from "../shared/subdivisionPhysicalStructureContracts";
 import { getSupabaseAdminClient } from "./supabase";
 
@@ -30,6 +32,7 @@ export type PhysicalStructureBlock = {
   blockNumber: number;
   sectorReference: string | null;
   blockTypology: "regular" | "mixed" | "irregular" | "other";
+  internalNote: string | null;
   lots: PhysicalStructureLot[];
 };
 
@@ -61,14 +64,16 @@ function asLot(value: unknown): PhysicalStructureLot {
 export async function listDraftSubdivisionPhysicalStructure(subjectId: string | undefined, rawContext: unknown, developmentId: string, client: RpcClient = getSupabaseAdminClient()): Promise<PhysicalStructureBlock[]> {
   const actorUserId = requireSubject(subjectId);
   const context = subdivisionContextSchema.parse(rawContext);
-  const { data, error } = await client.rpc("subdivision_list_draft_physical_structure_v3", { p_actor_user_id: actorUserId, p_organization_id: context.organizationId, p_module: context.module, p_purpose_code: context.purposeCode, p_development_id: developmentId });
+  const { data, error } = await client.rpc("subdivision_list_draft_physical_structure_v4", { p_actor_user_id: actorUserId, p_organization_id: context.organizationId, p_module: context.module, p_purpose_code: context.purposeCode, p_development_id: developmentId });
   if (error || !Array.isArray(data)) throw new Error("SUBDIVISION_PHYSICAL_STRUCTURE_READ_DENIED");
   return data.map((row) => {
     const record = row as Record<string, unknown>;
     const blockNumber = Number(record.block_number);
     const blockTypology = String(record.block_typology);
     if (typeof record.block_id !== "string" || !Number.isInteger(blockNumber) || !(["regular", "mixed", "irregular", "other"] as string[]).includes(blockTypology) || !Array.isArray(record.lots)) throw new Error("SUBDIVISION_PHYSICAL_STRUCTURE_READ_DENIED");
-    return { blockId: record.block_id, blockNumber, sectorReference: typeof record.sector_reference === "string" ? record.sector_reference : null, blockTypology: blockTypology as PhysicalStructureBlock["blockTypology"], lots: record.lots.map(asLot) };
+    const internalNote = record.internal_note === null || record.internal_note === undefined ? null : String(record.internal_note);
+    if (internalNote !== null && internalNote.length > 280) throw new Error("SUBDIVISION_PHYSICAL_STRUCTURE_READ_DENIED");
+    return { blockId: record.block_id, blockNumber, sectorReference: typeof record.sector_reference === "string" ? record.sector_reference : null, blockTypology: blockTypology as PhysicalStructureBlock["blockTypology"], internalNote, lots: record.lots.map(asLot) };
   });
 }
 
@@ -126,4 +131,10 @@ export async function upsertDraftSubdivisionLotOperationalProfile(subjectId: str
   const actorUserId = requireSubject(subjectId); const input = upsertSubdivisionLotOperationalProfileInputSchema.parse(rawInput);
   const { error } = await client.rpc("subdivision_upsert_draft_lot_operational_profile_v1", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_development_id: input.developmentId, p_block_id: input.blockId, p_lot_number: input.lotNumber, p_area_sqm: input.areaSqm ?? null, p_frontage_m: input.frontageM ?? null, p_depth_m: input.depthM ?? null, p_lot_typology: input.lotTypology, p_position_code: input.positionCode, p_reservation_purpose: input.reservationPurpose, p_internal_note: input.internalNote, p_correlation_id: input.correlationId });
   if (error) throw new Error("SUBDIVISION_LOT_OPERATIONAL_PROFILE_DENIED");
+}
+
+export async function upsertDraftSubdivisionBlockOperationalProfile(subjectId: string | undefined, rawInput: UpsertSubdivisionBlockOperationalProfileInput, client: RpcClient = getSupabaseAdminClient()): Promise<void> {
+  const actorUserId = requireSubject(subjectId); const input = upsertSubdivisionBlockOperationalProfileInputSchema.parse(rawInput);
+  const { error } = await client.rpc("subdivision_upsert_draft_block_operational_profile_v1", { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_development_id: input.developmentId, p_block_id: input.blockId, p_sector_reference: input.sectorReference ?? null, p_block_typology: input.blockTypology, p_internal_note: input.internalNote, p_correlation_id: input.correlationId });
+  if (error) throw new Error("SUBDIVISION_BLOCK_OPERATIONAL_PROFILE_DENIED");
 }

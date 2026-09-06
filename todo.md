@@ -2328,3 +2328,9 @@
 - [x] Adicionar observação interna curta e saneada, bloqueando dados pessoais, documentos, preço, venda, contrato, cobrança, pagamento e financeiro. **A255:** cliente e banco aplicam limite, vocabulário proibido e auditoria sem conteúdo da nota.
 - [x] Exigir alçada, MFA, contexto, idempotência e auditoria redigida; não preencher ou alterar Lote real durante o desenvolvimento. **A255:** nenhum Lote foi selecionado, preenchido ou alterado na revisão.
 - [x] Cobrir serviço, migração e interface; revisar desktop/móvel, gerar ZIP/HTML saneados e salvar checkpoint sem editar Lote real. **A255:** 219 arquivos/584 testes, tipagem, build Netlify, diff limpo, revisão responsiva e saneamento foram aprovados; checkpoint funcional `1872dff2` não altera nenhum Lote real.
+
+## Ficha operacional editável por Quadra — A256
+- [x] Criar ficha editável para tipologia, referência setorial e observação interna da Quadra, sempre resolvida no servidor por empreendimento e Quadra. **A256:** a seleção carrega atributos físicos da Quadra e o comando resolve seu vínculo no servidor.
+- [x] Bloquear dados pessoais, documentos, preço, venda, contrato, cobrança, pagamento e financeiro nas observações internas. **A256:** cliente e banco aplicam limite e vocabulário proibido; a auditoria não recebe o conteúdo da nota.
+- [x] Exigir alçada, MFA, contexto, idempotência e auditoria redigida; não preencher ou alterar Quadra real durante o desenvolvimento. **A256:** nenhuma Quadra foi selecionada, preenchida ou alterada na revisão; a leitura protegida passou a retornar a nota somente no contexto físico autorizado.
+- [x] Cobrir serviço, migração e interface; revisar desktop/móvel, gerar ZIP/HTML saneados e salvar checkpoint sem editar Quadra real. **A256:** 219 arquivos/587 testes, tipagem, build Netlify, diff limpo, captura desktop/móvel e saneamento foram aprovados; as verificações cobrem o comando, a leitura v4 e o bloqueio de domínios comerciais.

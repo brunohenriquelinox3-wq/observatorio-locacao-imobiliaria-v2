@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { applySubdivisionPhysicalStructure, listDraftSubdivisionPhysicalStructure, upsertDraftSubdivisionLotOperationalProfile, upsertDraftSubdivisionLotPhysicalReservation } from "./subdivisionPhysicalStructure";
+import { applySubdivisionPhysicalStructure, listDraftSubdivisionPhysicalStructure, upsertDraftSubdivisionBlockOperationalProfile, upsertDraftSubdivisionLotOperationalProfile, upsertDraftSubdivisionLotPhysicalReservation } from "./subdivisionPhysicalStructure";
 
 const context = { organizationId: "00000000-0000-4000-8000-000000000001", module: "loteadora" as const, purposeCode: "CADASTRO_INICIAL" };
 const subject = "00000000-0000-4000-8000-000000000010";
@@ -30,5 +30,18 @@ describe("serviço de estrutura física", () => {
     await expect(upsertDraftSubdivisionLotOperationalProfile(subject, { ...context, developmentId, blockId: "00000000-0000-4000-8000-000000000004", lotNumber: 8, areaSqm: 300, frontageM: 12, depthM: 25, lotTypology: "corner", positionCode: "corner", reservationPurpose: "technical_artesian_well", internalNote: "Área técnica com acesso de obra.", correlationId: "00000000-0000-4000-8000-000000000003" }, { rpc })).resolves.toBeUndefined();
     expect(rpc).toHaveBeenCalledWith("subdivision_upsert_draft_lot_operational_profile_v1", expect.objectContaining({ p_lot_number: 8, p_internal_note: "Área técnica com acesso de obra." }));
     expect(JSON.stringify(rpc.mock.calls[0]?.[1])).not.toMatch(/price|sale|customer|contract|payment/i);
+  });
+
+  it("atualiza a ficha física da Quadra com nota saneada e sem dados comerciais", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: null, error: null });
+    await expect(upsertDraftSubdivisionBlockOperationalProfile(subject, { ...context, developmentId, blockId: "00000000-0000-4000-8000-000000000004", sectorReference: "Setor técnico", blockTypology: "irregular", internalNote: "Acesso operacional em revisão.", correlationId: "00000000-0000-4000-8000-000000000003" }, { rpc })).resolves.toBeUndefined();
+    expect(rpc).toHaveBeenCalledWith("subdivision_upsert_draft_block_operational_profile_v1", expect.objectContaining({ p_block_id: "00000000-0000-4000-8000-000000000004", p_sector_reference: "Setor técnico", p_internal_note: "Acesso operacional em revisão." }));
+    expect(JSON.stringify(rpc.mock.calls[0]?.[1])).not.toMatch(/price|sale|customer|contract|payment/i);
+  });
+
+  it("lê a observação interna da Quadra somente no retorno físico protegido", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: [{ block_id: "00000000-0000-4000-8000-000000000004", block_number: 1, sector_reference: "Setor técnico", block_typology: "regular", internal_note: "Acesso operacional em revisão.", lots: [] }], error: null });
+    await expect(listDraftSubdivisionPhysicalStructure(subject, context, developmentId, { rpc })).resolves.toEqual([expect.objectContaining({ internalNote: "Acesso operacional em revisão." })]);
+    expect(rpc).toHaveBeenCalledWith("subdivision_list_draft_physical_structure_v4", expect.any(Object));
   });
 });

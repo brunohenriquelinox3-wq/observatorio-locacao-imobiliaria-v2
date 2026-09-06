@@ -217,5 +217,12 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Finalidade física");
     expect(studio).toContain("Somente reservas físicas");
     expect(studio).toContain("Reserva patrimonial");
+    expect(studio).toContain("FICHA OPERACIONAL DO LOTE");
+    expect(studio).toContain("Salvar ficha operacional");
+    expect(studio).toContain("FICHA OPERACIONAL DA QUADRA");
+    expect(studio).toContain("Salvar ficha da Quadra");
+    expect(studio).toContain("Observação interna");
+    expect(studio).toContain("A edição permanece física e interna");
+    expect(studio).toContain("upsertDraftBlockOperationalProfile");
   });
 });

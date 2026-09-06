@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 const source = readFileSync(new URL("../supabase/migrations/20260906193000_subdivision_physical_dossier_a202.sql", import.meta.url), "utf8");
 const reservationSource = readFileSync(new URL("../supabase/migrations/20260907119000_subdivision_lot_physical_reservation_a253.sql", import.meta.url), "utf8");
 const operationalProfileSource = readFileSync(new URL("../supabase/migrations/20260907120000_subdivision_lot_operational_profile_a255.sql", import.meta.url), "utf8");
+const blockOperationalProfileSource = readFileSync(new URL("../supabase/migrations/20260907121000_subdivision_block_operational_profile_a256.sql", import.meta.url), "utf8");
+const blockOperationalReadSource = readFileSync(new URL("../supabase/migrations/20260907121100_subdivision_block_operational_profile_read_a256.sql", import.meta.url), "utf8");
 
 describe("migração A202 de estrutura física e dossiê", () => {
   it("mantém somente atributos físicos e estados de pendência no escopo", () => {
@@ -50,5 +52,16 @@ describe("migração A202 de estrutura física e dossiê", () => {
     expect(operationalProfileSource).toContain("has_internal_note");
     expect(operationalProfileSource).toContain("require_active_subdivision_draft_authority");
     expect(operationalProfileSource).toContain("security definer set search_path=''");
+  });
+
+  it("mantém a ficha e a leitura de Quadra privadas, auditáveis e fora do escopo comercial", () => {
+    expect(blockOperationalProfileSource).toContain("subdivision_block_internal_notes");
+    expect(blockOperationalProfileSource).toContain("subdivision_upsert_draft_block_operational_profile_v1");
+    expect(blockOperationalProfileSource).toContain("require_active_subdivision_draft_authority");
+    expect(blockOperationalProfileSource).toContain("security definer set search_path=''");
+    expect(blockOperationalProfileSource).not.toMatch(/availability|price|sale|contract|payment|financial/i);
+    expect(blockOperationalReadSource).toContain("subdivision_list_draft_physical_structure_v4");
+    expect(blockOperationalReadSource).toContain("note.internal_note");
+    expect(blockOperationalReadSource).toContain("grant execute on function public.subdivision_list_draft_physical_structure_v4");
   });
 });
