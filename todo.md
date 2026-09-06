@@ -2252,3 +2252,10 @@
 - [x] Cobrir serviço, migração e interface e revisar sem anexar arquivo real. **A242:** teste dirigido, suíte integral com 218 arquivos/557 testes, tipagem, build Netlify, integridade de diff e revisão autenticada foram aprovados; o build preservou somente o aviso não bloqueante de chunks grandes.
 - [x] Gerar ZIP/HTML saneados. **A242:** os artefatos foram verificados sem ambiente, logs, documentação, checklist, dados de origem, credenciais ou infraestrutura.
 - [x] Salvar checkpoint A242 após documentação, validação integral e saneamento dos artefatos. **A242:** checkpoint `30552f17` preserva o vínculo opaco de evidência privada, os controles server-side e a ausência de anexo ou vínculo real criado.
+
+## Evidência vinculada para encaminhar condição de preço — A243
+- [x] Exigir ao menos um vínculo ativo de respaldo privado antes de encaminhar condição de preço, preservando a possibilidade de prepará-la sem documento. **A243:** a função v2 bloqueia encaminhamento sem vínculo ativo de anexo privado registrado, preservando a preparação como etapa sem efeito.
+- [x] Mostrar contagem e orientação de evidência pendente sem expor conteúdo, preço ou aprovação antes da vigência. **A243:** cada condição mostra sua contagem de vínculos e mantém o botão de encaminhar indisponível até haver evidência; o erro server-side também orienta sem revelar documento.
+- [x] Cobrir serviço, migração e interface e revisar sem criar condição ou anexo real. **A243:** testes dirigidos, suíte integral com 219 arquivos/560 testes, tipagem, build Netlify, integridade de diff e revisão autenticada foram aprovados; o build preservou somente o aviso não bloqueante de chunks grandes.
+- [x] Gerar ZIP/HTML saneados. **A243:** os artefatos foram verificados sem ambiente, logs, documentação, checklist, dados de origem, credenciais ou infraestrutura.
+- [ ] Salvar checkpoint A243 após documentação, validação integral e saneamento dos artefatos.

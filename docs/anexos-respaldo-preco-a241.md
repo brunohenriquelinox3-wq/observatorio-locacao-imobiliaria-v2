@@ -22,3 +22,14 @@ A central de condições passou a mostrar a contagem agregada de anexos privados
 ## Vínculo auditável A242
 
 A revisão autenticada confirmou o painel recolhido **“Respaldo privado vinculado”** dentro da política formal. Ao abrir, ele permite associar somente um anexo privado já registrado a uma política ou condição do cadastro selecionado. A escolha apresenta rótulos opacos de documento, sem nome original, URL, chave, conteúdo ou download. Como não há anexo registrado no cadastro, o seletor permanece sem opção e nenhum vínculo foi criado durante a revisão.
+
+## Encaminhamento condicionado à evidência A243
+
+A revisão autenticada confirmou que o cadastro mantém **0 anexos privados**, nenhuma condição registrada e a política-base em Preparação com uma exceção. A interface deixa claro que uma condição pode ser preparada, mas o encaminhamento só fica disponível quando houver política-base aprovada sem exceções, respaldo documental declarado completo e ao menos um vínculo privado ativo. A função protegida A243 repete essa verificação no servidor; nenhum preço, condição, anexo ou vínculo foi criado durante a revisão.
+
+| Resultado de validação A243 | Resultado |
+|---|---|
+| Serviço e migração | A função de encaminhamento v2 exige um vínculo ativo a anexo privado registrado. |
+| Interface | A condição exibe a contagem de vínculos e o aviso de respaldo pendente antes do encaminhamento. |
+| Validação integral | 219 arquivos de teste e 560 testes aprovados; tipagem, build e integridade de diff aprovados. |
+| Exceção de build | Apenas o aviso não bloqueante de chunks grandes permaneceu. |

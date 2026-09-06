@@ -116,7 +116,9 @@ async function transitionPriceCondition(subjectId: string | undefined, rawInput:
   const actorUserId = requireSubject(subjectId);
   const schema = operation === "submit" ? submitSubdivisionPriceConditionInputSchema : operation === "approve" ? approveSubdivisionPriceConditionInputSchema : withdrawSubdivisionPriceConditionInputSchema;
   const input = schema.parse(rawInput);
-  const { data, error } = await client.rpc(`subdivision_${operation}_price_condition_v1`, { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_condition_id: input.conditionId, p_correlation_id: input.correlationId });
+  const rpcName = operation === "submit" ? "subdivision_submit_price_condition_v2" : `subdivision_${operation}_price_condition_v1`;
+  const { data, error } = await client.rpc(rpcName, { p_actor_user_id: actorUserId, p_organization_id: input.organizationId, p_module: input.module, p_purpose_code: input.purposeCode, p_condition_id: input.conditionId, p_correlation_id: input.correlationId });
+  if (error?.message === "PRICE_CONDITION_EVIDENCE_REQUIRED") throw new Error("PRICE_CONDITION_EVIDENCE_REQUIRED");
   if (error || typeof data !== "string") throw new Error(`PRICE_CONDITION_${operation.toUpperCase()}_DENIED`);
   return { conditionId: data };
 }
