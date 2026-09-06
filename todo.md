@@ -1909,7 +1909,7 @@
 - [x] Aplicar persistência minimizada, criptografia em trânsito, RLS, MFA, autorização por contexto e auditoria redigida para os campos liberados. **A194:** a função v2 exige versão de privacidade e finalidade controladas antes de delegar a RPC já protegida; a auditoria segue redigida.
 - [x] Criar controles de retenção, expurgo e revisão humana que não eliminem dados por automação nem alterem registros reais durante o desenvolvimento. **A194:** a finalidade é cadastro em rascunho com revisão humana e não existe expurgo automático.
 - [x] Cobrir permissões, minimização, deduplicação, prévia, retenção, build e responsividade com testes e revisão técnica sem importar dados reais. **A194:** 219 arquivos/577 testes, tipagem, build, diff limpo e revisão autenticada sem arquivo ou gravação real.
-- [ ] Gerar documentação, ZIP e HTML saneados e salvar checkpoint sem publicar ou realizar importação real.
+- [x] Gerar documentação, ZIP e HTML saneados e salvar checkpoint sem publicar ou realizar importação real. **A194:** documentação de governança, ZIP/HTML saneados e checkpoint funcional `92002fbd` foram gerados sem prévia enviada, arquivo real ou registro importado.
 
 ## Reconstrução do Cadastro de Loteamentos
 - [x] Inventariar o fluxo atual de Cadastro de Loteamentos, seus dados, comandos, estados vazios e lacunas de edição, exclusão e anexos sem expor registros existentes. **A195:** confirmado que o fluxo era linear e não possuía edição, arquivamento ou anexo do próprio loteamento.
