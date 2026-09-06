@@ -2327,4 +2327,4 @@
 - [x] Criar ficha editável para atributos físicos permitidos, tipologia, posição e finalidade reservada, sempre resolvidos no servidor por empreendimento, Quadra e Lote. **A255:** a ficha carrega apenas o Lote escolhido e atualiza atributos físicos pelo comando protegido.
 - [x] Adicionar observação interna curta e saneada, bloqueando dados pessoais, documentos, preço, venda, contrato, cobrança, pagamento e financeiro. **A255:** cliente e banco aplicam limite, vocabulário proibido e auditoria sem conteúdo da nota.
 - [x] Exigir alçada, MFA, contexto, idempotência e auditoria redigida; não preencher ou alterar Lote real durante o desenvolvimento. **A255:** nenhum Lote foi selecionado, preenchido ou alterado na revisão.
-- [ ] Cobrir serviço, migração e interface; revisar desktop/móvel, gerar ZIP/HTML saneados e salvar checkpoint sem editar Lote real.
+- [x] Cobrir serviço, migração e interface; revisar desktop/móvel, gerar ZIP/HTML saneados e salvar checkpoint sem editar Lote real. **A255:** 219 arquivos/584 testes, tipagem, build Netlify, diff limpo, revisão responsiva e saneamento foram aprovados; checkpoint funcional `1872dff2` não altera nenhum Lote real.
