@@ -19,7 +19,9 @@ describe("SubdivisionSaleCaseWorkspace", () => {
     expect(source).toContain("não cria recebíveis, boletos ou calendário financeiro");
     expect(source).toContain("Valores ficam em centavos no servidor");
     expect(source).toContain("Preparar lembretes internos");
-    expect(source).toContain("agendamento diário permanece desativado");
+    expect(source).toContain("Ativar lembrete diário interno");
+    expect(source).toContain("Pausar lembrete interno");
+    expect(source).toContain("Não há boleto, código de barras, remessa, pagamento, baixa ou comunicação externa");
   });
 
   it("valida parcelamento no cliente antes de chamar o servidor", () => {

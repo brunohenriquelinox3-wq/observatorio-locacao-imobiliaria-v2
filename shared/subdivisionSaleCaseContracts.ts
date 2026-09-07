@@ -60,6 +60,11 @@ export const configureSubdivisionInternalReceivableAlertsInputSchema = subdivisi
   leadDays: z.number().int().min(1).max(14),
 }).strict();
 
+export const manageSubdivisionInternalReceivableAlertScheduleInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  action: z.enum(["activate", "pause", "resume", "remove"]),
+}).strict();
+
 export const createSubdivisionSaleCaseDocumentIntentInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
   saleCaseId: z.string().uuid(),
@@ -80,5 +85,6 @@ export type FormalizeSubdivisionSaleCaseInput = z.infer<typeof formalizeSubdivis
 export type ApproveSubdivisionSaleCaseInput = z.infer<typeof approveSubdivisionSaleCaseInputSchema>;
 export type RequestSubdivisionSaleReversalInput = z.infer<typeof requestSubdivisionSaleReversalInputSchema>;
 export type ConfigureSubdivisionInternalReceivableAlertsInput = z.infer<typeof configureSubdivisionInternalReceivableAlertsInputSchema>;
+export type ManageSubdivisionInternalReceivableAlertScheduleInput = z.infer<typeof manageSubdivisionInternalReceivableAlertScheduleInputSchema>;
 export type CreateSubdivisionSaleCaseDocumentIntentInput = z.infer<typeof createSubdivisionSaleCaseDocumentIntentInputSchema>;
 export type SetSubdivisionSaleCaseDossierReviewInput = z.infer<typeof setSubdivisionSaleCaseDossierReviewInputSchema>;

@@ -28,6 +28,8 @@ type Props = {
   approvingCase: boolean;
   requestingReversal: boolean;
   configuringAlerts: boolean;
+  managingAlertSchedule: boolean;
+  alertScheduleState: "unbound" | "active" | "paused";
   internalContracts: readonly InternalContract[];
   internalAttention: readonly InternalAttention[];
   onDevelopmentChange: (value: string) => void;
@@ -43,6 +45,7 @@ type Props = {
   onApproveCase: () => void;
   onRequestReversal: () => void;
   onConfigureAlerts: (leadDays: number) => void;
+  onManageAlertSchedule: (action: "activate" | "pause" | "resume" | "remove") => void;
 };
 
 const formatBrl = (value: number | null) => value === null ? "Não informado" : value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -175,8 +178,11 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
               <form className="subdivision-sale-case-workspace__alert-config" onSubmit={(event) => { event.preventDefault(); props.onConfigureAlerts(Number(alertLeadDays)); }}>
                 <label htmlFor="sale-case-alert-lead">Avisar com antecedência de dias<input id="sale-case-alert-lead" type="number" min="1" max="14" step="1" value={alertLeadDays} onChange={(event) => setAlertLeadDays(event.target.value)} disabled={props.configuringAlerts} required /></label>
                 <button type="submit" disabled={props.configuringAlerts}>{props.configuringAlerts ? "Preparando lembretes" : "Preparar lembretes internos"}</button>
-                <small>O agendamento diário permanece desativado até a publicação explícita; não há envio a clientes, cobrança ou baixa.</small>
+                <small>{props.alertScheduleState === "active" ? "Lembrete diário interno ativo: ele apenas sinaliza o operador para cobrar manualmente." : props.alertScheduleState === "paused" ? "Lembrete diário interno pausado; nenhum evento novo será criado até a retomada." : "Após preparar os lembretes, ative a rotina diária interna para sinalizar o operador."}</small>
               </form>
+              <div className="subdivision-sale-case-workspace__alert-actions" aria-label="Controle do lembrete diário interno">
+                {props.alertScheduleState === "unbound" ? <button type="button" onClick={() => props.onManageAlertSchedule("activate")} disabled={props.managingAlertSchedule}>{props.managingAlertSchedule ? "Ativando lembrete" : "Ativar lembrete diário interno"}</button> : <>{props.alertScheduleState === "active" ? <button type="button" onClick={() => props.onManageAlertSchedule("pause")} disabled={props.managingAlertSchedule}>Pausar lembrete interno</button> : <button type="button" onClick={() => props.onManageAlertSchedule("resume")} disabled={props.managingAlertSchedule}>Retomar lembrete interno</button>}<button type="button" onClick={() => props.onManageAlertSchedule("remove")} disabled={props.managingAlertSchedule}>Remover lembrete interno</button></>}
+              </div>
               <p>Não há boleto, código de barras, remessa, pagamento, baixa ou comunicação externa.</p>
             </> : <>
               <p>Depois de salvar termos coerentes, gere a agenda interna para revisão. Isso não aprova contrato e não altera o estoque do lote.</p>

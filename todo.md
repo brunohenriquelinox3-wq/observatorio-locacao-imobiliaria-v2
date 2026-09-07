@@ -2656,10 +2656,15 @@
 
 ### Marco M5 — lembretes internos periódicos
 
-- [ ] Revisar contratos, agenda, alertas, textos e procedimentos da Central de Vendas para reafirmar que o CRM é controle exclusivamente interno: ele sinaliza ao operador quando é necessário cobrar manualmente, mas não emite cobrança, não envia mensagem, não integra banco, não dá baixa e não confirma pagamento.
+- [x] Revisar contratos, agenda, alertas, textos e procedimentos da Central de Vendas para reafirmar que o CRM é controle exclusivamente interno: ele sinaliza ao operador quando é necessário cobrar manualmente, mas não emite cobrança, não envia mensagem, não integra banco, não dá baixa e não confirma pagamento. **A301:** o ciclo de agendamento só cria eventos privados de atenção e toda a interface explicita que a cobrança continua manual, sem contato automatizado ou efeito financeiro.
 - [x] Criar configuração por organização, eventos internos de atenção e endpoint periódico autenticado para a agenda de recebíveis, com idempotência por data, retenção controlada, observabilidade e sem envio de mensagem externa. **A297:** a configuração começa desativada e é isolada por organização; eventos são únicos por parcela, tipo e data. O endpoint aceita somente a identidade periódica autenticada e usa exclusivamente seu identificador de tarefa, sem consumir corpo externo.
 - [x] Exibir no contexto autorizado os lembretes de itens próximos do vencimento e anteriores à data, distinguindo “aguardando emissão bancária” de confirmação de pagamento ou atraso. **M5:** a Central permite configurar a antecedência entre 1 e 14 dias e informa que a preparação não ativa cron, envio, cobrança, baixa ou pagamento. A atenção existente permanece somente para revisão humana.
-- [ ] Após validação e checkpoint, solicitar publicação explícita antes de criar ou ativar o agendamento diário de produção; preservar pausa, retomada e exclusão do agendamento por identificador seguro.
+- [ ] Após validação e checkpoint, solicitar publicação explícita da versão A301 antes de criar ou ativar o agendamento diário de produção; preservar pausa, retomada e exclusão do agendamento por identificador seguro. A publicação anterior não contém a nova mutation contextual de ativação e gestão, portanto esta etapa requer nova publicação.
+
+### Ativação publicada — lembrete diário ao operador
+
+- [ ] Criar após publicação o agendamento diário autenticado da rotina interna de atenção, com identidade de cron, execução idempotente e possibilidade de pausa, retomada e remoção segura; não enviar mensagens, emitir cobranças, acessar banco, dar baixa ou registrar pagamentos. **A301:** implementação e migração aplicadas; o comando contextual cria o cron somente após sessão AAL2 e vincula seu identificador ao contexto autorizado.
+- [ ] Executar uma verificação controlada da rotina publicada e confirmar apenas métricas agregadas e ausência de efeitos externos antes de marcar a ativação como concluída.
 
 ### Marco M6 — dossiê privado e revisão de documentação comercial
 
