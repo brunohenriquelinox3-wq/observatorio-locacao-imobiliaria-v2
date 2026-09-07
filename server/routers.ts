@@ -242,6 +242,7 @@ import { createBuyerAttachmentIntent, listBuyerAttachmentIntents } from "./subdi
 import { createSubdivisionSaleDraft, listSubdivisionSaleDraftAttachmentCoverage, listSubdivisionSaleDrafts } from "./subdivisionSaleDraft";
 import { listSubdivisionSaleDraftWorkStates, upsertSubdivisionSaleDraftWorkState } from "./subdivisionSaleDraftWorkState";
 import { addSubdivisionSaleDraftCoBuyer, listSubdivisionSaleDraftCoBuyers } from "./subdivisionSaleDraftCoBuyer";
+import { listSubdivisionSaleCases, lookupSubdivisionBuyerClientByFiscalReference, openSubdivisionSaleCase, saveSubdivisionSaleCaseTerms } from "./subdivisionSaleCase";
 import { createSubdivisionEconomicRuleSet, listSubdivisionEconomicRuleSets } from "./subdivisionEconomicRuleSet";
 import { createSubdivisionEconomicRuleComponent, listSubdivisionEconomicRuleComponents } from "./subdivisionEconomicRuleComponent";
 import { addSubdivisionEconomicRuleComponentRoleReference, listSubdivisionEconomicRuleComponentRoleReferences } from "./subdivisionEconomicRuleComponentRoleReference";
@@ -291,6 +292,7 @@ import {
   linkSubdivisionPriceEvidenceInputSchema,
   listSubdivisionPriceEvidenceSummaryInputSchema,
 } from "../shared/subdivisionPriceEvidenceContracts";
+import { lookupSubdivisionBuyerClientByFiscalReferenceInputSchema, openSubdivisionSaleCaseInputSchema, saveSubdivisionSaleCaseTermsInputSchema } from "../shared/subdivisionSaleCaseContracts";
 import { authorizedOrganizationContextInputSchema, listAuthorizedOrganizationContexts } from "./organizationContext";
 import { clientImportCommitInputSchema } from "../shared/clientImportContracts";
 import { commitClientImport } from "./clientImport";
@@ -811,6 +813,16 @@ export const appRouter = router({
     addEconomicRuleComponentRoleReference: protectedProcedure.input(draftSubdivisionEconomicRuleComponentRoleReferenceInputSchema).mutation(({ ctx, input }) => addSubdivisionEconomicRuleComponentRoleReference(ctx.supabaseSubjectId ?? undefined, input)),
     addSaleDraftCoBuyer: protectedProcedure.input(draftSubdivisionSaleDraftCoBuyerInputSchema).mutation(({ ctx, input }) => addSubdivisionSaleDraftCoBuyer(ctx.supabaseSubjectId ?? undefined, input)),
     upsertSaleDraftWorkState: protectedProcedure.input(draftSubdivisionSaleDraftWorkStateInputSchema).mutation(({ ctx, input }) => upsertSubdivisionSaleDraftWorkState(ctx.supabaseSubjectId ?? undefined, input)),
+    lookupBuyerClientByFiscalReference: protectedProcedure.input(lookupSubdivisionBuyerClientByFiscalReferenceInputSchema).query(({ ctx, input }) => lookupSubdivisionBuyerClientByFiscalReference(ctx.supabaseSubjectId ?? undefined, input)),
+    listSaleCases: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleCases(ctx.supabaseSubjectId ?? undefined, input)),
+    openSaleCase: protectedProcedure.input(openSubdivisionSaleCaseInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return openSubdivisionSaleCase(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    saveSaleCaseTerms: protectedProcedure.input(saveSubdivisionSaleCaseTermsInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return saveSubdivisionSaleCaseTerms(ctx.supabaseSubjectId ?? undefined, input);
+    }),
   }),
 
   // TODO: add feature routers here, e.g.

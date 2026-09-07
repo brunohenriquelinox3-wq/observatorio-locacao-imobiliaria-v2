@@ -70,8 +70,9 @@ describe("setores da coluna Loteadora", () => {
     expect(page).toContain('aria-label="Áreas da Central de Vendas"');
     expect(page).toContain('href="/loteadora/vendas"');
     expect(page).toContain('{isCentralSalesJourney && <section id="subdivision-sales"');
-    expect(page).toContain("Iniciar preparação de venda");
-    expect(page).toContain("não é reserva, proposta, contrato, preço, cobrança, boleto, comissão, repasse ou financeiro");
+    expect(page).toContain("<SubdivisionSaleCaseWorkspace");
+    expect(page).toContain("onOpenCase={() => openSaleCaseMutation.mutate");
+    expect(page).toContain("onSaveTerms={(terms) => saveSaleCaseTermsMutation.mutate");
   });
 
   it("apresenta Cadastro e Estoque como áreas complementares sem desmontar o estúdio existente", () => {
