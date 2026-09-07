@@ -15,6 +15,40 @@
 
 .subdivision-buyer-profile__selected-notice svg { flex: 0 0 auto; color: #0d7e6d; }
 
+.subdivision-buyer-profile__search {
+	display: grid;
+	gap: 12px;
+	margin: 18px 0;
+	padding: clamp(16px, 2vw, 22px);
+	border: 1px solid #cce4dc;
+	border-radius: 13px;
+	background: linear-gradient(135deg, #f4fbf8, #ffffff);
+}
+
+.subdivision-buyer-profile__search-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.subdivision-buyer-profile__search-heading h3 { margin: 3px 0 5px; color: #164c45; font-size: 18px; letter-spacing: -.02em; }
+.subdivision-buyer-profile__search-heading p:last-child { max-width: 720px; margin: 0; color: #55736d; font-size: 12px; line-height: 1.55; }
+.subdivision-buyer-profile__search-heading > button { flex: 0 0 auto; min-height: 38px; padding: 8px 10px; border: 1px solid #a9cec5; border-radius: 8px; background: #ffffff; color: #1d675a; font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; }
+.subdivision-buyer-profile__search > label { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; padding: 0 11px; border: 1px solid #a7d5ca; border-radius: 9px; background: #fff; color: #27786a; }
+.subdivision-buyer-profile__search > label span { grid-column: 1 / -1; padding-top: 9px; color: #3c625c; font-size: 11px; font-weight: 850; }
+.subdivision-buyer-profile__search > label input { grid-column: 1 / -1; min-height: 36px; padding: 3px 0 10px; border: 0; outline: 0; background: transparent; color: #153f46; font: inherit; font-size: 13px; }
+.subdivision-buyer-profile__search > label input:focus { outline: 0; }
+.subdivision-buyer-profile__search:has(input:focus) { border-color: #1db39b; box-shadow: 0 0 0 3px rgba(29, 179, 155, .15); }
+.subdivision-buyer-profile__search-note, .subdivision-buyer-profile__search-hint, .subdivision-buyer-profile__search-state, .subdivision-buyer-profile__search-empty { display: flex; gap: 7px; align-items: flex-start; margin: 0; color: #55736d; font-size: 11px; line-height: 1.52; }
+.subdivision-buyer-profile__search-hint { padding: 9px 10px; border-left: 3px solid #9bcfbf; background: #edf8f4; }
+.subdivision-buyer-profile__search-state.is-error { color: #a13c3c; }
+.subdivision-buyer-profile__search-results { display: grid; gap: 7px; max-height: min(42vh, 330px); overflow-y: auto; overscroll-behavior: contain; padding-right: 6px; scrollbar-color: #77bcae #edf6f3; scrollbar-width: thin; }
+.subdivision-buyer-profile__search-results::-webkit-scrollbar { width: 9px; }
+.subdivision-buyer-profile__search-results::-webkit-scrollbar-track { border-radius: 99px; background: #edf6f3; }
+.subdivision-buyer-profile__search-results::-webkit-scrollbar-thumb { border: 3px solid #edf6f3; border-radius: 99px; background: #77bcae; }
+.subdivision-buyer-profile__search-results > button { display: grid; gap: 3px; padding: 11px 12px; border: 1px solid #d6e7e2; border-left: 3px solid #5bb59f; border-radius: 8px; background: #fff; color: #234d4d; font: inherit; text-align: left; cursor: pointer; }
+.subdivision-buyer-profile__search-results > button:hover, .subdivision-buyer-profile__search-results > button.is-selected { border-color: #78c3b2; background: #f3fbf7; }
+.subdivision-buyer-profile__search-results > button.is-selected { border-left-color: #126f62; }
+.subdivision-buyer-profile__search-results > button:focus-visible, .subdivision-buyer-profile__search-heading > button:focus-visible, .subdivision-buyer-profile__next-page:focus-visible { outline: 3px solid rgba(29, 179, 155, .32); outline-offset: 2px; }
+.subdivision-buyer-profile__search-results span { color: #278574; font-size: 9px; font-weight: 850; letter-spacing: .1em; }
+.subdivision-buyer-profile__search-results b { color: #183f46; font-size: 13px; }
+.subdivision-buyer-profile__search-results small { color: #5c7772; font-size: 10px; }
+
 .subdivision-buyer-profile__sequence {
   display: flex;
   flex-wrap: wrap;
@@ -85,7 +119,9 @@
 .subdivision-buyer-profile__form-actions > button.is-secondary:hover:not(:disabled) { border-color: #6eb9a8; background: #eaf8f3; }
 
 @media (max-width: 640px) {
-  .subdivision-buyer-profile__sequence { align-items: stretch; }
+	.subdivision-buyer-profile__search-heading { display: grid; }
+	.subdivision-buyer-profile__search-heading > button { width: 100%; }
+	.subdivision-buyer-profile__sequence { align-items: stretch; }
   .subdivision-buyer-profile__sequence > button { flex: 1 1 130px; }
   .subdivision-buyer-profile__sequence > span { flex-basis: 100%; order: -1; }
   .subdivision-buyer-profile__form-actions > button { width: 100%; }

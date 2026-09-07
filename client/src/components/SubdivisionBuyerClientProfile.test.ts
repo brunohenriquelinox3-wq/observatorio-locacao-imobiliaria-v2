@@ -62,24 +62,30 @@ describe("Clientes Loteadora profile composition", () => {
     expect(component).toContain('const restoredProfileAnchor = useRef(false);');
     expect(component).toContain('window.location.hash !== "#buyer-profile-client"');
     expect(component).toContain('document.getElementById("buyer-profile-client")?.scrollIntoView({ behavior: "auto", block: "center" })');
-    expect(component).toContain("[buyerClients?.length, isWorkspaceReady, presentation]");
+    expect(component).toContain("[isWorkspaceReady, presentation]");
   });
 
-  it("focuses the standalone selector only when it becomes ready without disrupting active editing", () => {
-    expect(component).toContain("const selectorRef = useRef<HTMLSelectElement>(null);");
+  it("focuses the standalone search only when it becomes ready without disrupting active editing", () => {
+    expect(component).toContain("const searchInputRef = useRef<HTMLInputElement>(null);");
     expect(component).toContain("const focusedStandaloneSelector = useRef(false);");
-    expect(component).toContain("if (presentation !== \"full\" || !isWorkspaceReady || buyerClientId || focusedStandaloneSelector.current || !buyerClients?.length) return;");
-    expect(component).toContain("selectorRef.current?.focus({ preventScroll: true })");
-    expect(component).toContain("<select ref={selectorRef} id=\"buyer-profile-client\"");
+    expect(component).toContain("if (presentation !== \"full\" || !isWorkspaceReady || buyerClientId || focusedStandaloneSelector.current) return;");
+    expect(component).toContain("searchInputRef.current?.focus({ preventScroll: true })");
+    expect(component).toContain('id="buyer-profile-search"');
   });
 
-  it("supports sequential navigation only across the authorized buyer-client options", () => {
-    expect(component).toContain("const selectedBuyerClientIndex = buyerClients?.findIndex");
+  it("supports search and sequential navigation only across contextual results", () => {
+    expect(component).toContain("const [searchDraft, setSearchDraft] = useState(\"\");");
+    expect(component).toContain("searchTerm, pageSize: 25, pageOffset: searchPageOffset");
+    expect(component).toContain("normalized.length >= 2");
+    expect(component).toContain("listDraftBuyerClientDirectory.useQuery(searchInput");
+    expect(component).toContain('aria-label="Resultados autorizados da busca de clientes"');
+    expect(component).toContain("const selectedBuyerClientIndex = visibleBuyerClients?.findIndex");
     expect(component).toContain("function selectAdjacentBuyerClient(direction: -1 | 1)");
-    expect(component).toContain("buyerClients?.[selectedBuyerClientIndex + direction]");
+    expect(component).toContain("visibleBuyerClients?.[selectedBuyerClientIndex + direction]");
     expect(component).toContain('aria-label="Navegação entre fichas autorizadas"');
     expect(component).toContain("Ficha anterior");
     expect(component).toContain("Próxima ficha");
+    expect(component).toContain("Ver próximos resultados autorizados");
   });
 
   it("does not expose a direct commercial transition or individual export control", () => {

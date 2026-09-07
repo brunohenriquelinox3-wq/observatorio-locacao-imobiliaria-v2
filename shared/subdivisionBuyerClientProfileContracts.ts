@@ -54,9 +54,9 @@ export const subdivisionBuyerClientProfileLookupInputSchema = subdivisionContext
 }).strict();
 
 export const subdivisionBuyerClientDirectoryListInputSchema = subdivisionContextSchema.extend({
-  searchTerm: z.string().trim().min(2).max(80).nullable(),
-  pageSize: z.number().int().min(1).max(25),
-  pageOffset: z.number().int().min(0).max(500),
+	searchTerm: z.string().trim().min(2).max(80).nullable(),
+	pageSize: z.number().int().min(1).max(25),
+	pageOffset: z.number().int().min(0).max(49_975),
 }).strict();
 
 export const subdivisionBuyerClientTimelineInputSchema = subdivisionContextSchema.extend({

@@ -1,5 +1,5 @@
 import type { SubdivisionContext } from "@shared/subdivisionContracts";
-import { BadgeCheck, CircleAlert, ClipboardCheck, ContactRound, Landmark, ShieldCheck, UserRoundCheck } from "lucide-react";
+import { BadgeCheck, CircleAlert, ClipboardCheck, ContactRound, Landmark, Search, ShieldCheck, UserRoundCheck } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -23,10 +23,11 @@ type SubdivisionBuyerClientProfileProps = {
   context: SubdivisionContext;
   isContextReady: boolean;
   isWorkspaceReady: boolean;
-  buyerClients: BuyerClientOption[] | undefined;
-  selectedBuyerClientId?: string;
-  onSelectBuyerClient?: (buyerClientId: string) => void;
-  presentation?: "full" | "embedded";
+	buyerClients: BuyerClientOption[] | undefined;
+	selectedBuyerClientId?: string;
+	onSelectBuyerClient?: (buyerClientId: string) => void;
+	onOpenDirectory?: () => void;
+	presentation?: "full" | "embedded";
 };
 
 const partyKinds = { individual: "Pessoa física", legal_entity: "Pessoa jurídica" } as const;
@@ -57,30 +58,42 @@ function emptyProfile(): BuyerProfileFormState {
   };
 }
 
-export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorkspaceReady, buyerClients, selectedBuyerClientId, onSelectBuyerClient, presentation = "full" }: SubdivisionBuyerClientProfileProps) {
-  const [uncontrolledBuyerClientId, setUncontrolledBuyerClientId] = useState("");
-  const buyerClientId = selectedBuyerClientId ?? uncontrolledBuyerClientId;
-  const editorFormRef = useRef<HTMLFormElement>(null);
-  const selectorRef = useRef<HTMLSelectElement>(null);
-  const selectedBuyerClientIndex = buyerClients?.findIndex((client) => client.buyerClientId === buyerClientId) ?? -1;
-  const lastFocusedBuyerClientId = useRef("");
-  const restoredProfileAnchor = useRef(false);
-  const focusedStandaloneSelector = useRef(false);
+export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorkspaceReady, buyerClients, selectedBuyerClientId, onSelectBuyerClient, onOpenDirectory, presentation = "full" }: SubdivisionBuyerClientProfileProps) {
+	const [uncontrolledBuyerClientId, setUncontrolledBuyerClientId] = useState("");
+	const buyerClientId = selectedBuyerClientId ?? uncontrolledBuyerClientId;
+	const editorFormRef = useRef<HTMLFormElement>(null);
+	const searchInputRef = useRef<HTMLInputElement>(null);
+	const [searchDraft, setSearchDraft] = useState("");
+	const [searchTerm, setSearchTerm] = useState<string | null>(null);
+	const [searchPageOffset, setSearchPageOffset] = useState(0);
+	const lastFocusedBuyerClientId = useRef("");
+	const restoredProfileAnchor = useRef(false);
+	const focusedStandaloneSelector = useRef(false);
   const setBuyerClientId = (buyerClientId: string) => {
     if (selectedBuyerClientId !== undefined) onSelectBuyerClient?.(buyerClientId);
-    else setUncontrolledBuyerClientId(buyerClientId);
-  };
-  const [profile, setProfile] = useState(emptyProfile);
+		else setUncontrolledBuyerClientId(buyerClientId);
+	};
+	const searchInput = useMemo(() => ({ ...context, searchTerm, pageSize: 25, pageOffset: searchPageOffset }), [context, searchPageOffset, searchTerm]);
+	const searchDirectoryQuery = trpc.subdivisionFoundation.listDraftBuyerClientDirectory.useQuery(searchInput, {
+		enabled: presentation === "full" && isWorkspaceReady && searchTerm !== null,
+		retry: false,
+	});
+	const visibleBuyerClients = useMemo(() => {
+		if (presentation === "embedded") return buyerClients;
+		return searchDirectoryQuery.data?.map((client) => ({ buyerClientId: client.buyerClientId, displayName: client.displayName }));
+	}, [buyerClients, presentation, searchDirectoryQuery.data]);
+	const selectedBuyerClientIndex = visibleBuyerClients?.findIndex((client) => client.buyerClientId === buyerClientId) ?? -1;
+	const [profile, setProfile] = useState(emptyProfile);
   const [requirementCode, setRequirementCode] = useState<keyof typeof buyerClientRequirementCodes>("identity_evidence");
   const [requirementState, setRequirementState] = useState<keyof typeof buyerClientRequirementStates>("to_confirm");
   const [contactPurpose, setContactPurpose] = useState<keyof typeof buyerClientContactPurposes>("service_contact");
   const [contactChannel, setContactChannel] = useState<keyof typeof buyerClientContactChannels>("email");
   const [preferenceState, setPreferenceState] = useState<keyof typeof buyerClientContactPreferenceStates>("granted");
 
-  function selectAdjacentBuyerClient(direction: -1 | 1) {
-    const adjacentBuyerClient = buyerClients?.[selectedBuyerClientIndex + direction];
-    if (adjacentBuyerClient) setBuyerClientId(adjacentBuyerClient.buyerClientId);
-  }
+	function selectAdjacentBuyerClient(direction: -1 | 1) {
+		const adjacentBuyerClient = visibleBuyerClients?.[selectedBuyerClientIndex + direction];
+		if (adjacentBuyerClient) setBuyerClientId(adjacentBuyerClient.buyerClientId);
+	}
 
   const selectionInput = useMemo(() => ({ ...context, buyerClientId }), [buyerClientId, context]);
   const initialDirectoryInput = useMemo(() => ({ ...context, searchTerm: null, pageSize: 25, pageOffset: 0 }), [context]);
@@ -88,9 +101,27 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
   const requirementsQuery = trpc.subdivisionFoundation.listDraftBuyerClientRequirements.useQuery(selectionInput, { enabled: isWorkspaceReady && Boolean(buyerClientId), retry: false });
   const preferencesQuery = trpc.subdivisionFoundation.listDraftBuyerClientContactPreferences.useQuery(selectionInput, { enabled: isWorkspaceReady && Boolean(buyerClientId), retry: false });
 
-  useEffect(() => {
-    if (!isContextReady && buyerClientId) setBuyerClientId("");
-  }, [buyerClientId, isContextReady]);
+	useEffect(() => {
+		if (!isContextReady && buyerClientId) setBuyerClientId("");
+	}, [buyerClientId, isContextReady]);
+
+	useEffect(() => {
+		if (presentation !== "full") return;
+		setSearchDraft("");
+		setSearchTerm(null);
+		setSearchPageOffset(0);
+		focusedStandaloneSelector.current = false;
+	}, [context.organizationId, context.purposeCode, presentation]);
+
+	useEffect(() => {
+		if (presentation !== "full") return;
+		const normalized = searchDraft.trim();
+		const timeout = window.setTimeout(() => {
+			setSearchTerm(normalized.length >= 2 ? normalized : null);
+			setSearchPageOffset(0);
+		}, 240);
+		return () => window.clearTimeout(timeout);
+	}, [presentation, searchDraft]);
 
   useEffect(() => {
     if (!buyerClientId) {
@@ -128,20 +159,20 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
   }, [buyerClientId, presentation, profileQuery.isLoading]);
 
   useEffect(() => {
-    if (presentation !== "full" || !isWorkspaceReady || restoredProfileAnchor.current || typeof window === "undefined" || window.location.hash !== "#buyer-profile-client") return;
-    restoredProfileAnchor.current = true;
-    const animationFrame = requestAnimationFrame(() => {
-      document.getElementById("buyer-profile-client")?.scrollIntoView({ behavior: "auto", block: "center" });
-    });
-    return () => cancelAnimationFrame(animationFrame);
-  }, [buyerClients?.length, isWorkspaceReady, presentation]);
+		if (presentation !== "full" || !isWorkspaceReady || restoredProfileAnchor.current || typeof window === "undefined" || window.location.hash !== "#buyer-profile-client") return;
+		restoredProfileAnchor.current = true;
+		const animationFrame = requestAnimationFrame(() => {
+			document.getElementById("buyer-profile-client")?.scrollIntoView({ behavior: "auto", block: "center" });
+		});
+		return () => cancelAnimationFrame(animationFrame);
+	}, [isWorkspaceReady, presentation]);
 
-  useEffect(() => {
-    if (presentation !== "full" || !isWorkspaceReady || buyerClientId || focusedStandaloneSelector.current || !buyerClients?.length) return;
-    focusedStandaloneSelector.current = true;
-    const animationFrame = requestAnimationFrame(() => selectorRef.current?.focus({ preventScroll: true }));
-    return () => cancelAnimationFrame(animationFrame);
-  }, [buyerClientId, buyerClients?.length, isWorkspaceReady, presentation]);
+	useEffect(() => {
+		if (presentation !== "full" || !isWorkspaceReady || buyerClientId || focusedStandaloneSelector.current) return;
+		focusedStandaloneSelector.current = true;
+		const animationFrame = requestAnimationFrame(() => searchInputRef.current?.focus({ preventScroll: true }));
+		return () => cancelAnimationFrame(animationFrame);
+	}, [buyerClientId, isWorkspaceReady, presentation]);
 
   const presenceSnapshot = {
     partyKind: profile.partyKind,
@@ -215,26 +246,30 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
 
   return (
     <section className={`subdivision-buyer-profile${presentation === "embedded" ? " is-embedded" : ""}`} aria-labelledby={presentation === "full" ? "buyer-profile-title" : undefined}>
-      {presentation === "full" && <header className="subdivision-buyer-profile__header">
-        <div>
-          <p className="subdivision-foundation-eyebrow">08 · FICHA CADASTRAL DO CLIENTE</p>
-          <h2 id="buyer-profile-title">Edite contatos, identificação e pendências em uma ficha única.</h2>
-          <p>A ficha complementa o Cliente Loteadora já cadastrado, sem duplicar a pessoa. Preencha somente o necessário para a finalidade declarada e deixe o restante para revisão humana futura.</p>
-        </div>
-        <div className="subdivision-buyer-profile__guard"><ShieldCheck size={19} aria-hidden="true" /><span>Privado por contexto<br /><b>e auditado sem conteúdo</b></span></div>
-      </header>}
+		{presentation === "full" && <header className="subdivision-buyer-profile__header">
+			<div>
+				<p className="subdivision-foundation-eyebrow">08 · BUSCA E FICHA CADASTRAL</p>
+				<h2 id="buyer-profile-title">Busque, confira e edite o Cliente Loteadora.</h2>
+				<p>Localize primeiro o cadastro pelo dado disponível. A ficha abre no próprio resultado, sem duplicar a pessoa e sem relacioná-la a venda, lote, crédito, contrato ou financeiro.</p>
+			</div>
+			<div className="subdivision-buyer-profile__guard"><ShieldCheck size={19} aria-hidden="true" /><span>Privado por contexto<br /><b>e auditado sem conteúdo</b></span></div>
+		</header>}
 
       {presentation === "embedded" && <div className="subdivision-buyer-profile__embedded-heading"><p className="subdivision-foundation-eyebrow">EDIÇÃO CONTEXTUAL</p><h3>Ficha completa do cliente selecionado</h3><p>Edite dados declarados neste mesmo painel; a gravação só ocorre após confirmação do servidor.</p></div>}
 
-      {presentation === "full" && <div className="subdivision-buyer-profile__selector">
-        <label htmlFor="buyer-profile-client">Cliente Loteadora
-          <select ref={selectorRef} id="buyer-profile-client" value={buyerClientId} onChange={(event) => setBuyerClientId(event.target.value)} disabled={!isWorkspaceReady || buyerClients === undefined}>
-            <option value="">{!isWorkspaceReady ? "Defina um contexto autorizado" : buyerClients?.length ? "Selecione um cliente para editar o cadastro" : "Nenhum cliente neste contexto"}</option>
-            {buyerClients?.map((client) => <option key={client.buyerClientId} value={client.buyerClientId}>{client.displayName}</option>)}
-          </select>
-        </label>
-        <p><Landmark size={17} aria-hidden="true" /> Esta área não relaciona cliente a lote, preço, crédito, proposta, contrato, registro ou pagamento.</p>
-      </div>}
+		{presentation === "full" && <div className="subdivision-buyer-profile__search" id="buyer-profile-client">
+			<div className="subdivision-buyer-profile__search-heading"><div><p className="subdivision-foundation-eyebrow">ESTOQUE CADASTRAL</p><h3>Encontre o cadastro para editar</h3><p>Digite pelo menos 2 caracteres de nome declarado, telefone, WhatsApp, e-mail, CPF/CNPJ ou outro documento declarado. O resultado confirma somente o cadastro elegível, sem revelar o termo pesquisado.</p></div>{onOpenDirectory && <button type="button" className="is-secondary" onClick={onOpenDirectory}>Adicionar, arquivar ou restaurar</button>}</div>
+			<label htmlFor="buyer-profile-search"><Search size={16} aria-hidden="true" /><span>Buscar Cliente Loteadora</span><input ref={searchInputRef} id="buyer-profile-search" value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)} placeholder="Nome, telefone, e-mail ou referência declarada" autoComplete="off" disabled={!isWorkspaceReady} /></label>
+			<p className="subdivision-buyer-profile__search-note"><Landmark size={17} aria-hidden="true" /> A pesquisa é delimitada pelo contexto e alçada. Ela não relaciona cliente a lote, preço, crédito, proposta, contrato, registro ou pagamento.</p>
+			{searchDraft.trim().length === 1 && <p className="subdivision-buyer-profile__search-hint">Continue digitando para pesquisar. Com um caractere, nenhuma consulta é enviada.</p>}
+			{searchTerm !== null && searchDirectoryQuery.isLoading && <p className="subdivision-buyer-profile__search-state"><span className="subdivision-foundation-spinner" aria-hidden="true" /> Consultando cadastros autorizados.</p>}
+			{searchDirectoryQuery.isError && <p className="subdivision-buyer-profile__search-state is-error"><CircleAlert size={16} aria-hidden="true" /> A pesquisa não foi liberada neste contexto.</p>}
+			{searchTerm && !searchDirectoryQuery.isLoading && !searchDirectoryQuery.isError && <div className="subdivision-buyer-profile__search-results" role="list" aria-label="Resultados autorizados da busca de clientes">
+				{visibleBuyerClients?.map((client) => <button type="button" role="listitem" key={client.buyerClientId} className={client.buyerClientId === buyerClientId ? "is-selected" : ""} aria-pressed={client.buyerClientId === buyerClientId} onClick={() => setBuyerClientId(client.buyerClientId)}><span>CLIENTE LOTEADORA</span><b>{client.displayName}</b><small>{client.buyerClientId === buyerClientId ? "Ficha aberta para edição" : "Abrir ficha para edição"}</small></button>)}
+				{visibleBuyerClients?.length === 0 && <p className="subdivision-buyer-profile__search-empty">Nenhum cadastro autorizado corresponde à busca. Refine o termo ou cadastre um novo cliente pela Central.</p>}
+			</div>}
+			{searchDirectoryQuery.data?.length === 25 && <button type="button" className="subdivision-buyer-profile__next-page" onClick={() => setSearchPageOffset((offset) => offset + 25)}>Ver próximos resultados autorizados</button>}
+		</div>}
 
       {!isContextReady && <div className="subdivision-foundation-empty"><CircleAlert size={18} /><p>Sem contexto autorizado não há consulta nem edição de perfil cadastral.</p></div>}
       {isWorkspaceReady && buyerClientId && profileQuery.isLoading && <div className="subdivision-foundation-empty"><span className="subdivision-foundation-spinner" aria-hidden="true" /><p>Confirmando o contexto antes de solicitar o perfil cadastral.</p></div>}
@@ -245,8 +280,8 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
           <div className="subdivision-buyer-profile__selected-notice"><ShieldCheck size={16} aria-hidden="true" /><span>Cadastro selecionado para edição. As alterações desta ficha são confirmadas pelo servidor antes de atualizar o resumo.</span></div>
           <nav className="subdivision-buyer-profile__sequence" aria-label="Navegação entre fichas autorizadas">
             <button type="button" className="is-secondary" onClick={() => selectAdjacentBuyerClient(-1)} disabled={selectedBuyerClientIndex <= 0 || profileQuery.isLoading || saveProfileMutation.isPending}>Ficha anterior</button>
-            <span aria-live="polite">Ficha {selectedBuyerClientIndex + 1} de {buyerClients?.length ?? 0}</span>
-            <button type="button" className="is-secondary" onClick={() => selectAdjacentBuyerClient(1)} disabled={selectedBuyerClientIndex < 0 || selectedBuyerClientIndex >= (buyerClients?.length ?? 0) - 1 || profileQuery.isLoading || saveProfileMutation.isPending}>Próxima ficha</button>
+			<span aria-live="polite">{selectedBuyerClientIndex >= 0 ? `Resultado ${selectedBuyerClientIndex + 1} de ${visibleBuyerClients?.length ?? 0}` : "Ficha selecionada fora da busca atual"}</span>
+			<button type="button" className="is-secondary" onClick={() => selectAdjacentBuyerClient(1)} disabled={selectedBuyerClientIndex < 0 || selectedBuyerClientIndex >= (visibleBuyerClients?.length ?? 0) - 1 || profileQuery.isLoading || saveProfileMutation.isPending}>Próxima ficha</button>
           </nav>
           <div className="subdivision-buyer-profile__form-heading"><ContactRound size={19} aria-hidden="true" /><div><h3>Dados de contato e identificação</h3><p>Dados declarados não equivalem a validação fiscal, crédito, aprovação ou aptidão para contrato.</p></div></div>
           <div className="subdivision-buyer-profile__grid">

@@ -33,6 +33,9 @@ describe("SubdivisionBuyerClientDirectory composition", () => {
     expect(component).toContain("[context.organizationId, context.purposeCode, onSelectBuyerClient]");
     expect(component).toContain("setPageOffset(0);");
     expect(component).toContain("Ver mais cadastros autorizados");
+	  expect(component).toContain('className="subdivision-buyer-directory__list"');
+	  expect(component).toContain("Nome, telefone, e-mail ou referência declarada");
+	  expect(component).toContain("devolve somente o cartão minimizado no mesmo contexto");
   });
 
   it("makes protected contact editing, private documents, and reversible exclusion discoverable", () => {

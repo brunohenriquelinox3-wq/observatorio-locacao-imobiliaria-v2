@@ -184,10 +184,10 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
 
     {!isContextReady && <div className="subdivision-foundation-empty"><CircleAlert size={18} /><p>Selecione um contexto autorizado antes de consultar a central de clientes.</p></div>}
     {isWorkspaceReady && <>
-      <div className="subdivision-buyer-directory__controls">
-        <label htmlFor="buyer-directory-search"><Search size={16} aria-hidden="true" /><span>Buscar cadastro no contexto</span><input id="buyer-directory-search" value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)} placeholder="Informe ao menos 2 caracteres" autoComplete="off" /></label>
-        <p><ListFilter size={16} aria-hidden="true" /> A busca usa o nome declarado no cadastro-base, limita o retorno e não consulta documento, contato, lote, valor ou contrato.</p>
-      </div>
+	      <div className="subdivision-buyer-directory__controls">
+	        <label htmlFor="buyer-directory-search"><Search size={16} aria-hidden="true" /><span>Buscar cadastro no contexto</span><input id="buyer-directory-search" value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)} placeholder="Nome, telefone, e-mail ou referência declarada" autoComplete="off" /></label>
+	        <p><ListFilter size={16} aria-hidden="true" /> A busca pode comparar nome declarado, contato ou referência já autorizada, mas devolve somente o cartão minimizado no mesmo contexto. Não relaciona cliente a lote, valor, crédito ou contrato.</p>
+	      </div>
       <form className="subdivision-buyer-directory__enrollment" onSubmit={registerDirectClient}>
         <div><UserRoundPlus size={19} aria-hidden="true" /><span><b>Novo Cliente Loteadora</b><small>Registre o nome declarado e a natureza da pessoa. Em seguida, abra a ficha para editar telefone, WhatsApp, e-mail, identificação, pendências e documentos privados.</small></span></div>
         <label htmlFor="buyer-directory-direct-name">Nome declarado<input id="buyer-directory-direct-name" value={newClientName} onChange={(event) => setNewClientName(event.target.value)} minLength={2} maxLength={160} autoComplete="off" placeholder="Informe o nome para o cadastro" required disabled={registerDirectMutation.isPending} /></label>

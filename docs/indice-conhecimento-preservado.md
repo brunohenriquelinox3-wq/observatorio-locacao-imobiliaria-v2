@@ -25,5 +25,6 @@ Este índice concentra decisões reutilizáveis do CRM para que atualizações f
 | Referências operacionais curtas | `referencias-operacionais-curtas-a278.md` | Antes de expor identificadores de preço, política, condição ou empreendimento na interface de Loteamentos. |
 | Cadastro e prontidão de Clientes Loteadora | `estrategia-clientes-loteadora-a279.md` | Antes de alterar `Party`, cliente comprador, perfil cadastral, pendências condicionais, preferências de contato, anexos privados ou qualquer passagem para domínio comercial. |
 | Central operacional de Clientes Loteadora | `estrategia-evolucao-integral-clientes-loteadora-a280.md` | Antes de criar lista, busca, ficha, histórico redigido, nota governada, prévia de planilha ou evolução documental; preservar A279 e bloquear domínios comercial, financeiro, contratual e registral. |
+| Busca escalável de Clientes Loteadora | `busca-escalavel-clientes-loteadora-a283.md` | Antes de alterar filtro cadastral, paginação, rolagem, seleção de ficha, projeção minimizada ou o vínculo compatível avançado. |
 
 > Não substituir este índice por resumos efêmeros. Atualize-o somente ao adicionar uma referência versionada que descreva uma decisão validada, sem incluir PII, preços individuais, conteúdo de fonte, segredos ou URLs de infraestrutura.
