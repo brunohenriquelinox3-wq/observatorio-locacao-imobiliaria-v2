@@ -330,6 +330,17 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(styles).toContain('@media (max-width: 640px)');
   });
 
+  it("refaz a leitura protegida quando a sessão sobe para MFA recente", () => {
+    const studio = source();
+
+    expect(studio).toContain("hasRecentTotpMfa");
+    expect(studio).toContain("shouldRefreshMfaProtectedPriceQueries");
+    expect(studio).toContain('refetchOnMount: "always"');
+    expect(studio).toContain('refetchOnWindowFocus: "always"');
+    expect(studio).toContain("mfaPriceReadinessRevision");
+    expect(studio).toContain("internalLotPriceReferencesQuery.refetch()");
+  });
+
   it("prioriza uma entrada operacional de portfólio sem manter barras laterais concorrentes", () => {
     const studio = source();
     const styles = operationalEntryStyles();

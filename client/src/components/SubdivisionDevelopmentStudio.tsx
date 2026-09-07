@@ -1,5 +1,7 @@
 import type { SubdivisionContext } from "@shared/subdivisionContracts";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
+import { hasRecentTotpMfa } from "@/lib/mfaSecurityState";
+import { shouldRefreshMfaProtectedPriceQueries } from "@/lib/mfaProtectedPriceQuerySync";
 import { trpc } from "@/lib/trpc";
 import { SubdivisionInternalInventoryPanel } from "@/components/SubdivisionInternalInventoryPanel";
 import { InlineLotPriceEditor } from "@/components/InlineLotPriceEditor";
@@ -322,6 +324,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   });
   const [withdrawPriceConditionReason, setWithdrawPriceConditionReason] = useState<"source_superseded" | "governance_review" | "effective_date_reassessment" | "documentary_reconciliation">("governance_review");
   const [focusedLotPriceTarget, setFocusedLotPriceTarget] = useState<{ blockId: string; lotNumber: number } | null>(null);
+  const [mfaPriceReadinessRevision, setMfaPriceReadinessRevision] = useState(0);
   const [physicalReservationDraft, setPhysicalReservationDraft] = useState({ blockId: "", lotNumber: "", reservationPurpose: "landowner_reserve" as "landowner_reserve" | "technical_artesian_well" | "technical_water_tank" | "technical_other" });
   const [operationalLotDraft, setOperationalLotDraft] = useState({ blockId: "", lotNumber: "", areaSqm: "", frontageM: "", depthM: "", rearM: "", leftSideM: "", rightSideM: "", lotTypology: "standard" as "standard" | "corner" | "irregular" | "other", positionCode: "not_declared" as "not_declared" | "internal" | "corner" | "end", reservationPurpose: "none" as "none" | "landowner_reserve" | "technical_artesian_well" | "technical_water_tank" | "technical_other", internalNote: "" });
   const [operationalBlockDraft, setOperationalBlockDraft] = useState({ blockId: "", sectorReference: "", blockTypology: "regular" as "regular" | "mixed" | "irregular" | "other", internalNote: "" });
@@ -331,6 +334,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const priceBaseSourceInput = useRef<HTMLInputElement>(null);
   const operationalLotProfileRef = useRef<HTMLElement>(null);
   const priceConditionAmountInputRef = useRef<HTMLInputElement>(null);
+  const wasMfaRecentRef = useRef(false);
   const utils = trpc.useUtils();
 
   const developmentsQuery = trpc.subdivisionFoundation.listDevelopmentStudio.useQuery(context, { enabled: isWorkspaceReady, retry: false });
@@ -351,10 +355,10 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const physicalStructureQuery = trpc.subdivisionFoundation.listDraftPhysicalStructure.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const requirementsQuery = trpc.subdivisionFoundation.listDraftDevelopmentRequirements.useQuery(structureInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const priceBasePoliciesQuery = trpc.subdivisionFoundation.listPriceBasePolicies.useQuery(priceBasePolicyInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
-  const internalLotPriceReferencesQuery = trpc.subdivisionFoundation.listLotInternalPriceReferences.useQuery(priceBasePolicyInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false, staleTime: 30_000 });
+  const internalLotPriceReferencesQuery = trpc.subdivisionFoundation.listLotInternalPriceReferences.useQuery(priceBasePolicyInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false, staleTime: 30_000, refetchOnMount: "always", refetchOnWindowFocus: "always" });
   const priceConditionsQuery = trpc.subdivisionFoundation.listPriceConditions.useQuery(priceConditionInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
   const priceEvidenceSummaryQuery = trpc.subdivisionFoundation.listPriceEvidenceSummary.useQuery(priceBasePolicyInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId), retry: false });
-  const focusedLotPriceContextQuery = trpc.subdivisionFoundation.getLotPriceContext.useQuery(focusedLotPriceContextInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId && focusedLotPriceTarget), retry: false, staleTime: 30_000 });
+  const focusedLotPriceContextQuery = trpc.subdivisionFoundation.getLotPriceContext.useQuery(focusedLotPriceContextInput, { enabled: isWorkspaceReady && Boolean(selectedDevelopmentId && focusedLotPriceTarget), retry: false, staleTime: 30_000, refetchOnMount: "always", refetchOnWindowFocus: "always" });
   const structuralReconciliationState = requirementsQuery.data?.find((requirement) => requirement.requirementCode === "technical_layout")?.requirementState as RequirementState | undefined;
   const structuralReconciliationPending = structuralReconciliationState === "review_required";
   const physicalLots = useMemo(() => (physicalStructureQuery.data ?? []).flatMap((block) => block.lots.map((lot) => ({ ...lot, blockId: String(block.blockId), blockNumber: Number(block.blockNumber) }))), [physicalStructureQuery.data]);
@@ -447,6 +451,47 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       ? internalPriceReferenceRequiresMfa ? "mfa_required" : "unavailable"
       : "available";
   const priceConditionCanPrepare = Boolean(priceConditionDraft.basePolicyId && priceConditionDraft.conditionReference && priceConditionDraft.amount && priceConditionDraft.effectiveFrom && (priceConditionDraft.scope === "development" || priceConditionDraft.blockId) && (priceConditionDraft.scope !== "lot" || priceConditionDraft.lotNumber));
+
+  useEffect(() => {
+    const client = getSupabaseBrowserClient();
+    if (!client) return;
+    let active = true;
+
+    const syncRecentMfa = async () => {
+      try {
+        const { data } = await client.auth.getSession();
+        if (!active) return;
+        const isRecent = hasRecentTotpMfa(data.session?.access_token);
+        if (shouldRefreshMfaProtectedPriceQueries(wasMfaRecentRef.current, isRecent)) {
+          setMfaPriceReadinessRevision((revision) => revision + 1);
+        }
+        wasMfaRecentRef.current = isRecent;
+      } catch {
+        // Sem leitura atual, o servidor continua a bloquear a consulta por padrão.
+      }
+    };
+
+    void syncRecentMfa();
+    const { data: listener } = client.auth.onAuthStateChange((_event, session) => {
+      const isRecent = hasRecentTotpMfa(session?.access_token);
+      if (shouldRefreshMfaProtectedPriceQueries(wasMfaRecentRef.current, isRecent)) {
+        setMfaPriceReadinessRevision((revision) => revision + 1);
+      }
+      wasMfaRecentRef.current = isRecent;
+    });
+    const intervalId = window.setInterval(() => void syncRecentMfa(), 30_000);
+    return () => {
+      active = false;
+      window.clearInterval(intervalId);
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!mfaPriceReadinessRevision || !isWorkspaceReady || !selectedDevelopmentId) return;
+    void internalLotPriceReferencesQuery.refetch();
+    if (focusedLotPriceTarget) void focusedLotPriceContextQuery.refetch();
+  }, [focusedLotPriceContextQuery, focusedLotPriceTarget, internalLotPriceReferencesQuery, isWorkspaceReady, mfaPriceReadinessRevision, selectedDevelopmentId]);
 
   useEffect(() => {
     if (!selectedOperationalLot || !selectedOperationalLotInternalReference) return;
