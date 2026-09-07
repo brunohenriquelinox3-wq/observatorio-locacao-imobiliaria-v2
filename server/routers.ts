@@ -295,7 +295,7 @@ import {
 } from "../shared/subdivisionPriceEvidenceContracts";
 import { approveSubdivisionSaleCaseInputSchema, configureSubdivisionInternalReceivableAlertsInputSchema, createSubdivisionSaleCaseDocumentIntentInputSchema, formalizeSubdivisionSaleCaseInputSchema, lookupSubdivisionBuyerClientByFiscalReferenceInputSchema, manageSubdivisionInternalReceivableAlertScheduleInputSchema, openSubdivisionSaleCaseInputSchema, releaseSubdivisionInternalReceivableBatchInputSchema, requestSubdivisionSaleReversalInputSchema, saveSubdivisionSaleCaseTermsInputSchema, setSubdivisionSaleCaseDossierReviewInputSchema } from "../shared/subdivisionSaleCaseContracts";
 import { listSubdivisionInternalReceivableAttention } from "./subdivisionInternalReceivableAttention";
-import { configureSubdivisionInternalReceivableAlerts } from "./subdivisionInternalReceivableAlerts";
+import { configureSubdivisionInternalReceivableAlerts, getSubdivisionInternalReceivableAlertConfiguration } from "./subdivisionInternalReceivableAlerts";
 import { manageSubdivisionInternalReceivableAlertSchedule } from "./subdivisionInternalReceivableAlertScheduleManagement";
 import { createSubdivisionSaleCaseDocumentIntent, listSubdivisionSaleCaseDossiers, setSubdivisionSaleCaseDossierReview } from "./subdivisionSaleCaseDossier";
 import { approveSubdivisionSaleCase, releaseSubdivisionInternalReceivableBatch, requestSubdivisionSaleReversal } from "./subdivisionSaleApproval";
@@ -855,6 +855,7 @@ export const appRouter = router({
       await requireVerifiedAal2Session(ctx);
       return configureSubdivisionInternalReceivableAlerts(ctx.supabaseSubjectId ?? undefined, input);
     }),
+    getInternalReceivableAlertConfiguration: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => getSubdivisionInternalReceivableAlertConfiguration(ctx.supabaseSubjectId ?? undefined, input)),
     manageInternalReceivableAlertSchedule: protectedProcedure.input(manageSubdivisionInternalReceivableAlertScheduleInputSchema).mutation(async ({ ctx, input }) => {
       await requireVerifiedAal2Session(ctx);
       return manageSubdivisionInternalReceivableAlertSchedule(ctx.supabaseSubjectId ?? undefined, input, ctx.req.headers.cookie);
