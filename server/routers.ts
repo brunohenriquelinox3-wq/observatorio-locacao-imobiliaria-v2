@@ -293,9 +293,10 @@ import {
   linkSubdivisionPriceEvidenceInputSchema,
   listSubdivisionPriceEvidenceSummaryInputSchema,
 } from "../shared/subdivisionPriceEvidenceContracts";
-import { approveSubdivisionSaleCaseInputSchema, configureSubdivisionInternalReceivableAlertsInputSchema, formalizeSubdivisionSaleCaseInputSchema, lookupSubdivisionBuyerClientByFiscalReferenceInputSchema, openSubdivisionSaleCaseInputSchema, requestSubdivisionSaleReversalInputSchema, saveSubdivisionSaleCaseTermsInputSchema } from "../shared/subdivisionSaleCaseContracts";
+import { approveSubdivisionSaleCaseInputSchema, configureSubdivisionInternalReceivableAlertsInputSchema, createSubdivisionSaleCaseDocumentIntentInputSchema, formalizeSubdivisionSaleCaseInputSchema, lookupSubdivisionBuyerClientByFiscalReferenceInputSchema, openSubdivisionSaleCaseInputSchema, requestSubdivisionSaleReversalInputSchema, saveSubdivisionSaleCaseTermsInputSchema, setSubdivisionSaleCaseDossierReviewInputSchema } from "../shared/subdivisionSaleCaseContracts";
 import { listSubdivisionInternalReceivableAttention } from "./subdivisionInternalReceivableAttention";
 import { configureSubdivisionInternalReceivableAlerts } from "./subdivisionInternalReceivableAlerts";
+import { createSubdivisionSaleCaseDocumentIntent, listSubdivisionSaleCaseDossiers, setSubdivisionSaleCaseDossierReview } from "./subdivisionSaleCaseDossier";
 import { approveSubdivisionSaleCase, requestSubdivisionSaleReversal } from "./subdivisionSaleApproval";
 import { listSubdivisionLotCommercialStates } from "./subdivisionLotCommercialState";
 import { authorizedOrganizationContextInputSchema, listAuthorizedOrganizationContexts } from "./organizationContext";
@@ -847,6 +848,9 @@ export const appRouter = router({
       await requireVerifiedAal2Session(ctx);
       return configureSubdivisionInternalReceivableAlerts(ctx.supabaseSubjectId ?? undefined, input);
     }),
+    createSaleCaseDocumentIntent: protectedProcedure.input(createSubdivisionSaleCaseDocumentIntentInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return createSubdivisionSaleCaseDocumentIntent(ctx.supabaseSubjectId ?? undefined, input); }),
+    setSaleCaseDossierReview: protectedProcedure.input(setSubdivisionSaleCaseDossierReviewInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return setSubdivisionSaleCaseDossierReview(ctx.supabaseSubjectId ?? undefined, input); }),
+    listSaleCaseDossiers: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleCaseDossiers(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   // TODO: add feature routers here, e.g.

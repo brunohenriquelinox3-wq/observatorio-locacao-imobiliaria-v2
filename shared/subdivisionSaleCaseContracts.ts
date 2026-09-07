@@ -60,6 +60,19 @@ export const configureSubdivisionInternalReceivableAlertsInputSchema = subdivisi
   leadDays: z.number().int().min(1).max(14),
 }).strict();
 
+export const createSubdivisionSaleCaseDocumentIntentInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  saleCaseId: z.string().uuid(),
+  documentCategory: z.string().trim().regex(/^[a-z][a-z0-9_]{2,47}$/),
+}).strict();
+
+export const setSubdivisionSaleCaseDossierReviewInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  saleCaseId: z.string().uuid(),
+  dossierReady: z.boolean(),
+  reasonCode: z.string().trim().regex(/^[a-z][a-z0-9_]{2,47}$/).nullable(),
+}).strict().superRefine((value, context) => { if (value.dossierReady && value.reasonCode !== null) context.addIssue({ code: z.ZodIssueCode.custom, message: "SUBDIVISION_SALE_CASE_DOSSIER_REVIEW_DENIED" }); if (!value.dossierReady && value.reasonCode === null) context.addIssue({ code: z.ZodIssueCode.custom, message: "SUBDIVISION_SALE_CASE_DOSSIER_REVIEW_DENIED" }); });
+
 export type LookupSubdivisionBuyerClientByFiscalReferenceInput = z.infer<typeof lookupSubdivisionBuyerClientByFiscalReferenceInputSchema>;
 export type OpenSubdivisionSaleCaseInput = z.infer<typeof openSubdivisionSaleCaseInputSchema>;
 export type SaveSubdivisionSaleCaseTermsInput = z.infer<typeof saveSubdivisionSaleCaseTermsInputSchema>;
@@ -67,3 +80,5 @@ export type FormalizeSubdivisionSaleCaseInput = z.infer<typeof formalizeSubdivis
 export type ApproveSubdivisionSaleCaseInput = z.infer<typeof approveSubdivisionSaleCaseInputSchema>;
 export type RequestSubdivisionSaleReversalInput = z.infer<typeof requestSubdivisionSaleReversalInputSchema>;
 export type ConfigureSubdivisionInternalReceivableAlertsInput = z.infer<typeof configureSubdivisionInternalReceivableAlertsInputSchema>;
+export type CreateSubdivisionSaleCaseDocumentIntentInput = z.infer<typeof createSubdivisionSaleCaseDocumentIntentInputSchema>;
+export type SetSubdivisionSaleCaseDossierReviewInput = z.infer<typeof setSubdivisionSaleCaseDossierReviewInputSchema>;

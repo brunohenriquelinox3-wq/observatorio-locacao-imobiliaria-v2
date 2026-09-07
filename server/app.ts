@@ -5,6 +5,7 @@ import { createContext } from "./_core/context";
 import { registerOAuthRoutes } from "./_core/oauth";
 import { registerStorageProxy } from "./_core/storageProxy";
 import { registerPrivateBuyerAttachmentRoute } from "./subdivisionBuyerAttachmentRoute";
+import { registerPrivateSaleCaseDossierAttachmentRoute } from "./subdivisionSaleCaseDossierAttachmentRoute";
 import { registerSubdivisionDevelopmentAttachmentRoute } from "./subdivisionDevelopmentAttachmentRoute";
 import { handleSubdivisionInternalReceivableAlertSchedule } from "./subdivisionInternalReceivableAlertSchedule";
 
@@ -22,6 +23,7 @@ export function createApp() {
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   registerPrivateBuyerAttachmentRoute(app);
+  registerPrivateSaleCaseDossierAttachmentRoute(app);
   registerSubdivisionDevelopmentAttachmentRoute(app);
   app.post("/api/scheduled/subdivision-internal-receivable-attention", handleSubdivisionInternalReceivableAlertSchedule);
   app.use(
