@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { domainContextSchema } from "./domainFoundationContracts";
+import { domainContextSchema, partyKindSchema } from "./domainFoundationContracts";
 
 export const subdivisionContextSchema = domainContextSchema.extend({
   module: z.literal("loteadora"),
@@ -34,6 +34,12 @@ export const draftSubdivisionBuyerClientInputSchema = subdivisionContextSchema.e
   correlationId: z.string().uuid(),
   partyRoleAssignmentId: z.string().uuid(),
 });
+
+export const registerSubdivisionBuyerClientDirectInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  partyKind: partyKindSchema,
+  displayName: z.string().trim().min(2).max(160),
+}).strict();
 
 export const draftSubdivisionBuyerAttachmentIntentInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
@@ -122,6 +128,7 @@ export type DraftSubdivisionBlockInput = z.infer<typeof draftSubdivisionBlockInp
 export type DraftSubdivisionLotInput = z.infer<typeof draftSubdivisionLotInputSchema>;
 export type DraftSubdivisionLotInventoryStateInput = z.infer<typeof draftSubdivisionLotInventoryStateInputSchema>;
 export type DraftSubdivisionBuyerClientInput = z.infer<typeof draftSubdivisionBuyerClientInputSchema>;
+export type RegisterSubdivisionBuyerClientDirectInput = z.infer<typeof registerSubdivisionBuyerClientDirectInputSchema>;
 export type DraftSubdivisionBuyerAttachmentIntentInput = z.infer<typeof draftSubdivisionBuyerAttachmentIntentInputSchema>;
 export type DraftSubdivisionSaleDraftInput = z.infer<typeof draftSubdivisionSaleDraftInputSchema>;
 export type DraftSubdivisionSaleDraftWorkStateInput = z.infer<typeof draftSubdivisionSaleDraftWorkStateInputSchema>;

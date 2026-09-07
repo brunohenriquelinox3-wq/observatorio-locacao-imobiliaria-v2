@@ -8,6 +8,8 @@ describe("SubdivisionBuyerClientDirectory composition", () => {
   it("keeps contextual list, quick preview, full-profile shortcut, and redacted timeline available", () => {
     expect(component).toContain("listDraftBuyerClientDirectory.useQuery");
     expect(component).toContain("listDraftBuyerClientTimeline.useQuery");
+    expect(component).toContain("registerBuyerClientDirect.useMutation");
+    expect(component).toContain("Cadastro direto de cliente");
     expect(component).toContain("Abrir ficha e organização cadastral");
     expect(component).toContain("HISTÓRICO REDIGIDO");
     expect(component).toContain("evento autorizado, sem conteúdo pessoal");

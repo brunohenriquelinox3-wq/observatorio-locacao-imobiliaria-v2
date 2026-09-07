@@ -1,5 +1,5 @@
 import type { SubdivisionContext } from "@shared/subdivisionContracts";
-import { ArchiveRestore, CircleAlert, ClipboardCheck, FileStack, ListFilter, Search, ShieldCheck, UsersRound } from "lucide-react";
+import { ArchiveRestore, CircleAlert, ClipboardCheck, FileStack, ListFilter, Search, ShieldCheck, UserRoundPlus, UsersRound } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import {
@@ -41,6 +41,8 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   const [searchDraft, setSearchDraft] = useState("");
   const [searchTerm, setSearchTerm] = useState<string | null>(null);
   const [pageOffset, setPageOffset] = useState(0);
+  const [newClientName, setNewClientName] = useState("");
+  const [newClientKind, setNewClientKind] = useState<"individual" | "legal_entity">("individual");
 
   useEffect(() => {
     const normalized = searchDraft.trim();
@@ -55,6 +57,18 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   const timelineInput = useMemo(() => ({ ...context, buyerClientId: selectedBuyerClientId, limit: 20 }), [context, selectedBuyerClientId]);
   const directoryQuery = trpc.subdivisionFoundation.listDraftBuyerClientDirectory.useQuery(directoryInput, { enabled: isWorkspaceReady, retry: false });
   const timelineQuery = trpc.subdivisionFoundation.listDraftBuyerClientTimeline.useQuery(timelineInput, { enabled: isWorkspaceReady && Boolean(selectedBuyerClientId), retry: false });
+  const utils = trpc.useUtils();
+  const registerDirectMutation = trpc.subdivisionFoundation.registerBuyerClientDirect.useMutation({
+    onSuccess(result) {
+      setNewClientName("");
+      onSelectBuyerClient(result.buyerClientId);
+      void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
+      void utils.subdivisionFoundation.listDraftBuyerClients.invalidate(context);
+      void utils.domainFoundation.listDraftPartyRoles.invalidate(context);
+      void utils.subdivisionFoundation.listDraftBuyerClientProfileSummaries.invalidate(context);
+      void utils.subdivisionFoundation.listBuyerAttachmentIntents.invalidate(context);
+    },
+  });
   const entries = directoryQuery.data as DirectoryEntry[] | undefined;
   const metrics = summarizeBuyerClientDirectory(entries ?? []);
   const activeEntry = entries?.find((entry) => entry.buyerClientId === selectedBuyerClientId) ?? null;
@@ -62,6 +76,13 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
 
   function openFullProfile() {
     document.getElementById("buyer-profile-title")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function registerDirectClient(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const displayName = newClientName.trim();
+    if (displayName.length < 2) return;
+    registerDirectMutation.mutate({ ...context, correlationId: crypto.randomUUID(), partyKind: newClientKind, displayName });
   }
 
   return <section className="subdivision-buyer-directory" aria-labelledby="buyer-directory-title">
@@ -80,6 +101,13 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
         <label htmlFor="buyer-directory-search"><Search size={16} aria-hidden="true" /><span>Buscar cadastro no contexto</span><input id="buyer-directory-search" value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)} placeholder="Informe ao menos 2 caracteres" autoComplete="off" /></label>
         <p><ListFilter size={16} aria-hidden="true" /> A busca usa o nome declarado no cadastro-base, limita o retorno e não consulta documento, contato, lote, valor ou contrato.</p>
       </div>
+      <form className="subdivision-buyer-directory__enrollment" onSubmit={registerDirectClient}>
+        <div><UserRoundPlus size={19} aria-hidden="true" /><span><b>Cadastro direto de cliente</b><small>Registre somente o nome declarado e a natureza da pessoa. Contatos, documentos e pendências ficam na ficha progressiva.</small></span></div>
+        <label htmlFor="buyer-directory-direct-name">Nome declarado<input id="buyer-directory-direct-name" value={newClientName} onChange={(event) => setNewClientName(event.target.value)} minLength={2} maxLength={160} autoComplete="off" placeholder="Informe o nome para o cadastro" required disabled={registerDirectMutation.isPending} /></label>
+        <label htmlFor="buyer-directory-direct-kind">Natureza<select id="buyer-directory-direct-kind" value={newClientKind} onChange={(event) => setNewClientKind(event.target.value as "individual" | "legal_entity")} disabled={registerDirectMutation.isPending}><option value="individual">Pessoa física</option><option value="legal_entity">Pessoa jurídica</option></select></label>
+        <button type="submit" disabled={registerDirectMutation.isPending || newClientName.trim().length < 2}>{registerDirectMutation.isPending ? "Registrando cliente" : "Cadastrar cliente"}</button>
+        {registerDirectMutation.isError && <p className="subdivision-buyer-directory__enrollment-error"><CircleAlert size={14} aria-hidden="true" /> O cadastro não foi concluído. Revise contexto, alçada e nome declarado; a criação é bloqueada quando a validação do servidor não for atendida.</p>}
+      </form>
       {belowSearchMinimum && <div className="subdivision-buyer-directory__hint"><CircleAlert size={15} aria-hidden="true" /> Continue digitando para pesquisar. Com apenas um caractere, a lista permanece sem filtro.</div>}
 
       <div className="subdivision-buyer-directory__metrics" aria-label="Resumo agregado de cadastros visíveis">
