@@ -142,6 +142,12 @@ import {
   subdivisionContextSchema,
 } from "../shared/subdivisionContracts";
 import {
+  subdivisionBuyerClientProfileLookupInputSchema,
+  upsertSubdivisionBuyerClientContactPreferenceInputSchema,
+  upsertSubdivisionBuyerClientProfileInputSchema,
+  upsertSubdivisionBuyerClientRequirementInputSchema,
+} from "../shared/subdivisionBuyerClientProfileContracts";
+import {
   archiveSubdivisionDevelopmentAttachmentInputSchema,
   archiveSubdivisionDevelopmentStudioInputSchema,
   createSubdivisionDevelopmentAttachmentIntentInputSchema,
@@ -211,6 +217,15 @@ import { listDraftLotInventoryStates, upsertDraftLotInventoryState } from "./sub
 import { listDraftLotInventoryEvents, transitionDraftLotInventoryState } from "./subdivisionLotInventoryEvents";
 import { linkDraftSubdivisionInternalPartyRole, listDraftSubdivisionInternalPartyRoles } from "./subdivisionInternalPartyRoles";
 import { createDraftSubdivisionBuyerClient, listDraftSubdivisionBuyerClients } from "./subdivisionBuyerClient";
+import {
+  getDraftSubdivisionBuyerClientProfile,
+  listDraftSubdivisionBuyerClientContactPreferences,
+  listDraftSubdivisionBuyerClientProfileSummaries,
+  listDraftSubdivisionBuyerClientRequirements,
+  upsertDraftSubdivisionBuyerClientContactPreference,
+  upsertDraftSubdivisionBuyerClientProfile,
+  upsertDraftSubdivisionBuyerClientRequirement,
+} from "./subdivisionBuyerClientProfile";
 import { createBuyerAttachmentIntent, listBuyerAttachmentIntents } from "./subdivisionBuyerAttachmentIntent";
 import { createSubdivisionSaleDraft, listSubdivisionSaleDraftAttachmentCoverage, listSubdivisionSaleDrafts } from "./subdivisionSaleDraft";
 import { listSubdivisionSaleDraftWorkStates, upsertSubdivisionSaleDraftWorkState } from "./subdivisionSaleDraftWorkState";
@@ -665,6 +680,22 @@ export const appRouter = router({
     linkDraftInternalPartyRole: protectedProcedure.input(subdivisionContextSchema.extend({ developmentId: z.string().uuid(), partyRoleId: z.string().uuid(), correlationId: z.string().uuid() })).mutation(({ ctx, input }) => linkDraftSubdivisionInternalPartyRole(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClients: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClients(ctx.supabaseSubjectId ?? undefined, input)),
     createDraftBuyerClient: protectedProcedure.input(draftSubdivisionBuyerClientInputSchema).mutation(({ ctx, input }) => createDraftSubdivisionBuyerClient(ctx.supabaseSubjectId ?? undefined, input)),
+    listDraftBuyerClientProfileSummaries: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientProfileSummaries(ctx.supabaseSubjectId ?? undefined, input)),
+    getDraftBuyerClientProfile: protectedProcedure.input(subdivisionBuyerClientProfileLookupInputSchema).query(({ ctx, input }) => getDraftSubdivisionBuyerClientProfile(ctx.supabaseSubjectId ?? undefined, input)),
+    upsertDraftBuyerClientProfile: protectedProcedure.input(upsertSubdivisionBuyerClientProfileInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return upsertDraftSubdivisionBuyerClientProfile(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    listDraftBuyerClientRequirements: protectedProcedure.input(subdivisionBuyerClientProfileLookupInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientRequirements(ctx.supabaseSubjectId ?? undefined, input)),
+    upsertDraftBuyerClientRequirement: protectedProcedure.input(upsertSubdivisionBuyerClientRequirementInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return upsertDraftSubdivisionBuyerClientRequirement(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    listDraftBuyerClientContactPreferences: protectedProcedure.input(subdivisionBuyerClientProfileLookupInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientContactPreferences(ctx.supabaseSubjectId ?? undefined, input)),
+    upsertDraftBuyerClientContactPreference: protectedProcedure.input(upsertSubdivisionBuyerClientContactPreferenceInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return upsertDraftSubdivisionBuyerClientContactPreference(ctx.supabaseSubjectId ?? undefined, input);
+    }),
     listBuyerAttachmentIntents: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listBuyerAttachmentIntents(ctx.supabaseSubjectId ?? undefined, input)),
     createBuyerAttachmentIntent: protectedProcedure.input(draftSubdivisionBuyerAttachmentIntentInputSchema).mutation(({ ctx, input }) => createBuyerAttachmentIntent(ctx.supabaseSubjectId ?? undefined, input)),
     listSaleDrafts: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleDrafts(ctx.supabaseSubjectId ?? undefined, input)),
