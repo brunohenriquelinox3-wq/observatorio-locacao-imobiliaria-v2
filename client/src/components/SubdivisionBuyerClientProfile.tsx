@@ -26,6 +26,8 @@ type SubdivisionBuyerClientProfileProps = {
   isWorkspaceReady: boolean;
   buyerClients: BuyerClientOption[] | undefined;
   partyRoles: PartyRoleOption[] | undefined;
+  selectedBuyerClientId?: string;
+  onSelectBuyerClient?: (buyerClientId: string) => void;
 };
 
 const partyKinds = { individual: "Pessoa física", legal_entity: "Pessoa jurídica" } as const;
@@ -54,8 +56,13 @@ function emptyProfile(): BuyerProfileFormState {
   };
 }
 
-export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorkspaceReady, buyerClients, partyRoles }: SubdivisionBuyerClientProfileProps) {
-  const [buyerClientId, setBuyerClientId] = useState("");
+export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorkspaceReady, buyerClients, partyRoles, selectedBuyerClientId, onSelectBuyerClient }: SubdivisionBuyerClientProfileProps) {
+  const [uncontrolledBuyerClientId, setUncontrolledBuyerClientId] = useState("");
+  const buyerClientId = selectedBuyerClientId ?? uncontrolledBuyerClientId;
+  const setBuyerClientId = (buyerClientId: string) => {
+    if (selectedBuyerClientId !== undefined) onSelectBuyerClient?.(buyerClientId);
+    else setUncontrolledBuyerClientId(buyerClientId);
+  };
   const [profile, setProfile] = useState(emptyProfile);
   const [requirementCode, setRequirementCode] = useState<keyof typeof buyerClientRequirementCodes>("identity_evidence");
   const [requirementState, setRequirementState] = useState<keyof typeof buyerClientRequirementStates>("to_confirm");
@@ -70,8 +77,8 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
   const preferencesQuery = trpc.subdivisionFoundation.listDraftBuyerClientContactPreferences.useQuery(selectionInput, { enabled: isWorkspaceReady && Boolean(buyerClientId), retry: false });
 
   useEffect(() => {
-    setBuyerClientId((current) => buyerClients?.some((client) => client.buyerClientId === current) ? current : "");
-  }, [buyerClients]);
+    if (!buyerClients?.some((client) => client.buyerClientId === buyerClientId)) setBuyerClientId("");
+  }, [buyerClientId, buyerClients]);
 
   useEffect(() => {
     if (!buyerClientId) {

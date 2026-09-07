@@ -1,0 +1,121 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { z } from "zod";
+import {
+  subdivisionBuyerClientDirectoryListInputSchema,
+  subdivisionBuyerClientProfilePartyKindSchema,
+  subdivisionBuyerClientRegistrationStateSchema,
+  subdivisionBuyerClientTimelineInputSchema,
+  type SubdivisionBuyerClientDirectoryListInput,
+  type SubdivisionBuyerClientTimelineInput,
+} from "../shared/subdivisionBuyerClientProfileContracts";
+import { getSupabaseAdminClient } from "./supabase";
+
+type RpcClient = Pick<SupabaseClient, "rpc">;
+type RpcRow = Record<string, unknown>;
+
+const attachmentSummarySchema = z.enum(["no_private_attachment", "awaiting_private_upload", "private_upload_recorded"]);
+const timelineEventKindSchema = z.enum(["buyer_client_registered", "profile_cadastral_atualizado", "pendencia_atualizada", "preferencia_atualizada", "anexo_privado_registrado"]);
+
+export type SubdivisionBuyerClientDirectoryEntry = {
+  buyerClientId: string;
+  displayName: string;
+  partyKind: "individual" | "legal_entity";
+  registrationState: "contact_pending" | "base_data_in_progress" | "conditional_requirements_pending" | "base_data_review";
+  profilePresent: boolean;
+  contactChannelsRecorded: number;
+  requirementsPending: number;
+  requirementsTotal: number;
+  attachmentSummary: "no_private_attachment" | "awaiting_private_upload" | "private_upload_recorded";
+  updatedAt: string;
+};
+
+export type SubdivisionBuyerClientTimelineEntry = {
+  eventKind: "buyer_client_registered" | "profile_cadastral_atualizado" | "pendencia_atualizada" | "preferencia_atualizada" | "anexo_privado_registrado";
+  occurredAt: string;
+};
+
+function requireSubject(subjectId: string | undefined): string {
+  if (!subjectId) throw new Error("SUBDIVISION_IDENTITY_REQUIRED");
+  return subjectId;
+}
+
+function asString(row: RpcRow, key: string, errorCode: string): string {
+  const value = row[key];
+  if (typeof value !== "string") throw new Error(errorCode);
+  return value;
+}
+
+function asBoolean(row: RpcRow, key: string, errorCode: string): boolean {
+  const value = row[key];
+  if (typeof value !== "boolean") throw new Error(errorCode);
+  return value;
+}
+
+function asCount(row: RpcRow, key: string, errorCode: string): number {
+  const value = row[key];
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0 || value > 99) throw new Error(errorCode);
+  return value;
+}
+
+function parseEnum<T extends z.ZodType>(schema: T, value: unknown, errorCode: string): z.output<T> {
+  const parsed = schema.safeParse(value);
+  if (!parsed.success) throw new Error(errorCode);
+  return parsed.data;
+}
+
+function directoryEntryFromRow(row: RpcRow): SubdivisionBuyerClientDirectoryEntry {
+  const errorCode = "SUBDIVISION_BUYER_CLIENT_DIRECTORY_READ_DENIED";
+  return {
+    buyerClientId: asString(row, "buyer_client_id", errorCode),
+    displayName: asString(row, "display_name", errorCode),
+    partyKind: parseEnum(subdivisionBuyerClientProfilePartyKindSchema, row.party_kind, errorCode),
+    registrationState: parseEnum(subdivisionBuyerClientRegistrationStateSchema, row.registration_state, errorCode),
+    profilePresent: asBoolean(row, "profile_present", errorCode),
+    contactChannelsRecorded: asCount(row, "contact_channels_recorded", errorCode),
+    requirementsPending: asCount(row, "requirements_pending", errorCode),
+    requirementsTotal: asCount(row, "requirements_total", errorCode),
+    attachmentSummary: parseEnum(attachmentSummarySchema, row.attachment_summary, errorCode),
+    updatedAt: asString(row, "updated_at", errorCode),
+  };
+}
+
+export async function listDraftSubdivisionBuyerClientDirectory(subjectId: string | undefined, rawInput: SubdivisionBuyerClientDirectoryListInput, client: RpcClient = getSupabaseAdminClient()): Promise<SubdivisionBuyerClientDirectoryEntry[]> {
+  const actorUserId = requireSubject(subjectId);
+  const input = subdivisionBuyerClientDirectoryListInputSchema.parse(rawInput);
+  const { data, error } = await client.rpc("subdivision_list_draft_buyer_client_directory", {
+    p_actor_user_id: actorUserId,
+    p_organization_id: input.organizationId,
+    p_module: input.module,
+    p_purpose_code: input.purposeCode,
+    p_search_term: input.searchTerm,
+    p_page_size: input.pageSize,
+    p_page_offset: input.pageOffset,
+  });
+  if (error || !Array.isArray(data)) throw new Error("SUBDIVISION_BUYER_CLIENT_DIRECTORY_READ_DENIED");
+  return data.map((raw) => {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("SUBDIVISION_BUYER_CLIENT_DIRECTORY_READ_DENIED");
+    return directoryEntryFromRow(raw as RpcRow);
+  });
+}
+
+export async function listDraftSubdivisionBuyerClientTimeline(subjectId: string | undefined, rawInput: SubdivisionBuyerClientTimelineInput, client: RpcClient = getSupabaseAdminClient()): Promise<SubdivisionBuyerClientTimelineEntry[]> {
+  const actorUserId = requireSubject(subjectId);
+  const input = subdivisionBuyerClientTimelineInputSchema.parse(rawInput);
+  const { data, error } = await client.rpc("subdivision_list_draft_buyer_client_timeline", {
+    p_actor_user_id: actorUserId,
+    p_organization_id: input.organizationId,
+    p_module: input.module,
+    p_purpose_code: input.purposeCode,
+    p_buyer_client_id: input.buyerClientId,
+    p_limit: input.limit,
+  });
+  if (error || !Array.isArray(data)) throw new Error("SUBDIVISION_BUYER_CLIENT_TIMELINE_READ_DENIED");
+  return data.map((raw) => {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("SUBDIVISION_BUYER_CLIENT_TIMELINE_READ_DENIED");
+    const row = raw as RpcRow;
+    return {
+      eventKind: parseEnum(timelineEventKindSchema, row.event_kind, "SUBDIVISION_BUYER_CLIENT_TIMELINE_READ_DENIED"),
+      occurredAt: asString(row, "occurred_at", "SUBDIVISION_BUYER_CLIENT_TIMELINE_READ_DENIED"),
+    };
+  });
+}
