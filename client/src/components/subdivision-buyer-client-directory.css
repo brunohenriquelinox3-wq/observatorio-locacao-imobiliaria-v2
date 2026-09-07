@@ -73,6 +73,46 @@
   opacity: .58;
 }
 
+.subdivision-buyer-directory__embedded-editor {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed #b7d8cf;
+}
+
+.subdivision-buyer-directory__embedded-editor .subdivision-buyer-profile.is-embedded {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.subdivision-buyer-directory__embedded-editor .subdivision-buyer-profile__embedded-heading {
+  margin-bottom: 14px;
+}
+
+.subdivision-buyer-directory__embedded-editor .subdivision-buyer-profile__embedded-heading h3 {
+  margin: 4px 0;
+  color: #164c45;
+  font-size: 16px;
+}
+
+.subdivision-buyer-directory__embedded-editor .subdivision-buyer-profile__embedded-heading p:last-child {
+  margin: 0;
+  color: #52746d;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.subdivision-buyer-directory__embedded-editor .subdivision-buyer-profile__workspace,
+.subdivision-buyer-directory__embedded-editor .subdivision-buyer-profile__lower-grid {
+  grid-template-columns: 1fr;
+}
+
+.subdivision-buyer-directory__embedded-editor .subdivision-buyer-profile__summary {
+  display: none;
+}
+
 @media (max-width: 840px) {
   .subdivision-buyer-directory__preview-actions { grid-template-columns: 1fr; }
 }

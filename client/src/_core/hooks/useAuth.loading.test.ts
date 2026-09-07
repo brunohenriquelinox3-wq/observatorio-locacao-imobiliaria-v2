@@ -17,4 +17,11 @@ describe("useAuth loading resilience", () => {
     expect(entry).not.toContain("startLogin();");
     expect(entry).toContain("credentials: \"include\"");
   });
+
+  it("keeps a resolved identity stable during a non-critical refetch", () => {
+    expect(hook).toContain("refetchOnMount: false");
+    expect(hook).toContain("refetchOnReconnect: false");
+    expect(hook).toContain("staleTime: 60_000");
+    expect(hook).toContain("placeholderData: (previousUser) => previousUser");
+  });
 });

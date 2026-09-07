@@ -34,6 +34,12 @@ describe("Clientes Loteadora profile composition", () => {
     expect(component).toContain("Cadastro selecionado para edição.");
   });
 
+  it("supports the same complete editor embedded in the selected client ficha", () => {
+    expect(component).toContain('presentation?: "full" | "embedded"');
+    expect(component).toContain('presentation === "embedded"');
+    expect(component).toContain("EDIÇÃO CONTEXTUAL");
+  });
+
   it("does not expose a direct commercial transition or individual export control", () => {
     expect(component).not.toMatch(/vincular.*lote|criar.*proposta|aprovar.*crédito|gerar.*contrato|exportar.*perfil/i);
     expect(component).not.toMatch(/storage_key|document_url|file_bytes|download.*documento/i);

@@ -8,7 +8,8 @@ describe("internal route loading", () => {
     expect(app).toContain('import Home from "./pages/Home"');
     expect(app).toContain('lazy(() => import("./pages/PlatformAdmin"))');
     expect(app).toContain('lazy(() => import("./pages/OrganizationAdmin"))');
-    expect(app).toContain('lazy(() => import("./pages/SubdivisionFoundation"))');
+    expect(app).toContain('import SubdivisionFoundation from "./pages/SubdivisionFoundation";');
+    expect(app).not.toContain('lazy(() => import("./pages/SubdivisionFoundation"))');
     expect(app).toContain('lazy(() => import("./pages/UrbanPipeline"))');
     expect(app).toContain('lazy(() => import("./pages/RentalPipeline"))');
     expect(app).toContain("<Suspense fallback={<RouteLoading />}>");

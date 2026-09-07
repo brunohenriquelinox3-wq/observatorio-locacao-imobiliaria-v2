@@ -68,6 +68,20 @@ describe("Supabase session bridge", () => {
     await expect(bridge.getAccessToken()).resolves.toBe("fresh-aal2-totp-token");
   });
 
+  it("shares one session read between concurrent protected requests", async () => {
+    const source = sessionSource({ access_token: "active-aal2-token" });
+    const bridge = createSupabaseSessionBridge(source);
+    await bridge.ready();
+    source.auth.getSession.mockClear();
+
+    await expect(Promise.all([
+      bridge.getAccessToken(),
+      bridge.getAccessToken(),
+      bridge.getAccessToken(),
+    ])).resolves.toEqual(["active-aal2-token", "active-aal2-token", "active-aal2-token"]);
+    expect(source.auth.getSession).toHaveBeenCalledTimes(1);
+  });
+
   it("fails closed without a Supabase session source", async () => {
     const bridge = createSupabaseSessionBridge(null);
     await expect(bridge.getAccessToken()).resolves.toBeNull();

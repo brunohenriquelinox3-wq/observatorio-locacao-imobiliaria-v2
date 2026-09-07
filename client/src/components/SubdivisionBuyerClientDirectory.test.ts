@@ -13,6 +13,8 @@ describe("SubdivisionBuyerClientDirectory composition", () => {
     expect(component).toContain("Editar dados cadastrais");
     expect(component).toContain("HISTÓRICO REDIGIDO");
     expect(component).toContain("evento autorizado, sem conteúdo pessoal");
+    expect(component).toContain('presentation="embedded"');
+    expect(component).toContain("SubdivisionBuyerClientProfile");
   });
 
   it("makes protected contact editing, private documents, and reversible exclusion discoverable", () => {

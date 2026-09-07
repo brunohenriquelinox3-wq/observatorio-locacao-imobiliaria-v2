@@ -16,6 +16,7 @@ function tokenFrom(session: SupabaseAccessTokenSession): string | null {
 export function createSupabaseSessionBridge(source: SupabaseSessionSource | null, onSessionChange?: () => void) {
   let accessToken: string | null = null;
   let sessionRevision = 0;
+  let pendingTokenRead: Promise<string | null> | null = null;
   const initialRevision = sessionRevision;
   let initialSessionSettled = !source;
   const initialSession = source
@@ -42,22 +43,30 @@ export function createSupabaseSessionBridge(source: SupabaseSessionSource | null
   });
 
   return {
-    ready: () => initialSession,
+    ready: () => boundedInitialSession,
     async getAccessToken(): Promise<string | null> {
       await boundedInitialSession;
       if (!source) return null;
-      try {
-        // A confirmação TOTP pode renovar os claims AAL/AMR sem disparar um
-        // evento observável pelo bridge em uma prévia embutida. Cada comando
-        // protegido deve transportar a sessão atual, nunca um token em cache.
-        const { data } = await source.auth.getSession();
-        accessToken = tokenFrom(data.session);
-        return accessToken;
-      } catch {
-        // Sem uma leitura atual, não encaminha token em cache potencialmente
-        // desatualizado. O servidor permanece fail-closed.
-        return null;
-      }
+      if (pendingTokenRead) return pendingTokenRead;
+
+      const revisionBeforeRead = sessionRevision;
+      pendingTokenRead = source.auth.getSession()
+        .then(({ data }) => {
+          // Caso uma renovação, logout ou step-up ocorra durante a leitura,
+          // o evento mais novo sempre prevalece sobre a resposta atrasada.
+          if (sessionRevision === revisionBeforeRead) accessToken = tokenFrom(data.session);
+          return accessToken;
+        })
+        .catch(() => {
+          // Sem leitura atual não encaminha token em cache potencialmente
+          // desatualizado. A autenticação e a autoridade continuam fail-closed.
+          return null;
+        })
+        .finally(() => {
+          pendingTokenRead = null;
+        });
+
+      return pendingTokenRead;
     },
   };
 }

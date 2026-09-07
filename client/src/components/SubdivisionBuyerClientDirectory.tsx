@@ -2,6 +2,7 @@ import type { SubdivisionContext } from "@shared/subdivisionContracts";
 import { ArchiveRestore, ArchiveX, CircleAlert, ClipboardCheck, FileStack, ListFilter, RotateCcw, Search, ShieldCheck, UserRoundPlus, UsersRound } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { trpc } from "@/lib/trpc";
+import { SubdivisionBuyerClientProfile } from "./SubdivisionBuyerClientProfile";
 import "./subdivision-buyer-client-directory.css";
 import {
   AlertDialog,
@@ -56,6 +57,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   const [newClientName, setNewClientName] = useState("");
   const [newClientKind, setNewClientKind] = useState<"individual" | "legal_entity">("individual");
   const [localActiveEntry, setLocalActiveEntry] = useState<DirectoryEntry | null>(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
   const effectiveSelectedBuyerClientId = localActiveEntry?.buyerClientId || selectedBuyerClientId;
 
   useEffect(() => {
@@ -79,6 +81,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
     onSuccess(result) {
       setNewClientName("");
       setLocalActiveEntry(null);
+      setIsEditorOpen(true);
       onSelectBuyerClient(result.buyerClientId);
       void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
       void utils.subdivisionFoundation.listDraftBuyerClients.invalidate(context);
@@ -91,6 +94,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   const archiveClientMutation = trpc.subdivisionFoundation.archiveClient.useMutation({
     onSuccess() {
       setLocalActiveEntry(null);
+      setIsEditorOpen(false);
       onSelectBuyerClient("");
       void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
       void utils.subdivisionFoundation.listDraftBuyerClients.invalidate(context);
@@ -102,6 +106,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   const restoreClientMutation = trpc.subdivisionFoundation.restoreClient.useMutation({
     onSuccess(result) {
       setLocalActiveEntry(null);
+      setIsEditorOpen(true);
       onSelectBuyerClient(result.buyerClientId);
       void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
       void utils.subdivisionFoundation.listDraftBuyerClients.invalidate(context);
@@ -116,10 +121,6 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
     ? localActiveEntry
     : entries?.find((entry) => entry.buyerClientId === effectiveSelectedBuyerClientId) ?? null;
   const belowSearchMinimum = searchDraft.trim().length === 1;
-
-  function openFullProfile() {
-    document.getElementById("buyer-profile-title")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
 
   function openDocuments() {
     document.getElementById("buyer-documents-title")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -175,7 +176,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
 
       {!directoryQuery.isLoading && !directoryQuery.isError && entries && entries.length > 0 && <div className="subdivision-buyer-directory__workspace">
         <div className="subdivision-buyer-directory__list" aria-label="Lista de Clientes Loteadora">
-          {entries.map((entry) => <button type="button" key={entry.buyerClientId} className={entry.buyerClientId === effectiveSelectedBuyerClientId ? "is-selected" : ""} aria-pressed={entry.buyerClientId === effectiveSelectedBuyerClientId} onClick={() => { setLocalActiveEntry(entry); onSelectBuyerClient(entry.buyerClientId); }}>
+          {entries.map((entry) => <button type="button" key={entry.buyerClientId} className={entry.buyerClientId === effectiveSelectedBuyerClientId ? "is-selected" : ""} aria-pressed={entry.buyerClientId === effectiveSelectedBuyerClientId} onClick={() => { setLocalActiveEntry(entry); setIsEditorOpen(false); onSelectBuyerClient(entry.buyerClientId); }}>
             <span className="subdivision-buyer-directory__entry-top"><small>{buyerClientDirectoryPartyKinds[entry.partyKind]}</small><b>{buyerClientDirectoryRegistrationStates[entry.registrationState]}</b></span>
             <strong>{entry.displayName}</strong>
             <span className="subdivision-buyer-directory__entry-foot"><i>{entry.profilePresent ? "Perfil organizado" : "Perfil a organizar"}</i><i>{entry.requirementsPending > 0 ? `${entry.requirementsPending} pendência(s)` : "Sem pendência registrada"}</i></span>
@@ -199,7 +200,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
               <div><dt>Anexo privado</dt><dd>{buyerClientDirectoryAttachmentSummaries[activeEntry.attachmentSummary]}</dd></div>
             </dl>
             <div className="subdivision-buyer-directory__preview-actions">
-              <button type="button" onClick={openFullProfile}>Editar dados cadastrais</button>
+              <button type="button" onClick={() => setIsEditorOpen((isOpen) => !isOpen)}>{isEditorOpen ? "Fechar edição" : "Editar dados cadastrais"}</button>
               <button type="button" className="is-secondary" onClick={openDocuments}>Documentos privados</button>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
@@ -220,6 +221,17 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
             {profileQuery.isLoading && <p className="subdivision-buyer-directory__profile-loading">Carregando ficha autorizada.</p>}
             {profileQuery.isError && <p className="subdivision-buyer-directory__profile-loading is-error">A ficha não foi liberada neste contexto.</p>}
             {archiveClientMutation.isError && <p className="subdivision-buyer-directory__profile-loading is-error">A exclusão não foi concluída; nenhum cadastro foi removido.</p>}
+            {isEditorOpen && <div className="subdivision-buyer-directory__embedded-editor">
+              <SubdivisionBuyerClientProfile
+                context={context}
+                isContextReady={isContextReady}
+                isWorkspaceReady={isWorkspaceReady}
+                buyerClients={entries?.map((entry) => ({ buyerClientId: entry.buyerClientId, displayName: entry.displayName }))}
+                selectedBuyerClientId={effectiveSelectedBuyerClientId}
+                onSelectBuyerClient={onSelectBuyerClient}
+                presentation="embedded"
+              />
+            </div>}
             <section className="subdivision-buyer-directory__timeline" aria-labelledby="buyer-directory-timeline-title">
               <div><p className="subdivision-foundation-eyebrow">HISTÓRICO REDIGIDO</p><h3 id="buyer-directory-timeline-title">Eventos de cadastro</h3></div>
               {timelineQuery.isLoading && <p className="subdivision-buyer-directory__timeline-empty">Carregando eventos autorizados.</p>}

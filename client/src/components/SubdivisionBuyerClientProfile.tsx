@@ -26,6 +26,7 @@ type SubdivisionBuyerClientProfileProps = {
   buyerClients: BuyerClientOption[] | undefined;
   selectedBuyerClientId?: string;
   onSelectBuyerClient?: (buyerClientId: string) => void;
+  presentation?: "full" | "embedded";
 };
 
 const partyKinds = { individual: "Pessoa física", legal_entity: "Pessoa jurídica" } as const;
@@ -56,7 +57,7 @@ function emptyProfile(): BuyerProfileFormState {
   };
 }
 
-export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorkspaceReady, buyerClients, selectedBuyerClientId, onSelectBuyerClient }: SubdivisionBuyerClientProfileProps) {
+export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorkspaceReady, buyerClients, selectedBuyerClientId, onSelectBuyerClient, presentation = "full" }: SubdivisionBuyerClientProfileProps) {
   const [uncontrolledBuyerClientId, setUncontrolledBuyerClientId] = useState("");
   const buyerClientId = selectedBuyerClientId ?? uncontrolledBuyerClientId;
   const setBuyerClientId = (buyerClientId: string) => {
@@ -183,17 +184,19 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
   }
 
   return (
-    <section className="subdivision-buyer-profile" aria-labelledby="buyer-profile-title">
-      <header className="subdivision-buyer-profile__header">
+    <section className={`subdivision-buyer-profile${presentation === "embedded" ? " is-embedded" : ""}`} aria-labelledby={presentation === "full" ? "buyer-profile-title" : undefined}>
+      {presentation === "full" && <header className="subdivision-buyer-profile__header">
         <div>
           <p className="subdivision-foundation-eyebrow">08 · FICHA CADASTRAL DO CLIENTE</p>
           <h2 id="buyer-profile-title">Edite contatos, identificação e pendências em uma ficha única.</h2>
           <p>A ficha complementa o Cliente Loteadora já cadastrado, sem duplicar a pessoa. Preencha somente o necessário para a finalidade declarada e deixe o restante para revisão humana futura.</p>
         </div>
         <div className="subdivision-buyer-profile__guard"><ShieldCheck size={19} aria-hidden="true" /><span>Privado por contexto<br /><b>e auditado sem conteúdo</b></span></div>
-      </header>
+      </header>}
 
-      <div className="subdivision-buyer-profile__selector">
+      {presentation === "embedded" && <div className="subdivision-buyer-profile__embedded-heading"><p className="subdivision-foundation-eyebrow">EDIÇÃO CONTEXTUAL</p><h3>Ficha completa do cliente selecionado</h3><p>Edite dados declarados neste mesmo painel; a gravação só ocorre após confirmação do servidor.</p></div>}
+
+      {presentation === "full" && <div className="subdivision-buyer-profile__selector">
         <label htmlFor="buyer-profile-client">Cliente Loteadora
           <select id="buyer-profile-client" value={buyerClientId} onChange={(event) => setBuyerClientId(event.target.value)} disabled={!isWorkspaceReady || buyerClients === undefined}>
             <option value="">{!isWorkspaceReady ? "Defina um contexto autorizado" : buyerClients?.length ? "Selecione um cliente para editar o cadastro" : "Nenhum cliente neste contexto"}</option>
@@ -201,7 +204,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
           </select>
         </label>
         <p><Landmark size={17} aria-hidden="true" /> Esta área não relaciona cliente a lote, preço, crédito, proposta, contrato, registro ou pagamento.</p>
-      </div>
+      </div>}
 
       {!isContextReady && <div className="subdivision-foundation-empty"><CircleAlert size={18} /><p>Sem contexto autorizado não há consulta nem edição de perfil cadastral.</p></div>}
       {isWorkspaceReady && summariesQuery.isLoading && <div className="subdivision-foundation-empty"><span className="subdivision-foundation-spinner" aria-hidden="true" /><p>Confirmando o contexto antes de solicitar os perfis cadastrais.</p></div>}

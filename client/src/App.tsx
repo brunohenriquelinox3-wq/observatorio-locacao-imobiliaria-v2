@@ -6,6 +6,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import { activationPathForPasswordFlow } from "./lib/supabaseInvitationActivation";
+import SubdivisionFoundation from "./pages/SubdivisionFoundation";
 import { lazy, Suspense, useEffect } from "react";
 
 const VendasUrbanas = lazy(() => import("./pages/VendasUrbanas"));
@@ -16,7 +17,6 @@ const DomainFoundation = lazy(() => import("./pages/DomainFoundation"));
 const AssetFoundation = lazy(() => import("./pages/AssetFoundation"));
 const UrbanPipeline = lazy(() => import("./pages/UrbanPipeline"));
 const RentalPipeline = lazy(() => import("./pages/RentalPipeline"));
-const SubdivisionFoundation = lazy(() => import("./pages/SubdivisionFoundation"));
 const LotInventory = lazy(() => import("./pages/LotInventory"));
 const AccountActivation = lazy(() => import("./pages/AccountActivation"));
 const SupabaseLogin = lazy(() => import("./pages/SupabaseLogin"));
