@@ -237,7 +237,7 @@ import {
   upsertDraftSubdivisionBuyerClientRequirement,
   updateDraftSubdivisionBuyerClientName,
 } from "./subdivisionBuyerClientProfile";
-import { listDraftSubdivisionBuyerClientDirectory, listDraftSubdivisionBuyerClientReadiness, listDraftSubdivisionBuyerClientTimeline } from "./subdivisionBuyerClientDirectory";
+import { getDraftSubdivisionBuyerClientDirectoryTotal, listDraftSubdivisionBuyerClientDirectory, listDraftSubdivisionBuyerClientReadiness, listDraftSubdivisionBuyerClientTimeline } from "./subdivisionBuyerClientDirectory";
 import { createBuyerAttachmentIntent, listBuyerAttachmentIntents } from "./subdivisionBuyerAttachmentIntent";
 import { createSubdivisionSaleDraft, listSubdivisionSaleDraftAttachmentCoverage, listSubdivisionSaleDrafts } from "./subdivisionSaleDraft";
 import { listSubdivisionSaleDraftWorkStates, upsertSubdivisionSaleDraftWorkState } from "./subdivisionSaleDraftWorkState";
@@ -719,6 +719,7 @@ export const appRouter = router({
     }),
     listArchivedClients: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listArchivedSubdivisionClients(ctx.supabaseSubjectId ?? undefined, input)),
 		listDraftBuyerClientDirectory: protectedProcedure.input(subdivisionBuyerClientDirectoryListInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientDirectory(ctx.supabaseSubjectId ?? undefined, input)),
+		getDraftBuyerClientDirectoryTotal: protectedProcedure.input(subdivisionBuyerClientDirectoryListInputSchema).query(({ ctx, input }) => getDraftSubdivisionBuyerClientDirectoryTotal(ctx.supabaseSubjectId ?? undefined, input)),
 		listDraftBuyerClientReadiness: protectedProcedure.input(subdivisionBuyerClientReadinessListInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientReadiness(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClientTimeline: protectedProcedure.input(subdivisionBuyerClientTimelineInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientTimeline(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClientProfileSummaries: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientProfileSummaries(ctx.supabaseSubjectId ?? undefined, input)),

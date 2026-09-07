@@ -85,6 +85,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   const timelineInput = useMemo(() => ({ ...context, buyerClientId: effectiveSelectedBuyerClientId, limit: 20 }), [context, effectiveSelectedBuyerClientId]);
   const profileInput = useMemo(() => ({ ...context, buyerClientId: effectiveSelectedBuyerClientId }), [context, effectiveSelectedBuyerClientId]);
   const directoryQuery = trpc.subdivisionFoundation.listDraftBuyerClientDirectory.useQuery(directoryInput, { enabled: isWorkspaceReady, retry: false });
+  const directoryTotalQuery = trpc.subdivisionFoundation.getDraftBuyerClientDirectoryTotal.useQuery(directoryInput, { enabled: isWorkspaceReady, retry: false });
   const timelineQuery = trpc.subdivisionFoundation.listDraftBuyerClientTimeline.useQuery(timelineInput, { enabled: isWorkspaceReady && Boolean(effectiveSelectedBuyerClientId), retry: false });
   const profileQuery = trpc.subdivisionFoundation.getDraftBuyerClientProfile.useQuery(profileInput, { enabled: isWorkspaceReady && Boolean(effectiveSelectedBuyerClientId), retry: false });
   const archivedClientsQuery = trpc.subdivisionFoundation.listArchivedClients.useQuery(context, { enabled: isWorkspaceReady, retry: false });
@@ -141,6 +142,11 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   });
   const entries = directoryQuery.data as DirectoryEntry[] | undefined;
   const metrics = summarizeBuyerClientDirectory(entries ?? []);
+  const directoryTotal = directoryTotalQuery.data?.total ?? null;
+  const firstDisplayedEntry = entries?.length ? pageOffset + 1 : 0;
+  const lastDisplayedEntry = entries?.length ? pageOffset + entries.length : 0;
+  const hasMoreEntries = Boolean(entries?.length && directoryTotal !== null && lastDisplayedEntry < directoryTotal);
+  const directoryScopeLabel = searchTerm ? "resultado(s) da busca" : "cadastro(s) ativo(s) no contexto";
   const activeEntry = localActiveEntry && entries?.some((entry) => entry.buyerClientId === localActiveEntry.buyerClientId)
     ? localActiveEntry
     : entries?.find((entry) => entry.buyerClientId === effectiveSelectedBuyerClientId) ?? null;
@@ -189,20 +195,23 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
 	        <p><ListFilter size={16} aria-hidden="true" /> A busca pode comparar nome declarado, contato ou referência já autorizada, mas devolve somente o cartão minimizado no mesmo contexto. Não relaciona cliente a lote, valor, crédito ou contrato.</p>
 	      </div>
       <form className="subdivision-buyer-directory__enrollment" onSubmit={registerDirectClient}>
-        <div><UserRoundPlus size={19} aria-hidden="true" /><span><b>Novo Cliente Loteadora</b><small>Registre o nome declarado e a natureza da pessoa. Em seguida, abra a ficha para editar telefone, WhatsApp, e-mail, identificação, pendências e documentos privados.</small></span></div>
+        <div><UserRoundPlus size={19} aria-hidden="true" /><span><small className="subdivision-buyer-directory__enrollment-kicker">AÇÃO PRINCIPAL</small><b>Novo Cliente Loteadora</b><small>Registre o nome declarado e a natureza da pessoa. Em seguida, abra a ficha para editar telefone, WhatsApp, e-mail, identificação, pendências e documentos privados.</small></span></div>
         <label htmlFor="buyer-directory-direct-name">Nome declarado<input id="buyer-directory-direct-name" value={newClientName} onChange={(event) => setNewClientName(event.target.value)} minLength={2} maxLength={160} autoComplete="off" placeholder="Informe o nome para o cadastro" required disabled={registerDirectMutation.isPending} /></label>
         <label htmlFor="buyer-directory-direct-kind">Natureza<select id="buyer-directory-direct-kind" value={newClientKind} onChange={(event) => setNewClientKind(event.target.value as "individual" | "legal_entity")} disabled={registerDirectMutation.isPending}><option value="individual">Pessoa física</option><option value="legal_entity">Pessoa jurídica</option></select></label>
-        <button type="submit" disabled={registerDirectMutation.isPending || newClientName.trim().length < 2}>{registerDirectMutation.isPending ? "Registrando cliente" : "Cadastrar cliente"}</button>
+        <button type="submit" className="subdivision-buyer-directory__enrollment-submit" disabled={registerDirectMutation.isPending || newClientName.trim().length < 2}><UserRoundPlus size={17} aria-hidden="true" />{registerDirectMutation.isPending ? "Registrando cliente" : "Cadastrar novo Cliente Loteadora"}</button>
         {registerDirectMutation.isError && <p className="subdivision-buyer-directory__enrollment-error"><CircleAlert size={14} aria-hidden="true" /> O cadastro não foi concluído. Revise contexto, alçada e nome declarado; a criação é bloqueada quando a validação do servidor não for atendida.</p>}
       </form>
       {belowSearchMinimum && <div className="subdivision-buyer-directory__hint"><CircleAlert size={15} aria-hidden="true" /> Continue digitando para pesquisar. Com apenas um caractere, a lista permanece sem filtro.</div>}
 
-      <div className="subdivision-buyer-directory__metrics" aria-label="Resumo agregado de cadastros visíveis">
-        <article><UsersRound size={17} aria-hidden="true" /><span><b>{metrics.total}</b> cadastro(s) visível(is)</span></article>
-        <article><ClipboardCheck size={17} aria-hidden="true" /><span><b>{metrics.profilesPresent}</b> perfil(is) organizado(s)</span></article>
-        <article><CircleAlert size={17} aria-hidden="true" /><span><b>{metrics.requirementsPending}</b> pendência(s) em revisão</span></article>
-        <article><FileStack size={17} aria-hidden="true" /><span><b>{metrics.attachmentsRecorded}</b> arquivo(s) privado(s) registrado(s)</span></article>
+      <div className="subdivision-buyer-directory__metrics" aria-label="Resumo agregado do estoque cadastral">
+        <article><UsersRound size={17} aria-hidden="true" /><span><b>{directoryTotal ?? "—"}</b> {directoryScopeLabel}</span></article>
+        <article><ListFilter size={17} aria-hidden="true" /><span><b>{metrics.total}</b> exibido(s) nesta página</span></article>
+        <article><ClipboardCheck size={17} aria-hidden="true" /><span><b>{metrics.profilesPresent}</b> perfil(is) organizado(s) nesta página</span></article>
+        <article><CircleAlert size={17} aria-hidden="true" /><span><b>{metrics.requirementsPending}</b> pendência(s) em revisão nesta página</span></article>
+        <article><FileStack size={17} aria-hidden="true" /><span><b>{metrics.attachmentsRecorded}</b> arquivo(s) privado(s) registrado(s) nesta página</span></article>
       </div>
+
+      {!directoryQuery.isLoading && !directoryQuery.isError && entries && directoryTotal !== null && <p className="subdivision-buyer-directory__pagination-status" aria-live="polite">{entries.length ? `Mostrando ${firstDisplayedEntry}–${lastDisplayedEntry} de ${directoryTotal} ${directoryScopeLabel}.` : `Nenhum ${directoryScopeLabel} nesta página.`}</p>}
 
       {directoryQuery.isLoading && <div className="subdivision-foundation-empty"><span className="subdivision-foundation-spinner" aria-hidden="true" /><p>Confirmando o contexto antes de carregar a central de clientes.</p></div>}
       {directoryQuery.isError && <div className="subdivision-foundation-empty is-error"><CircleAlert size={18} /><p>A lista não foi liberada. Revise sessão, contexto, membership, grant, vigência e finalidade sem inferir outros cadastros.</p></div>}
@@ -215,7 +224,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
             <strong>{entry.displayName}</strong>
             <span className="subdivision-buyer-directory__entry-foot"><i>{entry.profilePresent ? "Perfil organizado" : "Perfil a organizar"}</i><i>{entry.requirementsPending > 0 ? `${entry.requirementsPending} pendência(s)` : "Sem pendência registrada"}</i></span>
           </button>)}
-          {entries.length === pageSize && <button id="buyer-directory-more" type="button" className="subdivision-buyer-directory__more" aria-label="Carregar a próxima página de cadastros autorizados" onClick={() => setPageOffset((offset) => offset + pageSize)}><ArchiveRestore size={15} aria-hidden="true" /> Ver mais cadastros autorizados</button>}
+          {hasMoreEntries && <button id="buyer-directory-more" type="button" className="subdivision-buyer-directory__more" aria-label="Carregar a próxima página de cadastros autorizados" onClick={() => setPageOffset((offset) => offset + pageSize)}><ArchiveRestore size={15} aria-hidden="true" /> Ver próxima página de cadastros</button>}
         </div>
 
         <aside className="subdivision-buyer-directory__preview" aria-live="polite">

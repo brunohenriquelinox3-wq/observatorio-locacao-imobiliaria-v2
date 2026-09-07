@@ -31,6 +31,10 @@ export type SubdivisionBuyerClientDirectoryEntry = {
   updatedAt: string;
 };
 
+export type SubdivisionBuyerClientDirectoryTotal = {
+  total: number;
+};
+
 export type SubdivisionBuyerClientReadinessEntry = {
   buyerClientId: string;
   displayName: string;
@@ -72,6 +76,11 @@ function asNullableString(row: RpcRow, key: string, errorCode: string): string |
 function asCount(row: RpcRow, key: string, errorCode: string): number {
   const value = row[key];
   if (typeof value !== "number" || !Number.isInteger(value) || value < 0 || value > 99) throw new Error(errorCode);
+  return value;
+}
+
+function asDirectoryTotal(value: unknown, errorCode: string): number {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0 || value > 1_000_000) throw new Error(errorCode);
   return value;
 }
 
@@ -126,6 +135,20 @@ export async function listDraftSubdivisionBuyerClientDirectory(subjectId: string
     if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("SUBDIVISION_BUYER_CLIENT_DIRECTORY_READ_DENIED");
     return directoryEntryFromRow(raw as RpcRow);
   });
+}
+
+export async function getDraftSubdivisionBuyerClientDirectoryTotal(subjectId: string | undefined, rawInput: SubdivisionBuyerClientDirectoryListInput, client: RpcClient = getSupabaseAdminClient()): Promise<SubdivisionBuyerClientDirectoryTotal> {
+  const actorUserId = requireSubject(subjectId);
+  const input = subdivisionBuyerClientDirectoryListInputSchema.parse(rawInput);
+  const { data, error } = await client.rpc("subdivision_count_draft_buyer_client_directory", {
+    p_actor_user_id: actorUserId,
+    p_organization_id: input.organizationId,
+    p_module: input.module,
+    p_purpose_code: input.purposeCode,
+    p_search_term: input.searchTerm,
+  });
+  if (error) throw new Error("SUBDIVISION_BUYER_CLIENT_DIRECTORY_TOTAL_READ_DENIED");
+  return { total: asDirectoryTotal(data, "SUBDIVISION_BUYER_CLIENT_DIRECTORY_TOTAL_READ_DENIED") };
 }
 
 export async function listDraftSubdivisionBuyerClientReadiness(subjectId: string | undefined, rawInput: SubdivisionBuyerClientReadinessListInput, client: RpcClient = getSupabaseAdminClient()): Promise<SubdivisionBuyerClientReadinessEntry[]> {

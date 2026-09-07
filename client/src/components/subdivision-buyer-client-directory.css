@@ -113,6 +113,59 @@
 	display: none;
 }
 
+.subdivision-buyer-directory__enrollment {
+	position: relative;
+	border: 2px solid #0f7667;
+	background: linear-gradient(112deg, #e6f8f1 0%, #f8fffc 58%, #ecf9f5 100%);
+	box-shadow: 0 10px 24px rgba(18, 111, 98, .1);
+}
+
+.subdivision-buyer-directory__enrollment-kicker {
+	display: inline-flex;
+	width: fit-content;
+	margin-bottom: 4px;
+	padding: 3px 7px;
+	border-radius: 99px;
+	background: #0f7667;
+	color: #fff;
+	font-size: 9px;
+	font-weight: 900;
+	letter-spacing: .08em;
+}
+
+.subdivision-buyer-directory__enrollment-submit {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 48px;
+	border: 1px solid #0b5f53;
+	background: #0f7667;
+	box-shadow: 0 6px 15px rgba(15, 118, 103, .22);
+	color: #fff;
+	font-weight: 850;
+	transition: transform 160ms cubic-bezier(.23, 1, .32, 1), background 160ms cubic-bezier(.23, 1, .32, 1), box-shadow 160ms cubic-bezier(.23, 1, .32, 1);
+}
+
+.subdivision-buyer-directory__enrollment-submit:hover:not(:disabled) {
+	background: #0b5f53;
+	box-shadow: 0 10px 20px rgba(15, 118, 103, .27);
+}
+
+.subdivision-buyer-directory__enrollment-submit:active:not(:disabled) { transform: scale(.98); }
+
+.subdivision-buyer-directory__enrollment-submit:focus-visible {
+	outline: 3px solid rgba(29, 179, 155, .34);
+	outline-offset: 3px;
+}
+
+.subdivision-buyer-directory__pagination-status {
+	margin: 10px 0 0;
+	color: #376d63;
+	font-size: 12px;
+	font-weight: 700;
+}
+
 .subdivision-buyer-directory__workspace {
 	display: grid;
 	grid-template-columns: minmax(300px, .84fr) minmax(420px, 1.16fr);
@@ -203,8 +256,9 @@
 }
 
 @media (max-width: 840px) {
-	.subdivision-buyer-directory__preview-actions { grid-template-columns: 1fr; }
-	.subdivision-buyer-directory__archive-link { right: 16px; bottom: 16px; }
+		.subdivision-buyer-directory__preview-actions { grid-template-columns: 1fr; }
+		.subdivision-buyer-directory__archive-link { right: 16px; bottom: 16px; }
+		.subdivision-buyer-directory__enrollment-submit { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

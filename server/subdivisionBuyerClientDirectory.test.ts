@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { listDraftSubdivisionBuyerClientDirectory, listDraftSubdivisionBuyerClientTimeline } from "./subdivisionBuyerClientDirectory";
+import { getDraftSubdivisionBuyerClientDirectoryTotal, listDraftSubdivisionBuyerClientDirectory, listDraftSubdivisionBuyerClientTimeline } from "./subdivisionBuyerClientDirectory";
 
 const subjectId = "550e8400-e29b-41d4-a716-446655440000";
 const organizationId = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
@@ -28,6 +28,21 @@ describe("subdivision buyer client directory server boundary", () => {
       attachmentSummary: "awaiting_private_upload", updatedAt: "2026-09-07T00:00:00+00:00",
     }]);
     expect(rpc).toHaveBeenLastCalledWith("subdivision_list_draft_buyer_client_directory", expect.objectContaining({ p_actor_user_id: subjectId, p_search_term: null, p_page_size: 18 }));
+  });
+
+  it("returns only an aggregate total for the same authorized directory filter", async () => {
+    rpc.mockResolvedValueOnce({ data: 109, error: null });
+    await expect(getDraftSubdivisionBuyerClientDirectoryTotal(subjectId, { ...context, searchTerm: null, pageSize: 25, pageOffset: 0 }, client)).resolves.toEqual({ total: 109 });
+    expect(rpc).toHaveBeenLastCalledWith("subdivision_count_draft_buyer_client_directory", expect.objectContaining({
+      p_actor_user_id: subjectId,
+      p_organization_id: organizationId,
+      p_search_term: null,
+    }));
+  });
+
+  it("does not pass an invalid aggregate total to the client", async () => {
+    rpc.mockResolvedValueOnce({ data: 1_000_001, error: null });
+    await expect(getDraftSubdivisionBuyerClientDirectoryTotal(subjectId, { ...context, searchTerm: null, pageSize: 25, pageOffset: 0 }, client)).rejects.toThrow("SUBDIVISION_BUYER_CLIENT_DIRECTORY_TOTAL_READ_DENIED");
   });
 
   it("accepts only redacted, enumerated events for a contextual timeline", async () => {
