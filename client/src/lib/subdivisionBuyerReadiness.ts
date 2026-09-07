@@ -1,5 +1,9 @@
 export type BuyerReadinessClient = {
   buyerClientId: string;
+  displayName: string;
+  registrationState: "contact_pending" | "base_data_in_progress" | "conditional_requirements_pending" | "base_data_review";
+  primaryPhone: string | null;
+  messagingPhone: string | null;
 };
 
 export type BuyerReadinessAttachmentIntent = {
@@ -9,32 +13,32 @@ export type BuyerReadinessAttachmentIntent = {
 
 export type BuyerReadinessItem = {
   buyerClientId: string;
-  ordinalLabel: string;
-  attachmentLabel: string;
-  reviewLabel: string;
+  displayName: string;
+  registrationLabel: string;
+  primaryPhone: string | null;
+  messagingPhone: string | null;
 };
 
 export function buildSubdivisionBuyerReadiness(
   clients: readonly BuyerReadinessClient[],
   attachmentIntents: readonly BuyerReadinessAttachmentIntent[],
 ): BuyerReadinessItem[] {
-  const attachmentStateByBuyerId = new Map(
-    attachmentIntents.map((intent) => [intent.buyerClientId, intent.attachmentState]),
-  );
+  void attachmentIntents;
+  const registrationLabels = {
+    contact_pending: "Contato a organizar",
+    base_data_in_progress: "Cadastro em organização",
+    conditional_requirements_pending: "Conferência pendente",
+    base_data_review: "Cadastro em revisão",
+  } as const;
 
-  return clients.map((client, index) => {
-    const state = attachmentStateByBuyerId.get(client.buyerClientId);
-    const attachmentLabel = state === "private_upload_recorded"
-      ? "Cobertura privada registrada"
-      : state === "awaiting_private_upload"
-        ? "Intenção privada aguardando ciclo"
-        : "Sem intenção privada registrada";
+  return clients.map((client) => {
 
     return {
       buyerClientId: client.buyerClientId,
-      ordinalLabel: `Cliente Loteadora ${String(index + 1).padStart(2, "0")}`,
-      attachmentLabel,
-      reviewLabel: "Revisão humana necessária",
+      displayName: client.displayName,
+      registrationLabel: registrationLabels[client.registrationState],
+      primaryPhone: client.primaryPhone,
+      messagingPhone: client.messagingPhone,
     };
   });
 }

@@ -3,9 +3,11 @@ import { z } from "zod";
 import {
   subdivisionBuyerClientDirectoryListInputSchema,
   subdivisionBuyerClientProfilePartyKindSchema,
+  subdivisionBuyerClientReadinessListInputSchema,
   subdivisionBuyerClientRegistrationStateSchema,
   subdivisionBuyerClientTimelineInputSchema,
   type SubdivisionBuyerClientDirectoryListInput,
+  type SubdivisionBuyerClientReadinessListInput,
   type SubdivisionBuyerClientTimelineInput,
 } from "../shared/subdivisionBuyerClientProfileContracts";
 import { getSupabaseAdminClient } from "./supabase";
@@ -29,6 +31,15 @@ export type SubdivisionBuyerClientDirectoryEntry = {
   updatedAt: string;
 };
 
+export type SubdivisionBuyerClientReadinessEntry = {
+  buyerClientId: string;
+  displayName: string;
+  registrationState: "contact_pending" | "base_data_in_progress" | "conditional_requirements_pending" | "base_data_review";
+  primaryPhone: string | null;
+  messagingPhone: string | null;
+  updatedAt: string;
+};
+
 export type SubdivisionBuyerClientTimelineEntry = {
   eventKind: "buyer_client_registered" | "profile_cadastral_atualizado" | "pendencia_atualizada" | "preferencia_atualizada" | "anexo_privado_registrado";
   occurredAt: string;
@@ -48,6 +59,13 @@ function asString(row: RpcRow, key: string, errorCode: string): string {
 function asBoolean(row: RpcRow, key: string, errorCode: string): boolean {
   const value = row[key];
   if (typeof value !== "boolean") throw new Error(errorCode);
+  return value;
+}
+
+function asNullableString(row: RpcRow, key: string, errorCode: string): string | null {
+  const value = row[key];
+  if (value === null) return null;
+  if (typeof value !== "string") throw new Error(errorCode);
   return value;
 }
 
@@ -79,6 +97,18 @@ function directoryEntryFromRow(row: RpcRow): SubdivisionBuyerClientDirectoryEntr
   };
 }
 
+function readinessEntryFromRow(row: RpcRow): SubdivisionBuyerClientReadinessEntry {
+  const errorCode = "SUBDIVISION_BUYER_CLIENT_READINESS_READ_DENIED";
+  return {
+    buyerClientId: asString(row, "buyer_client_id", errorCode),
+    displayName: asString(row, "display_name", errorCode),
+    registrationState: parseEnum(subdivisionBuyerClientRegistrationStateSchema, row.registration_state, errorCode),
+    primaryPhone: asNullableString(row, "primary_phone", errorCode),
+    messagingPhone: asNullableString(row, "messaging_phone", errorCode),
+    updatedAt: asString(row, "updated_at", errorCode),
+  };
+}
+
 export async function listDraftSubdivisionBuyerClientDirectory(subjectId: string | undefined, rawInput: SubdivisionBuyerClientDirectoryListInput, client: RpcClient = getSupabaseAdminClient()): Promise<SubdivisionBuyerClientDirectoryEntry[]> {
   const actorUserId = requireSubject(subjectId);
   const input = subdivisionBuyerClientDirectoryListInputSchema.parse(rawInput);
@@ -95,6 +125,24 @@ export async function listDraftSubdivisionBuyerClientDirectory(subjectId: string
   return data.map((raw) => {
     if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("SUBDIVISION_BUYER_CLIENT_DIRECTORY_READ_DENIED");
     return directoryEntryFromRow(raw as RpcRow);
+  });
+}
+
+export async function listDraftSubdivisionBuyerClientReadiness(subjectId: string | undefined, rawInput: SubdivisionBuyerClientReadinessListInput, client: RpcClient = getSupabaseAdminClient()): Promise<SubdivisionBuyerClientReadinessEntry[]> {
+  const actorUserId = requireSubject(subjectId);
+  const input = subdivisionBuyerClientReadinessListInputSchema.parse(rawInput);
+  const { data, error } = await client.rpc("subdivision_list_draft_buyer_client_readiness", {
+    p_actor_user_id: actorUserId,
+    p_organization_id: input.organizationId,
+    p_module: input.module,
+    p_purpose_code: input.purposeCode,
+    p_page_size: input.pageSize,
+    p_page_offset: input.pageOffset,
+  });
+  if (error || !Array.isArray(data)) throw new Error("SUBDIVISION_BUYER_CLIENT_READINESS_READ_DENIED");
+  return data.map((raw) => {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("SUBDIVISION_BUYER_CLIENT_READINESS_READ_DENIED");
+    return readinessEntryFromRow(raw as RpcRow);
   });
 }
 

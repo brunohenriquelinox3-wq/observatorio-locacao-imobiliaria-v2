@@ -59,6 +59,11 @@ export const subdivisionBuyerClientDirectoryListInputSchema = subdivisionContext
 	pageOffset: z.number().int().min(0).max(49_975),
 }).strict();
 
+export const subdivisionBuyerClientReadinessListInputSchema = subdivisionContextSchema.extend({
+	pageSize: z.number().int().min(1).max(25),
+	pageOffset: z.number().int().min(0).max(49_975),
+}).strict();
+
 export const subdivisionBuyerClientTimelineInputSchema = subdivisionContextSchema.extend({
   buyerClientId: z.string().uuid(),
   limit: z.number().int().min(1).max(50),
@@ -101,6 +106,7 @@ export const upsertSubdivisionBuyerClientContactPreferenceInputSchema = subdivis
 
 export type SubdivisionBuyerClientProfileLookupInput = z.infer<typeof subdivisionBuyerClientProfileLookupInputSchema>;
 export type SubdivisionBuyerClientDirectoryListInput = z.infer<typeof subdivisionBuyerClientDirectoryListInputSchema>;
+export type SubdivisionBuyerClientReadinessListInput = z.infer<typeof subdivisionBuyerClientReadinessListInputSchema>;
 export type SubdivisionBuyerClientTimelineInput = z.infer<typeof subdivisionBuyerClientTimelineInputSchema>;
 export type UpsertSubdivisionBuyerClientProfileInput = z.infer<typeof upsertSubdivisionBuyerClientProfileInputSchema>;
 export type UpdateSubdivisionBuyerClientNameInput = z.infer<typeof updateSubdivisionBuyerClientNameInputSchema>;

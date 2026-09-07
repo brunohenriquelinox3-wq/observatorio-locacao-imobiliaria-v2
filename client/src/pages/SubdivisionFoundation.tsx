@@ -101,6 +101,7 @@ export default function SubdivisionFoundation() {
   const [buyerClientRoleId, setBuyerClientRoleId] = useState("");
   const [buyerClientIdForProfile, setBuyerClientIdForProfile] = useState("");
   const [buyerClientIdForAttachment, setBuyerClientIdForAttachment] = useState("");
+  const [readinessPageOffset, setReadinessPageOffset] = useState(0);
   const [attachmentIntentIdForUpload, setAttachmentIntentIdForUpload] = useState("");
   const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
   const [isAttachmentUploading, setIsAttachmentUploading] = useState(false);
@@ -164,6 +165,16 @@ export default function SubdivisionFoundation() {
   const buyerDirectoryQueryInput = useMemo(() => ({ ...context, searchTerm: null, pageSize: 25, pageOffset: 0 }), [context]);
   const buyerDirectoryQuery = trpc.subdivisionFoundation.listDraftBuyerClientDirectory.useQuery(buyerDirectoryQueryInput, { enabled: isWorkspaceReady, retry: false });
   const directoryBuyerClients = buyerDirectoryQuery.data;
+  const readinessQueryInput = useMemo(() => ({ ...context, pageSize: 25, pageOffset: readinessPageOffset }), [context, readinessPageOffset]);
+  const buyerReadinessQuery = trpc.subdivisionFoundation.listDraftBuyerClientReadiness.useQuery(readinessQueryInput, { enabled: isWorkspaceReady, retry: false });
+  const readinessBuyerClients = buyerReadinessQuery.data;
+  const profileBuyerClients = useMemo(() => {
+    const candidates = [
+      ...(directoryBuyerClients ?? []).map((client) => ({ buyerClientId: client.buyerClientId, displayName: client.displayName })),
+      ...(readinessBuyerClients ?? []).map((client) => ({ buyerClientId: client.buyerClientId, displayName: client.displayName })),
+    ];
+    return Array.from(new globalThis.Map(candidates.map((client) => [client.buyerClientId, { buyerClientId: client.buyerClientId, displayName: client.displayName }])).values());
+  }, [directoryBuyerClients, readinessBuyerClients]);
   const attachmentIntentsQuery = trpc.subdivisionFoundation.listBuyerAttachmentIntents.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const saleBlocksQueryInput = useMemo(() => ({ ...context, developmentId: saleDevelopmentId }), [context, saleDevelopmentId]);
   const saleBlocksQuery = trpc.subdivisionFoundation.listDraftBlocks.useQuery(saleBlocksQueryInput, { enabled: isWorkspaceReady && Boolean(saleDevelopmentId), retry: false });
@@ -188,10 +199,13 @@ export default function SubdivisionFoundation() {
   useEffect(() => {
     if (buyerDirectoryQuery.isFetching) return;
     setBuyerClientIdForAttachment((value) => retainAuthorizedSelection(value, directoryBuyerClients, (client) => client.buyerClientId));
-    setBuyerClientIdForProfile((value) => retainAuthorizedSelection(value, directoryBuyerClients, (client) => client.buyerClientId));
+    setBuyerClientIdForProfile((value) => retainAuthorizedSelection(value, profileBuyerClients, (client) => client.buyerClientId));
     setSaleBuyerClientId((value) => retainAuthorizedSelection(value, buyerClientsQuery.data, (client) => client.buyerClientId));
     setCoBuyerClientId((value) => retainAuthorizedSelection(value, buyerClientsQuery.data, (client) => client.buyerClientId));
-  }, [buyerClientsQuery.data, buyerDirectoryQuery.isFetching, directoryBuyerClients]);
+  }, [buyerClientsQuery.data, buyerDirectoryQuery.isFetching, directoryBuyerClients, profileBuyerClients]);
+  useEffect(() => {
+    setReadinessPageOffset(0);
+  }, [context.organizationId, context.purposeCode]);
   useEffect(() => {
     setAttachmentIntentIdForUpload((value) => retainAuthorizedSelection(value, attachmentIntentsQuery.data === undefined ? undefined : uploadableAttachmentIntents, (intent) => intent.attachmentIntentId));
   }, [attachmentIntentsQuery.data, uploadableAttachmentIntents]);
@@ -344,7 +358,7 @@ export default function SubdivisionFoundation() {
 		{isBuyerProfilePage && <section id="buyer-profile-standalone" className="subdivision-foundation-workspace" aria-labelledby="buyer-profile-standalone-title">
 		  <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">06 · ESTOQUE CADASTRAL</p><h2 id="buyer-profile-standalone-title">Busca e edição de Clientes Loteadora</h2></div><p>Encontre o cadastro pela informação disponível e edite a ficha no próprio resultado. Inclusão, arquivamento e restauração continuam disponíveis na Central de Clientes.</p></div>
 		  <button type="button" className="subdivision-foundation-profile-return" onClick={() => setLocation("/loteadora/clientes")}>Voltar para a Central de Clientes</button>
-		  <SubdivisionBuyerClientProfile context={context} isContextReady={isContextReady} isWorkspaceReady={isWorkspaceReady} buyerClients={directoryBuyerClients} selectedBuyerClientId={buyerClientIdForProfile} onSelectBuyerClient={selectBuyerClient} onOpenDirectory={() => setLocation("/loteadora/clientes#buyer-directory-search")} />
+			  <SubdivisionBuyerClientProfile context={context} isContextReady={isContextReady} isWorkspaceReady={isWorkspaceReady} buyerClients={profileBuyerClients} selectedBuyerClientId={buyerClientIdForProfile} onSelectBuyerClient={selectBuyerClient} onOpenDirectory={() => setLocation("/loteadora/clientes#buyer-directory-search")} />
 		</section>}
 			{!isBuyerProfilePage && <details id="subdivision-buyers" className="subdivision-preparation-disclosure subdivision-buyer-link-disclosure">
           <summary><span>Vincular cadastro existente</span><small>Ação avançada para vínculo temporal já elegível</small></summary>
@@ -361,7 +375,7 @@ export default function SubdivisionFoundation() {
           {isWorkspaceReady && attachmentIntentsQuery.data && attachmentIntentsQuery.data.length > 0 && <div className="subdivision-foundation-list__rows">{attachmentIntentsQuery.data.map((intent) => <article key={intent.attachmentIntentId}><span>Anexo privado</span><h3>{attachmentIntentSelectionLabel(intent, buyerClientsQuery.data ?? [], partyRolesQuery.data ?? [])}</h3><p><b>{attachmentStates[intent.attachmentState]}</b> · estado privado do ciclo, sem nome, chave, URL, tipo, tamanho, conteúdo, download ou visualização.</p></article>)}</div>}
           {isWorkspaceReady && uploadableAttachmentIntents.length > 0 && <form className="subdivision-foundation-card" onSubmit={uploadPrivateAttachment}><div className="subdivision-foundation-card__title"><FileStack size={19} /><h3>Anexar documento privado</h3></div><p>Selecione um documento preparado e um único PDF, JPEG ou PNG de até 2 MB. Use somente informações permitidas pela política da sua organização.</p><label htmlFor="subdivision-attachment-intent">Documento preparado<select id="subdivision-attachment-intent" value={attachmentIntentIdForUpload} onChange={(event) => setAttachmentIntentIdForUpload(event.target.value)} disabled={isAttachmentUploading || attachmentIntentsQuery.isLoading} required><option value="">{attachmentIntentsQuery.isLoading ? "Carregando documentos preparados" : attachmentIntentsQuery.isError ? "Leitura de documentos não liberada" : "Selecione um documento preparado"}</option>{uploadableAttachmentIntents.map((intent) => <option key={intent.attachmentIntentId} value={intent.attachmentIntentId}>{attachmentIntentSelectionLabel(intent, buyerClientsQuery.data ?? [], partyRolesQuery.data ?? [])}</option>)}</select></label><label htmlFor="subdivision-private-file">Arquivo local<input ref={attachmentInputRef} id="subdivision-private-file" type="file" accept="application/pdf,image/jpeg,image/png" onChange={(event) => setAttachmentFile(event.target.files?.[0] ?? null)} disabled={isAttachmentUploading} required /></label><p aria-live="polite">{attachmentFile ? "Arquivo selecionado localmente. O nome não é exibido nem persistido nesta tela." : "Nenhum arquivo selecionado."}</p><button type="submit" disabled={!attachmentIntentIdForUpload || !attachmentFile || isAttachmentUploading}>{isAttachmentUploading ? "Validando e enviando" : "Enviar documento privado"}</button></form>}
         </section>
-        <SubdivisionBuyerReadiness contextReady={isContextReady} clients={directoryBuyerClients} attachmentIntents={attachmentIntentsQuery.data} isLoading={buyerDirectoryQuery.isLoading || attachmentIntentsQuery.isLoading} isError={buyerDirectoryQuery.isError || attachmentIntentsQuery.isError} />
+	        <SubdivisionBuyerReadiness contextReady={isContextReady} clients={readinessBuyerClients} isLoading={buyerReadinessQuery.isLoading} isError={buyerReadinessQuery.isError} hasMore={(readinessBuyerClients?.length ?? 0) === 25} onLoadMore={() => setReadinessPageOffset((offset) => offset + 25)} onOpenProfile={(buyerClientId) => { selectBuyerClient(buyerClientId); setLocation("/loteadora/clientes/ficha#buyer-profile-contextual-editor"); }} />
         </>}
         {activeSector === "sales" && <section id="subdivision-sales" className="subdivision-foundation-workspace" aria-labelledby="subdivision-sale-draft-title">
           <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">08 · RASCUNHO INTERNO DE VENDA</p><h2 id="subdivision-sale-draft-title">Lote e cliente comprador podem ser conectados sem mudar o inventário.</h2></div><p>Este registro organiza somente o próximo trabalho interno. Não é reserva, proposta, contrato, preço, cobrança, boleto, comissão, repasse ou financeiro.</p></div>

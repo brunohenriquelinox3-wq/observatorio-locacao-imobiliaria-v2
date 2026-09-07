@@ -2,24 +2,30 @@ import { describe, expect, it } from "vitest";
 import { buildSubdivisionBuyerReadiness } from "./subdivisionBuyerReadiness";
 
 describe("buildSubdivisionBuyerReadiness", () => {
-  it("produz rótulos ordinais sem identificar a pessoa e preserva a cobertura opaca", () => {
+  it("produz cartões operacionais com nome, situação e contatos mínimos", () => {
     const items = buildSubdivisionBuyerReadiness(
-      [{ buyerClientId: "buyer-a" }, { buyerClientId: "buyer-b" }],
+      [
+        { buyerClientId: "buyer-a", displayName: "Cliente A", registrationState: "contact_pending", primaryPhone: null, messagingPhone: null },
+        { buyerClientId: "buyer-b", displayName: "Cliente B", registrationState: "base_data_review", primaryPhone: "contato", messagingPhone: "mensagem" },
+      ],
       [{ buyerClientId: "buyer-b", attachmentState: "private_upload_recorded" }],
     );
 
-    expect(items.map((item) => [item.ordinalLabel, item.attachmentLabel])).toEqual([
-      ["Cliente Loteadora 01", "Sem intenção privada registrada"],
-      ["Cliente Loteadora 02", "Cobertura privada registrada"],
+    expect(items.map((item) => [item.displayName, item.registrationLabel])).toEqual([
+      ["Cliente A", "Contato a organizar"],
+      ["Cliente B", "Cadastro em revisão"],
     ]);
+    expect(items[1]).toMatchObject({ primaryPhone: "contato", messagingPhone: "mensagem" });
   });
 
-  it("trata o ciclo pendente sem expor dados do anexo", () => {
+  it("mantém documentos e detalhes fora da projeção operacional", () => {
     const [item] = buildSubdivisionBuyerReadiness(
-      [{ buyerClientId: "buyer-a" }],
+      [{ buyerClientId: "buyer-a", displayName: "Cliente A", registrationState: "conditional_requirements_pending", primaryPhone: null, messagingPhone: null }],
       [{ buyerClientId: "buyer-a", attachmentState: "awaiting_private_upload" }],
     );
 
-    expect(item).toMatchObject({ attachmentLabel: "Intenção privada aguardando ciclo", reviewLabel: "Revisão humana necessária" });
+    expect(item).toMatchObject({ registrationLabel: "Conferência pendente", primaryPhone: null, messagingPhone: null });
+    expect(item).not.toHaveProperty("attachmentLabel");
+    expect(item).not.toHaveProperty("documentReference");
   });
 });

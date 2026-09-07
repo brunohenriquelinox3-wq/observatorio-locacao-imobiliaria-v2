@@ -53,10 +53,12 @@ describe("setores da coluna Loteadora", () => {
     expect(page).toContain("?? (lastAuthorizedContext && (!selectedOrganizationId || lastAuthorizedContext.organizationId === selectedOrganizationId)");
     expect(page).toContain("const contextOrganizationId = effectiveOrganizationContext?.organizationId ?? \"\";");
     expect(page).toContain("[contextOrganizationId, contextPurposeCode]");
-    expect(page).toContain("setBuyerClientIdForProfile((value) => retainAuthorizedSelection(value, directoryBuyerClients");
+    expect(page).toContain("const profileBuyerClients = useMemo(() =>");
+    expect(page).toContain("setBuyerClientIdForProfile((value) => retainAuthorizedSelection(value, profileBuyerClients");
     expect(page).toContain("setBuyerClientIdForAttachment((value) => retainAuthorizedSelection(value, directoryBuyerClients");
     expect(page).toContain("if (buyerDirectoryQuery.isFetching) return;");
-    expect(page).toContain("[buyerClientsQuery.data, buyerDirectoryQuery.isFetching, directoryBuyerClients]");
+    expect(page).toContain("[buyerClientsQuery.data, buyerDirectoryQuery.isFetching, directoryBuyerClients, profileBuyerClients]");
+    expect(page).toContain("listDraftBuyerClientReadiness.useQuery");
   });
 
   it("apresenta Cadastro e Estoque como áreas complementares sem desmontar o estúdio existente", () => {

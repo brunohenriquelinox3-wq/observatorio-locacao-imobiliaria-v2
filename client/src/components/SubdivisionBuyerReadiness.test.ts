@@ -10,13 +10,15 @@ describe("SubdivisionBuyerReadiness", () => {
     expect(source).toContain("não há leitura de prontidão nem indicação de existência de clientes");
   });
 
-  it("é somente leitura e não inclui controles materiais", () => {
-    expect(source).not.toContain("<button");
-    expect(source).not.toContain("onClick");
+  it("expõe um estoque operacional rolável com contatos mínimos e atalho de edição", () => {
+    expect(source).toContain("subdivision-buyer-readiness__rows");
+    expect(source).toContain("primaryPhone");
+    expect(source).toContain("messagingPhone");
+    expect(source).toContain("Editar cadastro");
+    expect(source).toContain("onOpenProfile");
     expect(source).not.toContain("fetch(");
     expect(source).not.toContain("useMutation");
     expect(source).not.toContain("input type=\"file\"");
-    expect(source).toContain("estado opaco, sem arquivo ou metadado");
-    expect(source).toContain("o quadro não decide, classifica risco ou inicia venda");
+    expect(source).toContain("Dados completos, identificação e documentos ficam na ficha privada.");
   });
 });

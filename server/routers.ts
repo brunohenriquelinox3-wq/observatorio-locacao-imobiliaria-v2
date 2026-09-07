@@ -146,9 +146,10 @@ import {
   subdivisionContextSchema,
 } from "../shared/subdivisionContracts";
 import {
-  subdivisionBuyerClientDirectoryListInputSchema,
-  subdivisionBuyerClientProfileLookupInputSchema,
-  subdivisionBuyerClientTimelineInputSchema,
+	subdivisionBuyerClientDirectoryListInputSchema,
+	subdivisionBuyerClientProfileLookupInputSchema,
+	subdivisionBuyerClientReadinessListInputSchema,
+	subdivisionBuyerClientTimelineInputSchema,
   updateSubdivisionBuyerClientNameInputSchema,
   upsertSubdivisionBuyerClientContactPreferenceInputSchema,
   upsertSubdivisionBuyerClientProfileInputSchema,
@@ -236,7 +237,7 @@ import {
   upsertDraftSubdivisionBuyerClientRequirement,
   updateDraftSubdivisionBuyerClientName,
 } from "./subdivisionBuyerClientProfile";
-import { listDraftSubdivisionBuyerClientDirectory, listDraftSubdivisionBuyerClientTimeline } from "./subdivisionBuyerClientDirectory";
+import { listDraftSubdivisionBuyerClientDirectory, listDraftSubdivisionBuyerClientReadiness, listDraftSubdivisionBuyerClientTimeline } from "./subdivisionBuyerClientDirectory";
 import { createBuyerAttachmentIntent, listBuyerAttachmentIntents } from "./subdivisionBuyerAttachmentIntent";
 import { createSubdivisionSaleDraft, listSubdivisionSaleDraftAttachmentCoverage, listSubdivisionSaleDrafts } from "./subdivisionSaleDraft";
 import { listSubdivisionSaleDraftWorkStates, upsertSubdivisionSaleDraftWorkState } from "./subdivisionSaleDraftWorkState";
@@ -717,7 +718,8 @@ export const appRouter = router({
       return restoreSubdivisionClient(ctx.supabaseSubjectId ?? undefined, input);
     }),
     listArchivedClients: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listArchivedSubdivisionClients(ctx.supabaseSubjectId ?? undefined, input)),
-    listDraftBuyerClientDirectory: protectedProcedure.input(subdivisionBuyerClientDirectoryListInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientDirectory(ctx.supabaseSubjectId ?? undefined, input)),
+		listDraftBuyerClientDirectory: protectedProcedure.input(subdivisionBuyerClientDirectoryListInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientDirectory(ctx.supabaseSubjectId ?? undefined, input)),
+		listDraftBuyerClientReadiness: protectedProcedure.input(subdivisionBuyerClientReadinessListInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientReadiness(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClientTimeline: protectedProcedure.input(subdivisionBuyerClientTimelineInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientTimeline(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClientProfileSummaries: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientProfileSummaries(ctx.supabaseSubjectId ?? undefined, input)),
     getDraftBuyerClientProfile: protectedProcedure.input(subdivisionBuyerClientProfileLookupInputSchema).query(({ ctx, input }) => getDraftSubdivisionBuyerClientProfile(ctx.supabaseSubjectId ?? undefined, input)),
