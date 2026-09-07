@@ -14,7 +14,7 @@ Antes de declarar uma alteração pronta, conferir no navegador a continuidade d
 
 O agente tem autonomia permanente para navegar pelo CRM, percorrer jornadas completas, acionar controles estritamente não materiais e testar fluxos de leitura, filtro, seleção, rolagem, foco, retorno, mensagens de bloqueio e responsividade. Essa autonomia existe para detectar e corrigir falhas antes da entrega, sem exigir nova autorização para cada teste seguro.
 
-Nenhum teste pode confirmar, enviar, salvar, criar, editar, arquivar, restaurar, importar, exportar, publicar ou alterar dados sem a autorização específica já aplicável. Operações materiais continuam condicionadas a identidade, organização, membership, grant, escopo, finalidade, MFA recente, correlação, idempotência e auditoria; falhas de precondição devem ser preservadas e tratadas como controles corretos, nunca contornadas.
+Nenhum teste pode confirmar, enviar, salvar, criar, editar, arquivar, restaurar, importar, exportar, publicar ou alterar dados sem a autorização específica já aplicável. Por ordem explícita do proprietário, o MFA é confirmado na autenticação e vinculado à sessão válida; operações materiais continuam condicionadas a identidade, organização, membership, grant, escopo, finalidade, sessão MFA autorizada, correlação, idempotência e auditoria. Logout, expiração ou invalidação da sessão devem voltar a bloquear as operações; falhas de precondição devem ser preservadas e tratadas como controles corretos, nunca contornadas.
 
 ## Preservação de conhecimento
 

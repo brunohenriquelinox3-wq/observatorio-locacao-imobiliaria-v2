@@ -1,5 +1,5 @@
 import DashboardLayout, { type DashboardAccessGate } from "@/components/DashboardLayout";
-import { hasRecentTotpMfa, mfaSecurityStatusCopy, resolveMfaSecurityStatus, type MfaSecurityStatus } from "@/lib/mfaSecurityState";
+import { hasSessionTotpMfa, mfaSecurityStatusCopy, resolveMfaSecurityStatus, type MfaSecurityStatus } from "@/lib/mfaSecurityState";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { toMfaQrImageSource, validateTotpCode } from "@/lib/identityMfa";
 import { ArrowRight, CircleAlert, Copy, Loader2, QrCode, ShieldCheck, ShieldAlert, Smartphone, TimerReset } from "lucide-react";
@@ -10,8 +10,8 @@ import "../security-mfa.css";
 type Enrollment = { factorId: string; qrCode: string; secret: string };
 
 const accessGate: DashboardAccessGate = {
-  eyebrow: "SEGURANÇA DE SESSÃO · MFA ANTES DE COMANDOS",
-  title: "Configure ou revalide sua proteção de acesso.",
+  eyebrow: "SEGURANÇA DE SESSÃO · MFA NO LOGIN",
+  title: "Configure a proteção usada para iniciar sua sessão autorizada.",
   description: "A sessão de contexto é independente da plataforma. A inscrição e a verificação TOTP ocorrem somente no provedor autenticado.",
   routeTitle: "Rota de segurança",
   routeDetail: "Contexto → autenticador → TOTP → servidor",
@@ -63,7 +63,7 @@ export default function SecurityMfa() {
         currentLevel: assurance.currentLevel,
         nextLevel: assurance.nextLevel,
         totpFactorCount: totpFactors.length,
-        hasRecentTotp: hasRecentTotpMfa(sessionData.session?.access_token),
+        hasSessionTotp: hasSessionTotpMfa(sessionData.session?.access_token),
       }));
     } catch {
       setStatus("error");
@@ -170,11 +170,11 @@ export default function SecurityMfa() {
   return <DashboardLayout navigationTitle="Núcleo CRM" accessGate={accessGate}>
     <main className="security-mfa">
       <header className="security-mfa__hero">
-        <div><p className="security-mfa__eyebrow">SEGURANÇA DE SESSÃO · TOTP</p><h1>Proteção visível antes de qualquer comando sensível.</h1><p>Configure ou revalide o seu autenticador. Esta tela não cria permissões, não mostra identidades e não substitui as verificações do servidor.</p></div>
+        <div><p className="security-mfa__eyebrow">SEGURANÇA DE SESSÃO · TOTP</p><h1>Proteção confirmada no login para a sessão autorizada.</h1><p>Configure o seu autenticador. A sessão válida mantém as ações permitidas até logout, expiração ou invalidação; esta tela não cria permissões nem substitui as verificações do servidor.</p></div>
         <aside className={`security-mfa__status security-mfa__status--${status}`} aria-live="polite"><ShieldCheck size={19} aria-hidden="true" /><div><span>Estado atual</span><strong>{presentation.label}</strong><small>{presentation.description}</small></div></aside>
       </header>
 
-      <section className="security-mfa__steps" aria-label="Etapas de segurança"><div><span>01</span><b>Sessão de contexto</b><small>Identidade e sessão separadas da plataforma.</small></div><div><span>02</span><b>Autenticador TOTP</b><small>QR e segredo somente no seu dispositivo.</small></div><div><span>03</span><b>Verificação recente</b><small>O servidor revalida antes de cada comando.</small></div></section>
+      <section className="security-mfa__steps" aria-label="Etapas de segurança"><div><span>01</span><b>Sessão de contexto</b><small>Identidade e sessão separadas da plataforma.</small></div><div><span>02</span><b>Autenticador TOTP</b><small>QR e segredo somente no seu dispositivo.</small></div><div><span>03</span><b>Sessão autorizada</b><small>As ações permitidas seguem ativas até logout, expiração ou invalidação.</small></div></section>
 
       {status === "unavailable" ? <section className="security-mfa__panel"><ShieldAlert size={22} aria-hidden="true" /><div><p className="security-mfa__eyebrow">CONTEXTO NECESSÁRIO</p><h2>Entre no contexto antes de configurar a proteção.</h2><p>O MFA deve ser vinculado à identidade de contexto correta. O acesso à plataforma, sozinho, não substitui essa etapa.</p><Link href="/entrar?proximo=%2Fseguranca-mfa" className="security-mfa__primary">Validar contexto <ArrowRight size={16} /></Link></div></section> : null}
 
@@ -186,7 +186,7 @@ export default function SecurityMfa() {
 
       {status === "challenge_required" && !enrollment ? <section className="security-mfa__panel"><TimerReset size={22} aria-hidden="true" /><div><p className="security-mfa__eyebrow">REVALIDAÇÃO OU NOVA VINCULAÇÃO</p><h2>Confirme um código recente ou vincule outro autenticador.</h2><p>O código nunca é registrado pelo CRM. Uma verificação aceita atualizará a sessão do provedor; o servidor continuará exigindo a garantia reforçada.</p><TotpCodeForm code={code} onCodeChange={setCode} onVerify={verifyTotp} busy={busy === "verify"} /><div className="security-mfa__secondary-action"><p><b>Sem acesso ao dispositivo atual?</b> Vincule outro autenticador sem remover o fator já existente. O QR e o segredo aparecerão somente nesta tela, até a confirmação ou o cancelamento.</p><label className="security-mfa__ack"><input type="checkbox" checked={hasConfirmedEnrollment} onChange={(event) => setHasConfirmedEnrollment(event.target.checked)} /> <span>Entendo que o QR code e o segredo são pessoais e não devem ser compartilhados.</span></label><button type="button" className="security-mfa__secondary" disabled={!canEnroll} onClick={() => void beginEnrollment()}>{busy === "enroll" ? <><Loader2 className="animate-spin" size={16} /> Preparando</> : <><QrCode size={16} /> Vincular outro autenticador</>}</button></div></div></section> : null}
 
-      {status === "verified" ? <section className="security-mfa__panel security-mfa__panel--success"><ShieldCheck size={22} aria-hidden="true" /><div><p className="security-mfa__eyebrow">SESSÃO REFORÇADA</p><h2>O MFA desta sessão está reconhecido.</h2><p>Você pode voltar ao Cadastro de Loteamentos. A autorização continua dependente de identidade, organização ativa, grant, finalidade e policy em cada comando.</p><Link href="/loteadora" className="security-mfa__primary">Voltar ao Cadastro de Loteamentos <ArrowRight size={16} /></Link></div></section> : null}
+      {status === "verified" ? <section className="security-mfa__panel security-mfa__panel--success"><ShieldCheck size={22} aria-hidden="true" /><div><p className="security-mfa__eyebrow">SESSÃO AUTORIZADA</p><h2>O MFA do login está reconhecido nesta sessão.</h2><p>Você pode voltar ao Cadastro de Loteamentos e usar as ações permitidas. A autorização continua dependente de identidade, organização ativa, grant, finalidade e policy em cada comando.</p><Link href="/loteadora" className="security-mfa__primary">Voltar ao Cadastro de Loteamentos <ArrowRight size={16} /></Link></div></section> : null}
 
       {errorMessage ? <p className="security-mfa__error" role="alert"><CircleAlert size={17} aria-hidden="true" />{errorMessage}</p> : null}
     </main>

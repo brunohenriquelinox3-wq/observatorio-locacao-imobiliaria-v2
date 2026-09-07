@@ -24,7 +24,7 @@ describe("Supabase identity bridge", () => {
     await expect(resolveSupabaseSubjectId("rejected", client)).resolves.toBeNull();
   });
 
-  it("attests only a validated, confirmed and recently verified AAL2 TOTP token", async () => {
+  it("attests a validated, confirmed AAL2 TOTP session", async () => {
     const client = {
       auth: { getUser: vi.fn().mockResolvedValue({ data: { user: { id: subjectId, email_confirmed_at: "2026-08-01T00:00:00.000Z" } }, error: null }) },
     } as never;
@@ -54,14 +54,17 @@ describe("Supabase identity bridge", () => {
     await expect(attestSupabaseMfa(token, client, now)).resolves.toMatchObject({ subjectId, method: "totp" });
   });
 
-  it("fails closed when AAL, MFA recency, subject match or verified recovery is missing", async () => {
-    const client = {
+  it("keeps a valid AAL2/TOTP token attested during the session and fails closed for weak or unconfirmed identity", async () => {
+    const verifiedClient = {
+      auth: { getUser: vi.fn().mockResolvedValue({ data: { user: { id: subjectId, email_confirmed_at: "2026-08-01T00:00:00.000Z" } }, error: null }) },
+    } as never;
+    const unconfirmedClient = {
       auth: { getUser: vi.fn().mockResolvedValue({ data: { user: { id: subjectId, email_confirmed_at: null } }, error: null }) },
     } as never;
     const staleToken = tokenWith({ sub: subjectId, aal: "aal2", amr: [{ method: "totp", timestamp: Math.floor(now.getTime() / 1_000) - 901 }] });
     const weakToken = tokenWith({ sub: subjectId, aal: "aal1", amr: [{ method: "password", timestamp: Math.floor(now.getTime() / 1_000) }] });
 
-    await expect(attestSupabaseMfa(staleToken, client, now)).resolves.toBeNull();
-    await expect(attestSupabaseMfa(weakToken, client, now)).resolves.toBeNull();
+    await expect(attestSupabaseMfa(staleToken, verifiedClient, now)).resolves.toMatchObject({ subjectId, method: "totp" });
+    await expect(attestSupabaseMfa(weakToken, unconfirmedClient, now)).resolves.toBeNull();
   });
 });

@@ -1,3 +1,3 @@
-export function shouldRefreshMfaProtectedPriceQueries(wasRecent: boolean, isRecent: boolean): boolean {
-  return isRecent && !wasRecent;
+export function shouldRefreshSessionPriceQueries(wasSessionMfa: boolean, hasSessionMfa: boolean): boolean {
+  return hasSessionMfa && !wasSessionMfa;
 }

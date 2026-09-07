@@ -80,7 +80,7 @@ export function SubdivisionInternalInventoryPanel({ context, developmentId, bloc
       void utils.subdivisionFoundation.listInternalLotInventoryProfiles.invalidate(input);
     },
     onError() {
-      toast.error("Perfil interno não atualizado", { description: "O comando exige MFA recente, contexto autorizado, alçada e finalidade válidos." });
+      toast.error("Perfil interno não atualizado", { description: "O comando exige sessão MFA autorizada, contexto, alçada e finalidade válidos." });
     },
   });
   const profileControlsDisabled = !isWorkspaceReady || profileReadUnavailable || upsertProfileMutation.isPending;
@@ -93,7 +93,7 @@ export function SubdivisionInternalInventoryPanel({ context, developmentId, bloc
   return <section className="subdivision-internal-inventory" id="subdivision-internal-inventory" aria-labelledby="internal-inventory-title">
     <header className="subdivision-internal-inventory__head">
       <div><span>ESTOQUE INTERNO · PERFIL OPERACIONAL</span><h5 id="internal-inventory-title">Leitura detalhada por Lote, sem transformar estrutura em disponibilidade.</h5><p>Classifique a leitura interna, a revisão e a camada do mapa. Estes campos não registram reserva comercial, preço comercial, venda, proposta, cliente, contrato ou financeiro.</p></div>
-      <div className="subdivision-internal-inventory__guard"><ShieldAlert size={17} /><span>Leitura na sessão · gravação sob MFA</span></div>
+      <div className="subdivision-internal-inventory__guard"><ShieldAlert size={17} /><span>Leitura e gravação na sessão autorizada</span></div>
     </header>
     <div className="subdivision-internal-inventory__summary" aria-label="Resumo interno de estoque">
       <article><Layers3 size={18} /><b>{allLots.length}</b><span>Lotes físicos na leitura</span></article>

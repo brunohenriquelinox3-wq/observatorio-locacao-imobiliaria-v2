@@ -13,16 +13,17 @@ function procedureSlice(name: string) {
 }
 
 describe("política de leitura interna vinculada à sessão", () => {
-  it("permite consultas internas durante sessão autenticada sem exigir MFA recente", () => {
+  it("permite consultas internas durante sessão autenticada sem exigir MFA por operação", () => {
     expect(procedureSlice("listLotInternalPriceReferences")).toContain("listSubdivisionLotInternalPriceReferences(ctx.supabaseSubjectId ?? undefined, input)");
     expect(procedureSlice("listLotInternalPriceReferences")).not.toContain("requireRecentTotpMfa");
     expect(procedureSlice("listInternalLotInventoryProfiles")).toContain("listSubdivisionLotInternalInventoryProfiles(ctx.supabaseSubjectId ?? undefined, input)");
     expect(procedureSlice("listInternalLotInventoryProfiles")).not.toContain("requireRecentTotpMfa");
   });
 
-  it("mantém MFA recente em preparação e gravação material", () => {
+  it("mantém atestação MFA da sessão em preparação e gravação material", () => {
     expect(procedureSlice("upsertInternalLotInventoryProfile")).toContain("await requireRecentTotpMfa(ctx)");
     expect(procedureSlice("createPriceCondition")).toContain("await requireRecentTotpMfa(ctx)");
     expect(procedureSlice("upsertDraftLotOperationalProfile")).toContain("await requireRecentTotpMfa(ctx)");
+    expect(source).toContain("const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken)");
   });
 });

@@ -8,8 +8,8 @@ describe("painel de estoque interno por Lote", () => {
     expect(source).toContain("listInternalLotInventoryProfiles");
     expect(source).toContain("upsertInternalLotInventoryProfile");
     expect(source).toContain("Sem efeito comercial");
-    expect(source).toContain("Leitura na sessão · gravação sob MFA");
-    expect(source).toContain("O comando exige MFA recente");
+    expect(source).toContain("Leitura e gravação na sessão autorizada");
+    expect(source).toContain("O comando exige sessão MFA autorizada");
     expect(source).toContain("profileControlsDisabled");
     expect(source).toContain("crypto.randomUUID()");
     expect(source).toContain("Lote(s) correspondem ao filtro");

@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 const source = readFileSync(resolve(process.cwd(), "server/routers.ts"), "utf8");
 
 describe("roteamento do estúdio de loteamentos", () => {
-  it("mantém criação, edição, arquivamento e anexos atrás de MFA TOTP e procedure protegida", () => {
+  it("mantém criação, edição, arquivamento e anexos atrás de sessão MFA TOTP e procedure protegida", () => {
     expect(source).toContain("requireRecentTotpMfa");
     expect(source).toContain('message: "SUBDIVISION_COMMAND_PRECONDITIONS_UNMET"');
     expect(source).toContain("createDevelopmentStudio: protectedProcedure");

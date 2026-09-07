@@ -46,7 +46,8 @@ export async function resolveSupabaseSubjectId(
 
 /**
  * O `getUser` valida o token contra o Supabase antes de o servidor interpretar
- * as claims AAL/AMR. A atestação devolve apenas os dados mínimos da policy.
+ * as claims AAL/AMR. A atestação é válida enquanto o token de sessão AAL2
+ * permanecer válido; logout, expiração ou revogação voltam a falhar fechados.
  */
 export async function attestSupabaseMfa(
   accessToken: string | undefined,
@@ -63,8 +64,7 @@ export async function attestSupabaseMfa(
     .reduce<JwtAmrEntry | undefined>((latest, entry) => !latest || Number(entry.timestamp) > Number(latest.timestamp) ? entry : latest, undefined);
   const timestamp = typeof mostRecentMethod?.timestamp === "number" ? mostRecentMethod.timestamp : NaN;
   const verifiedAt = new Date(timestamp * 1_000);
-  const ageMs = now.getTime() - verifiedAt.getTime();
-  if (mostRecentMethod?.method !== "totp" || !Number.isFinite(verifiedAt.getTime()) || ageMs < -60_000 || ageMs > 15 * 60_000) return null;
+  if (mostRecentMethod?.method !== "totp" || !Number.isFinite(verifiedAt.getTime()) || verifiedAt.getTime() > now.getTime() + 60_000) return null;
 
   try {
     const { data, error } = await client.auth.getUser(accessToken);

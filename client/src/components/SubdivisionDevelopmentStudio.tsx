@@ -1,7 +1,7 @@
 import type { SubdivisionContext } from "@shared/subdivisionContracts";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
-import { hasRecentTotpMfa } from "@/lib/mfaSecurityState";
-import { shouldRefreshMfaProtectedPriceQueries } from "@/lib/mfaProtectedPriceQuerySync";
+import { hasSessionTotpMfa } from "@/lib/mfaSecurityState";
+import { shouldRefreshSessionPriceQueries } from "@/lib/mfaProtectedPriceQuerySync";
 import { trpc } from "@/lib/trpc";
 import { SubdivisionInternalInventoryPanel } from "@/components/SubdivisionInternalInventoryPanel";
 import { InlineLotPriceEditor } from "@/components/InlineLotPriceEditor";
@@ -342,7 +342,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const priceBaseSourceInput = useRef<HTMLInputElement>(null);
   const operationalLotProfileRef = useRef<HTMLElement>(null);
   const priceConditionAmountInputRef = useRef<HTMLInputElement>(null);
-  const wasMfaRecentRef = useRef(false);
+  const hadSessionMfaRef = useRef(false);
   const utils = trpc.useUtils();
 
   const developmentsQuery = trpc.subdivisionFoundation.listDevelopmentStudio.useQuery(context, { enabled: isWorkspaceReady, retry: false });
@@ -462,29 +462,29 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     if (!client) return;
     let active = true;
 
-    const syncRecentMfa = async () => {
+    const syncSessionMfa = async () => {
       try {
         const { data } = await client.auth.getSession();
         if (!active) return;
-        const isRecent = hasRecentTotpMfa(data.session?.access_token);
-        if (shouldRefreshMfaProtectedPriceQueries(wasMfaRecentRef.current, isRecent)) {
+        const hasSessionMfa = hasSessionTotpMfa(data.session?.access_token);
+        if (shouldRefreshSessionPriceQueries(hadSessionMfaRef.current, hasSessionMfa)) {
           setMfaPriceReadinessRevision((revision) => revision + 1);
         }
-        wasMfaRecentRef.current = isRecent;
+        hadSessionMfaRef.current = hasSessionMfa;
       } catch {
         // Sem leitura atual, o servidor continua a bloquear a consulta por padrão.
       }
     };
 
-    void syncRecentMfa();
+    void syncSessionMfa();
     const { data: listener } = client.auth.onAuthStateChange((_event, session) => {
-      const isRecent = hasRecentTotpMfa(session?.access_token);
-      if (shouldRefreshMfaProtectedPriceQueries(wasMfaRecentRef.current, isRecent)) {
+      const hasSessionMfa = hasSessionTotpMfa(session?.access_token);
+      if (shouldRefreshSessionPriceQueries(hadSessionMfaRef.current, hasSessionMfa)) {
         setMfaPriceReadinessRevision((revision) => revision + 1);
       }
-      wasMfaRecentRef.current = isRecent;
+      hadSessionMfaRef.current = hasSessionMfa;
     });
-    const intervalId = window.setInterval(() => void syncRecentMfa(), 30_000);
+    const intervalId = window.setInterval(() => void syncSessionMfa(), 30_000);
     return () => {
       active = false;
       window.clearInterval(intervalId);

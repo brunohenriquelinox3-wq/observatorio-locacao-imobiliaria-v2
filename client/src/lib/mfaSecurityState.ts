@@ -5,10 +5,8 @@ export type MfaSecuritySnapshot = {
   currentLevel?: string | null;
   nextLevel?: string | null;
   totpFactorCount: number;
-  hasRecentTotp?: boolean;
+  hasSessionTotp?: boolean;
 };
-
-const TOTP_RECENCY_MS = 15 * 60_000;
 
 type JwtAmrEntry = { method?: unknown; timestamp?: unknown };
 
@@ -25,8 +23,8 @@ function readJwtPayload(accessToken: string): Record<string, unknown> | null {
   }
 }
 
-/** Mantém a indicação visual no mesmo limite de recência que o servidor. */
-export function hasRecentTotpMfa(accessToken: string | null | undefined, nowMs = Date.now()): boolean {
+/** Reflete o MFA AAL2 inscrito no token de uma sessão ainda autenticada. */
+export function hasSessionTotpMfa(accessToken: string | null | undefined, nowMs = Date.now()): boolean {
   if (!accessToken || accessToken.length > 8_192) return false;
   const payload = readJwtPayload(accessToken);
   if (!payload || payload.aal !== "aal2" || !Array.isArray(payload.amr)) return false;
@@ -35,13 +33,12 @@ export function hasRecentTotpMfa(accessToken: string | null | undefined, nowMs =
     .filter((entry) => entry.method === "totp" && typeof entry.timestamp === "number")
     .reduce<JwtAmrEntry | undefined>((latest, entry) => !latest || Number(entry.timestamp) > Number(latest.timestamp) ? entry : latest, undefined);
   const timestamp = typeof latestTotp?.timestamp === "number" ? latestTotp.timestamp * 1_000 : Number.NaN;
-  const ageMs = nowMs - timestamp;
-  return Number.isFinite(timestamp) && ageMs >= -60_000 && ageMs <= TOTP_RECENCY_MS;
+  return Number.isFinite(timestamp) && timestamp <= nowMs + 60_000;
 }
 
 export function resolveMfaSecurityStatus(snapshot: MfaSecuritySnapshot): MfaSecurityStatus {
   if (!snapshot.hasSession) return "unavailable";
-  if (snapshot.currentLevel === "aal2" && snapshot.hasRecentTotp === true) return "verified";
+  if (snapshot.currentLevel === "aal2" && snapshot.hasSessionTotp === true) return "verified";
   if (snapshot.totpFactorCount > 0 || snapshot.nextLevel === "aal2") return "challenge_required";
   return "enrollment_required";
 }
@@ -49,7 +46,7 @@ export function resolveMfaSecurityStatus(snapshot: MfaSecuritySnapshot): MfaSecu
 export function mfaSecurityStatusCopy(status: MfaSecurityStatus): { label: string; description: string } {
   switch (status) {
     case "verified":
-      return { label: "MFA recente reconhecido", description: "A sessão alcançou o nível reforçado. Cada comando continuará sendo revalidado pelo servidor." };
+      return { label: "MFA da sessão reconhecido", description: "A sessão autenticada mantém as ações permitidas até logout, expiração ou invalidação real." };
     case "challenge_required":
       return { label: "Revalidação necessária", description: "Abra o autenticador e confirme um novo código para elevar esta sessão." };
     case "enrollment_required":

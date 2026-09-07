@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hasRecentTotpMfa, mfaSecurityStatusCopy, resolveMfaSecurityStatus } from "./mfaSecurityState";
+import { hasSessionTotpMfa, mfaSecurityStatusCopy, resolveMfaSecurityStatus } from "./mfaSecurityState";
 
 function tokenWithClaims(claims: Record<string, unknown>) {
   const encode = (value: string) => btoa(value).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
@@ -22,14 +22,14 @@ describe("estado de Segurança e MFA", () => {
   });
 
   it("reconhece somente AAL2 como sessão reforçada", () => {
-    expect(resolveMfaSecurityStatus({ hasSession: true, currentLevel: "aal2", nextLevel: "aal2", totpFactorCount: 1, hasRecentTotp: true })).toBe("verified");
+    expect(resolveMfaSecurityStatus({ hasSession: true, currentLevel: "aal2", nextLevel: "aal2", totpFactorCount: 1, hasSessionTotp: true })).toBe("verified");
   });
 
-  it("exige nova confirmação quando o token AAL2 não contém TOTP recente", () => {
+  it("mantém o AAL2/TOTP válido durante a sessão mesmo quando a inscrição não é recente", () => {
     const now = 2_000_000;
     const staleToken = tokenWithClaims({ aal: "aal2", amr: [{ method: "totp", timestamp: 1_000 }] });
 
-    expect(hasRecentTotpMfa(staleToken, now)).toBe(false);
-    expect(resolveMfaSecurityStatus({ hasSession: true, currentLevel: "aal2", nextLevel: "aal2", totpFactorCount: 1, hasRecentTotp: false })).toBe("challenge_required");
+    expect(hasSessionTotpMfa(staleToken, now)).toBe(true);
+    expect(resolveMfaSecurityStatus({ hasSession: true, currentLevel: "aal2", nextLevel: "aal2", totpFactorCount: 1, hasSessionTotp: true })).toBe("verified");
   });
 });
