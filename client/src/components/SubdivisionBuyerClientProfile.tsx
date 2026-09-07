@@ -62,6 +62,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
   const buyerClientId = selectedBuyerClientId ?? uncontrolledBuyerClientId;
   const editorFormRef = useRef<HTMLFormElement>(null);
   const selectorRef = useRef<HTMLSelectElement>(null);
+  const selectedBuyerClientIndex = buyerClients?.findIndex((client) => client.buyerClientId === buyerClientId) ?? -1;
   const lastFocusedBuyerClientId = useRef("");
   const restoredProfileAnchor = useRef(false);
   const focusedStandaloneSelector = useRef(false);
@@ -75,6 +76,11 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
   const [contactPurpose, setContactPurpose] = useState<keyof typeof buyerClientContactPurposes>("service_contact");
   const [contactChannel, setContactChannel] = useState<keyof typeof buyerClientContactChannels>("email");
   const [preferenceState, setPreferenceState] = useState<keyof typeof buyerClientContactPreferenceStates>("granted");
+
+  function selectAdjacentBuyerClient(direction: -1 | 1) {
+    const adjacentBuyerClient = buyerClients?.[selectedBuyerClientIndex + direction];
+    if (adjacentBuyerClient) setBuyerClientId(adjacentBuyerClient.buyerClientId);
+  }
 
   const selectionInput = useMemo(() => ({ ...context, buyerClientId }), [buyerClientId, context]);
   const initialDirectoryInput = useMemo(() => ({ ...context, searchTerm: null, pageSize: 25, pageOffset: 0 }), [context]);
@@ -237,6 +243,11 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
       {isWorkspaceReady && buyerClientId && !profileQuery.isLoading && !profileQuery.isError && <div className="subdivision-buyer-profile__workspace">
         <form ref={editorFormRef} id="buyer-profile-contextual-editor" className="subdivision-buyer-profile__form" onSubmit={saveProfile} tabIndex={-1}>
           <div className="subdivision-buyer-profile__selected-notice"><ShieldCheck size={16} aria-hidden="true" /><span>Cadastro selecionado para edição. As alterações desta ficha são confirmadas pelo servidor antes de atualizar o resumo.</span></div>
+          <nav className="subdivision-buyer-profile__sequence" aria-label="Navegação entre fichas autorizadas">
+            <button type="button" className="is-secondary" onClick={() => selectAdjacentBuyerClient(-1)} disabled={selectedBuyerClientIndex <= 0 || profileQuery.isLoading || saveProfileMutation.isPending}>Ficha anterior</button>
+            <span aria-live="polite">Ficha {selectedBuyerClientIndex + 1} de {buyerClients?.length ?? 0}</span>
+            <button type="button" className="is-secondary" onClick={() => selectAdjacentBuyerClient(1)} disabled={selectedBuyerClientIndex < 0 || selectedBuyerClientIndex >= (buyerClients?.length ?? 0) - 1 || profileQuery.isLoading || saveProfileMutation.isPending}>Próxima ficha</button>
+          </nav>
           <div className="subdivision-buyer-profile__form-heading"><ContactRound size={19} aria-hidden="true" /><div><h3>Dados de contato e identificação</h3><p>Dados declarados não equivalem a validação fiscal, crédito, aprovação ou aptidão para contrato.</p></div></div>
           <div className="subdivision-buyer-profile__grid">
             <label htmlFor="buyer-profile-party-kind">Natureza cadastral<select id="buyer-profile-party-kind" value={profile.partyKind} onChange={(event) => setProfile((current) => ({ ...current, partyKind: event.target.value as keyof typeof partyKinds }))} disabled={profileQuery.isLoading}>{Object.entries(partyKinds).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>

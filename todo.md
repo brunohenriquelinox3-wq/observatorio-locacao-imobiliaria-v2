@@ -2576,3 +2576,5 @@
 - [x] Dar foco inicial ao seletor da ficha compatível após a recuperação autorizada, sem interferir na Central nem tomar foco durante edição ativa. **A282:** a ficha detalhada foca seu seletor uma vez após o contexto e a lista estarem prontos, sem rolar, e nunca toma foco quando já há um cadastro em edição. A cobertura e a tipagem foram aprovadas.
 
 - [x] Manter a seleção da ficha detalhada enquanto a invalidação contextual estiver em andamento após salvar, limpando-a somente quando a resposta autorizada e definitiva não trouxer mais o cadastro no mesmo contexto. **A282:** a reconciliação agora aguarda o término do refetch do diretório; só então aplica `retainAuthorizedSelection`. Os testes focais, a tipagem e a integridade do diff foram aprovados.
+
+- [x] Adicionar navegação sequencial acessível entre fichas já autorizadas para apoiar o recadastro manual, sem alterar, criar ou inferir dados de outro cliente. **A282:** a ficha selecionada mostra anterior, posição redigida e próxima ficha exclusivamente dentro da lista contextual autorizada; controles ficam inativos nos limites e enquanto houver salvamento. Cobertura, tipagem e integridade foram aprovadas.

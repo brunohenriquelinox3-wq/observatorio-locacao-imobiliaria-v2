@@ -73,6 +73,15 @@ describe("Clientes Loteadora profile composition", () => {
     expect(component).toContain("<select ref={selectorRef} id=\"buyer-profile-client\"");
   });
 
+  it("supports sequential navigation only across the authorized buyer-client options", () => {
+    expect(component).toContain("const selectedBuyerClientIndex = buyerClients?.findIndex");
+    expect(component).toContain("function selectAdjacentBuyerClient(direction: -1 | 1)");
+    expect(component).toContain("buyerClients?.[selectedBuyerClientIndex + direction]");
+    expect(component).toContain('aria-label="Navegação entre fichas autorizadas"');
+    expect(component).toContain("Ficha anterior");
+    expect(component).toContain("Próxima ficha");
+  });
+
   it("does not expose a direct commercial transition or individual export control", () => {
     expect(component).not.toMatch(/vincular.*lote|criar.*proposta|aprovar.*crédito|gerar.*contrato|exportar.*perfil/i);
     expect(component).not.toMatch(/storage_key|document_url|file_bytes|download.*documento/i);
