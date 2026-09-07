@@ -7,6 +7,13 @@ const actor = "00000000-0000-4000-8000-000000000002";
 const lotId = "00000000-0000-4000-8000-000000000003";
 const buyerClientId = "00000000-0000-4000-8000-000000000004";
 const saleCaseId = "00000000-0000-4000-8000-000000000005";
+const structuredTerms = {
+  negotiatedTotalCents: 12000000, entryAmountCents: 0, entryDueDate: null,
+  entryInstallmentCount: 0, entryInstallmentAmountCents: null, entryFirstDueDate: null, entryDueDay: null,
+  installmentCount: 200, installmentAmountCents: 60000, firstDueDate: "2026-10-20", dueDay: 20,
+  settlementMode: "structured" as const, cashSettlementAmountCents: null, cashSettlementDueDate: null,
+  supplementalAmountCents: null, supplementalDueDate: null, tradeInCreditCents: null, tradeInDueDate: null, tradeInCategory: null, tradeInDescription: null,
+};
 
 describe("subdivisionSaleCase", () => {
   it("consulta CPF/CNPJ declarado de modo exato e somente retorna o cadastro contextual", async () => {
@@ -23,9 +30,20 @@ describe("subdivisionSaleCase", () => {
 
   it("exige todos os dados de parcelamento quando houver parcelas e preserva valores em centavos", async () => {
     const rpc = vi.fn().mockResolvedValue({ data: { sale_case_id: saleCaseId, terms_version: 2, state: "preparation" }, error: null });
-    await expect(saveSubdivisionSaleCaseTerms(actor, { ...context, correlationId: "00000000-0000-4000-8000-000000000006", saleCaseId, negotiatedTotalCents: 12000000, entryAmountCents: 0, entryDueDate: null, installmentCount: 200, installmentAmountCents: 60000, firstDueDate: "2026-10-20", dueDay: 20 }, { rpc })).resolves.toMatchObject({ termsVersion: 2 });
-    expect(rpc).toHaveBeenCalledWith("subdivision_save_sale_case_terms", expect.objectContaining({ p_installment_count: 200, p_installment_amount_cents: 60000 }));
-    expect(() => saveSubdivisionSaleCaseTermsInputSchema.parse({ ...context, correlationId: "00000000-0000-4000-8000-000000000006", saleCaseId, negotiatedTotalCents: null, entryAmountCents: null, entryDueDate: null, installmentCount: 1, installmentAmountCents: null, firstDueDate: null, dueDay: null })).toThrow();
+    await expect(saveSubdivisionSaleCaseTerms(actor, { ...context, correlationId: "00000000-0000-4000-8000-000000000006", saleCaseId, ...structuredTerms }, { rpc })).resolves.toMatchObject({ termsVersion: 2 });
+    expect(rpc).toHaveBeenCalledWith("subdivision_save_sale_case_terms", expect.objectContaining({ p_installment_count: 200, p_installment_amount_cents: 60000, p_settlement_mode: "structured" }));
+    expect(() => saveSubdivisionSaleCaseTermsInputSchema.parse({ ...context, correlationId: "00000000-0000-4000-8000-000000000006", saleCaseId, ...structuredTerms, negotiatedTotalCents: null, installmentCount: 1, installmentAmountCents: null, firstDueDate: null, dueDay: null })).toThrow();
+  });
+
+  it("aceita venda à vista e entrada parcelada simultânea às parcelas regulares", () => {
+    expect(saveSubdivisionSaleCaseTermsInputSchema.parse({ ...context, correlationId: "00000000-0000-4000-8000-000000000010", saleCaseId, ...structuredTerms, negotiatedTotalCents: 360000, entryInstallmentCount: 2, entryInstallmentAmountCents: 50000, entryFirstDueDate: "2026-10-10", entryDueDay: 10, installmentCount: 2, installmentAmountCents: 130000, firstDueDate: "2026-10-20", dueDay: 20 })).toMatchObject({ entryInstallmentCount: 2, installmentCount: 2 });
+    expect(saveSubdivisionSaleCaseTermsInputSchema.parse({ ...context, correlationId: "00000000-0000-4000-8000-000000000011", saleCaseId, ...structuredTerms, negotiatedTotalCents: 400000, installmentCount: 0, installmentAmountCents: null, firstDueDate: null, dueDay: null, settlementMode: "cash", cashSettlementAmountCents: 400000, cashSettlementDueDate: "2026-10-10" })).toMatchObject({ settlementMode: "cash" });
+  });
+
+  it("rejeita total divergente, modo incompatível e bem sem metadados declarados", () => {
+    expect(() => saveSubdivisionSaleCaseTermsInputSchema.parse({ ...context, correlationId: "00000000-0000-4000-8000-000000000012", saleCaseId, ...structuredTerms, negotiatedTotalCents: 1 })).toThrow();
+    expect(() => saveSubdivisionSaleCaseTermsInputSchema.parse({ ...context, correlationId: "00000000-0000-4000-8000-000000000013", saleCaseId, ...structuredTerms, settlementMode: "cash" })).toThrow();
+    expect(() => saveSubdivisionSaleCaseTermsInputSchema.parse({ ...context, correlationId: "00000000-0000-4000-8000-000000000014", saleCaseId, ...structuredTerms, negotiatedTotalCents: 12100000, tradeInCreditCents: 100000, tradeInDueDate: "2026-10-10", tradeInCategory: null, tradeInDescription: null })).toThrow();
   });
 
   it("vincula e remove proponentes conjuntos somente no caso contextual", async () => {

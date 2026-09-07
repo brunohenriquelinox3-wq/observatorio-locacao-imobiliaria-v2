@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildMonthlyDueDates, deriveEqualInstallmentCents } from "./SubdivisionSaleCaseWorkspace";
+import { buildMonthlyDueDates, deriveEqualInstallmentCents, deriveEqualInstallmentFromResidualCents } from "./SubdivisionSaleCaseWorkspace";
 
 const source = readFileSync(path.resolve(process.cwd(), "client/src/components/SubdivisionSaleCaseWorkspace.tsx"), "utf8");
 
@@ -15,8 +15,11 @@ describe("SubdivisionSaleCaseWorkspace", () => {
 
   it("mantém termos negociáveis separados de cobrança, boleto e pagamento", () => {
     expect(source).toContain("Valor negociado (R$)");
-    expect(source).toContain("Número de parcelas");
-    expect(source).toContain("Primeiro vencimento");
+    expect(source).toContain("Modalidade principal");
+    expect(source).toContain("Parcelas de entrada");
+    expect(source).toContain("Parcelas regulares");
+    expect(source).toContain("Primeiro vencimento regular");
+    expect(source).toContain("Crédito de bem entregue (R$)");
     expect(source).toContain("não cria recebíveis, boletos ou calendário financeiro");
     expect(source).toContain("Valores ficam em centavos no servidor");
     expect(source).toContain("Preparar lembretes internos");
@@ -35,7 +38,7 @@ describe("SubdivisionSaleCaseWorkspace", () => {
     expect(source).toContain("Proponentes da venda conjunta");
     expect(source).toContain("Adicionar proponente");
     expect(source).toContain("Remover");
-    expect(source).toContain("A entrada e todas as parcelas precisam compor exatamente o valor negociado.");
+    expect(source).toContain("Todos os componentes precisam compor exatamente o valor negociado, sem saldo residual.");
     expect(source).toContain("O dia de vencimento deve corresponder à primeira data");
     expect(source).toContain("Composição da negociação");
   });
@@ -43,6 +46,8 @@ describe("SubdivisionSaleCaseWorkspace", () => {
   it("calcula parcelas iguais e projeta vencimentos mensais com ajuste para meses menores", () => {
     expect(deriveEqualInstallmentCents(12000000, 0, 200)).toBe(60000);
     expect(deriveEqualInstallmentCents(1000, 0, 3)).toBeNull();
+    expect(deriveEqualInstallmentFromResidualCents(360000, 100000, 2)).toBe(130000);
+    expect(deriveEqualInstallmentFromResidualCents(1000, 0, 3)).toBeNull();
     expect(buildMonthlyDueDates("2026-01-31", 31, 3)).toEqual(["2026-01-31", "2026-02-28", "2026-03-31"]);
   });
 });
