@@ -7,7 +7,9 @@ const source = readFileSync(path.resolve(process.cwd(), "client/src/components/S
 describe("SubdivisionSaleDraftReadiness", () => {
   it("mantém o bloqueio explícito antes do contexto", () => {
     expect(source).toContain("!contextReady");
-    expect(source).toContain("não há leitura de preparação nem indicação de existência de rascunhos internos");
+    expect(source).toContain("não há leitura de preparação nem indicação de existência de operações internas");
+    expect(source).toContain("A preparação organiza a revisão, não a venda.");
+    expect(source).not.toContain("rascunhos internos");
   });
 
   it("é somente leitura e não introduz ações comerciais ou mutações", () => {

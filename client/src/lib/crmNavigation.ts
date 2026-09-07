@@ -1,14 +1,13 @@
 import type { DashboardNavigationItem } from "@/components/DashboardLayout";
-import { Building2, CalendarClock, ClipboardCheck, Compass, FileText, House, LandPlot, Layers3, LockKeyhole, Search, ShieldCheck, UsersRound, Workflow } from "lucide-react";
+import { Building2, CalendarClock, ClipboardCheck, Compass, FileText, House, LandPlot, Layers3, LockKeyhole, Search, ShieldCheck, UsersRound } from "lucide-react";
 
 export const crmNavigationItems: DashboardNavigationItem[] = [
   { icon: Compass, label: "Central de plataforma", path: "/administracao" },
   { icon: ShieldCheck, label: "Painel ADM", path: "/adm" },
   { icon: LockKeyhole, label: "Segurança e MFA", path: "/seguranca-mfa", description: "Inscrição e revalidação TOTP" },
   { icon: LandPlot, label: "Loteamentos", path: "/loteadora", description: "Loteamentos · cadastro, matriz e estoque" },
-  { icon: UsersRound, label: "Clientes Loteadora", path: "/loteadora/clientes", description: "Loteadora · setor 03" },
+  { icon: UsersRound, label: "Central de Vendas", path: "/loteadora/clientes", description: "Loteadora · clientes, estoque e jornada de vendas" },
   { icon: Building2, label: "Sócios e Parceiros", path: "/loteadora/socios-parceiros", description: "Loteadora · setor 04" },
-  { icon: Workflow, label: "Vendas de Lotes", path: "/loteadora/vendas", description: "Loteadora · setor 05" },
   { icon: LockKeyhole, label: "Financeiro", path: "/loteadora/financeiro", disabled: true, description: "Loteadora · bloqueado até autorização explícita" },
   { icon: UsersRound, label: "Clientes e Leads", path: "/vendas-urbanas", description: "Vendas Urbanas · setor 01" },
   { icon: House, label: "Imóveis e Proprietários", path: "/vendas-urbanas/imoveis-proprietarios", description: "Vendas Urbanas · setor 02" },

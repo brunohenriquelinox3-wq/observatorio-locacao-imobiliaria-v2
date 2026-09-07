@@ -37,21 +37,21 @@ export default function SubdivisionSaleDraftReadiness({
       <div className="subdivision-foundation-heading">
         <div>
           <p className="subdivision-foundation-eyebrow">09 · PREPARAÇÃO INTERNA</p>
-          <h2 id="sale-draft-readiness-title">O rascunho organiza a revisão, não a venda.</h2>
+          <h2 id="sale-draft-readiness-title">A preparação organiza a revisão, não a venda.</h2>
         </div>
         <p>Esta leitura reúne vínculo interno, cobertura privada opaca, participantes e classificação de trabalho. Ela não cria reserva, proposta, contrato ou obrigação financeira.</p>
       </div>
 
       {!contextReady ? (
-        <div className="subdivision-foundation-empty"><ShieldCheck size={18} aria-hidden="true" /><p>Sem contexto, não há leitura de preparação nem indicação de existência de rascunhos internos.</p></div>
+        <div className="subdivision-foundation-empty"><ShieldCheck size={18} aria-hidden="true" /><p>Sem contexto, não há leitura de preparação nem indicação de existência de operações internas.</p></div>
       ) : isLoading ? (
         <div className="subdivision-foundation-empty"><span className="subdivision-foundation-spinner" aria-hidden="true" /><p>Confirmando o contexto antes de organizar a preparação interna.</p></div>
       ) : isError ? (
-        <div className="subdivision-foundation-empty is-error"><CircleAlert size={18} aria-hidden="true" /><p>A leitura de preparação não foi liberada. Revise contexto e alçada sem inferir rascunhos externos.</p></div>
+        <div className="subdivision-foundation-empty is-error"><CircleAlert size={18} aria-hidden="true" /><p>A leitura de preparação não foi liberada. Revise contexto e alçada sem inferir operações externas.</p></div>
       ) : items.length === 0 ? (
-        <div className="subdivision-foundation-empty"><Workflow size={18} aria-hidden="true" /><p>Nenhum rascunho interno foi devolvido para este contexto.</p></div>
+        <div className="subdivision-foundation-empty"><Workflow size={18} aria-hidden="true" /><p>Nenhuma preparação interna foi devolvida para este contexto.</p></div>
       ) : (
-        <div className="subdivision-foundation-list__rows" aria-label="Preparação interna de rascunhos">
+        <div className="subdivision-foundation-list__rows" aria-label="Preparações internas de venda">
           {items.map((item) => (
             <article key={item.saleDraftId}>
               <span>{item.ordinalLabel}</span>

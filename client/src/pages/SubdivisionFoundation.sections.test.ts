@@ -11,8 +11,9 @@ describe("setores da coluna Loteadora", () => {
 
     expect(navigation).toContain('label: "Loteamentos", path: "/loteadora"');
     expect(navigation).not.toContain('path: "/estoque-lotes"');
-    expect(navigation).toContain('label: "Clientes Loteadora", path: "/loteadora/clientes"');
+    expect(navigation).toContain('label: "Central de Vendas", path: "/loteadora/clientes"');
     expect(navigation).toContain('label: "Sócios e Parceiros", path: "/loteadora/socios-parceiros"');
+    expect(navigation).not.toContain('label: "Vendas de Lotes", path: "/loteadora/vendas"');
     expect(navigation).toContain('label: "Financeiro", path: "/loteadora/financeiro", disabled: true');
   });
 
@@ -25,12 +26,13 @@ describe("setores da coluna Loteadora", () => {
     expect(page).not.toContain("createEconomicRuleSet.useMutation");
   });
 
-  it("mantém Clientes Loteadora dependente de sessão, contexto e submissão explícita", () => {
+  it("mantém a Central de Vendas dependente de sessão, contexto e submissão explícita", () => {
     const page = source();
 
     expect(page).toContain("const isWorkspaceReady = isAuthenticated && isContextReady");
     expect(page).toContain("const selectBuyerClient = useCallback((buyerClientId: string) => {");
-    expect(page).toContain('listDraftBuyerClients.useQuery(context, { enabled: isWorkspaceReady && activeSector === "sales", retry: false })');
+    expect(page).toContain('const isCentralSalesJourney = location === "/loteadora/vendas";');
+    expect(page).toContain('listDraftBuyerClients.useQuery(context, { enabled: isWorkspaceReady && isCentralSalesJourney, retry: false })');
     expect(page).toContain('!isBuyerProfilePage && <details id="subdivision-buyers"');
     expect(page).toContain("Vincular cadastro existente");
     expect(page).not.toContain('directoryBuyerClients.map((client) => <article key={client.buyerClientId}');
@@ -61,6 +63,17 @@ describe("setores da coluna Loteadora", () => {
     expect(page).toContain("listDraftBuyerClientReadiness.useQuery");
   });
 
+  it("incorpora a rota legada de Vendas de Lotes à Central sem remover a compatibilidade", () => {
+    const page = source();
+
+    expect(page).toContain('"/loteadora/vendas": "clients"');
+    expect(page).toContain('aria-label="Áreas da Central de Vendas"');
+    expect(page).toContain('href="/loteadora/vendas"');
+    expect(page).toContain('{isCentralSalesJourney && <section id="subdivision-sales"');
+    expect(page).toContain("Iniciar preparação de venda");
+    expect(page).toContain("não é reserva, proposta, contrato, preço, cobrança, boleto, comissão, repasse ou financeiro");
+  });
+
   it("apresenta Cadastro e Estoque como áreas complementares sem desmontar o estúdio existente", () => {
     const page = source();
 
@@ -77,6 +90,6 @@ describe("setores da coluna Loteadora", () => {
     expect(page).toContain('item.path === "/loteadora" || item.path.startsWith("/loteadora/")');
     expect(page).not.toContain('crmNavigationItems.slice(2, 8)');
     expect(page).toContain('clients: { index: "Setor 02"');
-    expect(page).toContain('finance: { index: "Setor 05"');
+    expect(page).toContain('finance: { index: "Setor 04"');
   });
 });
