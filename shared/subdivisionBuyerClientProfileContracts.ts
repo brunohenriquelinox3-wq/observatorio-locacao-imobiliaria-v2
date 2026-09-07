@@ -78,6 +78,12 @@ export const upsertSubdivisionBuyerClientProfileInputSchema = subdivisionContext
   representationState: subdivisionBuyerClientRepresentationStateSchema,
 }).strict();
 
+export const updateSubdivisionBuyerClientNameInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  buyerClientId: z.string().uuid(),
+  displayName: z.string().trim().min(2).max(160),
+}).strict();
+
 export const upsertSubdivisionBuyerClientRequirementInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
   buyerClientId: z.string().uuid(),
@@ -97,5 +103,6 @@ export type SubdivisionBuyerClientProfileLookupInput = z.infer<typeof subdivisio
 export type SubdivisionBuyerClientDirectoryListInput = z.infer<typeof subdivisionBuyerClientDirectoryListInputSchema>;
 export type SubdivisionBuyerClientTimelineInput = z.infer<typeof subdivisionBuyerClientTimelineInputSchema>;
 export type UpsertSubdivisionBuyerClientProfileInput = z.infer<typeof upsertSubdivisionBuyerClientProfileInputSchema>;
+export type UpdateSubdivisionBuyerClientNameInput = z.infer<typeof updateSubdivisionBuyerClientNameInputSchema>;
 export type UpsertSubdivisionBuyerClientRequirementInput = z.infer<typeof upsertSubdivisionBuyerClientRequirementInputSchema>;
 export type UpsertSubdivisionBuyerClientContactPreferenceInput = z.infer<typeof upsertSubdivisionBuyerClientContactPreferenceInputSchema>;

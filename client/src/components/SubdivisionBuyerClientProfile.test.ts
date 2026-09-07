@@ -13,6 +13,9 @@ describe("Clientes Loteadora profile composition", () => {
     expect(component).toContain("Telefone");
     expect(component).toContain("WhatsApp");
     expect(component).toContain("Salvar dados do cliente");
+    expect(component).toContain("Nome declarado");
+    expect(component).toContain("CPF ou CNPJ — somente números");
+    expect(component).toContain("RG ou documento complementar");
     expect(component).toContain("PENDÊNCIAS CONDICIONAIS");
     expect(component).toContain("PREFERÊNCIAS DE CONTATO");
     expect(component).toContain("Não inclua renda, patrimônio, score, dados bancários, lote, preço, forma de pagamento, contrato ou informações sensíveis nesta etapa.");
@@ -56,6 +59,15 @@ describe("Clientes Loteadora profile composition", () => {
     expect(component).toContain("getDraftBuyerClientProfile.setData(selectionInput, confirmedProfile)");
     expect(component).not.toContain("getDraftBuyerClientProfile.invalidate(selectionInput)");
     expect(component).toContain("listDraftBuyerClientDirectory.invalidate(initialDirectoryInput)");
+  });
+
+  it("edits the declared name through its own confirmed server command while keeping CPF/CNPJ primary", () => {
+    expect(component).toContain("updateDraftBuyerClientName.useMutation");
+    expect(component).toContain("await updateNameMutation.mutateAsync");
+    expect(component).toContain('id="buyer-profile-declared-name"');
+    expect(component).toContain('className="subdivision-buyer-profile__field--primary subdivision-buyer-profile__field--wide"');
+    expect(component).toContain("CPF/CNPJ");
+    expect(component).toContain("Complementar e opcional");
   });
 
   it("recovers the full-profile selector anchor only after the authorized workspace is ready", () => {

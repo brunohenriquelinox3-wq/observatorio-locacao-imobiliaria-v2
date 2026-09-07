@@ -118,10 +118,16 @@
 .subdivision-buyer-profile__form-actions > button.is-secondary { border-color: #a9cec5; background: #f6fcfa; color: #1d675a; }
 .subdivision-buyer-profile__form-actions > button.is-secondary:hover:not(:disabled) { border-color: #6eb9a8; background: #eaf8f3; }
 
+.subdivision-buyer-profile__field--wide { grid-column: 1 / -1; }
+.subdivision-buyer-profile__field--primary { padding: 12px; border: 1px solid #8fcfc0; border-radius: 10px; background: #effaf7; }
+.subdivision-buyer-profile__field--primary > span { display: flex; align-items: baseline; gap: 5px; color: #17584f; font-weight: 850; }
+.subdivision-buyer-profile__field--primary b { color: #287b6b; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; }
+
 @media (max-width: 640px) {
 	.subdivision-buyer-profile__search-heading { display: grid; }
 	.subdivision-buyer-profile__search-heading > button { width: 100%; }
 	.subdivision-buyer-profile__sequence { align-items: stretch; }
+	.subdivision-buyer-profile__field--wide { grid-column: auto; }
   .subdivision-buyer-profile__sequence > button { flex: 1 1 130px; }
   .subdivision-buyer-profile__sequence > span { flex-basis: 100%; order: -1; }
   .subdivision-buyer-profile__form-actions > button { width: 100%; }

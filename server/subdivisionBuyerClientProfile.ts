@@ -14,10 +14,12 @@ import {
   upsertSubdivisionBuyerClientContactPreferenceInputSchema,
   upsertSubdivisionBuyerClientProfileInputSchema,
   upsertSubdivisionBuyerClientRequirementInputSchema,
+  updateSubdivisionBuyerClientNameInputSchema,
   type SubdivisionBuyerClientProfileLookupInput,
   type UpsertSubdivisionBuyerClientContactPreferenceInput,
   type UpsertSubdivisionBuyerClientProfileInput,
   type UpsertSubdivisionBuyerClientRequirementInput,
+  type UpdateSubdivisionBuyerClientNameInput,
 } from "../shared/subdivisionBuyerClientProfileContracts";
 import { getSupabaseAdminClient } from "./supabase";
 
@@ -44,6 +46,11 @@ export type SubdivisionBuyerClientProfile = Omit<SubdivisionBuyerClientProfileSu
   primaryEmail: string | null;
   primaryPhone: string | null;
   messagingPhone: string | null;
+};
+
+export type SubdivisionBuyerClientNameUpdate = {
+  buyerClientId: string;
+  displayName: string;
 };
 
 export type SubdivisionBuyerClientRequirement = {
@@ -181,6 +188,27 @@ export async function upsertDraftSubdivisionBuyerClientProfile(subjectId: string
     throw new Error("SUBDIVISION_BUYER_CLIENT_PROFILE_COMMAND_CONFIRMATION_DENIED");
   }
   return profile;
+}
+
+export async function updateDraftSubdivisionBuyerClientName(subjectId: string | undefined, rawInput: UpdateSubdivisionBuyerClientNameInput, client: RpcClient = getSupabaseAdminClient()): Promise<SubdivisionBuyerClientNameUpdate> {
+  const actorUserId = requireSubject(subjectId);
+  const input = updateSubdivisionBuyerClientNameInputSchema.parse(rawInput);
+  const { data, error } = await client.rpc("subdivision_update_draft_buyer_client_name", {
+    p_actor_user_id: actorUserId,
+    p_organization_id: input.organizationId,
+    p_module: input.module,
+    p_purpose_code: input.purposeCode,
+    p_buyer_client_id: input.buyerClientId,
+    p_display_name: input.displayName,
+    p_correlation_id: input.correlationId,
+  });
+  if (error || !Array.isArray(data) || data.length !== 1 || !data[0] || typeof data[0] !== "object" || Array.isArray(data[0])) {
+    throw new Error("SUBDIVISION_BUYER_CLIENT_NAME_COMMAND_DENIED");
+  }
+  const row = data[0] as RpcRow;
+  const buyerClientId = asString(row, "buyer_client_id");
+  if (buyerClientId !== input.buyerClientId) throw new Error("SUBDIVISION_BUYER_CLIENT_NAME_COMMAND_CONFIRMATION_DENIED");
+  return { buyerClientId, displayName: asString(row, "display_name") };
 }
 
 export async function listDraftSubdivisionBuyerClientRequirements(subjectId: string | undefined, rawInput: SubdivisionBuyerClientProfileLookupInput, client: RpcClient = getSupabaseAdminClient()): Promise<SubdivisionBuyerClientRequirement[]> {

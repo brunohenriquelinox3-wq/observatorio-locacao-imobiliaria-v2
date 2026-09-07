@@ -84,6 +84,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
 	}, [buyerClients, presentation, searchDirectoryQuery.data]);
 	const selectedBuyerClientIndex = visibleBuyerClients?.findIndex((client) => client.buyerClientId === buyerClientId) ?? -1;
 	const [profile, setProfile] = useState(emptyProfile);
+	const [declaredName, setDeclaredName] = useState("");
   const [requirementCode, setRequirementCode] = useState<keyof typeof buyerClientRequirementCodes>("identity_evidence");
   const [requirementState, setRequirementState] = useState<keyof typeof buyerClientRequirementStates>("to_confirm");
   const [contactPurpose, setContactPurpose] = useState<keyof typeof buyerClientContactPurposes>("service_contact");
@@ -122,6 +123,15 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
 		}, 240);
 		return () => window.clearTimeout(timeout);
 	}, [presentation, searchDraft]);
+
+	useEffect(() => {
+		if (!buyerClientId) {
+			setDeclaredName("");
+			return;
+		}
+		const selected = visibleBuyerClients?.find((client) => client.buyerClientId === buyerClientId);
+		if (selected) setDeclaredName(selected.displayName);
+	}, [buyerClientId, visibleBuyerClients]);
 
   useEffect(() => {
     if (!buyerClientId) {
@@ -186,15 +196,25 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
   const completion = buyerClientProfileCompletion(presenceSnapshot);
   const recommendations = recommendedBuyerClientRequirements(presenceSnapshot);
   const utils = trpc.useUtils();
-  const saveProfileMutation = trpc.subdivisionFoundation.upsertDraftBuyerClientProfile.useMutation({
+	const saveProfileMutation = trpc.subdivisionFoundation.upsertDraftBuyerClientProfile.useMutation({
     onSuccess(confirmedProfile) {
       utils.subdivisionFoundation.getDraftBuyerClientProfile.setData(selectionInput, confirmedProfile);
       toast.success("Perfil cadastral atualizado", { description: "O cadastro permanece interno, minimizado e separado de venda, crédito, contrato, registro e financeiro." });
       void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate(initialDirectoryInput);
     },
-    onError() { toast.error("Perfil não atualizado", { description: "O servidor exige sessão, contexto, cliente comprador elegível e dados compatíveis com a natureza cadastral." }); },
-  });
-  const saveRequirementMutation = trpc.subdivisionFoundation.upsertDraftBuyerClientRequirement.useMutation({
+		onError() { toast.error("Perfil não atualizado", { description: "O servidor exige sessão, contexto, cliente comprador elegível e dados compatíveis com a natureza cadastral." }); },
+	});
+	const updateNameMutation = trpc.subdivisionFoundation.updateDraftBuyerClientName.useMutation({
+		onSuccess(confirmedName) {
+			setDeclaredName(confirmedName.displayName);
+			const updateCachedName = (items: typeof searchDirectoryQuery.data | undefined) => items?.map((item) => item.buyerClientId === confirmedName.buyerClientId ? { ...item, displayName: confirmedName.displayName } : item);
+			utils.subdivisionFoundation.listDraftBuyerClientDirectory.setData(searchInput, updateCachedName);
+			utils.subdivisionFoundation.listDraftBuyerClientDirectory.setData(initialDirectoryInput, updateCachedName);
+			toast.success("Nome declarado atualizado", { description: "A busca e o resumo usam o nome confirmado pelo servidor no mesmo contexto." });
+		},
+		onError() { toast.error("Nome não atualizado", { description: "Revise o nome declarado e confirme que não há outro cadastro igual no mesmo contexto." }); },
+	});
+	const saveRequirementMutation = trpc.subdivisionFoundation.upsertDraftBuyerClientRequirement.useMutation({
     onSuccess() {
       toast.success("Pendência de prontidão atualizada", { description: "O estado organiza revisão humana e não representa aprovação jurídica, contratual ou registral." });
       void utils.subdivisionFoundation.listDraftBuyerClientRequirements.invalidate(selectionInput);
@@ -209,10 +229,23 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
     onError() { toast.error("Preferência não atualizada", { description: "O servidor exige perfil cadastral no contexto autorizado e preserva a auditoria redigida." }); },
   });
 
-  function saveProfile(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!buyerClientId) return;
-    saveProfileMutation.mutate({
+	async function saveProfile(event: React.FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+		if (!buyerClientId) return;
+		const normalizedName = declaredName.trim();
+		if (normalizedName.length < 2) {
+			toast.error("Nome declarado obrigatório", { description: "Informe ao menos dois caracteres para salvar a ficha." });
+			return;
+		}
+		const currentName = visibleBuyerClients?.find((client) => client.buyerClientId === buyerClientId)?.displayName;
+		if (normalizedName !== currentName) {
+			try {
+				await updateNameMutation.mutateAsync({ ...context, correlationId: crypto.randomUUID(), buyerClientId, displayName: normalizedName });
+			} catch {
+				return;
+			}
+		}
+		saveProfileMutation.mutate({
       ...context, correlationId: crypto.randomUUID(), buyerClientId,
       partyKind: profile.partyKind, registrationState: profile.registrationState,
       documentReference: profile.documentReference.trim() || null,
@@ -224,8 +257,10 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
     });
   }
 
-  function discardLocalProfileChanges() {
-    if (profileQuery.data) {
+	function discardLocalProfileChanges() {
+		const selected = visibleBuyerClients?.find((client) => client.buyerClientId === buyerClientId);
+		setDeclaredName(selected?.displayName ?? "");
+		if (profileQuery.data) {
       setProfile({
         partyKind: profileQuery.data.partyKind,
         registrationState: profileQuery.data.registrationState,
@@ -284,11 +319,12 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
 			<button type="button" className="is-secondary" onClick={() => selectAdjacentBuyerClient(1)} disabled={selectedBuyerClientIndex < 0 || selectedBuyerClientIndex >= (visibleBuyerClients?.length ?? 0) - 1 || profileQuery.isLoading || saveProfileMutation.isPending}>Próxima ficha</button>
           </nav>
           <div className="subdivision-buyer-profile__form-heading"><ContactRound size={19} aria-hidden="true" /><div><h3>Dados de contato e identificação</h3><p>Dados declarados não equivalem a validação fiscal, crédito, aprovação ou aptidão para contrato.</p></div></div>
-          <div className="subdivision-buyer-profile__grid">
-            <label htmlFor="buyer-profile-party-kind">Natureza cadastral<select id="buyer-profile-party-kind" value={profile.partyKind} onChange={(event) => setProfile((current) => ({ ...current, partyKind: event.target.value as keyof typeof partyKinds }))} disabled={profileQuery.isLoading}>{Object.entries(partyKinds).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-            <label htmlFor="buyer-profile-registration-state">Situação do cadastro<select id="buyer-profile-registration-state" value={profile.registrationState} onChange={(event) => setProfile((current) => ({ ...current, registrationState: event.target.value as keyof typeof buyerClientRegistrationStates }))} disabled={profileQuery.isLoading}>{Object.entries(buyerClientRegistrationStates).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-            <label htmlFor="buyer-profile-document-reference">CPF ou CNPJ<small>Opcional; informe apenas quando a finalidade cadastral justificar.</small><input id="buyer-profile-document-reference" inputMode="numeric" autoComplete="off" value={profile.documentReference} onChange={(event) => setProfile((current) => ({ ...current, documentReference: event.target.value.replace(/\D/g, "") }))} placeholder="Somente números" disabled={profileQuery.isLoading} /></label>
-            <label htmlFor="buyer-profile-identity-document">RG ou documento complementar<small>Opcional; não substitui a conferência humana nem o documento privado.</small><input id="buyer-profile-identity-document" autoComplete="off" value={profile.identityDocumentReference} onChange={(event) => setProfile((current) => ({ ...current, identityDocumentReference: event.target.value }))} placeholder="Preencher quando necessário" disabled={profileQuery.isLoading} /></label>
+		  <div className="subdivision-buyer-profile__grid">
+				<label className="subdivision-buyer-profile__field--wide" htmlFor="buyer-profile-declared-name">Nome declarado<small>Corrija a grafia quando necessário. O servidor impede duplicidade no mesmo contexto.</small><input id="buyer-profile-declared-name" autoComplete="name" value={declaredName} onChange={(event) => setDeclaredName(event.target.value)} placeholder="Nome completo ou razão declarada" disabled={profileQuery.isLoading || saveProfileMutation.isPending || updateNameMutation.isPending} /></label>
+				<label className="subdivision-buyer-profile__field--primary subdivision-buyer-profile__field--wide" htmlFor="buyer-profile-document-reference"><span>CPF ou CNPJ <b>· identificação principal</b></span><small>Quando informado e justificado pela finalidade cadastral, registre primeiro esta referência. Use somente números.</small><input id="buyer-profile-document-reference" inputMode="numeric" autoComplete="off" value={profile.documentReference} onChange={(event) => setProfile((current) => ({ ...current, documentReference: event.target.value.replace(/\D/g, "") }))} placeholder="CPF ou CNPJ — somente números" disabled={profileQuery.isLoading || saveProfileMutation.isPending || updateNameMutation.isPending} /></label>
+				<label htmlFor="buyer-profile-party-kind">Natureza cadastral<select id="buyer-profile-party-kind" value={profile.partyKind} onChange={(event) => setProfile((current) => ({ ...current, partyKind: event.target.value as keyof typeof partyKinds }))} disabled={profileQuery.isLoading}>{Object.entries(partyKinds).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+				<label htmlFor="buyer-profile-registration-state">Situação do cadastro<select id="buyer-profile-registration-state" value={profile.registrationState} onChange={(event) => setProfile((current) => ({ ...current, registrationState: event.target.value as keyof typeof buyerClientRegistrationStates }))} disabled={profileQuery.isLoading}>{Object.entries(buyerClientRegistrationStates).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+				<label htmlFor="buyer-profile-identity-document">RG ou documento complementar<small>Complementar e opcional; não substitui a conferência humana nem o documento privado.</small><input id="buyer-profile-identity-document" autoComplete="off" value={profile.identityDocumentReference} onChange={(event) => setProfile((current) => ({ ...current, identityDocumentReference: event.target.value }))} placeholder="Preencher quando necessário" disabled={profileQuery.isLoading || saveProfileMutation.isPending || updateNameMutation.isPending} /></label>
             <label htmlFor="buyer-profile-email">E-mail de contato<small>Opcional; não é autorização automática de comunicação.</small><input id="buyer-profile-email" type="email" autoComplete="off" value={profile.primaryEmail} onChange={(event) => setProfile((current) => ({ ...current, primaryEmail: event.target.value }))} placeholder="Preencher quando necessário" disabled={profileQuery.isLoading} /></label>
             <label htmlFor="buyer-profile-phone">Telefone<input id="buyer-profile-phone" type="tel" autoComplete="off" value={profile.primaryPhone} onChange={(event) => setProfile((current) => ({ ...current, primaryPhone: event.target.value }))} placeholder="Preencher quando necessário" disabled={profileQuery.isLoading} /></label>
             <label htmlFor="buyer-profile-messaging">WhatsApp<input id="buyer-profile-messaging" type="tel" autoComplete="off" value={profile.messagingPhone} onChange={(event) => setProfile((current) => ({ ...current, messagingPhone: event.target.value }))} placeholder="Preencher quando necessário" disabled={profileQuery.isLoading} /></label>
@@ -297,8 +333,8 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
           </div>
           <p className="subdivision-buyer-profile__notice"><ShieldCheck size={16} aria-hidden="true" /> Não inclua renda, patrimônio, score, dados bancários, lote, preço, forma de pagamento, contrato ou informações sensíveis nesta etapa.</p>
           <div className="subdivision-buyer-profile__form-actions">
-            <button type="submit" disabled={profileQuery.isLoading || saveProfileMutation.isPending}>{saveProfileMutation.isPending ? "Salvando cadastro" : "Salvar dados do cliente"}</button>
-            <button type="button" className="is-secondary" disabled={profileQuery.isLoading || saveProfileMutation.isPending} onClick={discardLocalProfileChanges}>Descartar alterações locais</button>
+				<button type="submit" disabled={profileQuery.isLoading || saveProfileMutation.isPending || updateNameMutation.isPending}>{saveProfileMutation.isPending || updateNameMutation.isPending ? "Salvando cadastro" : "Salvar dados do cliente"}</button>
+				<button type="button" className="is-secondary" disabled={profileQuery.isLoading || saveProfileMutation.isPending || updateNameMutation.isPending} onClick={discardLocalProfileChanges}>Descartar alterações locais</button>
           </div>
         </form>
 
@@ -308,7 +344,8 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
           <div className="subdivision-buyer-profile__meter" aria-label={`${completion.percentage}% de presenças cadastradas`}><span style={{ "--buyer-profile-progress": `${completion.percentage}%` } as React.CSSProperties} /></div>
           <p>O indicador conta campos presentes. Não revela os valores e não mede aprovação, qualidade, crédito ou validade documental.</p>
           <dl>
-            <div><dt>Cadastro</dt><dd>{buyerClientRegistrationStates[profile.registrationState]}</dd></div>
+				<div><dt>Cadastro</dt><dd>{buyerClientRegistrationStates[profile.registrationState]}</dd></div>
+				<div><dt>CPF/CNPJ</dt><dd>{profile.documentReference ? "Informado" : "Pendente"}</dd></div>
             <div><dt>Perfil</dt><dd>{partyKinds[profile.partyKind]}</dd></div>
             <div><dt>Representação</dt><dd>{buyerClientRepresentationStates[profile.representationState]}</dd></div>
           </dl>

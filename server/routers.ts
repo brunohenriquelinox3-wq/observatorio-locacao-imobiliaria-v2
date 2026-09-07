@@ -149,6 +149,7 @@ import {
   subdivisionBuyerClientDirectoryListInputSchema,
   subdivisionBuyerClientProfileLookupInputSchema,
   subdivisionBuyerClientTimelineInputSchema,
+  updateSubdivisionBuyerClientNameInputSchema,
   upsertSubdivisionBuyerClientContactPreferenceInputSchema,
   upsertSubdivisionBuyerClientProfileInputSchema,
   upsertSubdivisionBuyerClientRequirementInputSchema,
@@ -233,6 +234,7 @@ import {
   upsertDraftSubdivisionBuyerClientContactPreference,
   upsertDraftSubdivisionBuyerClientProfile,
   upsertDraftSubdivisionBuyerClientRequirement,
+  updateDraftSubdivisionBuyerClientName,
 } from "./subdivisionBuyerClientProfile";
 import { listDraftSubdivisionBuyerClientDirectory, listDraftSubdivisionBuyerClientTimeline } from "./subdivisionBuyerClientDirectory";
 import { createBuyerAttachmentIntent, listBuyerAttachmentIntents } from "./subdivisionBuyerAttachmentIntent";
@@ -722,6 +724,10 @@ export const appRouter = router({
     upsertDraftBuyerClientProfile: protectedProcedure.input(upsertSubdivisionBuyerClientProfileInputSchema).mutation(async ({ ctx, input }) => {
       await requireVerifiedAal2Session(ctx);
       return upsertDraftSubdivisionBuyerClientProfile(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    updateDraftBuyerClientName: protectedProcedure.input(updateSubdivisionBuyerClientNameInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return updateDraftSubdivisionBuyerClientName(ctx.supabaseSubjectId ?? undefined, input);
     }),
     listDraftBuyerClientRequirements: protectedProcedure.input(subdivisionBuyerClientProfileLookupInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientRequirements(ctx.supabaseSubjectId ?? undefined, input)),
     upsertDraftBuyerClientRequirement: protectedProcedure.input(upsertSubdivisionBuyerClientRequirementInputSchema).mutation(async ({ ctx, input }) => {

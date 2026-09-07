@@ -7,6 +7,7 @@ import {
   upsertDraftSubdivisionBuyerClientContactPreference,
   upsertDraftSubdivisionBuyerClientProfile,
   upsertDraftSubdivisionBuyerClientRequirement,
+  updateDraftSubdivisionBuyerClientName,
 } from "./subdivisionBuyerClientProfile";
 
 const subjectId = "550e8400-e29b-41d4-a716-446655440000";
@@ -71,6 +72,14 @@ describe("subdivision buyer client profile server boundary", () => {
     rpc.mockResolvedValueOnce({ data: { contact_purpose: "service_contact", contact_channel: "email", preference_state: "granted" }, error: null });
     await expect(upsertDraftSubdivisionBuyerClientContactPreference(subjectId, { ...context, correlationId, buyerClientId, contactPurpose: "service_contact", contactChannel: "email", preferenceState: "granted" }, client)).resolves.toEqual({ contactPurpose: "service_contact", contactChannel: "email", preferenceState: "granted" });
     expect(rpc).toHaveBeenLastCalledWith("subdivision_upsert_draft_buyer_client_contact_preference", expect.objectContaining({ p_contact_channel: "email" }));
+  });
+
+  it("updates a declared name only through the protected correlated RPC and requires its confirmed target", async () => {
+    rpc.mockResolvedValueOnce({ data: [{ buyer_client_id: buyerClientId, display_name: "Nome declarado corrigido" }], error: null });
+    await expect(updateDraftSubdivisionBuyerClientName(subjectId, { ...context, correlationId, buyerClientId, displayName: "Nome declarado corrigido" }, client)).resolves.toEqual({ buyerClientId, displayName: "Nome declarado corrigido" });
+    expect(rpc).toHaveBeenLastCalledWith("subdivision_update_draft_buyer_client_name", expect.objectContaining({ p_actor_user_id: subjectId, p_buyer_client_id: buyerClientId, p_correlation_id: correlationId }));
+
+    await expect(updateDraftSubdivisionBuyerClientName(undefined, { ...context, correlationId, buyerClientId, displayName: "Nome declarado corrigido" }, client)).rejects.toThrow("SUBDIVISION_IDENTITY_REQUIRED");
   });
 
   it("reads only enumerated requirement and preference states", async () => {
