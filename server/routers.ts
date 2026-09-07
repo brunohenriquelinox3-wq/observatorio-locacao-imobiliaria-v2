@@ -655,10 +655,8 @@ export const appRouter = router({
     upsertDraftLotInventoryState: protectedProcedure.input(draftSubdivisionLotInventoryStateInputSchema).mutation(({ ctx, input }) => upsertDraftLotInventoryState(ctx.supabaseSubjectId ?? undefined, input)),
     transitionDraftLotInventoryState: protectedProcedure.input(subdivisionContextSchema.extend({ inventoryStateId: z.string().uuid(), toPhase: z.enum(["reference_confirmed", "structure_review", "review_required"]), correlationId: z.string().uuid() })).mutation(({ ctx, input }) => transitionDraftLotInventoryState(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftLotInventoryEvents: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftLotInventoryEvents(ctx.supabaseSubjectId ?? undefined, input)),
-    listInternalLotInventoryProfiles: protectedProcedure.input(listSubdivisionLotInternalInventoryProfilesInputSchema).query(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
-      return listSubdivisionLotInternalInventoryProfiles(ctx.supabaseSubjectId ?? undefined, input);
-    }),
+    listInternalLotInventoryProfiles: protectedProcedure.input(listSubdivisionLotInternalInventoryProfilesInputSchema).query(({ ctx, input }) =>
+      listSubdivisionLotInternalInventoryProfiles(ctx.supabaseSubjectId ?? undefined, input)),
     upsertInternalLotInventoryProfile: protectedProcedure.input(upsertSubdivisionLotInternalInventoryProfileInputSchema).mutation(async ({ ctx, input }) => {
       await requireRecentTotpMfa(ctx);
       return upsertSubdivisionLotInternalInventoryProfile(ctx.supabaseSubjectId ?? undefined, input);
@@ -677,10 +675,8 @@ export const appRouter = router({
     listEconomicRuleComponents: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionEconomicRuleComponents(ctx.supabaseSubjectId ?? undefined, input)),
     listEconomicRuleComponentRoleReferences: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionEconomicRuleComponentRoleReferences(ctx.supabaseSubjectId ?? undefined, input)),
     listPriceBasePolicies: protectedProcedure.input(listSubdivisionPriceBasePoliciesInputSchema).query(({ ctx, input }) => listSubdivisionPriceBasePolicies(ctx.supabaseSubjectId ?? undefined, input)),
-    listLotInternalPriceReferences: protectedProcedure.input(listSubdivisionLotInternalPriceReferencesInputSchema).query(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
-      return listSubdivisionLotInternalPriceReferences(ctx.supabaseSubjectId ?? undefined, input);
-    }),
+    listLotInternalPriceReferences: protectedProcedure.input(listSubdivisionLotInternalPriceReferencesInputSchema).query(({ ctx, input }) =>
+      listSubdivisionLotInternalPriceReferences(ctx.supabaseSubjectId ?? undefined, input)),
     previewPriceBaseSource: protectedProcedure.input(previewSubdivisionPriceBaseSourceInputSchema).mutation(async ({ ctx, input }) => {
       await requireRecentTotpMfa(ctx);
       return previewSubdivisionPriceBaseSource(ctx.supabaseSubjectId ?? undefined, input);

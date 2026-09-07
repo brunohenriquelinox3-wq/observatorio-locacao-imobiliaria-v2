@@ -19,5 +19,6 @@ Este índice concentra decisões reutilizáveis do CRM para que atualizações f
 | Edição física e referência interna por Lote | `edicao-por-lote-a272.md` | Antes de alterar atalhos de edição no cartão, ficha física, ajuste de valor por m², total derivado ou controles de segurança da jornada. |
 | Editor contextual de valor por m² | `editor-contextual-valor-m2-a273.md` | Antes de alterar a apresentação direta de valor por m², o host contextual, cálculo referencial ou a preparação governada por Lote. |
 | Persistência MFA da leitura de valores | `persistencia-mfa-valores-a274.md` | Antes de alterar a transição MFA, invalidar consultas protegidas, apresentar bloqueios de preço interno ou renovar cartões e editor contextual. |
+| Leitura interna vinculada à sessão | `leitura-interna-por-sessao-a275.md` | Antes de alterar leituras de valores ou perfis internos, expiração de sessão, guardas de mutação ou a separação entre consulta e comando material. |
 
 > Não substituir este índice por resumos efêmeros. Atualize-o somente ao adicionar uma referência versionada que descreva uma decisão validada, sem incluir PII, preços individuais, conteúdo de fonte, segredos ou URLs de infraestrutura.

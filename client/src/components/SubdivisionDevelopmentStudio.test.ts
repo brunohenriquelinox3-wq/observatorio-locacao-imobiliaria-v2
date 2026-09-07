@@ -220,7 +220,6 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Confirme a sessão em Segurança e MFA e use Atualizar valores.");
     expect(studio).toContain('href="/seguranca-mfa"');
     expect(studio).toContain("Confirmar MFA");
-    expect(studio).toContain("internalPriceReferenceRequiresMfa");
     expect(studio).toContain("Atualizar valores");
     expect(studio).toContain("O cálculo permanece preservado e não foi alterado.");
     expect(studio).toContain("Cada cartão reúne a ficha física, o preço-base interno por m² e o valor total calculado pela área confirmada.");
@@ -330,15 +329,14 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(styles).toContain('@media (max-width: 640px)');
   });
 
-  it("refaz a leitura protegida quando a sessão sobe para MFA recente", () => {
+  it("mantém a leitura interna vinculada à sessão e preserva MFA para preparação material", () => {
     const studio = source();
 
-    expect(studio).toContain("hasRecentTotpMfa");
-    expect(studio).toContain("shouldRefreshMfaProtectedPriceQueries");
+    expect(studio).toContain("listLotInternalPriceReferences.useQuery");
     expect(studio).toContain('refetchOnMount: "always"');
     expect(studio).toContain('refetchOnWindowFocus: "always"');
-    expect(studio).toContain("mfaPriceReadinessRevision");
-    expect(studio).toContain("internalLotPriceReferencesQuery.refetch()");
+    expect(studio).toContain("Preparar atualização interna");
+    expect(studio).toContain("exige política, contexto, MFA, alçada");
   });
 
   it("prioriza uma entrada operacional de portfólio sem manter barras laterais concorrentes", () => {

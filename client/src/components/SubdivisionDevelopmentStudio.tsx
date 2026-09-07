@@ -29,6 +29,14 @@ type PriceConditionKind = "override_per_sqm" | "percentage_adjustment" | "tempor
 type PriceConditionDocumentState = "pending_evidence" | "under_review" | "declared_complete" | "review_required";
 type LotPriceAvailabilityReason = "no_policy" | "prepared_with_exceptions" | "prepared_pending_validation" | "submitted_pending_approval" | "approved_outside_vigency" | "policy_not_available";
 
+type InternalPriceReferenceReadState = "loading" | "available" | "unavailable" | "mfa_required";
+
+function resolveInternalPriceReferenceReadState(isFetching: boolean, isError: boolean): InternalPriceReferenceReadState {
+  if (isFetching) return "loading";
+  if (isError) return "unavailable";
+  return "available";
+}
+
 type DevelopmentStudioProps = {
   context: SubdivisionContext;
   isContextReady: boolean;
@@ -443,13 +451,10 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   const inlineLotPricePreviewTotal = selectedOperationalLot && typeof selectedOperationalLot.areaSqm === "number" && Number.isFinite(Number(priceConditionDraft.amount)) && Number(priceConditionDraft.amount) > 0
     ? selectedOperationalLot.areaSqm * Number(priceConditionDraft.amount)
     : null;
-  const internalPriceReferenceErrorMessage = internalLotPriceReferencesQuery.error?.message ?? "";
-  const internalPriceReferenceRequiresMfa = internalPriceReferenceErrorMessage.includes("SUBDIVISION_COMMAND_PRECONDITIONS_UNMET");
-  const internalPriceReferenceReadState = internalLotPriceReferencesQuery.isFetching
-    ? "loading"
-    : internalLotPriceReferencesQuery.isError
-      ? internalPriceReferenceRequiresMfa ? "mfa_required" : "unavailable"
-      : "available";
+  const internalPriceReferenceReadState = resolveInternalPriceReferenceReadState(
+    internalLotPriceReferencesQuery.isFetching,
+    internalLotPriceReferencesQuery.isError,
+  );
   const priceConditionCanPrepare = Boolean(priceConditionDraft.basePolicyId && priceConditionDraft.conditionReference && priceConditionDraft.amount && priceConditionDraft.effectiveFrom && (priceConditionDraft.scope === "development" || priceConditionDraft.blockId) && (priceConditionDraft.scope !== "lot" || priceConditionDraft.lotNumber));
 
   useEffect(() => {
