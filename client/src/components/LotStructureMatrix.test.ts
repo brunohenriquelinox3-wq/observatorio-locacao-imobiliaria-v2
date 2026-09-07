@@ -12,13 +12,14 @@ describe("LotStructureMatrix", () => {
     expect(source).toContain("Quadra matriz");
   });
 
-  it("permanece somente de leitura e sem vocabulário comercial material", () => {
+  it("permanece somente de leitura e exibe somente o estado comercial já aprovado", () => {
     expect(source).not.toContain("<button");
     expect(source).not.toContain("onClick");
     expect(source).not.toContain("fetch(");
     expect(source).not.toContain("FormData");
     expect(source).toContain("Sem comando por célula");
-    expect(source).toContain("não representa planta, área, disponibilidade, reserva, venda ou contrato");
+    expect(source).toContain("somente uma confirmação aprovada pode marcar um lote como vendido");
+    expect(source).toContain("Reversão em revisão");
   });
 
   it("usa um estado profissional de preparação quando não há Lotes devolvidos", () => {

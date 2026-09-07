@@ -243,6 +243,7 @@ import { createSubdivisionSaleDraft, listSubdivisionSaleDraftAttachmentCoverage,
 import { listSubdivisionSaleDraftWorkStates, upsertSubdivisionSaleDraftWorkState } from "./subdivisionSaleDraftWorkState";
 import { addSubdivisionSaleDraftCoBuyer, listSubdivisionSaleDraftCoBuyers } from "./subdivisionSaleDraftCoBuyer";
 import { listSubdivisionSaleCases, lookupSubdivisionBuyerClientByFiscalReference, openSubdivisionSaleCase, saveSubdivisionSaleCaseTerms } from "./subdivisionSaleCase";
+import { formalizeSubdivisionSaleCase, listSubdivisionInternalSaleContracts } from "./subdivisionSaleFormalization";
 import { createSubdivisionEconomicRuleSet, listSubdivisionEconomicRuleSets } from "./subdivisionEconomicRuleSet";
 import { createSubdivisionEconomicRuleComponent, listSubdivisionEconomicRuleComponents } from "./subdivisionEconomicRuleComponent";
 import { addSubdivisionEconomicRuleComponentRoleReference, listSubdivisionEconomicRuleComponentRoleReferences } from "./subdivisionEconomicRuleComponentRoleReference";
@@ -292,7 +293,10 @@ import {
   linkSubdivisionPriceEvidenceInputSchema,
   listSubdivisionPriceEvidenceSummaryInputSchema,
 } from "../shared/subdivisionPriceEvidenceContracts";
-import { lookupSubdivisionBuyerClientByFiscalReferenceInputSchema, openSubdivisionSaleCaseInputSchema, saveSubdivisionSaleCaseTermsInputSchema } from "../shared/subdivisionSaleCaseContracts";
+import { approveSubdivisionSaleCaseInputSchema, formalizeSubdivisionSaleCaseInputSchema, lookupSubdivisionBuyerClientByFiscalReferenceInputSchema, openSubdivisionSaleCaseInputSchema, requestSubdivisionSaleReversalInputSchema, saveSubdivisionSaleCaseTermsInputSchema } from "../shared/subdivisionSaleCaseContracts";
+import { listSubdivisionInternalReceivableAttention } from "./subdivisionInternalReceivableAttention";
+import { approveSubdivisionSaleCase, requestSubdivisionSaleReversal } from "./subdivisionSaleApproval";
+import { listSubdivisionLotCommercialStates } from "./subdivisionLotCommercialState";
 import { authorizedOrganizationContextInputSchema, listAuthorizedOrganizationContexts } from "./organizationContext";
 import { clientImportCommitInputSchema } from "../shared/clientImportContracts";
 import { commitClientImport } from "./clientImport";
@@ -822,6 +826,21 @@ export const appRouter = router({
     saveSaleCaseTerms: protectedProcedure.input(saveSubdivisionSaleCaseTermsInputSchema).mutation(async ({ ctx, input }) => {
       await requireVerifiedAal2Session(ctx);
       return saveSubdivisionSaleCaseTerms(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    listInternalSaleContracts: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionInternalSaleContracts(ctx.supabaseSubjectId ?? undefined, input)),
+    listInternalReceivableAttention: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionInternalReceivableAttention(ctx.supabaseSubjectId ?? undefined, input)),
+    listLotCommercialStates: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionLotCommercialStates(ctx.supabaseSubjectId ?? undefined, input)),
+    formalizeSaleCase: protectedProcedure.input(formalizeSubdivisionSaleCaseInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return formalizeSubdivisionSaleCase(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    approveSaleCase: protectedProcedure.input(approveSubdivisionSaleCaseInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return approveSubdivisionSaleCase(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    requestSaleReversal: protectedProcedure.input(requestSubdivisionSaleReversalInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return requestSubdivisionSaleReversal(ctx.supabaseSubjectId ?? undefined, input);
     }),
   }),
 
