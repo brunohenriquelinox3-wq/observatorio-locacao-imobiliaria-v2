@@ -7,6 +7,8 @@ export type SupabaseSessionSource = {
   };
 };
 
+const TOKEN_REFRESH_INTERVAL_MS = 3_000;
+
 function tokenFrom(session: SupabaseAccessTokenSession): string | null {
   return typeof session?.access_token === "string" && session.access_token.length > 0
     ? session.access_token
@@ -17,6 +19,7 @@ export function createSupabaseSessionBridge(source: SupabaseSessionSource | null
   let accessToken: string | null = null;
   let sessionRevision = 0;
   let pendingTokenRead: Promise<string | null> | null = null;
+  let lastTokenReadAt = 0;
   const initialRevision = sessionRevision;
   let initialSessionSettled = !source;
   const initialSession = source
@@ -24,7 +27,16 @@ export function createSupabaseSessionBridge(source: SupabaseSessionSource | null
       .then(({ data }) => {
         // Uma renovação ou step-up TOTP pode ocorrer antes da leitura inicial
         // terminar. Nesse caso, a sessão mais nova é a única que pode prevalecer.
-        if (sessionRevision === initialRevision) accessToken = tokenFrom(data.session);
+        if (sessionRevision === initialRevision) {
+          const nextToken = tokenFrom(data.session);
+          const tokenChanged = accessToken !== nextToken;
+          accessToken = nextToken;
+          lastTokenReadAt = Date.now();
+          // A UI pode ter sido montada pela sessão Manus antes de o token do
+          // Supabase chegar. Revalida apenas quando a sessão efetivamente muda,
+          // para recuperar contexto sem reinicializar consultas a cada ação.
+          if (tokenChanged) onSessionChange?.();
+        }
       })
       .catch(() => undefined)
       .finally(() => {
@@ -33,35 +45,42 @@ export function createSupabaseSessionBridge(source: SupabaseSessionSource | null
     : Promise.resolve();
   const boundedInitialSession = Promise.race([
     initialSession,
-    new Promise<void>((resolve) => globalThis.setTimeout(resolve, 1_500)),
+    // Uma janela curta liberava as chamadas protegidas antes da restauração da
+    // sessão. Dez segundos mantém o comportamento fail-closed sem prender a
+    // interface indefinidamente se o provedor estiver indisponível.
+    new Promise<void>((resolve) => globalThis.setTimeout(resolve, 10_000)),
   ]);
 
   source?.auth.onAuthStateChange((_event, session) => {
     sessionRevision += 1;
-    accessToken = tokenFrom(session);
-    onSessionChange?.();
+    const nextToken = tokenFrom(session);
+    const tokenChanged = accessToken !== nextToken;
+    accessToken = nextToken;
+    lastTokenReadAt = Date.now();
+    // Eventos repetidos do provedor não devem desmontar a área protegida. Só uma
+    // troca efetiva de token pode exigir que leituras contextuais sejam refeitas.
+    if (tokenChanged) onSessionChange?.();
   });
 
   return {
     ready: () => boundedInitialSession,
     async getAccessToken(): Promise<string | null> {
-      await boundedInitialSession;
-      if (!source) return null;
+      if (!source || !initialSessionSettled) return accessToken;
       if (pendingTokenRead) return pendingTokenRead;
+      if (Date.now() - lastTokenReadAt < TOKEN_REFRESH_INTERVAL_MS) return accessToken;
 
       const revisionBeforeRead = sessionRevision;
       pendingTokenRead = source.auth.getSession()
         .then(({ data }) => {
-          // Caso uma renovação, logout ou step-up ocorra durante a leitura,
-          // o evento mais novo sempre prevalece sobre a resposta atrasada.
-          if (sessionRevision === revisionBeforeRead) accessToken = tokenFrom(data.session);
+          // Uma leitura eventual não pode sobrescrever logout, renovação ou
+          // step-up que tenham chegado por evento durante a consulta.
+          if (sessionRevision === revisionBeforeRead) {
+            accessToken = tokenFrom(data.session);
+            lastTokenReadAt = Date.now();
+          }
           return accessToken;
         })
-        .catch(() => {
-          // Sem leitura atual não encaminha token em cache potencialmente
-          // desatualizado. A autenticação e a autoridade continuam fail-closed.
-          return null;
-        })
+        .catch(() => null)
         .finally(() => {
           pendingTokenRead = null;
         });

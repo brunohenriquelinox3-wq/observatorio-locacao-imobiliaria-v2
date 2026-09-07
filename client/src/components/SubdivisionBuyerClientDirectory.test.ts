@@ -17,6 +17,11 @@ describe("SubdivisionBuyerClientDirectory composition", () => {
     expect(component).toContain("SubdivisionBuyerClientProfile");
   });
 
+  it("opens the complete editor as soon as a client card is selected", () => {
+    expect(component).toContain("setLocalActiveEntry(entry); setIsEditorOpen(true); onSelectBuyerClient(entry.buyerClientId);");
+    expect(component).toContain("Fechar edição");
+  });
+
   it("makes protected contact editing, private documents, and reversible exclusion discoverable", () => {
     expect(component).toContain("Telefone");
     expect(component).toContain("WhatsApp");

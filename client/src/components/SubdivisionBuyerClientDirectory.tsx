@@ -176,7 +176,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
 
       {!directoryQuery.isLoading && !directoryQuery.isError && entries && entries.length > 0 && <div className="subdivision-buyer-directory__workspace">
         <div className="subdivision-buyer-directory__list" aria-label="Lista de Clientes Loteadora">
-          {entries.map((entry) => <button type="button" key={entry.buyerClientId} className={entry.buyerClientId === effectiveSelectedBuyerClientId ? "is-selected" : ""} aria-pressed={entry.buyerClientId === effectiveSelectedBuyerClientId} onClick={() => { setLocalActiveEntry(entry); setIsEditorOpen(false); onSelectBuyerClient(entry.buyerClientId); }}>
+          {entries.map((entry) => <button type="button" key={entry.buyerClientId} className={entry.buyerClientId === effectiveSelectedBuyerClientId ? "is-selected" : ""} aria-pressed={entry.buyerClientId === effectiveSelectedBuyerClientId} onClick={() => { setLocalActiveEntry(entry); setIsEditorOpen(true); onSelectBuyerClient(entry.buyerClientId); }}>
             <span className="subdivision-buyer-directory__entry-top"><small>{buyerClientDirectoryPartyKinds[entry.partyKind]}</small><b>{buyerClientDirectoryRegistrationStates[entry.registrationState]}</b></span>
             <strong>{entry.displayName}</strong>
             <span className="subdivision-buyer-directory__entry-foot"><i>{entry.profilePresent ? "Perfil organizado" : "Perfil a organizar"}</i><i>{entry.requirementsPending > 0 ? `${entry.requirementsPending} pendência(s)` : "Sem pendência registrada"}</i></span>

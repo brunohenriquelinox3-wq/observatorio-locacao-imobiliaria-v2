@@ -72,7 +72,6 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
   const [preferenceState, setPreferenceState] = useState<keyof typeof buyerClientContactPreferenceStates>("granted");
 
   const selectionInput = useMemo(() => ({ ...context, buyerClientId }), [buyerClientId, context]);
-  const summariesQuery = trpc.subdivisionFoundation.listDraftBuyerClientProfileSummaries.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const profileQuery = trpc.subdivisionFoundation.getDraftBuyerClientProfile.useQuery(selectionInput, { enabled: isWorkspaceReady && Boolean(buyerClientId), retry: false });
   const requirementsQuery = trpc.subdivisionFoundation.listDraftBuyerClientRequirements.useQuery(selectionInput, { enabled: isWorkspaceReady && Boolean(buyerClientId), retry: false });
   const preferencesQuery = trpc.subdivisionFoundation.listDraftBuyerClientContactPreferences.useQuery(selectionInput, { enabled: isWorkspaceReady && Boolean(buyerClientId), retry: false });
@@ -103,7 +102,6 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
     }
   }, [buyerClientId, profileQuery.data, profileQuery.isLoading]);
 
-  const activeSummary = useMemo(() => summariesQuery.data?.find((item) => item.buyerClientId === buyerClientId), [buyerClientId, summariesQuery.data]);
   const presenceSnapshot = {
     partyKind: profile.partyKind,
     civilStatus: profile.civilStatus,
@@ -113,22 +111,13 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
     primaryPhonePresent: profile.primaryPhone.length > 0,
     messagingPhonePresent: profile.messagingPhone.length > 0,
   };
-  const completion = buyerClientProfileCompletion(activeSummary ? {
-    ...presenceSnapshot,
-    partyKind: activeSummary.partyKind,
-    civilStatus: activeSummary.civilStatus,
-    representationState: activeSummary.representationState,
-    documentReferencePresent: activeSummary.documentReferencePresent,
-    primaryEmailPresent: activeSummary.primaryEmailPresent,
-    primaryPhonePresent: activeSummary.primaryPhonePresent,
-    messagingPhonePresent: activeSummary.messagingPhonePresent,
-  } : presenceSnapshot);
+  const completion = buyerClientProfileCompletion(presenceSnapshot);
   const recommendations = recommendedBuyerClientRequirements(presenceSnapshot);
   const utils = trpc.useUtils();
   const saveProfileMutation = trpc.subdivisionFoundation.upsertDraftBuyerClientProfile.useMutation({
     onSuccess() {
       toast.success("Perfil cadastral atualizado", { description: "O cadastro permanece interno, minimizado e separado de venda, crédito, contrato, registro e financeiro." });
-      void utils.subdivisionFoundation.listDraftBuyerClientProfileSummaries.invalidate(context);
+      void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
       void utils.subdivisionFoundation.getDraftBuyerClientProfile.invalidate(selectionInput);
     },
     onError() { toast.error("Perfil não atualizado", { description: "O servidor exige sessão, contexto, cliente comprador elegível e dados compatíveis com a natureza cadastral." }); },
@@ -207,10 +196,10 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
       </div>}
 
       {!isContextReady && <div className="subdivision-foundation-empty"><CircleAlert size={18} /><p>Sem contexto autorizado não há consulta nem edição de perfil cadastral.</p></div>}
-      {isWorkspaceReady && summariesQuery.isLoading && <div className="subdivision-foundation-empty"><span className="subdivision-foundation-spinner" aria-hidden="true" /><p>Confirmando o contexto antes de solicitar os perfis cadastrais.</p></div>}
-      {isWorkspaceReady && summariesQuery.isError && <div className="subdivision-foundation-empty is-error"><CircleAlert size={18} /><p>A leitura do perfil não foi liberada. Revise identidade, membership, grant, vigência e contexto sem inferir outros clientes.</p></div>}
+      {isWorkspaceReady && buyerClientId && profileQuery.isLoading && <div className="subdivision-foundation-empty"><span className="subdivision-foundation-spinner" aria-hidden="true" /><p>Confirmando o contexto antes de solicitar o perfil cadastral.</p></div>}
+      {isWorkspaceReady && buyerClientId && profileQuery.isError && <div className="subdivision-foundation-empty is-error"><CircleAlert size={18} /><p>A leitura do perfil não foi liberada. Revise identidade, membership, grant, vigência e contexto sem inferir outros clientes.</p></div>}
 
-      {isWorkspaceReady && buyerClientId && !summariesQuery.isLoading && !summariesQuery.isError && <div className="subdivision-buyer-profile__workspace">
+      {isWorkspaceReady && buyerClientId && !profileQuery.isLoading && !profileQuery.isError && <div className="subdivision-buyer-profile__workspace">
         <form className="subdivision-buyer-profile__form" onSubmit={saveProfile}>
           <div className="subdivision-buyer-profile__selected-notice"><ShieldCheck size={16} aria-hidden="true" /><span>Cadastro selecionado para edição. As alterações desta ficha são confirmadas pelo servidor antes de atualizar o resumo.</span></div>
           <div className="subdivision-buyer-profile__form-heading"><ContactRound size={19} aria-hidden="true" /><div><h3>Dados de contato e identificação</h3><p>Dados declarados não equivalem a validação fiscal, crédito, aprovação ou aptidão para contrato.</p></div></div>
@@ -245,7 +234,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
         </aside>
       </div>}
 
-      {isWorkspaceReady && buyerClientId && !summariesQuery.isLoading && !summariesQuery.isError && <div className="subdivision-buyer-profile__lower-grid">
+      {isWorkspaceReady && buyerClientId && !profileQuery.isLoading && !profileQuery.isError && <div className="subdivision-buyer-profile__lower-grid">
         <section className="subdivision-buyer-profile__module" aria-labelledby="buyer-profile-requirements-title">
           <div className="subdivision-buyer-profile__module-head"><BadgeCheck size={18} aria-hidden="true" /><div><p className="subdivision-foundation-eyebrow">PENDÊNCIAS CONDICIONAIS</p><h3 id="buyer-profile-requirements-title">Organize o que precisa ser confirmado.</h3></div></div>
           <p>O checklist é uma trilha de trabalho. Ele não pede arquivo, não declara suficiência e não inicia formalização.</p>

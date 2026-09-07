@@ -10,10 +10,18 @@ import { createSupabaseSessionBridge } from "./lib/supabaseSessionBridge";
 import "./index.css";
 
 const queryClient = new QueryClient();
-// Cada chamada tRPC já lê o token de sessão atual pelo bridge. Invalidar toda a
-// cache a cada evento do provedor reiniciava consultas protegidas (inclusive
-// auth.me) durante ações normais de cadastro e podia deixar a tela em loading.
-const supabaseSessionBridge = createSupabaseSessionBridge(getSupabaseBrowserClient());
+// A chegada/renovação real do token deve recuperar apenas leituras dependentes
+// da autoridade contextual. Não invalida auth.me nem toda a cache, evitando que
+// uma ação normal do cadastro remonte a área protegida.
+const refreshContextBoundQueries = () => {
+  void queryClient.invalidateQueries({
+    predicate(query) {
+      const [scope] = query.queryKey;
+      return scope === "organizationContext" || scope === "subdivisionFoundation";
+    },
+  });
+};
+const supabaseSessionBridge = createSupabaseSessionBridge(getSupabaseBrowserClient(), refreshContextBoundQueries);
 
 queryClient.getQueryCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {

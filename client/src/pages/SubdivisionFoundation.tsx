@@ -87,6 +87,7 @@ export default function SubdivisionFoundation() {
   const activeSector = sectorByPath[location] ?? "developments";
   const activeSectorPresentation = sectorPresentation[activeSector];
   const [selectedOrganizationId, setSelectedOrganizationId] = useState("");
+  const [lastAuthorizedContext, setLastAuthorizedContext] = useState<{ organizationId: string; purposeCode: string } | null>(null);
   const [internalReference, setInternalReference] = useState("");
   const [internalReferenceError, setInternalReferenceError] = useState("");
   const [workingPhase, setWorkingPhase] = useState<keyof typeof workingPhases>("preliminary_reference");
@@ -111,15 +112,36 @@ export default function SubdivisionFoundation() {
   const [coBuyerClientId, setCoBuyerClientId] = useState("");
   const attachmentInputRef = useRef<HTMLInputElement>(null);
 
-  const authorizedContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "loteadora" }, { enabled: isAuthenticated, retry: false });
+  const authorizedContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery(
+    { module: "loteadora" },
+    {
+      enabled: isAuthenticated,
+      retry: 2,
+      retryDelay: 750,
+      refetchOnWindowFocus: false,
+      staleTime: 30_000,
+    },
+  );
   const selectedOrganizationContext = resolveAuthorizedSubdivisionContext(selectedOrganizationId, authorizedContextsQuery.data);
   useEffect(() => {
     if (!selectedOrganizationId) setSelectedOrganizationId(initialAuthorizedSubdivisionContextId(authorizedContextsQuery.data));
   }, [selectedOrganizationId, authorizedContextsQuery.data]);
   useEffect(() => {
+    if (selectedOrganizationContext) {
+      setLastAuthorizedContext({
+        organizationId: selectedOrganizationContext.organizationId,
+        purposeCode: selectedOrganizationContext.purposeCode,
+      });
+    }
+  }, [selectedOrganizationContext]);
+  useEffect(() => {
     if (blockNumberError) setBlockNumberError("");
   }, [blockNumber]);
-  const context = useMemo(() => ({ organizationId: selectedOrganizationContext?.organizationId ?? "", module: "loteadora" as const, purposeCode: selectedOrganizationContext?.purposeCode ?? "" }), [selectedOrganizationContext]);
+  const effectiveOrganizationContext = selectedOrganizationContext
+    ?? (lastAuthorizedContext && (!selectedOrganizationId || lastAuthorizedContext.organizationId === selectedOrganizationId)
+      ? lastAuthorizedContext
+      : null);
+  const context = useMemo(() => ({ organizationId: effectiveOrganizationContext?.organizationId ?? "", module: "loteadora" as const, purposeCode: effectiveOrganizationContext?.purposeCode ?? "" }), [effectiveOrganizationContext]);
   const isContextReady = isDomainContextReady(context);
   const isWorkspaceReady = isAuthenticated && isContextReady;
   const developmentsQuery = trpc.subdivisionFoundation.listDraftDevelopments.useQuery(context, { enabled: isWorkspaceReady, retry: false });
