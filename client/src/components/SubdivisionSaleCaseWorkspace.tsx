@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 type Option = { id: string; label: string };
 type PriceContext = { state: string; availabilityReason: string | null; policyReference: string | null; conditionReference: string | null; effectivePricePerSqmBrl: number | null; lotAreaSqm: number | null; effectiveLotTotalBrl: number | null } | null | undefined;
 type SaleCase = { saleCaseId: string; state: string; termsVersion: number | null; negotiatedTotalCents: number | null; entryAmountCents: number | null; entryDueDate: string | null; installmentCount: number; installmentAmountCents: number | null; firstDueDate: string | null; dueDay: number | null };
+type SaleCaseParty = { saleCaseId: string; buyerClientId: string; partyRole: "primary_proponent" | "joint_proponent" };
 type InternalContract = { contractPreparationId: string; saleCaseId: string; state: "internal_review" | "approved" | "archived"; termsVersion: number; scheduledItemCount: number; scheduledTotalCents: number; bankIssuanceState: "awaiting_bank_issue" };
 type InternalAttention = { contractPreparationId: string; dueWithinFourDaysCount: number; pastDueUnreconciledCount: number };
 type InternalBatch = { batchId: string; saleCaseId: string; batchState: "released_internal_control" | "reversal_review"; itemCount: number; totalCents: number };
@@ -23,8 +24,11 @@ type Props = {
   lookupState: "idle" | "loading" | "found" | "not_found" | "error";
   priceContext: PriceContext;
   saleCases: readonly SaleCase[];
+  saleCaseParties: readonly SaleCaseParty[];
   openingCase: boolean;
   savingTerms: boolean;
+  addingJointProponent: boolean;
+  removingJointProponent: boolean;
   formalizingCase: boolean;
   approvingCase: boolean;
   requestingReversal: boolean;
@@ -43,6 +47,8 @@ type Props = {
   onFiscalReferenceChange: (value: string) => void;
   onLookupBuyer: () => void;
   onOpenCase: () => void;
+  onAddJointProponent: (buyerClientId: string) => void;
+  onRemoveJointProponent: (buyerClientId: string) => void;
   onSaveTerms: (input: { negotiatedTotalCents: number | null; entryAmountCents: number | null; entryDueDate: string | null; installmentCount: number; installmentAmountCents: number | null; firstDueDate: string | null; dueDay: number | null }) => void;
   onFormalizeCase: () => void;
   onApproveCase: () => void;
@@ -64,6 +70,27 @@ const centsFromBrl = (raw: string) => {
   return Number.isSafeInteger(value) && value >= 0 ? value : undefined;
 };
 
+export function deriveEqualInstallmentCents(totalCents: number | null, entryCents: number | null, installmentCount: number): number | null {
+  if (typeof totalCents !== "number" || !Number.isInteger(installmentCount) || installmentCount <= 0) return null;
+  const normalizedEntry = entryCents ?? 0;
+  const remainingCents = totalCents - normalizedEntry;
+  if (normalizedEntry < 0 || remainingCents < 0 || remainingCents % installmentCount !== 0) return null;
+  return remainingCents / installmentCount;
+}
+
+export function buildMonthlyDueDates(firstDueDate: string, dueDay: number | null, installmentCount: number): string[] {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(firstDueDate) || !Number.isInteger(dueDay) || !dueDay || installmentCount <= 0) return [];
+  const [year, month] = firstDueDate.split("-").map(Number);
+  return Array.from({ length: installmentCount }, (_, index) => {
+    const monthDate = new Date(Date.UTC(year, month - 1 + index, 1));
+    const currentYear = monthDate.getUTCFullYear();
+    const currentMonth = monthDate.getUTCMonth();
+    const lastDayOfMonth = new Date(Date.UTC(currentYear, currentMonth + 1, 0)).getUTCDate();
+    const day = Math.min(dueDay, lastDayOfMonth);
+    return `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  });
+}
+
 export function SubdivisionSaleCaseWorkspace(props: Props) {
   const [totalBrl, setTotalBrl] = useState("");
   const [entryBrl, setEntryBrl] = useState("");
@@ -73,8 +100,11 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
   const [firstDueDate, setFirstDueDate] = useState("");
   const [dueDay, setDueDay] = useState("");
   const [alertLeadDays, setAlertLeadDays] = useState("4");
+  const [jointBuyerClientId, setJointBuyerClientId] = useState("");
   const [termsError, setTermsError] = useState("");
   const selectedCase = props.saleCases.find((item) => item.saleCaseId === props.selectedSaleCaseId);
+  const selectedCaseParties = props.saleCaseParties.filter((party) => party.saleCaseId === props.selectedSaleCaseId);
+  const jointProponents = selectedCaseParties.filter((party) => party.partyRole === "joint_proponent");
   const selectedContract = props.internalContracts.find((item) => item.saleCaseId === props.selectedSaleCaseId);
   const selectedAttention = props.internalAttention.find((item) => item.contractPreparationId === selectedContract?.contractPreparationId);
   const selectedBatch = props.internalBatches.find((item) => item.saleCaseId === props.selectedSaleCaseId);
@@ -90,28 +120,56 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
     setTermsError("");
   }, [selectedCase?.saleCaseId, selectedCase?.negotiatedTotalCents, selectedCase?.entryAmountCents, selectedCase?.entryDueDate, selectedCase?.installmentCount, selectedCase?.installmentAmountCents, selectedCase?.firstDueDate, selectedCase?.dueDay]);
   const installmentQuantity = Number(installmentCount || 0);
+  const totalCents = centsFromBrl(totalBrl);
+  const entryCents = centsFromBrl(entryBrl);
+  const automaticInstallmentCents = useMemo(() => deriveEqualInstallmentCents(totalCents === undefined ? null : totalCents, entryCents === undefined ? null : entryCents, installmentQuantity), [entryCents, installmentQuantity, totalCents]);
   const installmentPreview = useMemo(() => {
     const cents = centsFromBrl(installmentBrl);
     return typeof cents === "number" && installmentQuantity > 0 ? cents * installmentQuantity : null;
   }, [installmentBrl, installmentQuantity]);
+  const reconciliation = useMemo(() => {
+    const total = centsFromBrl(totalBrl);
+    const entry = centsFromBrl(entryBrl);
+    if (typeof total !== "number" || entry === undefined || installmentPreview === null) return null;
+    return total - (entry ?? 0) - installmentPreview;
+  }, [entryBrl, installmentPreview, totalBrl]);
+  const installmentCalendar = useMemo(() => buildMonthlyDueDates(firstDueDate, dueDay ? Number(dueDay) : null, installmentQuantity), [dueDay, firstDueDate, installmentQuantity]);
+  useEffect(() => {
+    if (selectedCase?.state !== "preparation" || automaticInstallmentCents === null) return;
+    setInstallmentBrl(centsToInput(automaticInstallmentCents));
+  }, [automaticInstallmentCents, selectedCase?.state]);
+  useEffect(() => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(firstDueDate)) return;
+    setDueDay(String(Number(firstDueDate.slice(-2))));
+  }, [firstDueDate]);
+  const availableJointProponents = props.buyers.filter((buyer) => !selectedCaseParties.some((party) => party.buyerClientId === buyer.id));
   const isFiscalReferenceValid = /^\D*(?:\d\D*){11}$|^\D*(?:\d\D*){14}$/.test(props.fiscalReference);
 
   const submitTerms = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const total = centsFromBrl(totalBrl);
-    const entry = centsFromBrl(entryBrl);
+    const entryInput = centsFromBrl(entryBrl);
     const installment = centsFromBrl(installmentBrl);
     const parsedDueDay = dueDay ? Number(dueDay) : null;
-    if (total === undefined || entry === undefined || installment === undefined || !Number.isInteger(installmentQuantity) || installmentQuantity < 0 || installmentQuantity > 480) {
+    if (total === undefined || entryInput === undefined || installment === undefined || !Number.isInteger(installmentQuantity) || installmentQuantity < 0 || installmentQuantity > 480) {
       setTermsError("Revise os valores em reais e a quantidade de parcelas.");
       return;
     }
-    if ((entry === null || entry === 0) && entryDueDate || (typeof entry === "number" && entry > 0 && !entryDueDate)) {
+    const entry = entryInput ?? 0;
+    if ((entry === 0 && entryDueDate) || (entry > 0 && !entryDueDate)) {
       setTermsError("Para entrada informada, defina a data de vencimento; sem entrada, deixe a data vazia.");
       return;
     }
     if ((installmentQuantity === 0 && (installment !== null || firstDueDate || parsedDueDay !== null)) || (installmentQuantity > 0 && (installment === null || !firstDueDate || !parsedDueDay || parsedDueDay < 1 || parsedDueDay > 31))) {
       setTermsError("Para parcelamento, informe valor, primeira data e dia de vencimento. Sem parcelas, deixe esses campos vazios.");
+      return;
+    }
+    if (installmentQuantity > 0 && firstDueDate && new Date(`${firstDueDate}T12:00:00`).getDate() !== parsedDueDay) {
+      setTermsError("O dia de vencimento deve corresponder à primeira data para manter o calendário mensal consistente.");
+      return;
+    }
+    if (total === null || total <= 0 || installment === null || entry + installmentQuantity * installment !== total) {
+      setTermsError("A entrada e todas as parcelas precisam compor exatamente o valor negociado.");
       return;
     }
     setTermsError("");
@@ -131,7 +189,7 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
 
       <div className="subdivision-sale-case-workspace__grid">
         <form className="subdivision-foundation-card subdivision-sale-case-workspace__selector" onSubmit={(event) => { event.preventDefault(); props.onOpenCase(); }}>
-          <div className="subdivision-foundation-card__title"><Landmark size={19} /><h3>Selecionar lote e cliente</h3></div>
+          <div className="subdivision-foundation-card__title"><Landmark size={19} /><h3>Selecionar lote e proponente principal</h3></div>
           <p>O loteamento mantém a fonte física. A Central de Vendas apenas reúne a seleção autorizada para preparar o próximo trabalho.</p>
           <label htmlFor="sale-case-development">Loteamento<select id="sale-case-development" value={props.selectedDevelopmentId} onChange={(event) => props.onDevelopmentChange(event.target.value)} disabled={!props.isWorkspaceReady} required><option value="">Selecione um loteamento autorizado</option>{props.developments.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label>
           <label htmlFor="sale-case-block">Quadra<select id="sale-case-block" value={props.selectedBlockId} onChange={(event) => props.onBlockChange(event.target.value)} disabled={!props.isWorkspaceReady || !props.selectedDevelopmentId} required><option value="">Selecione uma quadra autorizada</option>{props.blocks.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label>
@@ -151,6 +209,20 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
         </aside>
       </div>
 
+      <section className="subdivision-foundation-card subdivision-sale-case-workspace__joint-parties" aria-labelledby="sale-case-joint-parties-title">
+        <div className="subdivision-foundation-card__title"><UserPlus size={19} /><h3 id="sale-case-joint-parties-title">Proponentes da venda conjunta</h3></div>
+        {!selectedCase ? <p>Abra uma preparação para vincular outros proponentes ao mesmo lote. O vínculo não duplica clientes nem cria venda, contrato, cobrança ou pagamento.</p> : <>
+          <p><b>{selectedCaseParties.length}</b> proponente(s) vinculados a esta preparação. A aprovação exigirá a revisão humana do dossiê depois da composição final.</p>
+          <ul className="subdivision-sale-case-workspace__party-list">
+            {selectedCaseParties.map((party) => {
+              const label = props.buyers.find((buyer) => buyer.id === party.buyerClientId)?.label ?? "Cadastro autorizado";
+              return <li key={`${party.saleCaseId}-${party.buyerClientId}`}><span>{party.partyRole === "primary_proponent" ? "Proponente principal" : "Proponente conjunto"} · {label}</span>{party.partyRole === "joint_proponent" && <button type="button" onClick={() => props.onRemoveJointProponent(party.buyerClientId)} disabled={props.removingJointProponent || selectedCase.state !== "preparation"}>Remover</button>}</li>;
+            })}
+          </ul>
+          {selectedCase.state === "preparation" && <div className="subdivision-sale-case-workspace__party-actions"><label htmlFor="sale-case-joint-proponent">Adicionar proponente conjunto<select id="sale-case-joint-proponent" value={jointBuyerClientId} onChange={(event) => setJointBuyerClientId(event.target.value)} disabled={props.addingJointProponent}><option value="">Selecione um cliente autorizado</option>{availableJointProponents.map((buyer) => <option key={buyer.id} value={buyer.id}>{buyer.label}</option>)}</select></label><button type="button" onClick={() => { if (jointBuyerClientId) { props.onAddJointProponent(jointBuyerClientId); setJointBuyerClientId(""); } }} disabled={!jointBuyerClientId || props.addingJointProponent}>{props.addingJointProponent ? "Vinculando" : "Adicionar proponente"}</button></div>}
+        </>}
+      </section>
+
       <section className="subdivision-sale-case-workspace__terms" aria-labelledby="sale-case-terms-title">
         <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">TERMOS FLEXÍVEIS</p><h3 id="sale-case-terms-title">Defina a negociação sem gerar cobrança.</h3></div><p>Valores ficam em centavos no servidor e são revisáveis enquanto o caso estiver em preparação. A prévia não cria recebíveis, boletos ou calendário financeiro.</p></div>
         {!props.selectedSaleCaseId ? <div className="subdivision-foundation-empty"><WalletCards size={18} /><p>Abra um caso em preparação para registrar os termos negociados.</p></div> : <div className="subdivision-sale-case-workspace__formalization">
@@ -166,12 +238,12 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
               <label htmlFor="sale-case-entry">Entrada (R$)<input id="sale-case-entry" inputMode="decimal" value={entryBrl} onChange={(event) => setEntryBrl(event.target.value)} placeholder="Opcional" disabled={props.savingTerms || selectedCase?.state !== "preparation"} /></label>
               <label htmlFor="sale-case-entry-due">Vencimento da entrada<input id="sale-case-entry-due" type="date" value={entryDueDate} onChange={(event) => setEntryDueDate(event.target.value)} disabled={props.savingTerms || !entryBrl.trim() || selectedCase?.state !== "preparation"} /></label>
               <label htmlFor="sale-case-installments">Número de parcelas<input id="sale-case-installments" type="number" min="0" max="480" step="1" value={installmentCount} onChange={(event) => setInstallmentCount(event.target.value)} disabled={props.savingTerms || selectedCase?.state !== "preparation"} required /></label>
-              <label htmlFor="sale-case-installment-value">Valor da parcela (R$)<input id="sale-case-installment-value" inputMode="decimal" value={installmentBrl} onChange={(event) => setInstallmentBrl(event.target.value)} placeholder={installmentQuantity > 0 ? "Ex.: 600,00" : "Sem parcelas"} disabled={props.savingTerms || installmentQuantity === 0 || selectedCase?.state !== "preparation"} /></label>
+              <label htmlFor="sale-case-installment-value">Valor da parcela (R$)<input id="sale-case-installment-value" inputMode="decimal" value={installmentBrl} onChange={(event) => setInstallmentBrl(event.target.value)} placeholder={installmentQuantity > 0 ? "Calculado automaticamente" : "Sem parcelas"} disabled={props.savingTerms || installmentQuantity === 0 || selectedCase?.state !== "preparation"} /><small>{automaticInstallmentCents === null && installmentQuantity > 0 ? "O saldo não divide em parcelas iguais: ajuste entrada, total ou quantidade." : automaticInstallmentCents !== null ? "Calculado automaticamente a partir do saldo e da quantidade." : ""}</small></label>
               <label htmlFor="sale-case-first-due">Primeiro vencimento<input id="sale-case-first-due" type="date" value={firstDueDate} onChange={(event) => setFirstDueDate(event.target.value)} disabled={props.savingTerms || installmentQuantity === 0 || selectedCase?.state !== "preparation"} /></label>
               <label htmlFor="sale-case-due-day">Dia de vencimento<input id="sale-case-due-day" type="number" min="1" max="31" step="1" value={dueDay} onChange={(event) => setDueDay(event.target.value)} placeholder="Ex.: 20" disabled={props.savingTerms || installmentQuantity === 0 || selectedCase?.state !== "preparation"} /></label>
             </div>
             {termsError && <p className="subdivision-sale-case-workspace__notice" role="alert"><CircleAlert size={15} />{termsError}</p>}
-            <div className="subdivision-sale-case-workspace__installment-preview"><span>Prévia matemática das parcelas</span><b>{installmentPreview === null ? "Informe parcelas para calcular" : formatBrl(installmentPreview / 100)}</b><small>Conferência operacional; não cria títulos, cobrança ou pagamento.</small></div>
+            <div className="subdivision-sale-case-workspace__installment-preview"><span>Composição da negociação</span><b>{installmentPreview === null ? "Informe parcelas para calcular" : formatBrl(installmentPreview / 100)}</b><small>Entrada + parcelas: {reconciliation === null ? "preencha os valores" : reconciliation === 0 ? "total conciliado" : `${formatBrl(Math.abs(reconciliation) / 100)} ${reconciliation > 0 ? "a recompor" : "acima do total"}`}. O calendário usa a primeira data e o mesmo dia de vencimento, ajustando meses menores ao último dia.</small>{installmentCalendar.length > 0 && <p><b>Calendário previsto:</b> {installmentCalendar.length} parcela(s), de {installmentCalendar[0]} até {installmentCalendar.at(-1)}. Próximas datas: {installmentCalendar.slice(0, 3).join(" · ")}. Esta prévia não cria parcela, lote interno ou alerta.</p>}</div>
             <button type="submit" disabled={props.savingTerms || selectedCase?.state !== "preparation"}>{props.savingTerms ? "Salvando termos" : "Salvar termos em preparação"}</button>
           </form>
           <aside className="subdivision-foundation-card subdivision-sale-case-workspace__review">

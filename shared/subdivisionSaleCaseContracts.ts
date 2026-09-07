@@ -14,6 +14,18 @@ export const openSubdivisionSaleCaseInputSchema = subdivisionContextSchema.exten
   buyerClientId: z.string().uuid(),
 }).strict();
 
+export const addSubdivisionSaleCaseJointProponentInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  saleCaseId: z.string().uuid(),
+  buyerClientId: z.string().uuid(),
+}).strict();
+
+export const removeSubdivisionSaleCaseJointProponentInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  saleCaseId: z.string().uuid(),
+  buyerClientId: z.string().uuid(),
+}).strict();
+
 export const saveSubdivisionSaleCaseTermsInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
   saleCaseId: z.string().uuid(),
@@ -85,6 +97,8 @@ export const setSubdivisionSaleCaseDossierReviewInputSchema = subdivisionContext
 
 export type LookupSubdivisionBuyerClientByFiscalReferenceInput = z.infer<typeof lookupSubdivisionBuyerClientByFiscalReferenceInputSchema>;
 export type OpenSubdivisionSaleCaseInput = z.infer<typeof openSubdivisionSaleCaseInputSchema>;
+export type AddSubdivisionSaleCaseJointProponentInput = z.infer<typeof addSubdivisionSaleCaseJointProponentInputSchema>;
+export type RemoveSubdivisionSaleCaseJointProponentInput = z.infer<typeof removeSubdivisionSaleCaseJointProponentInputSchema>;
 export type SaveSubdivisionSaleCaseTermsInput = z.infer<typeof saveSubdivisionSaleCaseTermsInputSchema>;
 export type FormalizeSubdivisionSaleCaseInput = z.infer<typeof formalizeSubdivisionSaleCaseInputSchema>;
 export type ApproveSubdivisionSaleCaseInput = z.infer<typeof approveSubdivisionSaleCaseInputSchema>;

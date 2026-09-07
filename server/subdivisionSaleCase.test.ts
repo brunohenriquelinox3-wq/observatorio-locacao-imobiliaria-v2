@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { lookupSubdivisionBuyerClientByFiscalReference, openSubdivisionSaleCase, saveSubdivisionSaleCaseTerms } from "./subdivisionSaleCase";
+import { addSubdivisionSaleCaseJointProponent, lookupSubdivisionBuyerClientByFiscalReference, openSubdivisionSaleCase, removeSubdivisionSaleCaseJointProponent, saveSubdivisionSaleCaseTerms } from "./subdivisionSaleCase";
 import { saveSubdivisionSaleCaseTermsInputSchema } from "../shared/subdivisionSaleCaseContracts";
 
 const context = { organizationId: "00000000-0000-4000-8000-000000000001", module: "loteadora" as const, purposeCode: "CADASTRO_INICIAL" };
@@ -26,5 +26,13 @@ describe("subdivisionSaleCase", () => {
     await expect(saveSubdivisionSaleCaseTerms(actor, { ...context, correlationId: "00000000-0000-4000-8000-000000000006", saleCaseId, negotiatedTotalCents: 12000000, entryAmountCents: 0, entryDueDate: null, installmentCount: 200, installmentAmountCents: 60000, firstDueDate: "2026-10-20", dueDay: 20 }, { rpc })).resolves.toMatchObject({ termsVersion: 2 });
     expect(rpc).toHaveBeenCalledWith("subdivision_save_sale_case_terms", expect.objectContaining({ p_installment_count: 200, p_installment_amount_cents: 60000 }));
     expect(() => saveSubdivisionSaleCaseTermsInputSchema.parse({ ...context, correlationId: "00000000-0000-4000-8000-000000000006", saleCaseId, negotiatedTotalCents: null, entryAmountCents: null, entryDueDate: null, installmentCount: 1, installmentAmountCents: null, firstDueDate: null, dueDay: null })).toThrow();
+  });
+
+  it("vincula e remove proponentes conjuntos somente no caso contextual", async () => {
+    const addRpc = vi.fn().mockResolvedValue({ data: "00000000-0000-4000-8000-000000000007", error: null });
+    await expect(addSubdivisionSaleCaseJointProponent(actor, { ...context, correlationId: "00000000-0000-4000-8000-000000000008", saleCaseId, buyerClientId }, { rpc: addRpc })).resolves.toEqual({ saleCasePartyId: "00000000-0000-4000-8000-000000000007" });
+    expect(addRpc).toHaveBeenCalledWith("subdivision_add_sale_case_joint_proponent", expect.objectContaining({ p_sale_case_id: saleCaseId, p_buyer_client_id: buyerClientId }));
+    const removeRpc = vi.fn().mockResolvedValue({ data: { sale_case_id: saleCaseId, joint_proponent_removed: true }, error: null });
+    await expect(removeSubdivisionSaleCaseJointProponent(actor, { ...context, correlationId: "00000000-0000-4000-8000-000000000009", saleCaseId, buyerClientId }, { rpc: removeRpc })).resolves.toMatchObject({ jointProponentRemoved: true });
   });
 });

@@ -242,7 +242,7 @@ import { createBuyerAttachmentIntent, listBuyerAttachmentIntents } from "./subdi
 import { createSubdivisionSaleDraft, listSubdivisionSaleDraftAttachmentCoverage, listSubdivisionSaleDrafts } from "./subdivisionSaleDraft";
 import { listSubdivisionSaleDraftWorkStates, upsertSubdivisionSaleDraftWorkState } from "./subdivisionSaleDraftWorkState";
 import { addSubdivisionSaleDraftCoBuyer, listSubdivisionSaleDraftCoBuyers } from "./subdivisionSaleDraftCoBuyer";
-import { listSubdivisionSaleCases, lookupSubdivisionBuyerClientByFiscalReference, openSubdivisionSaleCase, saveSubdivisionSaleCaseTerms } from "./subdivisionSaleCase";
+import { addSubdivisionSaleCaseJointProponent, listSubdivisionSaleCaseParties, listSubdivisionSaleCases, lookupSubdivisionBuyerClientByFiscalReference, openSubdivisionSaleCase, removeSubdivisionSaleCaseJointProponent, saveSubdivisionSaleCaseTerms } from "./subdivisionSaleCase";
 import { formalizeSubdivisionSaleCase, listSubdivisionInternalSaleContracts } from "./subdivisionSaleFormalization";
 import { createSubdivisionEconomicRuleSet, listSubdivisionEconomicRuleSets } from "./subdivisionEconomicRuleSet";
 import { createSubdivisionEconomicRuleComponent, listSubdivisionEconomicRuleComponents } from "./subdivisionEconomicRuleComponent";
@@ -293,7 +293,7 @@ import {
   linkSubdivisionPriceEvidenceInputSchema,
   listSubdivisionPriceEvidenceSummaryInputSchema,
 } from "../shared/subdivisionPriceEvidenceContracts";
-import { approveSubdivisionSaleCaseInputSchema, configureSubdivisionInternalReceivableAlertsInputSchema, createSubdivisionSaleCaseDocumentIntentInputSchema, formalizeSubdivisionSaleCaseInputSchema, lookupSubdivisionBuyerClientByFiscalReferenceInputSchema, manageSubdivisionInternalReceivableAlertScheduleInputSchema, openSubdivisionSaleCaseInputSchema, releaseSubdivisionInternalReceivableBatchInputSchema, requestSubdivisionSaleReversalInputSchema, saveSubdivisionSaleCaseTermsInputSchema, setSubdivisionSaleCaseDossierReviewInputSchema } from "../shared/subdivisionSaleCaseContracts";
+import { addSubdivisionSaleCaseJointProponentInputSchema, approveSubdivisionSaleCaseInputSchema, configureSubdivisionInternalReceivableAlertsInputSchema, createSubdivisionSaleCaseDocumentIntentInputSchema, formalizeSubdivisionSaleCaseInputSchema, lookupSubdivisionBuyerClientByFiscalReferenceInputSchema, manageSubdivisionInternalReceivableAlertScheduleInputSchema, openSubdivisionSaleCaseInputSchema, releaseSubdivisionInternalReceivableBatchInputSchema, removeSubdivisionSaleCaseJointProponentInputSchema, requestSubdivisionSaleReversalInputSchema, saveSubdivisionSaleCaseTermsInputSchema, setSubdivisionSaleCaseDossierReviewInputSchema } from "../shared/subdivisionSaleCaseContracts";
 import { listSubdivisionInternalReceivableAttention } from "./subdivisionInternalReceivableAttention";
 import { configureSubdivisionInternalReceivableAlerts, getSubdivisionInternalReceivableAlertConfiguration } from "./subdivisionInternalReceivableAlerts";
 import { manageSubdivisionInternalReceivableAlertSchedule } from "./subdivisionInternalReceivableAlertScheduleManagement";
@@ -823,6 +823,7 @@ export const appRouter = router({
     upsertSaleDraftWorkState: protectedProcedure.input(draftSubdivisionSaleDraftWorkStateInputSchema).mutation(({ ctx, input }) => upsertSubdivisionSaleDraftWorkState(ctx.supabaseSubjectId ?? undefined, input)),
     lookupBuyerClientByFiscalReference: protectedProcedure.input(lookupSubdivisionBuyerClientByFiscalReferenceInputSchema).query(({ ctx, input }) => lookupSubdivisionBuyerClientByFiscalReference(ctx.supabaseSubjectId ?? undefined, input)),
     listSaleCases: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleCases(ctx.supabaseSubjectId ?? undefined, input)),
+    listSaleCaseParties: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleCaseParties(ctx.supabaseSubjectId ?? undefined, input)),
     openSaleCase: protectedProcedure.input(openSubdivisionSaleCaseInputSchema).mutation(async ({ ctx, input }) => {
       await requireVerifiedAal2Session(ctx);
       return openSubdivisionSaleCase(ctx.supabaseSubjectId ?? undefined, input);
@@ -830,6 +831,14 @@ export const appRouter = router({
     saveSaleCaseTerms: protectedProcedure.input(saveSubdivisionSaleCaseTermsInputSchema).mutation(async ({ ctx, input }) => {
       await requireVerifiedAal2Session(ctx);
       return saveSubdivisionSaleCaseTerms(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    addSaleCaseJointProponent: protectedProcedure.input(addSubdivisionSaleCaseJointProponentInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return addSubdivisionSaleCaseJointProponent(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    removeSaleCaseJointProponent: protectedProcedure.input(removeSubdivisionSaleCaseJointProponentInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return removeSubdivisionSaleCaseJointProponent(ctx.supabaseSubjectId ?? undefined, input);
     }),
     listInternalSaleContracts: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionInternalSaleContracts(ctx.supabaseSubjectId ?? undefined, input)),
     listInternalReceivableAttention: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionInternalReceivableAttention(ctx.supabaseSubjectId ?? undefined, input)),

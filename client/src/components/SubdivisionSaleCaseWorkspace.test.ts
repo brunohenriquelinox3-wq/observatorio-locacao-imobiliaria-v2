@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { buildMonthlyDueDates, deriveEqualInstallmentCents } from "./SubdivisionSaleCaseWorkspace";
 
 const source = readFileSync(path.resolve(process.cwd(), "client/src/components/SubdivisionSaleCaseWorkspace.tsx"), "utf8");
 
@@ -28,5 +29,20 @@ describe("SubdivisionSaleCaseWorkspace", () => {
     expect(source).toContain("installmentQuantity > 0");
     expect(source).toContain("Revise os valores em reais e a quantidade de parcelas.");
     expect(source).toContain("Para parcelamento, informe valor, primeira data e dia de vencimento.");
+  });
+
+  it("permite proponentes conjuntos e exige uma composição financeira conciliada", () => {
+    expect(source).toContain("Proponentes da venda conjunta");
+    expect(source).toContain("Adicionar proponente");
+    expect(source).toContain("Remover");
+    expect(source).toContain("A entrada e todas as parcelas precisam compor exatamente o valor negociado.");
+    expect(source).toContain("O dia de vencimento deve corresponder à primeira data");
+    expect(source).toContain("Composição da negociação");
+  });
+
+  it("calcula parcelas iguais e projeta vencimentos mensais com ajuste para meses menores", () => {
+    expect(deriveEqualInstallmentCents(12000000, 0, 200)).toBe(60000);
+    expect(deriveEqualInstallmentCents(1000, 0, 3)).toBeNull();
+    expect(buildMonthlyDueDates("2026-01-31", 31, 3)).toEqual(["2026-01-31", "2026-02-28", "2026-03-31"]);
   });
 });
