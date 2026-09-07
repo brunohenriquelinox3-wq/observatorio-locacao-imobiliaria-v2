@@ -2656,6 +2656,14 @@
 
 ### Marco M5 — lembretes internos periódicos
 
+- [ ] Revisar contratos, agenda, alertas, textos e procedimentos da Central de Vendas para reafirmar que o CRM é controle exclusivamente interno: ele sinaliza ao operador quando é necessário cobrar manualmente, mas não emite cobrança, não envia mensagem, não integra banco, não dá baixa e não confirma pagamento.
 - [x] Criar configuração por organização, eventos internos de atenção e endpoint periódico autenticado para a agenda de recebíveis, com idempotência por data, retenção controlada, observabilidade e sem envio de mensagem externa. **A297:** a configuração começa desativada e é isolada por organização; eventos são únicos por parcela, tipo e data. O endpoint aceita somente a identidade periódica autenticada e usa exclusivamente seu identificador de tarefa, sem consumir corpo externo.
 - [x] Exibir no contexto autorizado os lembretes de itens próximos do vencimento e anteriores à data, distinguindo “aguardando emissão bancária” de confirmação de pagamento ou atraso. **M5:** a Central permite configurar a antecedência entre 1 e 14 dias e informa que a preparação não ativa cron, envio, cobrança, baixa ou pagamento. A atenção existente permanece somente para revisão humana.
 - [ ] Após validação e checkpoint, solicitar publicação explícita antes de criar ou ativar o agendamento diário de produção; preservar pausa, retomada e exclusão do agendamento por identificador seguro.
+
+### Marco M6 — dossiê privado e revisão de documentação comercial
+
+- [ ] Manter a ordem obrigatória do programa: cadastro/estoque, preparação de negociação, formalização e agenda internos, confirmação comercial do lote, dossiê privado e somente depois lembretes ao operador; não antecipar, fundir ou executar efeitos de etapa posterior.
+- [ ] Vincular, de forma opaca, intenções de documento privadas ao caso de venda e à preparação contratual, reutilizando o armazenamento governado e sem expor bytes, URL, chave, download público ou conteúdo em auditoria.
+- [ ] Criar uma lista de conferência documental e cadastral exclusivamente interna, revisável e auditada, que nunca bloqueie por inferência automática nem substitua análise humana, jurídica ou registral.
+- [ ] Exigir confirmação humana do dossiê antes da aprovação material do contrato, com motivo de pendência e reversão governada, sem assinatura eletrônica, registro imobiliário ou alteração financeira automática.
