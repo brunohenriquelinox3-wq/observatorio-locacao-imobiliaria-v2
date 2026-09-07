@@ -2663,6 +2663,7 @@
 
 ### Ativação publicada — lembrete diário ao operador
 
+- [x] Remover a exigência de MFA por comando nos controles internos do Financeiro, preservando sessão autenticada, expiração, logout, revogação, contexto, membership, grant, vigência, módulo, finalidade, correlação, idempotência e auditoria. **Correção de sessão:** preparar antecedência e gerir o lembrete não solicitam MFA novamente; as procedures protegidas, a autoridade contextual server-side e os demais bloqueios de sessão continuam obrigatórios. A validação integral aprovou 283 arquivos e 763 testes, tipagem, build e integridade.
 - [ ] Exibir e configurar no Financeiro a antecedência interna antes da ativação, usando leitura contextual persistida em vez de estado local ou erro genérico.
 - [ ] Criar após publicação o agendamento diário autenticado da rotina interna de atenção, com identidade de cron, execução idempotente e possibilidade de pausa, retomada e remoção segura; não enviar mensagens, emitir cobranças, acessar banco, dar baixa ou registrar pagamentos. **A301:** implementação e migração aplicadas; o comando contextual cria o cron somente após sessão AAL2 e vincula seu identificador ao contexto autorizado.
 - [ ] Executar uma verificação controlada da rotina publicada e confirmar apenas métricas agregadas e ausência de efeitos externos antes de marcar a ativação como concluída.

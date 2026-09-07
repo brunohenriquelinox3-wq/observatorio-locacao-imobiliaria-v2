@@ -851,15 +851,9 @@ export const appRouter = router({
       await requireVerifiedAal2Session(ctx);
       return releaseSubdivisionInternalReceivableBatch(ctx.supabaseSubjectId ?? undefined, input);
     }),
-    configureInternalReceivableAlerts: protectedProcedure.input(configureSubdivisionInternalReceivableAlertsInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
-      return configureSubdivisionInternalReceivableAlerts(ctx.supabaseSubjectId ?? undefined, input);
-    }),
+    configureInternalReceivableAlerts: protectedProcedure.input(configureSubdivisionInternalReceivableAlertsInputSchema).mutation(({ ctx, input }) => configureSubdivisionInternalReceivableAlerts(ctx.supabaseSubjectId ?? undefined, input)),
     getInternalReceivableAlertConfiguration: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => getSubdivisionInternalReceivableAlertConfiguration(ctx.supabaseSubjectId ?? undefined, input)),
-    manageInternalReceivableAlertSchedule: protectedProcedure.input(manageSubdivisionInternalReceivableAlertScheduleInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
-      return manageSubdivisionInternalReceivableAlertSchedule(ctx.supabaseSubjectId ?? undefined, input, ctx.req.headers.cookie);
-    }),
+    manageInternalReceivableAlertSchedule: protectedProcedure.input(manageSubdivisionInternalReceivableAlertScheduleInputSchema).mutation(({ ctx, input }) => manageSubdivisionInternalReceivableAlertSchedule(ctx.supabaseSubjectId ?? undefined, input, ctx.req.headers.cookie)),
     createSaleCaseDocumentIntent: protectedProcedure.input(createSubdivisionSaleCaseDocumentIntentInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return createSubdivisionSaleCaseDocumentIntent(ctx.supabaseSubjectId ?? undefined, input); }),
     setSaleCaseDossierReview: protectedProcedure.input(setSubdivisionSaleCaseDossierReviewInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return setSubdivisionSaleCaseDossierReview(ctx.supabaseSubjectId ?? undefined, input); }),
     listSaleCaseDossiers: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleCaseDossiers(ctx.supabaseSubjectId ?? undefined, input)),
