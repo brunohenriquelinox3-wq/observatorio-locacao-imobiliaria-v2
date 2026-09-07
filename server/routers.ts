@@ -301,6 +301,8 @@ import { createSubdivisionSaleCaseDocumentIntent, listSubdivisionSaleCaseDossier
 import { approveSubdivisionSaleCase, releaseSubdivisionInternalReceivableBatch, requestSubdivisionSaleReversal } from "./subdivisionSaleApproval";
 import { listSubdivisionInternalReceivableBatches } from "./subdivisionInternalReceivableBatch";
 import { listSubdivisionLotCommercialStates } from "./subdivisionLotCommercialState";
+import { activateSubdivisionParticipationPolicyVersion, addSubdivisionParticipationPolicyRule, addSubdivisionParticipationRuleLotScope, createSubdivisionParticipationPolicyVersion, listSubdivisionParticipationPolicyRules, listSubdivisionParticipationPolicyVersions, lookupSubdivisionInternalPartyByFiscalReference, upsertSubdivisionInternalPartyProfile } from "./subdivisionParticipationPolicy";
+import { activateSubdivisionParticipationPolicyVersionInputSchema, addSubdivisionParticipationPolicyRuleInputSchema, addSubdivisionParticipationRuleLotScopeInputSchema, createSubdivisionParticipationPolicyVersionInputSchema, lookupSubdivisionInternalPartyByFiscalReferenceInputSchema, upsertSubdivisionInternalPartyProfileInputSchema } from "../shared/subdivisionParticipationContracts";
 import { authorizedOrganizationContextInputSchema, listAuthorizedOrganizationContexts } from "./organizationContext";
 import { clientImportCommitInputSchema } from "../shared/clientImportContracts";
 import { commitClientImport } from "./clientImport";
@@ -712,6 +714,14 @@ export const appRouter = router({
     }),
     listDraftInternalPartyRoles: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionInternalPartyRoles(ctx.supabaseSubjectId ?? undefined, input)),
     linkDraftInternalPartyRole: protectedProcedure.input(subdivisionContextSchema.extend({ developmentId: z.string().uuid(), partyRoleId: z.string().uuid(), correlationId: z.string().uuid() })).mutation(({ ctx, input }) => linkDraftSubdivisionInternalPartyRole(ctx.supabaseSubjectId ?? undefined, input)),
+    upsertInternalPartyProfile: protectedProcedure.input(upsertSubdivisionInternalPartyProfileInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return upsertSubdivisionInternalPartyProfile(ctx.supabaseSubjectId ?? undefined, input); }),
+    lookupInternalPartyByFiscalReference: protectedProcedure.input(lookupSubdivisionInternalPartyByFiscalReferenceInputSchema).query(({ ctx, input }) => lookupSubdivisionInternalPartyByFiscalReference(ctx.supabaseSubjectId ?? undefined, input)),
+    listParticipationPolicyVersions: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionParticipationPolicyVersions(ctx.supabaseSubjectId ?? undefined, input)),
+    listParticipationPolicyRules: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionParticipationPolicyRules(ctx.supabaseSubjectId ?? undefined, input)),
+    createParticipationPolicyVersion: protectedProcedure.input(createSubdivisionParticipationPolicyVersionInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return createSubdivisionParticipationPolicyVersion(ctx.supabaseSubjectId ?? undefined, input); }),
+    addParticipationPolicyRule: protectedProcedure.input(addSubdivisionParticipationPolicyRuleInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return addSubdivisionParticipationPolicyRule(ctx.supabaseSubjectId ?? undefined, input); }),
+    addParticipationRuleLotScope: protectedProcedure.input(addSubdivisionParticipationRuleLotScopeInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return addSubdivisionParticipationRuleLotScope(ctx.supabaseSubjectId ?? undefined, input); }),
+    activateParticipationPolicyVersion: protectedProcedure.input(activateSubdivisionParticipationPolicyVersionInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return activateSubdivisionParticipationPolicyVersion(ctx.supabaseSubjectId ?? undefined, input); }),
     listDraftBuyerClients: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClients(ctx.supabaseSubjectId ?? undefined, input)),
     createDraftBuyerClient: protectedProcedure.input(draftSubdivisionBuyerClientInputSchema).mutation(({ ctx, input }) => createDraftSubdivisionBuyerClient(ctx.supabaseSubjectId ?? undefined, input)),
     registerBuyerClientDirect: protectedProcedure.input(registerSubdivisionBuyerClientDirectInputSchema).mutation(({ ctx, input }) => registerSubdivisionBuyerClientDirect(ctx.supabaseSubjectId ?? undefined, input)),
