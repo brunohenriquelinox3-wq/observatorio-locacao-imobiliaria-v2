@@ -22,6 +22,11 @@ describe("SubdivisionBuyerClientDirectory composition", () => {
     expect(component).toContain("Fechar edição");
   });
 
+  it("uses the maximum authorized first page so active records are not hidden by an artificial local limit", () => {
+    expect(component).toContain("const pageSize = 25;");
+    expect(component).toContain("Ver mais cadastros autorizados");
+  });
+
   it("makes protected contact editing, private documents, and reversible exclusion discoverable", () => {
     expect(component).toContain("Telefone");
     expect(component).toContain("WhatsApp");

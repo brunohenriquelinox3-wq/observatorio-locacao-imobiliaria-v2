@@ -26,4 +26,21 @@ describe("política de leitura interna vinculada à sessão", () => {
     expect(procedureSlice("upsertDraftLotOperationalProfile")).toContain("await requireRecentTotpMfa(ctx)");
     expect(source).toContain("const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken)");
   });
+
+  it("exige AAL2 vigente, sem novo desafio, nos comandos de Cliente Loteadora", () => {
+    for (const command of [
+      "registerClientDirect",
+      "archiveClient",
+      "restoreClient",
+      "upsertDraftBuyerClientProfile",
+      "upsertDraftBuyerClientRequirement",
+      "upsertDraftBuyerClientContactPreference",
+    ]) {
+      const procedure = procedureSlice(command);
+      expect(procedure).toContain("await requireVerifiedAal2Session(ctx)");
+      expect(procedure).not.toContain("requireRecentTotpMfa");
+    }
+    expect(source).toContain('attestation.assuranceLevel !== "aal2"');
+    expect(source).toContain('message: "SUBDIVISION_COMMAND_PRECONDITIONS_UNMET"');
+  });
 });

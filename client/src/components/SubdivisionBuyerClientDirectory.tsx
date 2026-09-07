@@ -44,7 +44,9 @@ type SubdivisionBuyerClientDirectoryProps = {
   onSelectBuyerClient: (buyerClientId: string) => void;
 };
 
-const pageSize = 18;
+// Mantém a primeira leitura no limite permitido pelo servidor, reduzindo a
+// aparência de ausência falsa sem retirar a paginação para bases maiores.
+const pageSize = 25;
 
 function formatTimestamp(value: string) {
   return new Date(value).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });

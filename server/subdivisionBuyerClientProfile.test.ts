@@ -52,11 +52,17 @@ describe("subdivision buyer client profile server boundary", () => {
 
   it("uses protected, correlated RPCs for profile, requirements, and preferences", async () => {
     rpc.mockResolvedValueOnce({ data: profileId, error: null });
+    rpc.mockResolvedValueOnce({ data: [{
+      profile_id: profileId, buyer_client_id: buyerClientId, party_kind: "individual", registration_state: "base_data_in_progress",
+      document_reference: null, identity_document_reference: null, primary_email: null, primary_phone: null, messaging_phone: null,
+      civil_status: "not_declared", representation_state: "not_declared", updated_at: "2026-09-06T00:00:00+00:00",
+    }], error: null });
     await expect(upsertDraftSubdivisionBuyerClientProfile(subjectId, {
       ...context, correlationId, buyerClientId, partyKind: "individual", registrationState: "base_data_in_progress",
       documentReference: null, identityDocumentReference: null, primaryEmail: null, primaryPhone: null, messagingPhone: null, civilStatus: "not_declared", representationState: "not_declared",
-    }, client)).resolves.toEqual({ profileId });
-    expect(rpc).toHaveBeenLastCalledWith("subdivision_upsert_draft_buyer_client_profile", expect.objectContaining({ p_buyer_client_id: buyerClientId, p_correlation_id: correlationId }));
+    }, client)).resolves.toMatchObject({ profileId, buyerClientId, registrationState: "base_data_in_progress" });
+    expect(rpc).toHaveBeenNthCalledWith(1, "subdivision_upsert_draft_buyer_client_profile", expect.objectContaining({ p_buyer_client_id: buyerClientId, p_correlation_id: correlationId }));
+    expect(rpc).toHaveBeenNthCalledWith(2, "subdivision_get_draft_buyer_client_profile", expect.objectContaining({ p_buyer_client_id: buyerClientId }));
 
     rpc.mockResolvedValueOnce({ data: { requirement_code: "identity_evidence", requirement_state: "to_confirm" }, error: null });
     await expect(upsertDraftSubdivisionBuyerClientRequirement(subjectId, { ...context, correlationId, buyerClientId, requirementCode: "identity_evidence", requirementState: "to_confirm" }, client)).resolves.toEqual({ requirementCode: "identity_evidence", requirementState: "to_confirm" });

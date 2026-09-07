@@ -150,7 +150,7 @@ export async function getDraftSubdivisionBuyerClientProfile(subjectId: string | 
   return profileFromRow(data[0] as RpcRow);
 }
 
-export async function upsertDraftSubdivisionBuyerClientProfile(subjectId: string | undefined, rawInput: UpsertSubdivisionBuyerClientProfileInput, client: RpcClient = getSupabaseAdminClient()): Promise<{ profileId: string }> {
+export async function upsertDraftSubdivisionBuyerClientProfile(subjectId: string | undefined, rawInput: UpsertSubdivisionBuyerClientProfileInput, client: RpcClient = getSupabaseAdminClient()): Promise<SubdivisionBuyerClientProfile> {
   const actorUserId = requireSubject(subjectId);
   const input = upsertSubdivisionBuyerClientProfileInputSchema.parse(rawInput);
   const { data, error } = await client.rpc("subdivision_upsert_draft_buyer_client_profile", {
@@ -171,7 +171,16 @@ export async function upsertDraftSubdivisionBuyerClientProfile(subjectId: string
     p_correlation_id: input.correlationId,
   });
   if (error || typeof data !== "string") throw new Error("SUBDIVISION_BUYER_CLIENT_PROFILE_COMMAND_DENIED");
-  return { profileId: data };
+  const profile = await getDraftSubdivisionBuyerClientProfile(actorUserId, {
+    organizationId: input.organizationId,
+    module: input.module,
+    purposeCode: input.purposeCode,
+    buyerClientId: input.buyerClientId,
+  }, client);
+  if (!profile || profile.profileId !== data || profile.buyerClientId !== input.buyerClientId) {
+    throw new Error("SUBDIVISION_BUYER_CLIENT_PROFILE_COMMAND_CONFIRMATION_DENIED");
+  }
+  return profile;
 }
 
 export async function listDraftSubdivisionBuyerClientRequirements(subjectId: string | undefined, rawInput: SubdivisionBuyerClientProfileLookupInput, client: RpcClient = getSupabaseAdminClient()): Promise<SubdivisionBuyerClientRequirement[]> {

@@ -115,10 +115,10 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
   const recommendations = recommendedBuyerClientRequirements(presenceSnapshot);
   const utils = trpc.useUtils();
   const saveProfileMutation = trpc.subdivisionFoundation.upsertDraftBuyerClientProfile.useMutation({
-    onSuccess() {
+    onSuccess(confirmedProfile) {
+      utils.subdivisionFoundation.getDraftBuyerClientProfile.setData(selectionInput, confirmedProfile);
       toast.success("Perfil cadastral atualizado", { description: "O cadastro permanece interno, minimizado e separado de venda, crédito, contrato, registro e financeiro." });
       void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
-      void utils.subdivisionFoundation.getDraftBuyerClientProfile.invalidate(selectionInput);
     },
     onError() { toast.error("Perfil não atualizado", { description: "O servidor exige sessão, contexto, cliente comprador elegível e dados compatíveis com a natureza cadastral." }); },
   });

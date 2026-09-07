@@ -299,6 +299,18 @@ async function requireRecentTotpMfa(ctx: { supabaseAccessToken?: string; supabas
   }
 }
 
+/**
+ * A276: valida a sessão AAL2 que já foi estabelecida no login/revalidação.
+ * Não inicia desafio, QR ou TOTP por comando. Identidade, expiração, revogação
+ * e todos os guardas de contexto continuam confirmados antes da chamada SQL.
+ */
+async function requireVerifiedAal2Session(ctx: { supabaseAccessToken?: string; supabaseSubjectId?: string | null }) {
+  const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
+  if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2") {
+    throw new TRPCError({ code: "PRECONDITION_FAILED", message: "SUBDIVISION_COMMAND_PRECONDITIONS_UNMET" });
+  }
+}
+
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
@@ -690,19 +702,37 @@ export const appRouter = router({
     listDraftBuyerClients: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClients(ctx.supabaseSubjectId ?? undefined, input)),
     createDraftBuyerClient: protectedProcedure.input(draftSubdivisionBuyerClientInputSchema).mutation(({ ctx, input }) => createDraftSubdivisionBuyerClient(ctx.supabaseSubjectId ?? undefined, input)),
     registerBuyerClientDirect: protectedProcedure.input(registerSubdivisionBuyerClientDirectInputSchema).mutation(({ ctx, input }) => registerSubdivisionBuyerClientDirect(ctx.supabaseSubjectId ?? undefined, input)),
-    registerClientDirect: protectedProcedure.input(registerSubdivisionClientDirectInputSchema).mutation(({ ctx, input }) => registerSubdivisionClientDirect(ctx.supabaseSubjectId ?? undefined, input)),
-    archiveClient: protectedProcedure.input(archiveSubdivisionClientInputSchema).mutation(({ ctx, input }) => archiveSubdivisionClient(ctx.supabaseSubjectId ?? undefined, input)),
-    restoreClient: protectedProcedure.input(restoreSubdivisionClientInputSchema).mutation(({ ctx, input }) => restoreSubdivisionClient(ctx.supabaseSubjectId ?? undefined, input)),
+    registerClientDirect: protectedProcedure.input(registerSubdivisionClientDirectInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return registerSubdivisionClientDirect(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    archiveClient: protectedProcedure.input(archiveSubdivisionClientInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return archiveSubdivisionClient(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    restoreClient: protectedProcedure.input(restoreSubdivisionClientInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return restoreSubdivisionClient(ctx.supabaseSubjectId ?? undefined, input);
+    }),
     listArchivedClients: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listArchivedSubdivisionClients(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClientDirectory: protectedProcedure.input(subdivisionBuyerClientDirectoryListInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientDirectory(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClientTimeline: protectedProcedure.input(subdivisionBuyerClientTimelineInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientTimeline(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClientProfileSummaries: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientProfileSummaries(ctx.supabaseSubjectId ?? undefined, input)),
     getDraftBuyerClientProfile: protectedProcedure.input(subdivisionBuyerClientProfileLookupInputSchema).query(({ ctx, input }) => getDraftSubdivisionBuyerClientProfile(ctx.supabaseSubjectId ?? undefined, input)),
-    upsertDraftBuyerClientProfile: protectedProcedure.input(upsertSubdivisionBuyerClientProfileInputSchema).mutation(({ ctx, input }) => upsertDraftSubdivisionBuyerClientProfile(ctx.supabaseSubjectId ?? undefined, input)),
+    upsertDraftBuyerClientProfile: protectedProcedure.input(upsertSubdivisionBuyerClientProfileInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return upsertDraftSubdivisionBuyerClientProfile(ctx.supabaseSubjectId ?? undefined, input);
+    }),
     listDraftBuyerClientRequirements: protectedProcedure.input(subdivisionBuyerClientProfileLookupInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientRequirements(ctx.supabaseSubjectId ?? undefined, input)),
-    upsertDraftBuyerClientRequirement: protectedProcedure.input(upsertSubdivisionBuyerClientRequirementInputSchema).mutation(({ ctx, input }) => upsertDraftSubdivisionBuyerClientRequirement(ctx.supabaseSubjectId ?? undefined, input)),
+    upsertDraftBuyerClientRequirement: protectedProcedure.input(upsertSubdivisionBuyerClientRequirementInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return upsertDraftSubdivisionBuyerClientRequirement(ctx.supabaseSubjectId ?? undefined, input);
+    }),
     listDraftBuyerClientContactPreferences: protectedProcedure.input(subdivisionBuyerClientProfileLookupInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientContactPreferences(ctx.supabaseSubjectId ?? undefined, input)),
-    upsertDraftBuyerClientContactPreference: protectedProcedure.input(upsertSubdivisionBuyerClientContactPreferenceInputSchema).mutation(({ ctx, input }) => upsertDraftSubdivisionBuyerClientContactPreference(ctx.supabaseSubjectId ?? undefined, input)),
+    upsertDraftBuyerClientContactPreference: protectedProcedure.input(upsertSubdivisionBuyerClientContactPreferenceInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return upsertDraftSubdivisionBuyerClientContactPreference(ctx.supabaseSubjectId ?? undefined, input);
+    }),
     listBuyerAttachmentIntents: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listBuyerAttachmentIntents(ctx.supabaseSubjectId ?? undefined, input)),
     createBuyerAttachmentIntent: protectedProcedure.input(draftSubdivisionBuyerAttachmentIntentInputSchema).mutation(({ ctx, input }) => createBuyerAttachmentIntent(ctx.supabaseSubjectId ?? undefined, input)),
     listSaleDrafts: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleDrafts(ctx.supabaseSubjectId ?? undefined, input)),

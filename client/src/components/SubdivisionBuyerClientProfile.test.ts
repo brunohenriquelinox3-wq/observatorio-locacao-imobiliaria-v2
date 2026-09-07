@@ -40,6 +40,12 @@ describe("Clientes Loteadora profile composition", () => {
     expect(component).toContain("EDIÇÃO CONTEXTUAL");
   });
 
+  it("only updates the visible ficha after receiving the confirmed profile from the server", () => {
+    expect(component).toContain("onSuccess(confirmedProfile)");
+    expect(component).toContain("getDraftBuyerClientProfile.setData(selectionInput, confirmedProfile)");
+    expect(component).not.toContain("getDraftBuyerClientProfile.invalidate(selectionInput)");
+  });
+
   it("does not expose a direct commercial transition or individual export control", () => {
     expect(component).not.toMatch(/vincular.*lote|criar.*proposta|aprovar.*crédito|gerar.*contrato|exportar.*perfil/i);
     expect(component).not.toMatch(/storage_key|document_url|file_bytes|download.*documento/i);
