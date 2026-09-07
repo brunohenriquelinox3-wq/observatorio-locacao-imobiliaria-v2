@@ -1,7 +1,19 @@
 import type { SubdivisionContext } from "@shared/subdivisionContracts";
-import { ArchiveRestore, CircleAlert, ClipboardCheck, FileStack, ListFilter, Search, ShieldCheck, UserRoundPlus, UsersRound } from "lucide-react";
+import { ArchiveRestore, ArchiveX, CircleAlert, ClipboardCheck, FileStack, ListFilter, RotateCcw, Search, ShieldCheck, UserRoundPlus, UsersRound } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { trpc } from "@/lib/trpc";
+import "./subdivision-buyer-client-directory.css";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   buyerClientDirectoryAttachmentSummaries,
   buyerClientDirectoryPartyKinds,
@@ -43,6 +55,8 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   const [pageOffset, setPageOffset] = useState(0);
   const [newClientName, setNewClientName] = useState("");
   const [newClientKind, setNewClientKind] = useState<"individual" | "legal_entity">("individual");
+  const [localActiveEntry, setLocalActiveEntry] = useState<DirectoryEntry | null>(null);
+  const effectiveSelectedBuyerClientId = localActiveEntry?.buyerClientId || selectedBuyerClientId;
 
   useEffect(() => {
     const normalized = searchDraft.trim();
@@ -54,28 +68,66 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   }, [searchDraft]);
 
   const directoryInput = useMemo(() => ({ ...context, searchTerm, pageSize, pageOffset }), [context, pageOffset, searchTerm]);
-  const timelineInput = useMemo(() => ({ ...context, buyerClientId: selectedBuyerClientId, limit: 20 }), [context, selectedBuyerClientId]);
+  const timelineInput = useMemo(() => ({ ...context, buyerClientId: effectiveSelectedBuyerClientId, limit: 20 }), [context, effectiveSelectedBuyerClientId]);
+  const profileInput = useMemo(() => ({ ...context, buyerClientId: effectiveSelectedBuyerClientId }), [context, effectiveSelectedBuyerClientId]);
   const directoryQuery = trpc.subdivisionFoundation.listDraftBuyerClientDirectory.useQuery(directoryInput, { enabled: isWorkspaceReady, retry: false });
-  const timelineQuery = trpc.subdivisionFoundation.listDraftBuyerClientTimeline.useQuery(timelineInput, { enabled: isWorkspaceReady && Boolean(selectedBuyerClientId), retry: false });
+  const timelineQuery = trpc.subdivisionFoundation.listDraftBuyerClientTimeline.useQuery(timelineInput, { enabled: isWorkspaceReady && Boolean(effectiveSelectedBuyerClientId), retry: false });
+  const profileQuery = trpc.subdivisionFoundation.getDraftBuyerClientProfile.useQuery(profileInput, { enabled: isWorkspaceReady && Boolean(effectiveSelectedBuyerClientId), retry: false });
+  const archivedClientsQuery = trpc.subdivisionFoundation.listArchivedClients.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const utils = trpc.useUtils();
-  const registerDirectMutation = trpc.subdivisionFoundation.registerBuyerClientDirect.useMutation({
+  const registerDirectMutation = trpc.subdivisionFoundation.registerClientDirect.useMutation({
     onSuccess(result) {
       setNewClientName("");
+      setLocalActiveEntry(null);
       onSelectBuyerClient(result.buyerClientId);
       void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
       void utils.subdivisionFoundation.listDraftBuyerClients.invalidate(context);
       void utils.domainFoundation.listDraftPartyRoles.invalidate(context);
       void utils.subdivisionFoundation.listDraftBuyerClientProfileSummaries.invalidate(context);
       void utils.subdivisionFoundation.listBuyerAttachmentIntents.invalidate(context);
+      void utils.subdivisionFoundation.listArchivedClients.invalidate(context);
+    },
+  });
+  const archiveClientMutation = trpc.subdivisionFoundation.archiveClient.useMutation({
+    onSuccess() {
+      setLocalActiveEntry(null);
+      onSelectBuyerClient("");
+      void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
+      void utils.subdivisionFoundation.listDraftBuyerClients.invalidate(context);
+      void utils.subdivisionFoundation.listDraftBuyerClientProfileSummaries.invalidate(context);
+      void utils.subdivisionFoundation.listBuyerAttachmentIntents.invalidate(context);
+      void utils.subdivisionFoundation.listArchivedClients.invalidate(context);
+    },
+  });
+  const restoreClientMutation = trpc.subdivisionFoundation.restoreClient.useMutation({
+    onSuccess(result) {
+      setLocalActiveEntry(null);
+      onSelectBuyerClient(result.buyerClientId);
+      void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
+      void utils.subdivisionFoundation.listDraftBuyerClients.invalidate(context);
+      void utils.subdivisionFoundation.listDraftBuyerClientProfileSummaries.invalidate(context);
+      void utils.subdivisionFoundation.listBuyerAttachmentIntents.invalidate(context);
+      void utils.subdivisionFoundation.listArchivedClients.invalidate(context);
     },
   });
   const entries = directoryQuery.data as DirectoryEntry[] | undefined;
   const metrics = summarizeBuyerClientDirectory(entries ?? []);
-  const activeEntry = entries?.find((entry) => entry.buyerClientId === selectedBuyerClientId) ?? null;
+  const activeEntry = localActiveEntry && entries?.some((entry) => entry.buyerClientId === localActiveEntry.buyerClientId)
+    ? localActiveEntry
+    : entries?.find((entry) => entry.buyerClientId === effectiveSelectedBuyerClientId) ?? null;
   const belowSearchMinimum = searchDraft.trim().length === 1;
 
   function openFullProfile() {
     document.getElementById("buyer-profile-title")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function openDocuments() {
+    document.getElementById("buyer-documents-title")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function archiveActiveClient() {
+    if (!activeEntry) return;
+    archiveClientMutation.mutate({ ...context, correlationId: crypto.randomUUID(), buyerClientId: activeEntry.buyerClientId });
   }
 
   function registerDirectClient(event: React.FormEvent<HTMLFormElement>) {
@@ -90,7 +142,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
       <div>
         <p className="subdivision-foundation-eyebrow">06 · CENTRAL DE CLIENTES</p>
         <h2 id="buyer-directory-title">Localize, confira e organize o cadastro sem sair do contexto.</h2>
-        <p>A lista reúne somente clientes compradores devolvidos pelo servidor. Ela não abre venda, lote, proposta, crédito, contrato, registro ou pagamento.</p>
+        <p>A lista reúne somente Clientes Loteadora devolvidos pelo servidor. Ela não abre venda, lote, proposta, crédito, contrato, registro ou pagamento.</p>
       </div>
       <div className="subdivision-buyer-directory__guard"><ShieldCheck size={19} aria-hidden="true" /><span>Leitura delimitada<br /><b>por contexto e alçada</b></span></div>
     </header>
@@ -102,7 +154,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
         <p><ListFilter size={16} aria-hidden="true" /> A busca usa o nome declarado no cadastro-base, limita o retorno e não consulta documento, contato, lote, valor ou contrato.</p>
       </div>
       <form className="subdivision-buyer-directory__enrollment" onSubmit={registerDirectClient}>
-        <div><UserRoundPlus size={19} aria-hidden="true" /><span><b>Cadastro direto de cliente</b><small>Registre somente o nome declarado e a natureza da pessoa. Contatos, documentos e pendências ficam na ficha progressiva.</small></span></div>
+        <div><UserRoundPlus size={19} aria-hidden="true" /><span><b>Novo Cliente Loteadora</b><small>Registre o nome declarado e a natureza da pessoa. Em seguida, abra a ficha para editar telefone, WhatsApp, e-mail, identificação, pendências e documentos privados.</small></span></div>
         <label htmlFor="buyer-directory-direct-name">Nome declarado<input id="buyer-directory-direct-name" value={newClientName} onChange={(event) => setNewClientName(event.target.value)} minLength={2} maxLength={160} autoComplete="off" placeholder="Informe o nome para o cadastro" required disabled={registerDirectMutation.isPending} /></label>
         <label htmlFor="buyer-directory-direct-kind">Natureza<select id="buyer-directory-direct-kind" value={newClientKind} onChange={(event) => setNewClientKind(event.target.value as "individual" | "legal_entity")} disabled={registerDirectMutation.isPending}><option value="individual">Pessoa física</option><option value="legal_entity">Pessoa jurídica</option></select></label>
         <button type="submit" disabled={registerDirectMutation.isPending || newClientName.trim().length < 2}>{registerDirectMutation.isPending ? "Registrando cliente" : "Cadastrar cliente"}</button>
@@ -119,11 +171,11 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
 
       {directoryQuery.isLoading && <div className="subdivision-foundation-empty"><span className="subdivision-foundation-spinner" aria-hidden="true" /><p>Confirmando o contexto antes de carregar a central de clientes.</p></div>}
       {directoryQuery.isError && <div className="subdivision-foundation-empty is-error"><CircleAlert size={18} /><p>A lista não foi liberada. Revise sessão, contexto, membership, grant, vigência e finalidade sem inferir outros cadastros.</p></div>}
-      {!directoryQuery.isLoading && !directoryQuery.isError && entries?.length === 0 && <div className="subdivision-foundation-empty"><UsersRound size={18} /><p>Nenhum cliente comprador corresponde à leitura autorizada. A ausência não cria nem altera cadastros.</p></div>}
+      {!directoryQuery.isLoading && !directoryQuery.isError && entries?.length === 0 && <div className="subdivision-foundation-empty"><UsersRound size={18} /><p>Nenhum Cliente Loteadora corresponde à leitura autorizada. A ausência não cria nem altera cadastros.</p></div>}
 
       {!directoryQuery.isLoading && !directoryQuery.isError && entries && entries.length > 0 && <div className="subdivision-buyer-directory__workspace">
-        <div className="subdivision-buyer-directory__list" aria-label="Lista de clientes compradores">
-          {entries.map((entry) => <button type="button" key={entry.buyerClientId} className={entry.buyerClientId === selectedBuyerClientId ? "is-selected" : ""} aria-pressed={entry.buyerClientId === selectedBuyerClientId} onClick={() => onSelectBuyerClient(entry.buyerClientId)}>
+        <div className="subdivision-buyer-directory__list" aria-label="Lista de Clientes Loteadora">
+          {entries.map((entry) => <button type="button" key={entry.buyerClientId} className={entry.buyerClientId === effectiveSelectedBuyerClientId ? "is-selected" : ""} aria-pressed={entry.buyerClientId === effectiveSelectedBuyerClientId} onClick={() => { setLocalActiveEntry(entry); onSelectBuyerClient(entry.buyerClientId); }}>
             <span className="subdivision-buyer-directory__entry-top"><small>{buyerClientDirectoryPartyKinds[entry.partyKind]}</small><b>{buyerClientDirectoryRegistrationStates[entry.registrationState]}</b></span>
             <strong>{entry.displayName}</strong>
             <span className="subdivision-buyer-directory__entry-foot"><i>{entry.profilePresent ? "Perfil organizado" : "Perfil a organizar"}</i><i>{entry.requirementsPending > 0 ? `${entry.requirementsPending} pendência(s)` : "Sem pendência registrada"}</i></span>
@@ -132,17 +184,42 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
         </div>
 
         <aside className="subdivision-buyer-directory__preview" aria-live="polite">
-          {!activeEntry && <div className="subdivision-buyer-directory__preview-empty"><UsersRound size={22} aria-hidden="true" /><h3>Selecione um cadastro</h3><p>O painel mostra somente a situação cadastral, a prontidão e o histórico redigido do cliente escolhido.</p></div>}
+          {!activeEntry && <div className="subdivision-buyer-directory__preview-empty"><UsersRound size={22} aria-hidden="true" /><h3>Selecione um cadastro</h3><p>O painel mostra a ficha do Cliente Loteadora, sua prontidão e o histórico redigido do cliente escolhido.</p></div>}
           {activeEntry && <>
             <div className="subdivision-buyer-directory__preview-head"><span>FICHA CADASTRAL</span><b>{activeEntry.displayName}</b><small>Atualizado em {formatTimestamp(activeEntry.updatedAt)}</small></div>
             <dl>
               <div><dt>Natureza</dt><dd>{buyerClientDirectoryPartyKinds[activeEntry.partyKind]}</dd></div>
               <div><dt>Situação</dt><dd>{buyerClientDirectoryRegistrationStates[activeEntry.registrationState]}</dd></div>
-              <div><dt>Contatos declarados</dt><dd>{activeEntry.contactChannelsRecorded} canal(is)</dd></div>
+              <div><dt>Telefone</dt><dd>{profileQuery.data?.primaryPhone ?? "Não informado"}</dd></div>
+              <div><dt>WhatsApp</dt><dd>{profileQuery.data?.messagingPhone ?? "Não informado"}</dd></div>
+              <div><dt>E-mail</dt><dd>{profileQuery.data?.primaryEmail ?? "Não informado"}</dd></div>
+              <div><dt>CPF/CNPJ</dt><dd>{profileQuery.data?.documentReference ?? "Não informado"}</dd></div>
+              <div><dt>RG/documento</dt><dd>{profileQuery.data?.identityDocumentReference ?? "Não informado"}</dd></div>
               <div><dt>Pendências</dt><dd>{activeEntry.requirementsPending} de {activeEntry.requirementsTotal} em revisão</dd></div>
               <div><dt>Anexo privado</dt><dd>{buyerClientDirectoryAttachmentSummaries[activeEntry.attachmentSummary]}</dd></div>
             </dl>
-            <button type="button" onClick={openFullProfile}>Abrir ficha e organização cadastral</button>
+            <div className="subdivision-buyer-directory__preview-actions">
+              <button type="button" onClick={openFullProfile}>Editar dados cadastrais</button>
+              <button type="button" className="is-secondary" onClick={openDocuments}>Documentos privados</button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button type="button" className="is-danger" disabled={archiveClientMutation.isPending}><ArchiveX size={15} aria-hidden="true" />{archiveClientMutation.isPending ? "Excluindo da lista" : "Excluir da lista"}</button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Excluir este Cliente Loteadora da lista ativa?</AlertDialogTitle>
+                    <AlertDialogDescription>O cadastro será arquivado, manterá a auditoria redigida e poderá ser restaurado nesta mesma central. Esta ação não cria venda, contrato, cobrança ou efeito financeiro.</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction onClick={archiveActiveClient}>Confirmar arquivamento</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+            {profileQuery.isLoading && <p className="subdivision-buyer-directory__profile-loading">Carregando ficha autorizada.</p>}
+            {profileQuery.isError && <p className="subdivision-buyer-directory__profile-loading is-error">A ficha não foi liberada neste contexto.</p>}
+            {archiveClientMutation.isError && <p className="subdivision-buyer-directory__profile-loading is-error">A exclusão não foi concluída; nenhum cadastro foi removido.</p>}
             <section className="subdivision-buyer-directory__timeline" aria-labelledby="buyer-directory-timeline-title">
               <div><p className="subdivision-foundation-eyebrow">HISTÓRICO REDIGIDO</p><h3 id="buyer-directory-timeline-title">Eventos de cadastro</h3></div>
               {timelineQuery.isLoading && <p className="subdivision-buyer-directory__timeline-empty">Carregando eventos autorizados.</p>}
@@ -153,6 +230,12 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
           </>}
         </aside>
       </div>}
+      {archivedClientsQuery.data && archivedClientsQuery.data.length > 0 && <details className="subdivision-buyer-directory__archive">
+        <summary><ArchiveRestore size={16} aria-hidden="true" /> Cadastros arquivados ({archivedClientsQuery.data.length})</summary>
+        <p>Os itens abaixo foram excluídos somente da lista ativa. A auditoria foi preservada e a restauração exige o mesmo contexto autorizado.</p>
+        <div>{archivedClientsQuery.data.map((client) => <article key={client.buyerClientId}><span>{client.displayName}</span><button type="button" onClick={() => restoreClientMutation.mutate({ ...context, correlationId: crypto.randomUUID(), buyerClientId: client.buyerClientId })} disabled={restoreClientMutation.isPending}><RotateCcw size={14} aria-hidden="true" /> Restaurar</button></article>)}</div>
+        {restoreClientMutation.isError && <p className="subdivision-buyer-directory__profile-loading is-error">A restauração não foi concluída; o cadastro permanece arquivado.</p>}
+      </details>}
     </>}
   </section>;
 }

@@ -8,11 +8,24 @@ describe("SubdivisionBuyerClientDirectory composition", () => {
   it("keeps contextual list, quick preview, full-profile shortcut, and redacted timeline available", () => {
     expect(component).toContain("listDraftBuyerClientDirectory.useQuery");
     expect(component).toContain("listDraftBuyerClientTimeline.useQuery");
-    expect(component).toContain("registerBuyerClientDirect.useMutation");
-    expect(component).toContain("Cadastro direto de cliente");
-    expect(component).toContain("Abrir ficha e organização cadastral");
+    expect(component).toContain("registerClientDirect.useMutation");
+    expect(component).toContain("Novo Cliente Loteadora");
+    expect(component).toContain("Editar dados cadastrais");
     expect(component).toContain("HISTÓRICO REDIGIDO");
     expect(component).toContain("evento autorizado, sem conteúdo pessoal");
+  });
+
+  it("makes protected contact editing, private documents, and reversible exclusion discoverable", () => {
+    expect(component).toContain("Telefone");
+    expect(component).toContain("WhatsApp");
+    expect(component).toContain("CPF/CNPJ");
+    expect(component).toContain("Editar dados cadastrais");
+    expect(component).toContain("Documentos privados");
+    expect(component).toContain("archiveClient.useMutation");
+    expect(component).toContain("restoreClient.useMutation");
+    expect(component).toContain("AlertDialog");
+    expect(component).toContain("Confirmar arquivamento");
+    expect(component).toContain("Cadastros arquivados");
   });
 
   it("does not introduce commercial, financial, contractual, or document-view controls", () => {

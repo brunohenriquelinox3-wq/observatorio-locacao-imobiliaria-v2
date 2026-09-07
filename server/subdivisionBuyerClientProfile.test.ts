@@ -43,7 +43,7 @@ describe("subdivision buyer client profile server boundary", () => {
   it("returns a selected protected profile only through its contextual buyer client", async () => {
     rpc.mockResolvedValueOnce({ data: [{
       profile_id: profileId, buyer_client_id: buyerClientId, party_kind: "individual", registration_state: "base_data_in_progress",
-      document_reference: null, primary_email: null, primary_phone: null, messaging_phone: null,
+      document_reference: null, identity_document_reference: null, primary_email: null, primary_phone: null, messaging_phone: null,
       civil_status: "not_declared", representation_state: "not_declared", updated_at: "2026-09-06T00:00:00+00:00",
     }], error: null });
     await expect(getDraftSubdivisionBuyerClientProfile(subjectId, { ...context, buyerClientId }, client)).resolves.toMatchObject({ profileId, buyerClientId, documentReference: null });
@@ -54,7 +54,7 @@ describe("subdivision buyer client profile server boundary", () => {
     rpc.mockResolvedValueOnce({ data: profileId, error: null });
     await expect(upsertDraftSubdivisionBuyerClientProfile(subjectId, {
       ...context, correlationId, buyerClientId, partyKind: "individual", registrationState: "base_data_in_progress",
-      documentReference: null, primaryEmail: null, primaryPhone: null, messagingPhone: null, civilStatus: "not_declared", representationState: "not_declared",
+      documentReference: null, identityDocumentReference: null, primaryEmail: null, primaryPhone: null, messagingPhone: null, civilStatus: "not_declared", representationState: "not_declared",
     }, client)).resolves.toEqual({ profileId });
     expect(rpc).toHaveBeenLastCalledWith("subdivision_upsert_draft_buyer_client_profile", expect.objectContaining({ p_buyer_client_id: buyerClientId, p_correlation_id: correlationId }));
 

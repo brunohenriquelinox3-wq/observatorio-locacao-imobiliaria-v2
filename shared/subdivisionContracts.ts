@@ -41,6 +41,22 @@ export const registerSubdivisionBuyerClientDirectInputSchema = subdivisionContex
   displayName: z.string().trim().min(2).max(160),
 }).strict();
 
+export const registerSubdivisionClientDirectInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  partyKind: partyKindSchema,
+  displayName: z.string().trim().min(2).max(160),
+}).strict();
+
+export const archiveSubdivisionClientInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  buyerClientId: z.string().uuid(),
+}).strict();
+
+export const restoreSubdivisionClientInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  buyerClientId: z.string().uuid(),
+}).strict();
+
 export const draftSubdivisionBuyerAttachmentIntentInputSchema = subdivisionContextSchema.extend({
   correlationId: z.string().uuid(),
   buyerClientId: z.string().uuid(),
@@ -129,6 +145,9 @@ export type DraftSubdivisionLotInput = z.infer<typeof draftSubdivisionLotInputSc
 export type DraftSubdivisionLotInventoryStateInput = z.infer<typeof draftSubdivisionLotInventoryStateInputSchema>;
 export type DraftSubdivisionBuyerClientInput = z.infer<typeof draftSubdivisionBuyerClientInputSchema>;
 export type RegisterSubdivisionBuyerClientDirectInput = z.infer<typeof registerSubdivisionBuyerClientDirectInputSchema>;
+export type RegisterSubdivisionClientDirectInput = z.infer<typeof registerSubdivisionClientDirectInputSchema>;
+export type ArchiveSubdivisionClientInput = z.infer<typeof archiveSubdivisionClientInputSchema>;
+export type RestoreSubdivisionClientInput = z.infer<typeof restoreSubdivisionClientInputSchema>;
 export type DraftSubdivisionBuyerAttachmentIntentInput = z.infer<typeof draftSubdivisionBuyerAttachmentIntentInputSchema>;
 export type DraftSubdivisionSaleDraftInput = z.infer<typeof draftSubdivisionSaleDraftInputSchema>;
 export type DraftSubdivisionSaleDraftWorkStateInput = z.infer<typeof draftSubdivisionSaleDraftWorkStateInputSchema>;

@@ -40,6 +40,7 @@ export type SubdivisionBuyerClientProfileSummary = {
 
 export type SubdivisionBuyerClientProfile = Omit<SubdivisionBuyerClientProfileSummary, "documentReferencePresent" | "primaryEmailPresent" | "primaryPhonePresent" | "messagingPhonePresent"> & {
   documentReference: string | null;
+  identityDocumentReference: string | null;
   primaryEmail: string | null;
   primaryPhone: string | null;
   messagingPhone: string | null;
@@ -84,6 +85,7 @@ function parseEnum<T extends z.ZodType>(schema: T, value: unknown): z.output<T> 
 
 function profileFromRow(row: RpcRow): SubdivisionBuyerClientProfile {
   const documentReference = asNullableString(row, "document_reference");
+  const identityDocumentReference = asNullableString(row, "identity_document_reference");
   const primaryEmail = asNullableString(row, "primary_email");
   const primaryPhone = asNullableString(row, "primary_phone");
   const messagingPhone = asNullableString(row, "messaging_phone");
@@ -95,6 +97,7 @@ function profileFromRow(row: RpcRow): SubdivisionBuyerClientProfile {
     civilStatus: parseEnum(subdivisionBuyerClientCivilStatusSchema, row.civil_status),
     representationState: parseEnum(subdivisionBuyerClientRepresentationStateSchema, row.representation_state),
     documentReference,
+    identityDocumentReference,
     primaryEmail,
     primaryPhone,
     messagingPhone,
@@ -159,6 +162,7 @@ export async function upsertDraftSubdivisionBuyerClientProfile(subjectId: string
     p_party_kind: input.partyKind,
     p_registration_state: input.registrationState,
     p_document_reference: input.documentReference,
+    p_identity_document_reference: input.identityDocumentReference,
     p_primary_email: input.primaryEmail,
     p_primary_phone: input.primaryPhone,
     p_messaging_phone: input.messagingPhone,

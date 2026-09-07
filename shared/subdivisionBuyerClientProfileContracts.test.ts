@@ -15,12 +15,12 @@ describe("subdivision buyer client profile contracts", () => {
   it("accepts a minimized profile only in an explicit loteadora context", () => {
     expect(upsertSubdivisionBuyerClientProfileInputSchema.safeParse({
       ...context, correlationId, buyerClientId, partyKind: "individual", registrationState: "base_data_in_progress",
-      documentReference: null, primaryEmail: null, primaryPhone: null, messagingPhone: null,
+      documentReference: null, identityDocumentReference: null, primaryEmail: null, primaryPhone: null, messagingPhone: null,
       civilStatus: "not_declared", representationState: "not_declared",
     }).success).toBe(true);
     expect(upsertSubdivisionBuyerClientProfileInputSchema.safeParse({
       ...context, correlationId, buyerClientId, partyKind: "individual", registrationState: "base_data_in_progress",
-      documentReference: null, primaryEmail: null, primaryPhone: null, messagingPhone: null,
+      documentReference: null, identityDocumentReference: null, primaryEmail: null, primaryPhone: null, messagingPhone: null,
       civilStatus: "not_declared", representationState: "not_declared", income: "1000",
     }).success).toBe(false);
   });
@@ -28,17 +28,17 @@ describe("subdivision buyer client profile contracts", () => {
   it("rejects a foreign module, invalid document reference, and commercial states", () => {
     expect(upsertSubdivisionBuyerClientProfileInputSchema.safeParse({
       ...context, module: "locacao", correlationId, buyerClientId, partyKind: "individual", registrationState: "base_data_in_progress",
-      documentReference: null, primaryEmail: null, primaryPhone: null, messagingPhone: null,
+      documentReference: null, identityDocumentReference: null, primaryEmail: null, primaryPhone: null, messagingPhone: null,
       civilStatus: "not_declared", representationState: "not_declared",
     }).success).toBe(false);
     expect(upsertSubdivisionBuyerClientProfileInputSchema.safeParse({
       ...context, correlationId, buyerClientId, partyKind: "individual", registrationState: "base_data_in_progress",
-      documentReference: "123", primaryEmail: null, primaryPhone: null, messagingPhone: null,
+      documentReference: "123", identityDocumentReference: null, primaryEmail: null, primaryPhone: null, messagingPhone: null,
       civilStatus: "not_declared", representationState: "not_declared",
     }).success).toBe(false);
     expect(upsertSubdivisionBuyerClientProfileInputSchema.safeParse({
       ...context, correlationId, buyerClientId, partyKind: "individual", registrationState: "sale_approved",
-      documentReference: null, primaryEmail: null, primaryPhone: null, messagingPhone: null,
+      documentReference: null, identityDocumentReference: null, primaryEmail: null, primaryPhone: null, messagingPhone: null,
       civilStatus: "not_declared", representationState: "not_declared",
     }).success).toBe(false);
   });
@@ -61,5 +61,18 @@ describe("subdivision buyer client profile contracts", () => {
   it("uses a contextual buyer client identifier for protected reads", () => {
     expect(subdivisionBuyerClientProfileLookupInputSchema.safeParse({ ...context, buyerClientId }).success).toBe(true);
     expect(subdivisionBuyerClientProfileLookupInputSchema.safeParse({ ...context, buyerClientId, profileId: correlationId }).success).toBe(false);
+  });
+
+  it("accepts a bounded complementary identity reference and rejects malformed values", () => {
+    expect(upsertSubdivisionBuyerClientProfileInputSchema.safeParse({
+      ...context, correlationId, buyerClientId, partyKind: "individual", registrationState: "base_data_in_progress",
+      documentReference: null, identityDocumentReference: "MG-12.345.678", primaryEmail: null, primaryPhone: null, messagingPhone: null,
+      civilStatus: "not_declared", representationState: "not_declared",
+    }).success).toBe(true);
+    expect(upsertSubdivisionBuyerClientProfileInputSchema.safeParse({
+      ...context, correlationId, buyerClientId, partyKind: "individual", registrationState: "base_data_in_progress",
+      documentReference: null, identityDocumentReference: "x", primaryEmail: null, primaryPhone: null, messagingPhone: null,
+      civilStatus: "not_declared", representationState: "not_declared",
+    }).success).toBe(false);
   });
 });

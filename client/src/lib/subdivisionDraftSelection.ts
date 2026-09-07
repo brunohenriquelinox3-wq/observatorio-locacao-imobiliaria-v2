@@ -21,15 +21,15 @@ export type SaleDraftCandidate = {
 
 export function buyerClientSelectionLabel(client: BuyerClientCandidate, partyRoles: PartyRoleCandidate[]): string {
   const role = partyRoles.find((candidate) => candidate.partyRoleAssignmentId === client.partyRoleAssignmentId);
-  return role ? `Cliente comprador · ${subdivisionPartyRoleSelectionLabel(role)}` : "Cliente comprador em rascunho";
+  return role ? `Cliente · ${role.displayName}` : "Cliente Loteadora";
 }
 
 export function attachmentIntentSelectionLabel(intent: AttachmentIntentCandidate, clients: BuyerClientCandidate[], partyRoles: PartyRoleCandidate[]): string {
   const client = clients.find((candidate) => candidate.buyerClientId === intent.buyerClientId);
-  return client ? `Intenção privada · ${buyerClientSelectionLabel(client, partyRoles)}` : "Intenção privada autorizada";
+  return client ? `Documento privado · ${buyerClientSelectionLabel(client, partyRoles)}` : "Documento privado autorizado";
 }
 
 export function saleDraftSelectionLabel(draft: SaleDraftCandidate, clients: BuyerClientCandidate[], partyRoles: PartyRoleCandidate[]): string {
   const client = clients.find((candidate) => candidate.buyerClientId === draft.buyerClientId);
-  return client ? `Rascunho de venda · ${buyerClientSelectionLabel(client, partyRoles)}` : "Rascunho interno de venda";
+  return client ? `Preparação de venda · ${buyerClientSelectionLabel(client, partyRoles)}` : "Preparação interna de venda";
 }

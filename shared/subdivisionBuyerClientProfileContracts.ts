@@ -45,6 +45,7 @@ export const subdivisionBuyerClientContactChannelSchema = z.enum(["email", "phon
 export const subdivisionBuyerClientContactPreferenceStateSchema = z.enum(["granted", "revoked"]);
 
 const optionalDocumentReference = z.string().trim().regex(/^(?:[0-9]{11}|[0-9]{14})$/).nullable();
+const optionalIdentityDocumentReference = z.string().trim().min(4).max(40).regex(/^[A-Za-z0-9.\-/\s]+$/).nullable();
 const optionalEmail = z.string().trim().email().max(320).nullable();
 const optionalPhone = z.string().trim().regex(/^[0-9+().\-\s]{8,25}$/).nullable();
 
@@ -69,6 +70,7 @@ export const upsertSubdivisionBuyerClientProfileInputSchema = subdivisionContext
   partyKind: subdivisionBuyerClientProfilePartyKindSchema,
   registrationState: subdivisionBuyerClientRegistrationStateSchema,
   documentReference: optionalDocumentReference,
+  identityDocumentReference: optionalIdentityDocumentReference,
   primaryEmail: optionalEmail,
   primaryPhone: optionalPhone,
   messagingPhone: optionalPhone,

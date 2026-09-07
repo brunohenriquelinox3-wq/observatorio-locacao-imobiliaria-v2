@@ -8,7 +8,7 @@ const roleLabels: Record<string, string> = {
   partner: "Parceiro",
   land_contributor: "Cedente de terra",
   client: "Cliente",
-  buyer: "Comprador",
+  buyer: "Cliente Loteadora",
 };
 
 export function subdivisionPartyRoleSelectionLabel(candidate: SubdivisionPartyRoleSelectionCandidate): string {

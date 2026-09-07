@@ -1,0 +1,83 @@
+.subdivision-buyer-directory__preview-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #dcebe6;
+}
+
+.subdivision-buyer-directory__preview-actions > button,
+.subdivision-buyer-directory__preview-actions [data-slot="alert-dialog-trigger"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid #126f62;
+  border-radius: 9px;
+  background: #126f62;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 160ms cubic-bezier(.23, 1, .32, 1), background 160ms cubic-bezier(.23, 1, .32, 1), border-color 160ms cubic-bezier(.23, 1, .32, 1);
+}
+
+.subdivision-buyer-directory__preview-actions > button:hover:not(:disabled),
+.subdivision-buyer-directory__preview-actions [data-slot="alert-dialog-trigger"]:hover:not(:disabled) {
+  border-color: #0c5c51;
+  background: #0c5c51;
+}
+
+.subdivision-buyer-directory__preview-actions > button:active:not(:disabled),
+.subdivision-buyer-directory__preview-actions [data-slot="alert-dialog-trigger"]:active:not(:disabled) {
+  transform: scale(.98);
+}
+
+.subdivision-buyer-directory__preview-actions .is-secondary {
+  border-color: #a9cec5;
+  background: #f6fcfa;
+  color: #1d675a;
+}
+
+.subdivision-buyer-directory__preview-actions .is-secondary:hover:not(:disabled) {
+  border-color: #6eb9a8;
+  background: #eaf8f3;
+}
+
+.subdivision-buyer-directory__preview-actions .is-danger {
+  border-color: #e0b8ad;
+  background: #fff8f6;
+  color: #9a4334;
+}
+
+.subdivision-buyer-directory__preview-actions .is-danger:hover:not(:disabled) {
+  border-color: #c97766;
+  background: #fff0ec;
+}
+
+.subdivision-buyer-directory__preview-actions > button:focus-visible,
+.subdivision-buyer-directory__preview-actions [data-slot="alert-dialog-trigger"]:focus-visible {
+  outline: 3px solid rgba(29, 179, 155, .32);
+  outline-offset: 2px;
+}
+
+.subdivision-buyer-directory__preview-actions > button:disabled,
+.subdivision-buyer-directory__preview-actions [data-slot="alert-dialog-trigger"]:disabled {
+  cursor: not-allowed;
+  opacity: .58;
+}
+
+@media (max-width: 840px) {
+  .subdivision-buyer-directory__preview-actions { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .subdivision-buyer-directory__preview-actions > button,
+  .subdivision-buyer-directory__preview-actions [data-slot="alert-dialog-trigger"] { transition: none; }
+}

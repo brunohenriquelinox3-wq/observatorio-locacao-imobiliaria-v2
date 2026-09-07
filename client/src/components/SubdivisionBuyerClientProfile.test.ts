@@ -7,7 +7,12 @@ const foundationPage = readFileSync(resolve(import.meta.dirname, "../pages/Subdi
 
 describe("Clientes Loteadora profile composition", () => {
   it("keeps a progressive profile, conditional requirements, and granular contact preferences", () => {
-    expect(component).toContain("Dados mínimos para organização");
+    expect(component).toContain("Dados de contato e identificação");
+    expect(component).toContain("CPF ou CNPJ");
+    expect(component).toContain("RG ou documento complementar");
+    expect(component).toContain("Telefone");
+    expect(component).toContain("WhatsApp");
+    expect(component).toContain("Salvar dados do cliente");
     expect(component).toContain("PENDÊNCIAS CONDICIONAIS");
     expect(component).toContain("PREFERÊNCIAS DE CONTATO");
     expect(component).toContain("Não inclua renda, patrimônio, score, dados bancários, lote, preço, forma de pagamento, contrato ou informações sensíveis nesta etapa.");

@@ -36,6 +36,7 @@ type BuyerProfileFormState = {
   partyKind: keyof typeof partyKinds;
   registrationState: keyof typeof buyerClientRegistrationStates;
   documentReference: string;
+  identityDocumentReference: string;
   primaryEmail: string;
   primaryPhone: string;
   messagingPhone: string;
@@ -48,6 +49,7 @@ function emptyProfile(): BuyerProfileFormState {
     partyKind: "individual",
     registrationState: "contact_pending",
     documentReference: "",
+    identityDocumentReference: "",
     primaryEmail: "",
     primaryPhone: "",
     messagingPhone: "",
@@ -90,6 +92,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
         partyKind: profileQuery.data.partyKind,
         registrationState: profileQuery.data.registrationState,
         documentReference: profileQuery.data.documentReference ?? "",
+        identityDocumentReference: profileQuery.data.identityDocumentReference ?? "",
         primaryEmail: profileQuery.data.primaryEmail ?? "",
         primaryPhone: profileQuery.data.primaryPhone ?? "",
         messagingPhone: profileQuery.data.messagingPhone ?? "",
@@ -153,6 +156,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
       ...context, correlationId: crypto.randomUUID(), buyerClientId,
       partyKind: profile.partyKind, registrationState: profile.registrationState,
       documentReference: profile.documentReference.trim() || null,
+      identityDocumentReference: profile.identityDocumentReference.trim() || null,
       primaryEmail: profile.primaryEmail.trim() || null,
       primaryPhone: profile.primaryPhone.trim() || null,
       messagingPhone: profile.messagingPhone.trim() || null,
@@ -164,17 +168,17 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
     <section className="subdivision-buyer-profile" aria-labelledby="buyer-profile-title">
       <header className="subdivision-buyer-profile__header">
         <div>
-          <p className="subdivision-foundation-eyebrow">08 · PERFIL CADASTRAL E PRONTIDÃO</p>
-          <h2 id="buyer-profile-title">Cadastro progressivo, pendências condicionais e contato por finalidade.</h2>
-          <p>O perfil complementa o cliente comprador já vinculado, sem duplicar a pessoa. Preencha somente o necessário para a finalidade declarada e deixe o restante para revisão humana futura.</p>
+          <p className="subdivision-foundation-eyebrow">08 · FICHA CADASTRAL DO CLIENTE</p>
+          <h2 id="buyer-profile-title">Edite contatos, identificação e pendências em uma ficha única.</h2>
+          <p>A ficha complementa o Cliente Loteadora já cadastrado, sem duplicar a pessoa. Preencha somente o necessário para a finalidade declarada e deixe o restante para revisão humana futura.</p>
         </div>
         <div className="subdivision-buyer-profile__guard"><ShieldCheck size={19} aria-hidden="true" /><span>Privado por contexto<br /><b>e auditado sem conteúdo</b></span></div>
       </header>
 
       <div className="subdivision-buyer-profile__selector">
-        <label htmlFor="buyer-profile-client">Cliente comprador autorizado
+        <label htmlFor="buyer-profile-client">Cliente Loteadora
           <select id="buyer-profile-client" value={buyerClientId} onChange={(event) => setBuyerClientId(event.target.value)} disabled={!isWorkspaceReady || buyerClients === undefined || summariesQuery.isLoading}>
-            <option value="">{!isWorkspaceReady ? "Defina um contexto autorizado" : buyerClients?.length ? "Selecione um cliente para organizar o cadastro" : "Nenhum cliente comprador neste contexto"}</option>
+            <option value="">{!isWorkspaceReady ? "Defina um contexto autorizado" : buyerClients?.length ? "Selecione um cliente para editar o cadastro" : "Nenhum cliente neste contexto"}</option>
             {buyerClients?.map((client) => <option key={client.buyerClientId} value={client.buyerClientId}>{buyerClientSelectionLabel(client, partyRoles ?? [])}</option>)}
           </select>
         </label>
@@ -187,19 +191,20 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
 
       {isWorkspaceReady && buyerClientId && !summariesQuery.isLoading && !summariesQuery.isError && <div className="subdivision-buyer-profile__workspace">
         <form className="subdivision-buyer-profile__form" onSubmit={saveProfile}>
-          <div className="subdivision-buyer-profile__form-heading"><ContactRound size={19} aria-hidden="true" /><div><h3>Dados mínimos para organização</h3><p>Dados declarados não equivalem a validação fiscal, crédito, aprovação ou aptidão para contrato.</p></div></div>
+          <div className="subdivision-buyer-profile__form-heading"><ContactRound size={19} aria-hidden="true" /><div><h3>Dados de contato e identificação</h3><p>Dados declarados não equivalem a validação fiscal, crédito, aprovação ou aptidão para contrato.</p></div></div>
           <div className="subdivision-buyer-profile__grid">
             <label htmlFor="buyer-profile-party-kind">Natureza cadastral<select id="buyer-profile-party-kind" value={profile.partyKind} onChange={(event) => setProfile((current) => ({ ...current, partyKind: event.target.value as keyof typeof partyKinds }))} disabled={profileQuery.isLoading}>{Object.entries(partyKinds).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
             <label htmlFor="buyer-profile-registration-state">Situação do cadastro<select id="buyer-profile-registration-state" value={profile.registrationState} onChange={(event) => setProfile((current) => ({ ...current, registrationState: event.target.value as keyof typeof buyerClientRegistrationStates }))} disabled={profileQuery.isLoading}>{Object.entries(buyerClientRegistrationStates).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-            <label htmlFor="buyer-profile-document-reference">Referência fiscal declarada<small>Opcional; informe apenas quando a finalidade cadastral justificar.</small><input id="buyer-profile-document-reference" inputMode="numeric" autoComplete="off" value={profile.documentReference} onChange={(event) => setProfile((current) => ({ ...current, documentReference: event.target.value.replace(/\D/g, "") }))} placeholder="Somente números" disabled={profileQuery.isLoading} /></label>
+            <label htmlFor="buyer-profile-document-reference">CPF ou CNPJ<small>Opcional; informe apenas quando a finalidade cadastral justificar.</small><input id="buyer-profile-document-reference" inputMode="numeric" autoComplete="off" value={profile.documentReference} onChange={(event) => setProfile((current) => ({ ...current, documentReference: event.target.value.replace(/\D/g, "") }))} placeholder="Somente números" disabled={profileQuery.isLoading} /></label>
+            <label htmlFor="buyer-profile-identity-document">RG ou documento complementar<small>Opcional; não substitui a conferência humana nem o documento privado.</small><input id="buyer-profile-identity-document" autoComplete="off" value={profile.identityDocumentReference} onChange={(event) => setProfile((current) => ({ ...current, identityDocumentReference: event.target.value }))} placeholder="Preencher quando necessário" disabled={profileQuery.isLoading} /></label>
             <label htmlFor="buyer-profile-email">E-mail de contato<small>Opcional; não é autorização automática de comunicação.</small><input id="buyer-profile-email" type="email" autoComplete="off" value={profile.primaryEmail} onChange={(event) => setProfile((current) => ({ ...current, primaryEmail: event.target.value }))} placeholder="Preencher quando necessário" disabled={profileQuery.isLoading} /></label>
-            <label htmlFor="buyer-profile-phone">Telefone de contato<input id="buyer-profile-phone" type="tel" autoComplete="off" value={profile.primaryPhone} onChange={(event) => setProfile((current) => ({ ...current, primaryPhone: event.target.value }))} placeholder="Preencher quando necessário" disabled={profileQuery.isLoading} /></label>
-            <label htmlFor="buyer-profile-messaging">Contato por mensageria<input id="buyer-profile-messaging" type="tel" autoComplete="off" value={profile.messagingPhone} onChange={(event) => setProfile((current) => ({ ...current, messagingPhone: event.target.value }))} placeholder="Preencher quando necessário" disabled={profileQuery.isLoading} /></label>
+            <label htmlFor="buyer-profile-phone">Telefone<input id="buyer-profile-phone" type="tel" autoComplete="off" value={profile.primaryPhone} onChange={(event) => setProfile((current) => ({ ...current, primaryPhone: event.target.value }))} placeholder="Preencher quando necessário" disabled={profileQuery.isLoading} /></label>
+            <label htmlFor="buyer-profile-messaging">WhatsApp<input id="buyer-profile-messaging" type="tel" autoComplete="off" value={profile.messagingPhone} onChange={(event) => setProfile((current) => ({ ...current, messagingPhone: event.target.value }))} placeholder="Preencher quando necessário" disabled={profileQuery.isLoading} /></label>
             <label htmlFor="buyer-profile-civil-status">Situação civil declarada<select id="buyer-profile-civil-status" value={profile.civilStatus} onChange={(event) => setProfile((current) => ({ ...current, civilStatus: event.target.value as keyof typeof buyerClientCivilStatuses }))} disabled={profileQuery.isLoading}>{Object.entries(buyerClientCivilStatuses).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
             <label htmlFor="buyer-profile-representation">Representação declarada<select id="buyer-profile-representation" value={profile.representationState} onChange={(event) => setProfile((current) => ({ ...current, representationState: event.target.value as keyof typeof buyerClientRepresentationStates }))} disabled={profileQuery.isLoading}>{Object.entries(buyerClientRepresentationStates).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
           </div>
           <p className="subdivision-buyer-profile__notice"><ShieldCheck size={16} aria-hidden="true" /> Não inclua renda, patrimônio, score, dados bancários, lote, preço, forma de pagamento, contrato ou informações sensíveis nesta etapa.</p>
-          <button type="submit" disabled={profileQuery.isLoading || saveProfileMutation.isPending}>{saveProfileMutation.isPending ? "Salvando perfil" : "Salvar perfil cadastral"}</button>
+          <button type="submit" disabled={profileQuery.isLoading || saveProfileMutation.isPending}>{saveProfileMutation.isPending ? "Salvando cadastro" : "Salvar dados do cliente"}</button>
         </form>
 
         <aside className="subdivision-buyer-profile__summary" aria-label="Resumo privado de preenchimento">
@@ -253,7 +258,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
           </>}
         </section>
       </div>}
-      {isWorkspaceReady && !buyerClientId && buyerClients?.length === 0 && <div className="subdivision-foundation-empty"><UserRoundCheck size={18} /><p>Quando houver cliente comprador já autorizado neste contexto, o perfil cadastral poderá ser organizado aqui sem duplicar o cadastro-base.</p></div>}
+      {isWorkspaceReady && !buyerClientId && buyerClients?.length === 0 && <div className="subdivision-foundation-empty"><UserRoundCheck size={18} /><p>Quando houver Cliente Loteadora autorizado neste contexto, a ficha cadastral poderá ser organizada aqui sem duplicar o cadastro-base.</p></div>}
     </section>
   );
 }

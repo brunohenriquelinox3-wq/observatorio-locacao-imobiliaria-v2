@@ -140,6 +140,9 @@ import {
   draftSubdivisionEconomicRuleComponentRoleReferenceInputSchema,
   draftSubdivisionSaleDraftWorkStateInputSchema,
   registerSubdivisionBuyerClientDirectInputSchema,
+  registerSubdivisionClientDirectInputSchema,
+  archiveSubdivisionClientInputSchema,
+  restoreSubdivisionClientInputSchema,
   subdivisionContextSchema,
 } from "../shared/subdivisionContracts";
 import {
@@ -221,6 +224,7 @@ import { listDraftLotInventoryEvents, transitionDraftLotInventoryState } from ".
 import { linkDraftSubdivisionInternalPartyRole, listDraftSubdivisionInternalPartyRoles } from "./subdivisionInternalPartyRoles";
 import { createDraftSubdivisionBuyerClient, listDraftSubdivisionBuyerClients } from "./subdivisionBuyerClient";
 import { registerSubdivisionBuyerClientDirect } from "./subdivisionBuyerClientDirect";
+import { archiveSubdivisionClient, listArchivedSubdivisionClients, registerSubdivisionClientDirect, restoreSubdivisionClient } from "./subdivisionClientLifecycle";
 import {
   getDraftSubdivisionBuyerClientProfile,
   listDraftSubdivisionBuyerClientContactPreferences,
@@ -686,6 +690,16 @@ export const appRouter = router({
     listDraftBuyerClients: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClients(ctx.supabaseSubjectId ?? undefined, input)),
     createDraftBuyerClient: protectedProcedure.input(draftSubdivisionBuyerClientInputSchema).mutation(({ ctx, input }) => createDraftSubdivisionBuyerClient(ctx.supabaseSubjectId ?? undefined, input)),
     registerBuyerClientDirect: protectedProcedure.input(registerSubdivisionBuyerClientDirectInputSchema).mutation(({ ctx, input }) => registerSubdivisionBuyerClientDirect(ctx.supabaseSubjectId ?? undefined, input)),
+    registerClientDirect: protectedProcedure.input(registerSubdivisionClientDirectInputSchema).mutation(({ ctx, input }) => registerSubdivisionClientDirect(ctx.supabaseSubjectId ?? undefined, input)),
+    archiveClient: protectedProcedure.input(archiveSubdivisionClientInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return archiveSubdivisionClient(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    restoreClient: protectedProcedure.input(restoreSubdivisionClientInputSchema).mutation(async ({ ctx, input }) => {
+      await requireRecentTotpMfa(ctx);
+      return restoreSubdivisionClient(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    listArchivedClients: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listArchivedSubdivisionClients(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClientDirectory: protectedProcedure.input(subdivisionBuyerClientDirectoryListInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientDirectory(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClientTimeline: protectedProcedure.input(subdivisionBuyerClientTimelineInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientTimeline(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClientProfileSummaries: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientProfileSummaries(ctx.supabaseSubjectId ?? undefined, input)),
