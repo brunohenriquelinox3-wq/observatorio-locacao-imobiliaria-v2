@@ -514,7 +514,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
         blockId: selectedOperationalLot.blockId,
         lotNumber: String(selectedOperationalLot.lotNumber),
         adjustmentKind: "override_per_sqm",
-        amount: "",
+        amount: String(selectedOperationalLotInternalReference.basePricePerSqmBrl),
         effectiveFrom: "",
         effectiveUntil: "",
       };
@@ -765,6 +765,8 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       toast.success("Condição preparada", { description: "A condição ainda não é vigente: precisa de respaldo, política-base aprovada e aprovação por outra pessoa autorizada." });
       setPriceConditionDraft((current) => ({ ...current, conditionReference: "", amount: "", effectiveFrom: "", effectiveUntil: "", documentState: "pending_evidence" }));
       void utils.subdivisionFoundation.listPriceConditions.invalidate();
+      void utils.subdivisionFoundation.listLotInternalPriceReferences.invalidate();
+      void utils.subdivisionFoundation.getLotPriceContext.invalidate();
     },
     onError() {
       toast.error("Condição não preparada", { description: "Revise MFA recente, escopo físico, vigência, referência única e dados obrigatórios. Nenhuma condição foi registrada." });
@@ -784,6 +786,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     onSuccess() {
       toast.success("Condição aprovada", { description: "A condição pode orientar a leitura de referência na vigência, sem criar venda, contrato ou financeiro." });
       void utils.subdivisionFoundation.listPriceConditions.invalidate();
+      void utils.subdivisionFoundation.listLotInternalPriceReferences.invalidate();
       void utils.subdivisionFoundation.getLotPriceContext.invalidate();
     },
     onError() {
@@ -794,6 +797,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
     onSuccess() {
       toast.success("Condição retirada", { description: "A retirada preserva o histórico e não reverte venda, contrato ou movimento financeiro." });
       void utils.subdivisionFoundation.listPriceConditions.invalidate();
+      void utils.subdivisionFoundation.listLotInternalPriceReferences.invalidate();
       void utils.subdivisionFoundation.getLotPriceContext.invalidate();
     },
     onError() {
@@ -1056,6 +1060,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
   function selectLotForPriceAdjustment(lot: (typeof physicalLots)[number], policyId: string) {
     selectLotForOperationalEdit(lot, { navigate: false });
     setFocusedLotPriceTarget({ blockId: lot.blockId, lotNumber: lot.lotNumber });
+    const internalReference = internalLotPriceByKey.get(`${lot.blockId}:${lot.lotNumber}`);
     setPriceConditionDraft((current) => ({
       ...current,
       basePolicyId: policyId,
@@ -1064,7 +1069,7 @@ export function SubdivisionDevelopmentStudio({ context, isContextReady, isWorksp
       blockId: lot.blockId,
       lotNumber: String(lot.lotNumber),
       adjustmentKind: "override_per_sqm",
-      amount: "",
+      amount: internalReference ? String(internalReference.basePricePerSqmBrl) : "",
       effectiveFrom: "",
       effectiveUntil: "",
     }));

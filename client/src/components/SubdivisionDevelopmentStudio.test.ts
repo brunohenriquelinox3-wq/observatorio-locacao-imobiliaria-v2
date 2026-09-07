@@ -242,6 +242,10 @@ describe("SubdivisionDevelopmentStudio modular", () => {
     expect(studio).toContain("Preparar atualização interna");
     expect(studio).toContain("createLotConditionReference");
     expect(studio).toContain("inlineLotPricePreviewTotal");
+    expect(studio).toContain("amount: String(selectedOperationalLotInternalReference.basePricePerSqmBrl)");
+    expect(studio).toContain("const internalReference = internalLotPriceByKey.get");
+    expect(studio).toContain("amount: internalReference ? String(internalReference.basePricePerSqmBrl) : \"\"");
+    expect(studio).toContain("listLotInternalPriceReferences.invalidate()");
     expect(lotManagementStyles()).toContain(".subdivision-lot-management__inline-price-editor");
     expect(studio).toContain("FINALIDADE FÍSICA RESERVADA");
     expect(studio).toContain("Reserva de proprietários da área de origem");

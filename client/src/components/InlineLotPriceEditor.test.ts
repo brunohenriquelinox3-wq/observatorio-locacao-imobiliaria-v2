@@ -9,6 +9,8 @@ describe("InlineLotPriceEditor", () => {
     expect(source).toContain('const editorId = "inline-lot-price-editor-contextual"');
     expect(source).toContain("TOTAL REFERENCIAL PARA CONFERÊNCIA");
     expect(source).toContain("Derivado exclusivamente da área física confirmada");
+    expect(source).toContain("O valor interno atual é carregado nesta ficha para edição.");
+    expect(source).toContain("Referência interna atual, pronta para ajuste governado");
   });
 
   it("mantém a preparação interna governada e sem linguagem comercial", () => {
