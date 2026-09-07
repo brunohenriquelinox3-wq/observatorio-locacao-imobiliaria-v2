@@ -293,8 +293,9 @@ import {
   linkSubdivisionPriceEvidenceInputSchema,
   listSubdivisionPriceEvidenceSummaryInputSchema,
 } from "../shared/subdivisionPriceEvidenceContracts";
-import { approveSubdivisionSaleCaseInputSchema, formalizeSubdivisionSaleCaseInputSchema, lookupSubdivisionBuyerClientByFiscalReferenceInputSchema, openSubdivisionSaleCaseInputSchema, requestSubdivisionSaleReversalInputSchema, saveSubdivisionSaleCaseTermsInputSchema } from "../shared/subdivisionSaleCaseContracts";
+import { approveSubdivisionSaleCaseInputSchema, configureSubdivisionInternalReceivableAlertsInputSchema, formalizeSubdivisionSaleCaseInputSchema, lookupSubdivisionBuyerClientByFiscalReferenceInputSchema, openSubdivisionSaleCaseInputSchema, requestSubdivisionSaleReversalInputSchema, saveSubdivisionSaleCaseTermsInputSchema } from "../shared/subdivisionSaleCaseContracts";
 import { listSubdivisionInternalReceivableAttention } from "./subdivisionInternalReceivableAttention";
+import { configureSubdivisionInternalReceivableAlerts } from "./subdivisionInternalReceivableAlerts";
 import { approveSubdivisionSaleCase, requestSubdivisionSaleReversal } from "./subdivisionSaleApproval";
 import { listSubdivisionLotCommercialStates } from "./subdivisionLotCommercialState";
 import { authorizedOrganizationContextInputSchema, listAuthorizedOrganizationContexts } from "./organizationContext";
@@ -841,6 +842,10 @@ export const appRouter = router({
     requestSaleReversal: protectedProcedure.input(requestSubdivisionSaleReversalInputSchema).mutation(async ({ ctx, input }) => {
       await requireVerifiedAal2Session(ctx);
       return requestSubdivisionSaleReversal(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    configureInternalReceivableAlerts: protectedProcedure.input(configureSubdivisionInternalReceivableAlertsInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return configureSubdivisionInternalReceivableAlerts(ctx.supabaseSubjectId ?? undefined, input);
     }),
   }),
 

@@ -27,6 +27,7 @@ type Props = {
   formalizingCase: boolean;
   approvingCase: boolean;
   requestingReversal: boolean;
+  configuringAlerts: boolean;
   internalContracts: readonly InternalContract[];
   internalAttention: readonly InternalAttention[];
   onDevelopmentChange: (value: string) => void;
@@ -41,6 +42,7 @@ type Props = {
   onFormalizeCase: () => void;
   onApproveCase: () => void;
   onRequestReversal: () => void;
+  onConfigureAlerts: (leadDays: number) => void;
 };
 
 const formatBrl = (value: number | null) => value === null ? "Não informado" : value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -63,6 +65,7 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
   const [installmentBrl, setInstallmentBrl] = useState("");
   const [firstDueDate, setFirstDueDate] = useState("");
   const [dueDay, setDueDay] = useState("");
+  const [alertLeadDays, setAlertLeadDays] = useState("4");
   const [termsError, setTermsError] = useState("");
   const selectedCase = props.saleCases.find((item) => item.saleCaseId === props.selectedSaleCaseId);
   const selectedContract = props.internalContracts.find((item) => item.saleCaseId === props.selectedSaleCaseId);
@@ -169,6 +172,11 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
               <p><b>Agenda interna pronta:</b> {selectedContract.scheduledItemCount} item(ns), no estado “aguardando emissão bancária”.</p>
               {selectedAttention && <p className="subdivision-sale-case-workspace__attention"><b>{selectedAttention.dueWithinFourDaysCount}</b> item(ns) vencem em até quatro dias e <b>{selectedAttention.pastDueUnreconciledCount}</b> estão anteriores à data atual sem conciliação bancária. Revise a agenda: isso não é confirmação de atraso ou pagamento.</p>}
               {selectedContract.state === "internal_review" ? <button type="button" onClick={props.onApproveCase} disabled={props.approvingCase || selectedCase?.state !== "terms_review"}>{props.approvingCase ? "Confirmando aprovação" : "Confirmar venda e marcar lote vendido"}</button> : <button type="button" onClick={props.onRequestReversal} disabled={props.requestingReversal || selectedCase?.state !== "approved"}>{props.requestingReversal ? "Solicitando revisão" : "Solicitar revisão de reversão"}</button>}
+              <form className="subdivision-sale-case-workspace__alert-config" onSubmit={(event) => { event.preventDefault(); props.onConfigureAlerts(Number(alertLeadDays)); }}>
+                <label htmlFor="sale-case-alert-lead">Avisar com antecedência de dias<input id="sale-case-alert-lead" type="number" min="1" max="14" step="1" value={alertLeadDays} onChange={(event) => setAlertLeadDays(event.target.value)} disabled={props.configuringAlerts} required /></label>
+                <button type="submit" disabled={props.configuringAlerts}>{props.configuringAlerts ? "Preparando lembretes" : "Preparar lembretes internos"}</button>
+                <small>O agendamento diário permanece desativado até a publicação explícita; não há envio a clientes, cobrança ou baixa.</small>
+              </form>
               <p>Não há boleto, código de barras, remessa, pagamento, baixa ou comunicação externa.</p>
             </> : <>
               <p>Depois de salvar termos coerentes, gere a agenda interna para revisão. Isso não aprova contrato e não altera o estoque do lote.</p>

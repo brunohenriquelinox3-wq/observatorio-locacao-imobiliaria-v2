@@ -55,9 +55,15 @@ export const requestSubdivisionSaleReversalInputSchema = subdivisionContextSchem
   saleCaseId: z.string().uuid(),
 }).strict();
 
+export const configureSubdivisionInternalReceivableAlertsInputSchema = subdivisionContextSchema.extend({
+  correlationId: z.string().uuid(),
+  leadDays: z.number().int().min(1).max(14),
+}).strict();
+
 export type LookupSubdivisionBuyerClientByFiscalReferenceInput = z.infer<typeof lookupSubdivisionBuyerClientByFiscalReferenceInputSchema>;
 export type OpenSubdivisionSaleCaseInput = z.infer<typeof openSubdivisionSaleCaseInputSchema>;
 export type SaveSubdivisionSaleCaseTermsInput = z.infer<typeof saveSubdivisionSaleCaseTermsInputSchema>;
 export type FormalizeSubdivisionSaleCaseInput = z.infer<typeof formalizeSubdivisionSaleCaseInputSchema>;
 export type ApproveSubdivisionSaleCaseInput = z.infer<typeof approveSubdivisionSaleCaseInputSchema>;
 export type RequestSubdivisionSaleReversalInput = z.infer<typeof requestSubdivisionSaleReversalInputSchema>;
+export type ConfigureSubdivisionInternalReceivableAlertsInput = z.infer<typeof configureSubdivisionInternalReceivableAlertsInputSchema>;

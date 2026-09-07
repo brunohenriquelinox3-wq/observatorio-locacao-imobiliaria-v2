@@ -6,6 +6,7 @@ import { registerOAuthRoutes } from "./_core/oauth";
 import { registerStorageProxy } from "./_core/storageProxy";
 import { registerPrivateBuyerAttachmentRoute } from "./subdivisionBuyerAttachmentRoute";
 import { registerSubdivisionDevelopmentAttachmentRoute } from "./subdivisionDevelopmentAttachmentRoute";
+import { handleSubdivisionInternalReceivableAlertSchedule } from "./subdivisionInternalReceivableAlertSchedule";
 
 /**
  * Cria somente as rotas de aplicação compartilhadas entre o servidor local e
@@ -22,6 +23,7 @@ export function createApp() {
   registerOAuthRoutes(app);
   registerPrivateBuyerAttachmentRoute(app);
   registerSubdivisionDevelopmentAttachmentRoute(app);
+  app.post("/api/scheduled/subdivision-internal-receivable-attention", handleSubdivisionInternalReceivableAlertSchedule);
   app.use(
     "/api/trpc",
     createExpressMiddleware({
