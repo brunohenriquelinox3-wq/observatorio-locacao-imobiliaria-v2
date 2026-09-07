@@ -40,6 +40,16 @@ describe("Clientes Loteadora profile composition", () => {
     expect(component).toContain("EDIÇÃO CONTEXTUAL");
   });
 
+  it("moves focus to the contextual editor once for each newly selected client and brings it into view accessibly", () => {
+    expect(component).toContain("const editorFormRef = useRef<HTMLFormElement>(null);");
+    expect(component).toContain("const lastFocusedBuyerClientId = useRef(\"\");");
+    expect(component).toContain('window.matchMedia("(prefers-reduced-motion: reduce)").matches');
+    expect(component).toContain('editorForm.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" })');
+    expect(component).toContain("editorForm.focus({ preventScroll: true })");
+    expect(component).toContain('id="buyer-profile-contextual-editor"');
+    expect(component).toContain("tabIndex={-1}");
+  });
+
   it("only updates the visible ficha after receiving the confirmed profile from the server", () => {
     expect(component).toContain("onSuccess(confirmedProfile)");
     expect(component).toContain("getDraftBuyerClientProfile.setData(selectionInput, confirmedProfile)");

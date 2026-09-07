@@ -38,6 +38,17 @@ describe("setores da coluna Loteadora", () => {
     expect(page).toContain("createAttachmentIntentMutation.mutate({ ...context, correlationId: crypto.randomUUID(), buyerClientId: buyerClientIdForAttachment })");
   });
 
+  it("preserva contexto e seleção autorizados durante refetch transitório, sem estender a retenção a outro contexto", () => {
+    const page = source();
+
+    expect(page).toContain("const [lastAuthorizedContext, setLastAuthorizedContext] = useState<{ organizationId: string; purposeCode: string } | null>(null)");
+    expect(page).toContain("setLastAuthorizedContext({");
+    expect(page).toContain("const effectiveOrganizationContext = selectedOrganizationContext");
+    expect(page).toContain("?? (lastAuthorizedContext && (!selectedOrganizationId || lastAuthorizedContext.organizationId === selectedOrganizationId)");
+    expect(page).toContain("setBuyerClientIdForProfile((value) => retainAuthorizedSelection(value, directoryBuyerClients");
+    expect(page).toContain("setBuyerClientIdForAttachment((value) => retainAuthorizedSelection(value, directoryBuyerClients");
+  });
+
   it("apresenta Cadastro e Estoque como áreas complementares sem desmontar o estúdio existente", () => {
     const page = source();
 

@@ -1,6 +1,6 @@
 import type { SubdivisionContext } from "@shared/subdivisionContracts";
 import { BadgeCheck, CircleAlert, ClipboardCheck, ContactRound, Landmark, ShieldCheck, UserRoundCheck } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import {
@@ -60,6 +60,8 @@ function emptyProfile(): BuyerProfileFormState {
 export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorkspaceReady, buyerClients, selectedBuyerClientId, onSelectBuyerClient, presentation = "full" }: SubdivisionBuyerClientProfileProps) {
   const [uncontrolledBuyerClientId, setUncontrolledBuyerClientId] = useState("");
   const buyerClientId = selectedBuyerClientId ?? uncontrolledBuyerClientId;
+  const editorFormRef = useRef<HTMLFormElement>(null);
+  const lastFocusedBuyerClientId = useRef("");
   const setBuyerClientId = (buyerClientId: string) => {
     if (selectedBuyerClientId !== undefined) onSelectBuyerClient?.(buyerClientId);
     else setUncontrolledBuyerClientId(buyerClientId);
@@ -82,6 +84,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
 
   useEffect(() => {
     if (!buyerClientId) {
+      lastFocusedBuyerClientId.current = "";
       setProfile(emptyProfile());
       return;
     }
@@ -101,6 +104,18 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
       setProfile(emptyProfile());
     }
   }, [buyerClientId, profileQuery.data, profileQuery.isLoading]);
+
+  useEffect(() => {
+    if (presentation !== "embedded" || !buyerClientId || profileQuery.isLoading || lastFocusedBuyerClientId.current === buyerClientId) return;
+    lastFocusedBuyerClientId.current = buyerClientId;
+    requestAnimationFrame(() => {
+      const editorForm = editorFormRef.current;
+      if (!editorForm) return;
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      editorForm.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+      editorForm.focus({ preventScroll: true });
+    });
+  }, [buyerClientId, presentation, profileQuery.isLoading]);
 
   const presenceSnapshot = {
     partyKind: profile.partyKind,
@@ -200,7 +215,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
       {isWorkspaceReady && buyerClientId && profileQuery.isError && <div className="subdivision-foundation-empty is-error"><CircleAlert size={18} /><p>A leitura do perfil não foi liberada. Revise identidade, membership, grant, vigência e contexto sem inferir outros clientes.</p></div>}
 
       {isWorkspaceReady && buyerClientId && !profileQuery.isLoading && !profileQuery.isError && <div className="subdivision-buyer-profile__workspace">
-        <form className="subdivision-buyer-profile__form" onSubmit={saveProfile}>
+        <form ref={editorFormRef} id="buyer-profile-contextual-editor" className="subdivision-buyer-profile__form" onSubmit={saveProfile} tabIndex={-1}>
           <div className="subdivision-buyer-profile__selected-notice"><ShieldCheck size={16} aria-hidden="true" /><span>Cadastro selecionado para edição. As alterações desta ficha são confirmadas pelo servidor antes de atualizar o resumo.</span></div>
           <div className="subdivision-buyer-profile__form-heading"><ContactRound size={19} aria-hidden="true" /><div><h3>Dados de contato e identificação</h3><p>Dados declarados não equivalem a validação fiscal, crédito, aprovação ou aptidão para contrato.</p></div></div>
           <div className="subdivision-buyer-profile__grid">
