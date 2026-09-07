@@ -26,6 +26,8 @@ describe("SubdivisionBuyerClientDirectory composition", () => {
 
   it("uses the maximum authorized first page so active records are not hidden by an artificial local limit", () => {
     expect(component).toContain("const pageSize = 25;");
+    expect(component).toContain("const initialDirectoryInput = useMemo(() => ({ ...context, searchTerm: null, pageSize, pageOffset: 0 }), [context]);");
+    expect(component).toContain("listDraftBuyerClientDirectory.invalidate(initialDirectoryInput)");
     expect(component).toContain('id="buyer-directory-more"');
     expect(component).toContain('aria-label="Carregar a próxima página de cadastros autorizados"');
     expect(component).toContain("[context.organizationId, context.purposeCode, onSelectBuyerClient]");

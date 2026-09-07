@@ -61,7 +61,10 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
   const [uncontrolledBuyerClientId, setUncontrolledBuyerClientId] = useState("");
   const buyerClientId = selectedBuyerClientId ?? uncontrolledBuyerClientId;
   const editorFormRef = useRef<HTMLFormElement>(null);
+  const selectorRef = useRef<HTMLSelectElement>(null);
   const lastFocusedBuyerClientId = useRef("");
+  const restoredProfileAnchor = useRef(false);
+  const focusedStandaloneSelector = useRef(false);
   const setBuyerClientId = (buyerClientId: string) => {
     if (selectedBuyerClientId !== undefined) onSelectBuyerClient?.(buyerClientId);
     else setUncontrolledBuyerClientId(buyerClientId);
@@ -74,6 +77,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
   const [preferenceState, setPreferenceState] = useState<keyof typeof buyerClientContactPreferenceStates>("granted");
 
   const selectionInput = useMemo(() => ({ ...context, buyerClientId }), [buyerClientId, context]);
+  const initialDirectoryInput = useMemo(() => ({ ...context, searchTerm: null, pageSize: 25, pageOffset: 0 }), [context]);
   const profileQuery = trpc.subdivisionFoundation.getDraftBuyerClientProfile.useQuery(selectionInput, { enabled: isWorkspaceReady && Boolean(buyerClientId), retry: false });
   const requirementsQuery = trpc.subdivisionFoundation.listDraftBuyerClientRequirements.useQuery(selectionInput, { enabled: isWorkspaceReady && Boolean(buyerClientId), retry: false });
   const preferencesQuery = trpc.subdivisionFoundation.listDraftBuyerClientContactPreferences.useQuery(selectionInput, { enabled: isWorkspaceReady && Boolean(buyerClientId), retry: false });
@@ -117,6 +121,22 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
     });
   }, [buyerClientId, presentation, profileQuery.isLoading]);
 
+  useEffect(() => {
+    if (presentation !== "full" || !isWorkspaceReady || restoredProfileAnchor.current || typeof window === "undefined" || window.location.hash !== "#buyer-profile-client") return;
+    restoredProfileAnchor.current = true;
+    const animationFrame = requestAnimationFrame(() => {
+      document.getElementById("buyer-profile-client")?.scrollIntoView({ behavior: "auto", block: "center" });
+    });
+    return () => cancelAnimationFrame(animationFrame);
+  }, [buyerClients?.length, isWorkspaceReady, presentation]);
+
+  useEffect(() => {
+    if (presentation !== "full" || !isWorkspaceReady || buyerClientId || focusedStandaloneSelector.current || !buyerClients?.length) return;
+    focusedStandaloneSelector.current = true;
+    const animationFrame = requestAnimationFrame(() => selectorRef.current?.focus({ preventScroll: true }));
+    return () => cancelAnimationFrame(animationFrame);
+  }, [buyerClientId, buyerClients?.length, isWorkspaceReady, presentation]);
+
   const presenceSnapshot = {
     partyKind: profile.partyKind,
     civilStatus: profile.civilStatus,
@@ -133,7 +153,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
     onSuccess(confirmedProfile) {
       utils.subdivisionFoundation.getDraftBuyerClientProfile.setData(selectionInput, confirmedProfile);
       toast.success("Perfil cadastral atualizado", { description: "O cadastro permanece interno, minimizado e separado de venda, crédito, contrato, registro e financeiro." });
-      void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
+      void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate(initialDirectoryInput);
     },
     onError() { toast.error("Perfil não atualizado", { description: "O servidor exige sessão, contexto, cliente comprador elegível e dados compatíveis com a natureza cadastral." }); },
   });
@@ -202,7 +222,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
 
       {presentation === "full" && <div className="subdivision-buyer-profile__selector">
         <label htmlFor="buyer-profile-client">Cliente Loteadora
-          <select id="buyer-profile-client" value={buyerClientId} onChange={(event) => setBuyerClientId(event.target.value)} disabled={!isWorkspaceReady || buyerClients === undefined}>
+          <select ref={selectorRef} id="buyer-profile-client" value={buyerClientId} onChange={(event) => setBuyerClientId(event.target.value)} disabled={!isWorkspaceReady || buyerClients === undefined}>
             <option value="">{!isWorkspaceReady ? "Defina um contexto autorizado" : buyerClients?.length ? "Selecione um cliente para editar o cadastro" : "Nenhum cliente neste contexto"}</option>
             {buyerClients?.map((client) => <option key={client.buyerClientId} value={client.buyerClientId}>{client.displayName}</option>)}
           </select>

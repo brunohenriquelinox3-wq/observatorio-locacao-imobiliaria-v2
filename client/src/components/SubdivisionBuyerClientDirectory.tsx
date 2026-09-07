@@ -89,6 +89,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   const profileQuery = trpc.subdivisionFoundation.getDraftBuyerClientProfile.useQuery(profileInput, { enabled: isWorkspaceReady && Boolean(effectiveSelectedBuyerClientId), retry: false });
   const archivedClientsQuery = trpc.subdivisionFoundation.listArchivedClients.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const utils = trpc.useUtils();
+  const initialDirectoryInput = useMemo(() => ({ ...context, searchTerm: null, pageSize, pageOffset: 0 }), [context]);
   useEffect(() => {
     if (!archivedClientsQuery.data?.length || window.location.hash !== "#buyer-directory-archived") return;
     window.requestAnimationFrame(() => {
@@ -104,7 +105,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
       setLocalActiveEntry(null);
       setIsEditorOpen(true);
       onSelectBuyerClient(result.buyerClientId);
-      void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
+      void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate(initialDirectoryInput);
       void utils.subdivisionFoundation.listDraftBuyerClients.invalidate(context);
       void utils.domainFoundation.listDraftPartyRoles.invalidate(context);
       void utils.subdivisionFoundation.listDraftBuyerClientProfileSummaries.invalidate(context);
@@ -118,7 +119,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
       setLocalActiveEntry(null);
       setIsEditorOpen(false);
       onSelectBuyerClient("");
-      void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
+      void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate(initialDirectoryInput);
       void utils.subdivisionFoundation.listDraftBuyerClients.invalidate(context);
       void utils.subdivisionFoundation.listDraftBuyerClientProfileSummaries.invalidate(context);
       void utils.subdivisionFoundation.listBuyerAttachmentIntents.invalidate(context);
@@ -131,7 +132,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
       setLocalActiveEntry(null);
       setIsEditorOpen(true);
       onSelectBuyerClient(result.buyerClientId);
-      void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate();
+      void utils.subdivisionFoundation.listDraftBuyerClientDirectory.invalidate(initialDirectoryInput);
       void utils.subdivisionFoundation.listDraftBuyerClients.invalidate(context);
       void utils.subdivisionFoundation.listDraftBuyerClientProfileSummaries.invalidate(context);
       void utils.subdivisionFoundation.listBuyerAttachmentIntents.invalidate(context);

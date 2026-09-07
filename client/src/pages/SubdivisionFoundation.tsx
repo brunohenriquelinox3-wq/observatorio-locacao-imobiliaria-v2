@@ -147,7 +147,9 @@ export default function SubdivisionFoundation() {
     ?? (lastAuthorizedContext && (!selectedOrganizationId || lastAuthorizedContext.organizationId === selectedOrganizationId)
       ? lastAuthorizedContext
       : null);
-  const context = useMemo(() => ({ organizationId: effectiveOrganizationContext?.organizationId ?? "", module: "loteadora" as const, purposeCode: effectiveOrganizationContext?.purposeCode ?? "" }), [effectiveOrganizationContext]);
+  const contextOrganizationId = effectiveOrganizationContext?.organizationId ?? "";
+  const contextPurposeCode = effectiveOrganizationContext?.purposeCode ?? "";
+  const context = useMemo(() => ({ organizationId: contextOrganizationId, module: "loteadora" as const, purposeCode: contextPurposeCode }), [contextOrganizationId, contextPurposeCode]);
   const isContextReady = isDomainContextReady(context);
   const isWorkspaceReady = isAuthenticated && isContextReady;
   const developmentsQuery = trpc.subdivisionFoundation.listDraftDevelopments.useQuery(context, { enabled: isWorkspaceReady, retry: false });
@@ -184,11 +186,12 @@ export default function SubdivisionFoundation() {
     setBuyerClientRoleId((value) => retainAuthorizedSelection(value, partyRolesQuery.data === undefined ? undefined : eligibleBuyerPartyRoles, (assignment) => assignment.partyRoleAssignmentId));
   }, [eligibleBuyerPartyRoles, eligibleInternalPartyRoles, partyRolesQuery.data]);
   useEffect(() => {
+    if (buyerDirectoryQuery.isFetching) return;
     setBuyerClientIdForAttachment((value) => retainAuthorizedSelection(value, directoryBuyerClients, (client) => client.buyerClientId));
     setBuyerClientIdForProfile((value) => retainAuthorizedSelection(value, directoryBuyerClients, (client) => client.buyerClientId));
     setSaleBuyerClientId((value) => retainAuthorizedSelection(value, buyerClientsQuery.data, (client) => client.buyerClientId));
     setCoBuyerClientId((value) => retainAuthorizedSelection(value, buyerClientsQuery.data, (client) => client.buyerClientId));
-  }, [buyerClientsQuery.data, directoryBuyerClients]);
+  }, [buyerClientsQuery.data, buyerDirectoryQuery.isFetching, directoryBuyerClients]);
   useEffect(() => {
     setAttachmentIntentIdForUpload((value) => retainAuthorizedSelection(value, attachmentIntentsQuery.data === undefined ? undefined : uploadableAttachmentIntents, (intent) => intent.attachmentIntentId));
   }, [attachmentIntentsQuery.data, uploadableAttachmentIntents]);
