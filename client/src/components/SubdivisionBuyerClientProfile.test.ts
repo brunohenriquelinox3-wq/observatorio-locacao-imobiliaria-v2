@@ -18,13 +18,14 @@ describe("Clientes Loteadora profile composition", () => {
     expect(component).toContain("Não inclua renda, patrimônio, score, dados bancários, lote, preço, forma de pagamento, contrato ou informações sensíveis nesta etapa.");
   });
 
-  it("is composed after the preserved opaque attachment flow and before the preserved readiness summary", () => {
+  it("keeps the compatible full profile in its own route instead of mounting it with the embedded editor", () => {
+    const standaloneProfileSection = foundationPage.indexOf('isBuyerProfilePage && <section id="buyer-profile-standalone"');
     const attachmentSection = foundationPage.indexOf("id=\"subdivision-attachment-title\"");
-    const profileSection = foundationPage.indexOf("<SubdivisionBuyerClientProfile");
     const readinessSection = foundationPage.indexOf("<SubdivisionBuyerReadiness");
-    expect(attachmentSection).toBeGreaterThan(-1);
-    expect(profileSection).toBeGreaterThan(attachmentSection);
-    expect(readinessSection).toBeGreaterThan(profileSection);
+    expect(standaloneProfileSection).toBeGreaterThan(-1);
+    expect(standaloneProfileSection).toBeLessThan(attachmentSection);
+    expect(readinessSection).toBeGreaterThan(attachmentSection);
+    expect(foundationPage).toContain("!isBuyerProfilePage && <SubdivisionBuyerClientDirectory");
   });
 
   it("preserves the selected client received from the central while compatible lists refresh", () => {

@@ -20,6 +20,8 @@ describe("SubdivisionBuyerClientDirectory composition", () => {
   it("opens the complete editor as soon as a client card is selected", () => {
     expect(component).toContain("setLocalActiveEntry(entry); setIsEditorOpen(true); onSelectBuyerClient(entry.buyerClientId);");
     expect(component).toContain("Fechar edição");
+    expect(component).toContain("onOpenProfilePage: () => void;");
+    expect(component).toContain("Abrir ficha em página");
   });
 
   it("uses the maximum authorized first page so active records are not hidden by an artificial local limit", () => {

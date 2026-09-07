@@ -42,6 +42,7 @@ type SubdivisionBuyerClientDirectoryProps = {
   isWorkspaceReady: boolean;
   selectedBuyerClientId: string;
   onSelectBuyerClient: (buyerClientId: string) => void;
+  onOpenProfilePage: () => void;
 };
 
 // Mantém a primeira leitura no limite permitido pelo servidor, reduzindo a
@@ -52,7 +53,7 @@ function formatTimestamp(value: string) {
   return new Date(value).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
 }
 
-export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWorkspaceReady, selectedBuyerClientId, onSelectBuyerClient }: SubdivisionBuyerClientDirectoryProps) {
+export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWorkspaceReady, selectedBuyerClientId, onSelectBuyerClient, onOpenProfilePage }: SubdivisionBuyerClientDirectoryProps) {
   const [searchDraft, setSearchDraft] = useState("");
   const [searchTerm, setSearchTerm] = useState<string | null>(null);
   const [pageOffset, setPageOffset] = useState(0);
@@ -233,6 +234,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
             </dl>
             <div className="subdivision-buyer-directory__preview-actions">
               <button type="button" onClick={() => setIsEditorOpen((isOpen) => !isOpen)}>{isEditorOpen ? "Fechar edição" : "Editar dados cadastrais"}</button>
+              <button type="button" className="is-secondary" onClick={onOpenProfilePage}>Abrir ficha em página</button>
               <button type="button" className="is-secondary" onClick={openDocuments}>Documentos privados</button>
               <AlertDialog>
                 <AlertDialogTrigger asChild>

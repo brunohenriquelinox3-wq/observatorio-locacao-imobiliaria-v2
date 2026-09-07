@@ -33,6 +33,10 @@ describe("setores da coluna Loteadora", () => {
     expect(page).toContain('listDraftBuyerClients.useQuery(context, { enabled: isWorkspaceReady && activeSector === "sales", retry: false })');
     expect(page).toContain("isWorkspaceReady && directoryBuyerClients && directoryBuyerClients.length > 0");
     expect(page).toContain("onSelectBuyerClient={selectBuyerClient}");
+    expect(page).toContain('"/loteadora/clientes/ficha": "clients"');
+    expect(page).toContain("const isBuyerProfilePage = location === \"/loteadora/clientes/ficha\"");
+    expect(page).toContain("!isBuyerProfilePage && <SubdivisionBuyerClientDirectory");
+    expect(page).toContain("isBuyerProfilePage && <section id=\"buyer-profile-standalone\"");
     expect(page).toContain("listBuyerAttachmentIntents.useQuery(context, { enabled: isWorkspaceReady, retry: false })");
     expect(page).toContain("createBuyerClientMutation.mutate({ ...context, correlationId: crypto.randomUUID(), partyRoleAssignmentId: buyerClientRoleId })");
     expect(page).toContain("createAttachmentIntentMutation.mutate({ ...context, correlationId: crypto.randomUUID(), buyerClientId: buyerClientIdForAttachment })");
