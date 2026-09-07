@@ -18,6 +18,8 @@ O roteador mantém as mesmas rotas e serviços. Foram flexibilizadas apenas duas
 
 A sessão autenticada confirmou que os cartões exibem novamente as referências internas e os totais referenciais após o carregamento da jornada, sem novo desafio MFA. O painel de estoque também ficou disponível para leitura. Nenhuma edição, preparação, salvamento, aprovação, publicação ou mudança de preço foi executada.
 
+Na conferência final no navegador, a seleção autorizada apresentou leitura contínua para a totalidade da matriz física e para o painel de perfil interno, sem solicitar MFA adicional durante a mesma sessão. Os números individuais, identificadores físicos e demais dados privados foram deliberadamente omitidos deste registro.
+
 A política foi coberta por teste que exige consultas internas sem guarda de MFA recente e preserva o mesmo guarda nas mutações de perfil, condição de preço e ficha física. A validação integral aprovou **229 arquivos de teste e 621 testes**, além de tipagem, build de publicação e integridade do diff. O build apresentou apenas o aviso conhecido de pacotes grandes, sem falha.
 
 O ZIP de código e o HTML autônomo A275 foram gerados e aprovados nas verificações de presença, exclusões e saneamento. O ZIP exclui ambiente, dependências, logs, documentos internos e checklist. O HTML não contém credenciais, URLs de banco, hosts, endpoints, papel privilegiado ou marcadores de infraestrutura. Não houve publicação.
