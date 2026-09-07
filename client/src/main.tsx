@@ -1,35 +1,23 @@
 import { trpc } from "@/lib/trpc";
-import { COOKIE_NAME, UNAUTHED_ERR_MSG } from '@shared/const';
+import { COOKIE_NAME } from '@shared/const';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
-import { startLogin } from "./const";
 import { getSupabaseBrowserClient } from "./lib/supabaseBrowser";
 import { createSupabaseSessionBridge } from "./lib/supabaseSessionBridge";
 import "./index.css";
 
 const queryClient = new QueryClient();
-const supabaseSessionBridge = createSupabaseSessionBridge(getSupabaseBrowserClient(), () => {
-  void queryClient.invalidateQueries();
-});
-
-const redirectToLoginIfUnauthorized = (error: unknown) => {
-  if (!(error instanceof TRPCClientError)) return;
-  if (typeof window === "undefined") return;
-
-  const isUnauthorized = error.message === UNAUTHED_ERR_MSG;
-
-  if (!isUnauthorized) return;
-
-  startLogin();
-};
+// Cada chamada tRPC já lê o token de sessão atual pelo bridge. Invalidar toda a
+// cache a cada evento do provedor reiniciava consultas protegidas (inclusive
+// auth.me) durante ações normais de cadastro e podia deixar a tela em loading.
+const supabaseSessionBridge = createSupabaseSessionBridge(getSupabaseBrowserClient());
 
 queryClient.getQueryCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.query.state.error;
-    redirectToLoginIfUnauthorized(error);
     console.error("[API Query Error]", error);
   }
 });
@@ -37,7 +25,6 @@ queryClient.getQueryCache().subscribe(event => {
 queryClient.getMutationCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.mutation.state.error;
-    redirectToLoginIfUnauthorized(error);
     console.error("[API Mutation Error]", error);
   }
 });

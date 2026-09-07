@@ -9,8 +9,8 @@ describe("buildSubdivisionBuyerReadiness", () => {
     );
 
     expect(items.map((item) => [item.ordinalLabel, item.attachmentLabel])).toEqual([
-      ["Cliente em rascunho 01", "Sem intenção privada registrada"],
-      ["Cliente em rascunho 02", "Cobertura privada registrada"],
+      ["Cliente Loteadora 01", "Sem intenção privada registrada"],
+      ["Cliente Loteadora 02", "Cobertura privada registrada"],
     ]);
   });
 

@@ -33,7 +33,7 @@ export default function SubdivisionBuyerReadiness({
           <p className="subdivision-foundation-eyebrow">08 · PRONTIDÃO PRIVADA</p>
           <h2 id="buyer-readiness-title">A preparação não identifica o cliente.</h2>
         </div>
-        <p>Esta leitura organiza somente o vínculo em rascunho, a cobertura privada opaca e a necessidade de conferência humana. Ela não aprova cadastro nem produz efeito comercial.</p>
+          <p>Esta leitura organiza somente o cadastro, a cobertura privada opaca e a necessidade de conferência humana. Ela não aprova cadastro nem produz efeito comercial.</p>
       </div>
 
       {!contextReady ? (
@@ -43,13 +43,13 @@ export default function SubdivisionBuyerReadiness({
       ) : isError ? (
         <div className="subdivision-foundation-empty is-error"><CircleAlert size={18} aria-hidden="true" /><p>A leitura de prontidão não foi liberada. Revise contexto e alçada sem inferir dados externos.</p></div>
       ) : items.length === 0 ? (
-        <div className="subdivision-foundation-empty"><UserRoundCheck size={18} aria-hidden="true" /><p>Nenhum cliente comprador em rascunho foi devolvido para este contexto.</p></div>
+        <div className="subdivision-foundation-empty"><UserRoundCheck size={18} aria-hidden="true" /><p>Nenhum Cliente Loteadora foi devolvido para este contexto.</p></div>
       ) : (
-        <div className="subdivision-foundation-list__rows" aria-label="Prontidão privada de clientes em rascunho">
+        <div className="subdivision-foundation-list__rows" aria-label="Prontidão privada de Clientes Loteadora">
           {items.map((item) => (
             <article key={item.buyerClientId}>
               <span>{item.ordinalLabel}</span>
-              <h3>Cadastro-base em rascunho</h3>
+              <h3>Cadastro-base em organização</h3>
               <p><FileStack size={15} aria-hidden="true" /><b>{item.attachmentLabel}</b> · estado opaco, sem arquivo ou metadado.</p>
               <p><ShieldCheck size={15} aria-hidden="true" /><b>{item.reviewLabel}</b> · o quadro não decide, classifica risco ou inicia venda.</p>
             </article>

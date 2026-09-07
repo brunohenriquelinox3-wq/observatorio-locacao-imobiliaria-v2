@@ -15,18 +15,15 @@ import {
   buyerClientRequirementStates,
   recommendedBuyerClientRequirements,
 } from "@/lib/subdivisionBuyerClientProfile";
-import { buyerClientSelectionLabel } from "@/lib/subdivisionDraftSelection";
 import "./subdivision-buyer-client-profile.css";
 
-type BuyerClientOption = { buyerClientId: string; partyRoleAssignmentId: string; createdAt: string };
-type PartyRoleOption = { partyRoleAssignmentId: string; displayName: string; role: string };
+type BuyerClientOption = { buyerClientId: string; displayName: string };
 
 type SubdivisionBuyerClientProfileProps = {
   context: SubdivisionContext;
   isContextReady: boolean;
   isWorkspaceReady: boolean;
   buyerClients: BuyerClientOption[] | undefined;
-  partyRoles: PartyRoleOption[] | undefined;
   selectedBuyerClientId?: string;
   onSelectBuyerClient?: (buyerClientId: string) => void;
 };
@@ -59,7 +56,7 @@ function emptyProfile(): BuyerProfileFormState {
   };
 }
 
-export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorkspaceReady, buyerClients, partyRoles, selectedBuyerClientId, onSelectBuyerClient }: SubdivisionBuyerClientProfileProps) {
+export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorkspaceReady, buyerClients, selectedBuyerClientId, onSelectBuyerClient }: SubdivisionBuyerClientProfileProps) {
   const [uncontrolledBuyerClientId, setUncontrolledBuyerClientId] = useState("");
   const buyerClientId = selectedBuyerClientId ?? uncontrolledBuyerClientId;
   const setBuyerClientId = (buyerClientId: string) => {
@@ -198,9 +195,9 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
 
       <div className="subdivision-buyer-profile__selector">
         <label htmlFor="buyer-profile-client">Cliente Loteadora
-          <select id="buyer-profile-client" value={buyerClientId} onChange={(event) => setBuyerClientId(event.target.value)} disabled={!isWorkspaceReady || buyerClients === undefined || summariesQuery.isLoading}>
+          <select id="buyer-profile-client" value={buyerClientId} onChange={(event) => setBuyerClientId(event.target.value)} disabled={!isWorkspaceReady || buyerClients === undefined}>
             <option value="">{!isWorkspaceReady ? "Defina um contexto autorizado" : buyerClients?.length ? "Selecione um cliente para editar o cadastro" : "Nenhum cliente neste contexto"}</option>
-            {buyerClients?.map((client) => <option key={client.buyerClientId} value={client.buyerClientId}>{buyerClientSelectionLabel(client, partyRoles ?? [])}</option>)}
+            {buyerClients?.map((client) => <option key={client.buyerClientId} value={client.buyerClientId}>{client.displayName}</option>)}
           </select>
         </label>
         <p><Landmark size={17} aria-hidden="true" /> Esta área não relaciona cliente a lote, preço, crédito, proposta, contrato, registro ou pagamento.</p>

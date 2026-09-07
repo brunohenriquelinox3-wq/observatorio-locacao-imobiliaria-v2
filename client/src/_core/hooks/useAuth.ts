@@ -2,7 +2,7 @@ import { startLogin } from "@/const";
 import { clearLegacyAuthIdentityMirror } from "@/lib/authIdentityStorage";
 import { trpc } from "@/lib/trpc";
 import { TRPCClientError } from "@trpc/client";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type UseAuthOptions = {
   redirectOnUnauthenticated?: boolean;
@@ -16,6 +16,7 @@ export function useAuth(options?: UseAuthOptions) {
   // desync it from an in-flight login's `state`.
   const { redirectOnUnauthenticated = false, redirectPath } = options ?? {};
   const utils = trpc.useUtils();
+  const [authLoadingTimedOut, setAuthLoadingTimedOut] = useState(false);
 
   const meQuery = trpc.auth.me.useQuery(undefined, {
     retry: false,
@@ -27,6 +28,16 @@ export function useAuth(options?: UseAuthOptions) {
       utils.auth.me.setData(undefined, null);
     },
   });
+
+  useEffect(() => {
+    if (!meQuery.isLoading) {
+      setAuthLoadingTimedOut(false);
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => setAuthLoadingTimedOut(true), 12_000);
+    return () => window.clearTimeout(timeoutId);
+  }, [meQuery.isLoading]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -59,7 +70,7 @@ export function useAuth(options?: UseAuthOptions) {
   const state = useMemo(() => {
     return {
       user: meQuery.data ?? null,
-      loading: meQuery.isLoading || logoutMutation.isPending,
+      loading: (meQuery.isLoading && !authLoadingTimedOut) || logoutMutation.isPending,
       error: meQuery.error ?? logoutMutation.error ?? null,
       isAuthenticated: Boolean(meQuery.data),
     };
@@ -67,6 +78,7 @@ export function useAuth(options?: UseAuthOptions) {
     meQuery.data,
     meQuery.error,
     meQuery.isLoading,
+    authLoadingTimedOut,
     logoutMutation.error,
     logoutMutation.isPending,
   ]);

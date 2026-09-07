@@ -32,7 +32,7 @@ export function buildSubdivisionBuyerReadiness(
 
     return {
       buyerClientId: client.buyerClientId,
-      ordinalLabel: `Cliente em rascunho ${String(index + 1).padStart(2, "0")}`,
+      ordinalLabel: `Cliente Loteadora ${String(index + 1).padStart(2, "0")}`,
       attachmentLabel,
       reviewLabel: "Revisão humana necessária",
     };
