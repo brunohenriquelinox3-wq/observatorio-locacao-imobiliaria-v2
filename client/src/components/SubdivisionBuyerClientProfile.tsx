@@ -16,6 +16,7 @@ import {
   recommendedBuyerClientRequirements,
 } from "@/lib/subdivisionBuyerClientProfile";
 import { buyerClientSelectionLabel } from "@/lib/subdivisionDraftSelection";
+import "./subdivision-buyer-client-profile.css";
 
 type BuyerClientOption = { buyerClientId: string; partyRoleAssignmentId: string; createdAt: string };
 type PartyRoleOption = { partyRoleAssignmentId: string; displayName: string; role: string };
@@ -79,8 +80,8 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
   const preferencesQuery = trpc.subdivisionFoundation.listDraftBuyerClientContactPreferences.useQuery(selectionInput, { enabled: isWorkspaceReady && Boolean(buyerClientId), retry: false });
 
   useEffect(() => {
-    if (!buyerClients?.some((client) => client.buyerClientId === buyerClientId)) setBuyerClientId("");
-  }, [buyerClientId, buyerClients]);
+    if (!isContextReady && buyerClientId) setBuyerClientId("");
+  }, [buyerClientId, isContextReady]);
 
   useEffect(() => {
     if (!buyerClientId) {
@@ -164,6 +165,26 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
     });
   }
 
+  function discardLocalProfileChanges() {
+    if (profileQuery.data) {
+      setProfile({
+        partyKind: profileQuery.data.partyKind,
+        registrationState: profileQuery.data.registrationState,
+        documentReference: profileQuery.data.documentReference ?? "",
+        identityDocumentReference: profileQuery.data.identityDocumentReference ?? "",
+        primaryEmail: profileQuery.data.primaryEmail ?? "",
+        primaryPhone: profileQuery.data.primaryPhone ?? "",
+        messagingPhone: profileQuery.data.messagingPhone ?? "",
+        civilStatus: profileQuery.data.civilStatus,
+        representationState: profileQuery.data.representationState,
+      });
+      toast.message("Alterações locais descartadas", { description: "A ficha voltou ao último estado confirmado pelo servidor." });
+      return;
+    }
+    setProfile(emptyProfile());
+    toast.message("Campos limpos", { description: "Nenhuma informação foi enviada ao servidor." });
+  }
+
   return (
     <section className="subdivision-buyer-profile" aria-labelledby="buyer-profile-title">
       <header className="subdivision-buyer-profile__header">
@@ -191,6 +212,7 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
 
       {isWorkspaceReady && buyerClientId && !summariesQuery.isLoading && !summariesQuery.isError && <div className="subdivision-buyer-profile__workspace">
         <form className="subdivision-buyer-profile__form" onSubmit={saveProfile}>
+          <div className="subdivision-buyer-profile__selected-notice"><ShieldCheck size={16} aria-hidden="true" /><span>Cadastro selecionado para edição. As alterações desta ficha são confirmadas pelo servidor antes de atualizar o resumo.</span></div>
           <div className="subdivision-buyer-profile__form-heading"><ContactRound size={19} aria-hidden="true" /><div><h3>Dados de contato e identificação</h3><p>Dados declarados não equivalem a validação fiscal, crédito, aprovação ou aptidão para contrato.</p></div></div>
           <div className="subdivision-buyer-profile__grid">
             <label htmlFor="buyer-profile-party-kind">Natureza cadastral<select id="buyer-profile-party-kind" value={profile.partyKind} onChange={(event) => setProfile((current) => ({ ...current, partyKind: event.target.value as keyof typeof partyKinds }))} disabled={profileQuery.isLoading}>{Object.entries(partyKinds).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
@@ -204,7 +226,10 @@ export function SubdivisionBuyerClientProfile({ context, isContextReady, isWorks
             <label htmlFor="buyer-profile-representation">Representação declarada<select id="buyer-profile-representation" value={profile.representationState} onChange={(event) => setProfile((current) => ({ ...current, representationState: event.target.value as keyof typeof buyerClientRepresentationStates }))} disabled={profileQuery.isLoading}>{Object.entries(buyerClientRepresentationStates).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
           </div>
           <p className="subdivision-buyer-profile__notice"><ShieldCheck size={16} aria-hidden="true" /> Não inclua renda, patrimônio, score, dados bancários, lote, preço, forma de pagamento, contrato ou informações sensíveis nesta etapa.</p>
-          <button type="submit" disabled={profileQuery.isLoading || saveProfileMutation.isPending}>{saveProfileMutation.isPending ? "Salvando cadastro" : "Salvar dados do cliente"}</button>
+          <div className="subdivision-buyer-profile__form-actions">
+            <button type="submit" disabled={profileQuery.isLoading || saveProfileMutation.isPending}>{saveProfileMutation.isPending ? "Salvando cadastro" : "Salvar dados do cliente"}</button>
+            <button type="button" className="is-secondary" disabled={profileQuery.isLoading || saveProfileMutation.isPending} onClick={discardLocalProfileChanges}>Descartar alterações locais</button>
+          </div>
         </form>
 
         <aside className="subdivision-buyer-profile__summary" aria-label="Resumo privado de preenchimento">

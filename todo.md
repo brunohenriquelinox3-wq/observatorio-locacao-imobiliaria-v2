@@ -2543,3 +2543,5 @@
 - [ ] Executar a exclusão e a restauração como teste sintético de ponta a ponta; em seguida, limpar somente os registros sintéticos já cadastrados e recadastrar a lista sintética atualizada manualmente, sem usar campos de venda, crédito, contrato ou financeiro.
 - [ ] Corrigir a hierarquia visual dos controles da ficha, com botões separados, rótulos legíveis, foco acessível e confirmação embutida; eliminar qualquer dependência de diálogo nativo que possa prender a automação de teste.
 - [ ] Verificar que seleção, ficha, edição, documentos, arquivamento e restauração permanecem operáveis após recarga, sem confundir indisponibilidade da sessão remota com erro do CRM.
+- [ ] Corrigir a propagação do cliente selecionado entre a central e o editor, para que “Editar dados cadastrais” abra a ficha completa já vinculada ao mesmo Cliente Loteadora.
+- [ ] Garantir paridade entre ficha-resumo e editor: todo campo apresentado como editável deve ter controle, validação, estado vazio, salvar/cancelar e atualização confirmada pelo servidor.

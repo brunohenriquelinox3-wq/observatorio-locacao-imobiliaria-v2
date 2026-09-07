@@ -27,6 +27,13 @@ describe("Clientes Loteadora profile composition", () => {
     expect(readinessSection).toBeGreaterThan(profileSection);
   });
 
+  it("preserves the selected client received from the central while compatible lists refresh", () => {
+    expect(component).toContain("const buyerClientId = selectedBuyerClientId ?? uncontrolledBuyerClientId;");
+    expect(component).toContain("if (!isContextReady && buyerClientId) setBuyerClientId(\"\");");
+    expect(component).not.toContain("buyerClients?.some((client) => client.buyerClientId === buyerClientId)");
+    expect(component).toContain("Cadastro selecionado para edição.");
+  });
+
   it("does not expose a direct commercial transition or individual export control", () => {
     expect(component).not.toMatch(/vincular.*lote|criar.*proposta|aprovar.*crédito|gerar.*contrato|exportar.*perfil/i);
     expect(component).not.toMatch(/storage_key|document_url|file_bytes|download.*documento/i);
