@@ -322,6 +322,36 @@
   line-height: 1.25;
 }
 
+.subdivision-lot-management__inline-price-reference {
+  display: grid;
+  align-content: start;
+  gap: 0.24rem;
+  min-height: 2.45rem;
+  padding: 0.46rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 18%, var(--border));
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--primary) 3%, var(--background));
+}
+
+.subdivision-lot-management__inline-price-reference > span {
+  color: #567181;
+  font-size: 0.58rem;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+}
+
+.subdivision-lot-management__inline-price-reference > b {
+  color: #21495f;
+  font-size: 0.78rem;
+}
+
+.subdivision-lot-management__inline-price-reference > small {
+  color: #778077;
+  font-size: 0.57rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
 .subdivision-lot-management__inline-price-editor-form input,
 .subdivision-lot-management__inline-price-editor-form select {
   width: 100%;
@@ -382,6 +412,36 @@
 
 .subdivision-price-base-policy__history article {
   align-items: start;
+}
+
+.subdivision-price-conditions__auto-reference {
+  display: grid;
+  align-content: start;
+  gap: 0.24rem;
+  min-height: 2.45rem;
+  padding: 0.46rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 18%, var(--border));
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--primary) 3%, var(--background));
+}
+
+.subdivision-price-conditions__auto-reference > span {
+  color: #567181;
+  font-size: 0.58rem;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+}
+
+.subdivision-price-conditions__auto-reference > b {
+  color: #21495f;
+  font-size: 0.78rem;
+}
+
+.subdivision-price-conditions__auto-reference > small {
+  color: #778077;
+  font-size: 0.57rem;
+  font-weight: 650;
+  line-height: 1.25;
 }
 
 .subdivision-price-base-policy__history article > .subdivision-price-base-policy__submission-note {

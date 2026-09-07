@@ -22,5 +22,6 @@ Este índice concentra decisões reutilizáveis do CRM para que atualizações f
 | Leitura interna vinculada à sessão | `leitura-interna-por-sessao-a275.md` | Antes de alterar leituras de valores ou perfis internos, expiração de sessão, guardas de mutação ou a separação entre consulta e comando material. |
 | MFA no login e sessão autorizada | `mfa-no-login-sessao-autorizada-a276.md` | Antes de alterar atestação AAL2/TOTP, permissões de comandos durante a sessão, logout, expiração ou mensagens de Segurança e MFA. |
 | Pré-preenchimento de referência interna | `preenchimento-referencia-interna-a277.md` | Antes de alterar a passagem de referência entre cartão e editor, total derivado, invalidação pós-servidor ou exceção intencionalmente vazia. |
+| Referências operacionais curtas | `referencias-operacionais-curtas-a278.md` | Antes de expor identificadores de preço, política, condição ou empreendimento na interface de Loteamentos. |
 
 > Não substituir este índice por resumos efêmeros. Atualize-o somente ao adicionar uma referência versionada que descreva uma decisão validada, sem incluir PII, preços individuais, conteúdo de fonte, segredos ou URLs de infraestrutura.

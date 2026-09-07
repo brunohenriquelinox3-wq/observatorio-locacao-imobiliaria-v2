@@ -1,6 +1,7 @@
 import type { FormEvent, RefObject } from "react";
 import { createPortal } from "react-dom";
 import { ShieldCheck } from "lucide-react";
+import { formatLotPriceAdjustmentLabel } from "@/lib/subdivisionOperationalReference";
 
 type PriceConditionDraft = {
   amount: string;
@@ -62,16 +63,16 @@ export function InlineLotPriceEditor({
           <h6 id={editorTitleId}>Atualize o valor do Lote selecionado.</h6>
           <p>O valor interno atual é carregado nesta ficha para edição. O total é recalculado apenas para conferência e não pode ser digitado separadamente; o cartão é renovado quando o servidor confirma a referência vigente.</p>
         </div>
-        <span className="subdivision-lot-management__inline-price-editor-lot">Q{blockNumber} · L{lotNumber}</span>
+        <span className="subdivision-lot-management__inline-price-editor-lot">{formatLotPriceAdjustmentLabel(blockNumber, lotNumber)}</span>
       </div>
       <form id="inline-lot-price-form" className="subdivision-lot-management__inline-price-editor-form" onSubmit={onPrepare}>
         <label>Valor por m² (BRL)<small>Referência interna atual, pronta para ajuste governado</small><input ref={amountInputRef} type="number" min="0.0001" step="0.0001" inputMode="decimal" value={draft.amount} onChange={(event) => onDraftChange({ amount: event.target.value })} placeholder="Informe o novo valor por m²" disabled={!workspaceReady || busy} required /></label>
         <label>Início da vigência<small>Obrigatório para preparar a atualização interna</small><input type="date" value={draft.effectiveFrom} onChange={(event) => onDraftChange({ effectiveFrom: event.target.value })} disabled={!workspaceReady || busy} required /></label>
         <label>Motivo interno<small>Justificativa operacional da atualização</small><select value={draft.reasonCode} onChange={(event) => onDraftChange({ reasonCode: event.target.value })} disabled={!workspaceReady || busy}>{reasonOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-        <label>Referência da atualização<small>Identificação interna única da condição</small><input value={draft.conditionReference} onChange={(event) => onDraftChange({ conditionReference: event.target.value })} maxLength={75} disabled={!workspaceReady || busy} required /></label>
+        <div className="subdivision-lot-management__inline-price-reference"><span>Identificação do ajuste</span><b>{formatLotPriceAdjustmentLabel(blockNumber, lotNumber)}</b><small>Gerada automaticamente para esta atualização. O código técnico permanece nos controles internos.</small></div>
         <div className="subdivision-lot-management__inline-price-preview"><span>TOTAL REFERENCIAL PARA CONFERÊNCIA</span><b>{previewTotal === null ? "Informe o valor por m²" : previewTotal.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</b><small>Derivado exclusivamente da área física confirmada. Não é valor contratual, disponibilidade ou lançamento financeiro.</small></div>
       </form>
-      <div className="subdivision-lot-management__inline-price-editor-actions"><p>Ao preparar, a atualização permanece interna e exige política, contexto, MFA, alçada, vigência, respaldo, correlação, idempotência e aprovação segregada antes de qualquer referência vigente.</p><button type="submit" form="inline-lot-price-form" disabled={!workspaceReady || busy || !canPrepare}>{preparing ? "Preparando atualização interna" : "Preparar atualização interna"}</button></div>
+      <div className="subdivision-lot-management__inline-price-editor-actions"><p>Ao preparar, a atualização permanece interna e exige sessão autenticada, política, contexto, alçada, vigência, respaldo, correlação, idempotência e aprovação segregada antes de qualquer referência vigente.</p><button type="submit" form="inline-lot-price-form" disabled={!workspaceReady || busy || !canPrepare}>{preparing ? "Preparando atualização interna" : "Preparar atualização interna"}</button></div>
     </section>
   ) : state === "mfa_required" ? (
     <section id={editorId} className="subdivision-lot-management__inline-price-editor" aria-labelledby={editorTitleId}>

@@ -10,12 +10,15 @@ describe("InlineLotPriceEditor", () => {
     expect(source).toContain("TOTAL REFERENCIAL PARA CONFERÊNCIA");
     expect(source).toContain("Derivado exclusivamente da área física confirmada");
     expect(source).toContain("O valor interno atual é carregado nesta ficha para edição.");
-    expect(source).toContain("Referência interna atual, pronta para ajuste governado");
+    expect(source).toContain("Identificação do ajuste");
+    expect(source).toContain("Gerada automaticamente para esta atualização");
+    expect(source).toContain("formatLotPriceAdjustmentLabel");
+    expect(source).not.toContain("Referência da atualização");
   });
 
   it("mantém a preparação interna governada e sem linguagem comercial", () => {
     expect(source).toContain("Preparar atualização interna");
-    expect(source).toContain("exige política, contexto, MFA, alçada");
+    expect(source).toContain("exige sessão autenticada, política, contexto, alçada");
     expect(source).toContain("Não é valor contratual, disponibilidade ou lançamento financeiro");
     expect(source).not.toContain("Valor de venda");
   });
