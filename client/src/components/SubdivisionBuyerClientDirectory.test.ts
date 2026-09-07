@@ -24,6 +24,10 @@ describe("SubdivisionBuyerClientDirectory composition", () => {
 
   it("uses the maximum authorized first page so active records are not hidden by an artificial local limit", () => {
     expect(component).toContain("const pageSize = 25;");
+    expect(component).toContain('id="buyer-directory-more"');
+    expect(component).toContain('aria-label="Carregar a próxima página de cadastros autorizados"');
+    expect(component).toContain("[context.organizationId, context.purposeCode, onSelectBuyerClient]");
+    expect(component).toContain("setPageOffset(0);");
     expect(component).toContain("Ver mais cadastros autorizados");
   });
 
@@ -38,6 +42,11 @@ describe("SubdivisionBuyerClientDirectory composition", () => {
     expect(component).toContain("AlertDialog");
     expect(component).toContain("Confirmar arquivamento");
     expect(component).toContain("Cadastros arquivados");
+    expect(component).toContain('id="buyer-directory-archived"');
+    expect(component).toContain('window.location.hash !== "#buyer-directory-archived"');
+    expect(component).toContain('document.getElementById("buyer-directory-archived")?.scrollIntoView');
+    expect(component).toContain('aria-controls="buyer-directory-archived"');
+    expect(component).toContain("Ver cadastros arquivados");
   });
 
   it("does not introduce commercial, financial, contractual, or document-view controls", () => {

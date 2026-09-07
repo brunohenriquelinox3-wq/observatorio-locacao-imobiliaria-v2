@@ -113,11 +113,48 @@
   display: none;
 }
 
+.subdivision-buyer-directory__archive-link {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  max-width: calc(100vw - 48px);
+  padding: 10px 14px;
+  border: 1px solid #0f7667;
+  border-radius: 10px;
+  background: #f5fffb;
+  box-shadow: 0 10px 26px rgba(23, 72, 63, .16);
+  color: #0f6257;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 160ms cubic-bezier(.23, 1, .32, 1), background 160ms cubic-bezier(.23, 1, .32, 1), box-shadow 160ms cubic-bezier(.23, 1, .32, 1);
+}
+
+.subdivision-buyer-directory__archive-link:hover {
+  background: #e6f8f1;
+  box-shadow: 0 14px 30px rgba(23, 72, 63, .2);
+}
+
+.subdivision-buyer-directory__archive-link:active { transform: scale(.98); }
+
+.subdivision-buyer-directory__archive-link:focus-visible {
+  outline: 3px solid rgba(29, 179, 155, .32);
+  outline-offset: 3px;
+}
+
 @media (max-width: 840px) {
   .subdivision-buyer-directory__preview-actions { grid-template-columns: 1fr; }
+  .subdivision-buyer-directory__archive-link { right: 16px; bottom: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .subdivision-buyer-directory__preview-actions > button,
-  .subdivision-buyer-directory__preview-actions [data-slot="alert-dialog-trigger"] { transition: none; }
+  .subdivision-buyer-directory__preview-actions [data-slot="alert-dialog-trigger"],
+  .subdivision-buyer-directory__archive-link { transition: none; }
 }

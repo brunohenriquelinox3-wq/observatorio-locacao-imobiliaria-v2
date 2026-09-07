@@ -63,6 +63,15 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   const effectiveSelectedBuyerClientId = localActiveEntry?.buyerClientId || selectedBuyerClientId;
 
   useEffect(() => {
+    setSearchDraft("");
+    setSearchTerm(null);
+    setPageOffset(0);
+    setLocalActiveEntry(null);
+    setIsEditorOpen(false);
+    onSelectBuyerClient("");
+  }, [context.organizationId, context.purposeCode, onSelectBuyerClient]);
+
+  useEffect(() => {
     const normalized = searchDraft.trim();
     const timeout = window.setTimeout(() => {
       setSearchTerm(normalized.length >= 2 ? normalized : null);
@@ -79,9 +88,18 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   const profileQuery = trpc.subdivisionFoundation.getDraftBuyerClientProfile.useQuery(profileInput, { enabled: isWorkspaceReady && Boolean(effectiveSelectedBuyerClientId), retry: false });
   const archivedClientsQuery = trpc.subdivisionFoundation.listArchivedClients.useQuery(context, { enabled: isWorkspaceReady, retry: false });
   const utils = trpc.useUtils();
+  useEffect(() => {
+    if (!archivedClientsQuery.data?.length || window.location.hash !== "#buyer-directory-archived") return;
+    window.requestAnimationFrame(() => {
+      document.getElementById("buyer-directory-archived")?.scrollIntoView({ behavior: "auto", block: "start" });
+    });
+  }, [archivedClientsQuery.data?.length]);
   const registerDirectMutation = trpc.subdivisionFoundation.registerClientDirect.useMutation({
     onSuccess(result) {
       setNewClientName("");
+      setSearchDraft("");
+      setSearchTerm(null);
+      setPageOffset(0);
       setLocalActiveEntry(null);
       setIsEditorOpen(true);
       onSelectBuyerClient(result.buyerClientId);
@@ -95,6 +113,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   });
   const archiveClientMutation = trpc.subdivisionFoundation.archiveClient.useMutation({
     onSuccess() {
+      setPageOffset(0);
       setLocalActiveEntry(null);
       setIsEditorOpen(false);
       onSelectBuyerClient("");
@@ -107,6 +126,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
   });
   const restoreClientMutation = trpc.subdivisionFoundation.restoreClient.useMutation({
     onSuccess(result) {
+      setPageOffset(0);
       setLocalActiveEntry(null);
       setIsEditorOpen(true);
       onSelectBuyerClient(result.buyerClientId);
@@ -128,6 +148,13 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
     document.getElementById("buyer-documents-title")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  function openArchivedClients() {
+    const archive = document.getElementById("buyer-directory-archived") as HTMLDetailsElement | null;
+    if (!archive) return;
+    archive.open = true;
+    archive.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   function archiveActiveClient() {
     if (!activeEntry) return;
     archiveClientMutation.mutate({ ...context, correlationId: crypto.randomUUID(), buyerClientId: activeEntry.buyerClientId });
@@ -147,7 +174,10 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
         <h2 id="buyer-directory-title">Localize, confira e organize o cadastro sem sair do contexto.</h2>
         <p>A lista reúne somente Clientes Loteadora devolvidos pelo servidor. Ela não abre venda, lote, proposta, crédito, contrato, registro ou pagamento.</p>
       </div>
-      <div className="subdivision-buyer-directory__guard"><ShieldCheck size={19} aria-hidden="true" /><span>Leitura delimitada<br /><b>por contexto e alçada</b></span></div>
+      <div className="subdivision-buyer-directory__header-actions">
+        <div className="subdivision-buyer-directory__guard"><ShieldCheck size={19} aria-hidden="true" /><span>Leitura delimitada<br /><b>por contexto e alçada</b></span></div>
+        {archivedClientsQuery.data && archivedClientsQuery.data.length > 0 && <button type="button" className="subdivision-buyer-directory__archive-link" aria-controls="buyer-directory-archived" onClick={openArchivedClients}><ArchiveRestore size={16} aria-hidden="true" /> Ver cadastros arquivados ({archivedClientsQuery.data.length})</button>}
+      </div>
     </header>
 
     {!isContextReady && <div className="subdivision-foundation-empty"><CircleAlert size={18} /><p>Selecione um contexto autorizado antes de consultar a central de clientes.</p></div>}
@@ -183,7 +213,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
             <strong>{entry.displayName}</strong>
             <span className="subdivision-buyer-directory__entry-foot"><i>{entry.profilePresent ? "Perfil organizado" : "Perfil a organizar"}</i><i>{entry.requirementsPending > 0 ? `${entry.requirementsPending} pendência(s)` : "Sem pendência registrada"}</i></span>
           </button>)}
-          {entries.length === pageSize && <button type="button" className="subdivision-buyer-directory__more" onClick={() => setPageOffset((offset) => offset + pageSize)}><ArchiveRestore size={15} aria-hidden="true" /> Ver mais cadastros autorizados</button>}
+          {entries.length === pageSize && <button id="buyer-directory-more" type="button" className="subdivision-buyer-directory__more" aria-label="Carregar a próxima página de cadastros autorizados" onClick={() => setPageOffset((offset) => offset + pageSize)}><ArchiveRestore size={15} aria-hidden="true" /> Ver mais cadastros autorizados</button>}
         </div>
 
         <aside className="subdivision-buyer-directory__preview" aria-live="polite">
@@ -244,7 +274,7 @@ export function SubdivisionBuyerClientDirectory({ context, isContextReady, isWor
           </>}
         </aside>
       </div>}
-      {archivedClientsQuery.data && archivedClientsQuery.data.length > 0 && <details className="subdivision-buyer-directory__archive">
+      {archivedClientsQuery.data && archivedClientsQuery.data.length > 0 && <details id="buyer-directory-archived" className="subdivision-buyer-directory__archive">
         <summary><ArchiveRestore size={16} aria-hidden="true" /> Cadastros arquivados ({archivedClientsQuery.data.length})</summary>
         <p>Os itens abaixo foram excluídos somente da lista ativa. A auditoria foi preservada e a restauração exige o mesmo contexto autorizado.</p>
         <div>{archivedClientsQuery.data.map((client) => <article key={client.buyerClientId}><span>{client.displayName}</span><button type="button" onClick={() => restoreClientMutation.mutate({ ...context, correlationId: crypto.randomUUID(), buyerClientId: client.buyerClientId })} disabled={restoreClientMutation.isPending}><RotateCcw size={14} aria-hidden="true" /> Restaurar</button></article>)}</div>
