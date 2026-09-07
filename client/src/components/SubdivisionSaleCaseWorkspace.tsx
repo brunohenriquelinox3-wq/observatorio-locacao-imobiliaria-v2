@@ -6,6 +6,7 @@ type PriceContext = { state: string; availabilityReason: string | null; policyRe
 type SaleCase = { saleCaseId: string; state: string; termsVersion: number | null; negotiatedTotalCents: number | null; entryAmountCents: number | null; entryDueDate: string | null; installmentCount: number; installmentAmountCents: number | null; firstDueDate: string | null; dueDay: number | null };
 type InternalContract = { contractPreparationId: string; saleCaseId: string; state: "internal_review" | "approved" | "archived"; termsVersion: number; scheduledItemCount: number; scheduledTotalCents: number; bankIssuanceState: "awaiting_bank_issue" };
 type InternalAttention = { contractPreparationId: string; dueWithinFourDaysCount: number; pastDueUnreconciledCount: number };
+type InternalBatch = { batchId: string; saleCaseId: string; batchState: "released_internal_control" | "reversal_review"; itemCount: number; totalCents: number };
 
 type Props = {
   isWorkspaceReady: boolean;
@@ -32,6 +33,8 @@ type Props = {
   alertScheduleState: "unbound" | "active" | "paused";
   internalContracts: readonly InternalContract[];
   internalAttention: readonly InternalAttention[];
+  internalBatches: readonly InternalBatch[];
+  releasingInternalBatch: boolean;
   onDevelopmentChange: (value: string) => void;
   onBlockChange: (value: string) => void;
   onLotChange: (value: string) => void;
@@ -46,6 +49,7 @@ type Props = {
   onRequestReversal: () => void;
   onConfigureAlerts: (leadDays: number) => void;
   onManageAlertSchedule: (action: "activate" | "pause" | "resume" | "remove") => void;
+  onReleaseInternalBatch: () => void;
 };
 
 const formatBrl = (value: number | null) => value === null ? "Não informado" : value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -73,6 +77,7 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
   const selectedCase = props.saleCases.find((item) => item.saleCaseId === props.selectedSaleCaseId);
   const selectedContract = props.internalContracts.find((item) => item.saleCaseId === props.selectedSaleCaseId);
   const selectedAttention = props.internalAttention.find((item) => item.contractPreparationId === selectedContract?.contractPreparationId);
+  const selectedBatch = props.internalBatches.find((item) => item.saleCaseId === props.selectedSaleCaseId);
   useEffect(() => {
     if (!selectedCase) return;
     setTotalBrl(centsToInput(selectedCase.negotiatedTotalCents));
@@ -171,10 +176,11 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
           </form>
           <aside className="subdivision-foundation-card subdivision-sale-case-workspace__review">
             <div className="subdivision-foundation-card__title"><ShieldCheck size={19} /><h3>Formalização interna</h3></div>
-            {selectedContract ? <>
-              <p><b>Agenda interna pronta:</b> {selectedContract.scheduledItemCount} item(ns), no estado “aguardando emissão bancária”.</p>
-              {selectedAttention && <p className="subdivision-sale-case-workspace__attention"><b>{selectedAttention.dueWithinFourDaysCount}</b> item(ns) vencem em até quatro dias e <b>{selectedAttention.pastDueUnreconciledCount}</b> estão anteriores à data atual sem conciliação bancária. Revise a agenda: isso não é confirmação de atraso ou pagamento.</p>}
-              {selectedContract.state === "internal_review" ? <button type="button" onClick={props.onApproveCase} disabled={props.approvingCase || selectedCase?.state !== "terms_review"}>{props.approvingCase ? "Confirmando aprovação" : "Confirmar venda e marcar lote vendido"}</button> : <button type="button" onClick={props.onRequestReversal} disabled={props.requestingReversal || selectedCase?.state !== "approved"}>{props.requestingReversal ? "Solicitando revisão" : "Solicitar revisão de reversão"}</button>}
+              {selectedContract ? <>
+                <p><b>Agenda interna pronta:</b> {selectedContract.scheduledItemCount} item(ns), no estado “aguardando emissão bancária”.</p>
+                {selectedAttention && <p className="subdivision-sale-case-workspace__attention"><b>{selectedAttention.dueWithinFourDaysCount}</b> item(ns) vencem em até quatro dias e <b>{selectedAttention.pastDueUnreconciledCount}</b> estão anteriores à data atual sem conciliação bancária. Revise a agenda: isso não é confirmação de atraso ou pagamento.</p>}
+                {selectedBatch ? <p className="subdivision-sale-case-workspace__batch"><b>Lote interno liberado:</b> {selectedBatch.itemCount} parcela(s) disponível(is) para controle do operador. Não há emissão bancária, mensagem, baixa ou pagamento.</p> : selectedCase?.state === "approved" ? <button type="button" onClick={props.onReleaseInternalBatch} disabled={props.releasingInternalBatch}>{props.releasingInternalBatch ? "Liberando lote interno" : "Liberar lote interno de parcelas"}</button> : null}
+                {selectedContract.state === "internal_review" ? <button type="button" onClick={props.onApproveCase} disabled={props.approvingCase || selectedCase?.state !== "terms_review"}>{props.approvingCase ? "Confirmando aprovação" : "Confirmar venda e marcar lote vendido"}</button> : <button type="button" onClick={props.onRequestReversal} disabled={props.requestingReversal || selectedCase?.state !== "approved"}>{props.requestingReversal ? "Solicitando revisão" : "Solicitar revisão de reversão"}</button>}
               <form className="subdivision-sale-case-workspace__alert-config" onSubmit={(event) => { event.preventDefault(); props.onConfigureAlerts(Number(alertLeadDays)); }}>
                 <label htmlFor="sale-case-alert-lead">Avisar com antecedência de dias<input id="sale-case-alert-lead" type="number" min="1" max="14" step="1" value={alertLeadDays} onChange={(event) => setAlertLeadDays(event.target.value)} disabled={props.configuringAlerts} required /></label>
                 <button type="submit" disabled={props.configuringAlerts}>{props.configuringAlerts ? "Preparando lembretes" : "Preparar lembretes internos"}</button>

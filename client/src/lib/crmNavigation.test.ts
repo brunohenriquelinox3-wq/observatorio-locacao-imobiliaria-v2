@@ -16,8 +16,9 @@ describe("navegação setorial do CRM", () => {
     expect(crmNavigationItems.some((item) => item.path === "/loteadora/vendas")).toBe(false);
   });
 
-  it("mantém as áreas econômicas e contratuais bloqueadas", () => {
-    expect(crmNavigationItems.filter((item) => item.path.endsWith("/financeiro") || item.path.endsWith("/propostas") || item.path.endsWith("/contratos")).every((item) => item.disabled)).toBe(true);
+  it("libera apenas o Financeiro interno da Loteadora e mantém os demais setores externos bloqueados", () => {
+    expect(crmNavigationItems.find((item) => item.path === "/loteadora/financeiro")?.disabled).not.toBe(true);
+    expect(crmNavigationItems.filter((item) => item.path !== "/loteadora/financeiro" && (item.path.endsWith("/financeiro") || item.path.endsWith("/propostas") || item.path.endsWith("/contratos"))).every((item) => item.disabled)).toBe(true);
   });
 
   it("mantém Estoque/Mapa fora do menu setorial porque é uma rota interna compatível de Loteamentos", () => {

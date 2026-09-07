@@ -293,12 +293,13 @@ import {
   linkSubdivisionPriceEvidenceInputSchema,
   listSubdivisionPriceEvidenceSummaryInputSchema,
 } from "../shared/subdivisionPriceEvidenceContracts";
-import { approveSubdivisionSaleCaseInputSchema, configureSubdivisionInternalReceivableAlertsInputSchema, createSubdivisionSaleCaseDocumentIntentInputSchema, formalizeSubdivisionSaleCaseInputSchema, lookupSubdivisionBuyerClientByFiscalReferenceInputSchema, manageSubdivisionInternalReceivableAlertScheduleInputSchema, openSubdivisionSaleCaseInputSchema, requestSubdivisionSaleReversalInputSchema, saveSubdivisionSaleCaseTermsInputSchema, setSubdivisionSaleCaseDossierReviewInputSchema } from "../shared/subdivisionSaleCaseContracts";
+import { approveSubdivisionSaleCaseInputSchema, configureSubdivisionInternalReceivableAlertsInputSchema, createSubdivisionSaleCaseDocumentIntentInputSchema, formalizeSubdivisionSaleCaseInputSchema, lookupSubdivisionBuyerClientByFiscalReferenceInputSchema, manageSubdivisionInternalReceivableAlertScheduleInputSchema, openSubdivisionSaleCaseInputSchema, releaseSubdivisionInternalReceivableBatchInputSchema, requestSubdivisionSaleReversalInputSchema, saveSubdivisionSaleCaseTermsInputSchema, setSubdivisionSaleCaseDossierReviewInputSchema } from "../shared/subdivisionSaleCaseContracts";
 import { listSubdivisionInternalReceivableAttention } from "./subdivisionInternalReceivableAttention";
 import { configureSubdivisionInternalReceivableAlerts } from "./subdivisionInternalReceivableAlerts";
 import { manageSubdivisionInternalReceivableAlertSchedule } from "./subdivisionInternalReceivableAlertScheduleManagement";
 import { createSubdivisionSaleCaseDocumentIntent, listSubdivisionSaleCaseDossiers, setSubdivisionSaleCaseDossierReview } from "./subdivisionSaleCaseDossier";
-import { approveSubdivisionSaleCase, requestSubdivisionSaleReversal } from "./subdivisionSaleApproval";
+import { approveSubdivisionSaleCase, releaseSubdivisionInternalReceivableBatch, requestSubdivisionSaleReversal } from "./subdivisionSaleApproval";
+import { listSubdivisionInternalReceivableBatches } from "./subdivisionInternalReceivableBatch";
 import { listSubdivisionLotCommercialStates } from "./subdivisionLotCommercialState";
 import { authorizedOrganizationContextInputSchema, listAuthorizedOrganizationContexts } from "./organizationContext";
 import { clientImportCommitInputSchema } from "../shared/clientImportContracts";
@@ -832,6 +833,7 @@ export const appRouter = router({
     }),
     listInternalSaleContracts: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionInternalSaleContracts(ctx.supabaseSubjectId ?? undefined, input)),
     listInternalReceivableAttention: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionInternalReceivableAttention(ctx.supabaseSubjectId ?? undefined, input)),
+    listInternalReceivableBatches: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionInternalReceivableBatches(ctx.supabaseSubjectId ?? undefined, input)),
     listLotCommercialStates: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionLotCommercialStates(ctx.supabaseSubjectId ?? undefined, input)),
     formalizeSaleCase: protectedProcedure.input(formalizeSubdivisionSaleCaseInputSchema).mutation(async ({ ctx, input }) => {
       await requireVerifiedAal2Session(ctx);
@@ -844,6 +846,10 @@ export const appRouter = router({
     requestSaleReversal: protectedProcedure.input(requestSubdivisionSaleReversalInputSchema).mutation(async ({ ctx, input }) => {
       await requireVerifiedAal2Session(ctx);
       return requestSubdivisionSaleReversal(ctx.supabaseSubjectId ?? undefined, input);
+    }),
+    releaseInternalReceivableBatch: protectedProcedure.input(releaseSubdivisionInternalReceivableBatchInputSchema).mutation(async ({ ctx, input }) => {
+      await requireVerifiedAal2Session(ctx);
+      return releaseSubdivisionInternalReceivableBatch(ctx.supabaseSubjectId ?? undefined, input);
     }),
     configureInternalReceivableAlerts: protectedProcedure.input(configureSubdivisionInternalReceivableAlertsInputSchema).mutation(async ({ ctx, input }) => {
       await requireVerifiedAal2Session(ctx);

@@ -14,14 +14,15 @@ describe("setores da coluna Loteadora", () => {
     expect(navigation).toContain('label: "Central de Vendas", path: "/loteadora/clientes"');
     expect(navigation).toContain('label: "Sócios e Parceiros", path: "/loteadora/socios-parceiros"');
     expect(navigation).not.toContain('label: "Vendas de Lotes", path: "/loteadora/vendas"');
-    expect(navigation).toContain('label: "Financeiro", path: "/loteadora/financeiro", disabled: true');
+    expect(navigation).toContain('label: "Financeiro", path: "/loteadora/financeiro", description: "Loteadora · lotes internos de parcelas e controle operacional"');
   });
 
-  it("mantém Financeiro sem consultas ou comandos econômicos enquanto estiver bloqueado", () => {
+  it("libera Financeiro somente como controle interno de parcelas aprovadas", () => {
     const page = source();
 
     expect(page).toContain('activeSector === "finance"');
-    expect(page).toContain("Financeiro ainda não está liberado para desenvolvimento.");
+    expect(page).toContain("<SubdivisionInternalReceivableBatchPanel");
+    expect(page).toContain("listInternalReceivableBatches.useQuery");
     expect(page).not.toContain("listEconomicRuleSets.useQuery");
     expect(page).not.toContain("createEconomicRuleSet.useMutation");
   });

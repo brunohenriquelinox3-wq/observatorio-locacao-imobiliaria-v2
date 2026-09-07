@@ -8,7 +8,7 @@ export const crmNavigationItems: DashboardNavigationItem[] = [
   { icon: LandPlot, label: "Loteamentos", path: "/loteadora", description: "Loteamentos · cadastro, matriz e estoque" },
   { icon: UsersRound, label: "Central de Vendas", path: "/loteadora/clientes", description: "Loteadora · clientes, estoque e jornada de vendas" },
   { icon: Building2, label: "Sócios e Parceiros", path: "/loteadora/socios-parceiros", description: "Loteadora · setor 04" },
-  { icon: LockKeyhole, label: "Financeiro", path: "/loteadora/financeiro", disabled: true, description: "Loteadora · bloqueado até autorização explícita" },
+  { icon: LockKeyhole, label: "Financeiro", path: "/loteadora/financeiro", description: "Loteadora · lotes internos de parcelas e controle operacional" },
   { icon: UsersRound, label: "Clientes e Leads", path: "/vendas-urbanas", description: "Vendas Urbanas · setor 01" },
   { icon: House, label: "Imóveis e Proprietários", path: "/vendas-urbanas/imoveis-proprietarios", description: "Vendas Urbanas · setor 02" },
   { icon: Building2, label: "Empreendimentos e Construtoras", path: "/vendas-urbanas/empreendimentos", description: "Vendas Urbanas · setor 03" },
