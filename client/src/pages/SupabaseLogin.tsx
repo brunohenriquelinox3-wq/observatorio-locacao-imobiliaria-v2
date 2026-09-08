@@ -3,6 +3,7 @@ import {
   resolveSupabaseLoginDestination,
   supabaseLoginErrorMessage,
 } from "@/lib/supabaseLoginDestination";
+import { resolvePublishedGoogleOAuthRedirect } from "@/lib/supabaseOAuthRedirect";
 import { ArrowRight, Chrome, CircleAlert, KeyRound, Loader2, LogOut, ShieldCheck } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
@@ -20,8 +21,17 @@ export default function SupabaseLogin() {
     () => resolveSupabaseLoginDestination(new URLSearchParams(window.location.search).get("proximo")),
     [],
   );
+  const googleOAuthRedirect = useMemo(
+    () => resolvePublishedGoogleOAuthRedirect(window.location.origin, destination),
+    [destination],
+  );
 
   useEffect(() => {
+    if (!googleOAuthRedirect) {
+      setState("unavailable");
+      return;
+    }
+
     const client = getSupabaseBrowserClient();
     if (!client) {
       setState("unavailable");
@@ -70,7 +80,7 @@ export default function SupabaseLogin() {
 
   async function signInWithGoogle() {
     const client = getSupabaseBrowserClient();
-    if (!client) return;
+    if (!client || !googleOAuthRedirect) return;
 
     setIsStartingGoogle(true);
     setErrorMessage(null);
@@ -78,7 +88,7 @@ export default function SupabaseLogin() {
       const { data, error } = await client.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/entrar?proximo=${encodeURIComponent(destination)}`,
+          redirectTo: googleOAuthRedirect,
         },
       });
       if (error || !data.url) throw new Error("SUPABASE_GOOGLE_OAUTH_DENIED");

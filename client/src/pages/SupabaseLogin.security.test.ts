@@ -8,7 +8,8 @@ describe("jornada de login Supabase", () => {
   it("prioriza Google com retorno interno e não expõe o destino a redirecionamento externo", () => {
     expect(source).toContain("signInWithOAuth");
     expect(source).toContain('provider: "google"');
-    expect(source).toContain("window.location.origin}/entrar?proximo=${encodeURIComponent(destination)}");
+    expect(source).toContain("resolvePublishedGoogleOAuthRedirect(window.location.origin, destination)");
+    expect(source).toContain("redirectTo: googleOAuthRedirect");
     expect(source).toContain("Continuar com Google");
     expect(source).not.toContain("window.location.assign(data.url)");
   });

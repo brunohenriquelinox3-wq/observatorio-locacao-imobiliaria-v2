@@ -2730,3 +2730,9 @@
 - [x] Preservar bootstrap já existente, contexto organizacional, memberships, grants, módulos, escopos, vigências, auditoria, logout e falha fechada para identidades sem vínculo. **Preservado:** bootstrap privilegiado continua com guarda própria; rotas operacionais exigem sujeito Supabase válido e autorização contextual; criação de identidade é registrada sem dados de perfil; logout encerra a sessão Google local.
 - [x] Atualizar a entrada visual para permitir que colaboradores iniciem pelo Google sem redirecionamento obrigatório à plataforma. **Jornada:** a raiz oferece entrada Google; a tela de contexto não exige mais etapa de plataforma; uma conta autenticada sem contexto recebe orientação para solicitar somente o próprio vínculo de trabalho.
 - [ ] Validar em conta Google de teste autorizada e em identidade sem vínculo, sem criar dados operacionais, alterar permissões existentes ou expor dados individuais.
+
+### Correção do retorno Google — origem publicada
+
+- [x] Diagnosticar por que a autenticação Google retorna à prévia temporária em vez da origem publicada do CRM. **Diagnóstico:** a prévia de desenvolvimento usava sua própria origem dinâmica como retorno OAuth; depois do encerramento da prévia, o navegador recebia erro de conexão. O problema não era de credenciais Google, permissões ou sessão do CRM.
+- [x] Fixar o destino OAuth de produção em origem publicada validada, sem permitir redirecionamento externo e sem prejudicar a prévia de desenvolvimento. **Correção:** o iniciador Google agora aceita apenas origem HTTPS publicada e monta o destino interno validado; prévia temporária, origem local, HTTP ou origem inválida não iniciam OAuth e mostram estado indisponível seguro.
+- [ ] Validar em navegador que o retorno Google publicado não aponta para endereço temporário nem apresenta erro de conexão.
