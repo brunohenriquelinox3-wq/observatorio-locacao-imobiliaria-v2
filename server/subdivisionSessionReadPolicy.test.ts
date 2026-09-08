@@ -20,14 +20,17 @@ describe("política de leitura interna vinculada à sessão", () => {
     expect(procedureSlice("listInternalLotInventoryProfiles")).not.toContain("requireRecentTotpMfa");
   });
 
-  it("mantém atestação MFA da sessão em preparação e gravação material", () => {
-    expect(procedureSlice("upsertInternalLotInventoryProfile")).toContain("await requireRecentTotpMfa(ctx)");
-    expect(procedureSlice("createPriceCondition")).toContain("await requireRecentTotpMfa(ctx)");
-    expect(procedureSlice("upsertDraftLotOperationalProfile")).toContain("await requireRecentTotpMfa(ctx)");
-    expect(source).toContain("const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken)");
+  it("permite preparação e gravação material somente em sessão Google protegida, sem MFA repetido", () => {
+    for (const command of ["upsertInternalLotInventoryProfile", "createPriceCondition", "upsertDraftLotOperationalProfile"]) {
+      const procedure = procedureSlice(command);
+      expect(procedure).toContain("protectedProcedure");
+      expect(procedure).not.toContain("requireRecentTotpMfa");
+      expect(procedure).not.toContain("requireVerifiedAal2Session");
+    }
+    expect(source).toContain("preparePlatformWorkforceAccess: platformActiveProcedure");
   });
 
-  it("exige AAL2 vigente, sem novo desafio, nos comandos de Cliente Loteadora", () => {
+  it("mantém comandos de Cliente Loteadora protegidos sem exigir AAL2 por operação", () => {
     for (const command of [
       "registerClientDirect",
       "archiveClient",
@@ -37,10 +40,9 @@ describe("política de leitura interna vinculada à sessão", () => {
       "upsertDraftBuyerClientContactPreference",
     ]) {
       const procedure = procedureSlice(command);
-      expect(procedure).toContain("await requireVerifiedAal2Session(ctx)");
+      expect(procedure).toContain("protectedProcedure");
       expect(procedure).not.toContain("requireRecentTotpMfa");
+      expect(procedure).not.toContain("requireVerifiedAal2Session");
     }
-    expect(source).toContain('attestation.assuranceLevel !== "aal2"');
-    expect(source).toContain('message: "SUBDIVISION_COMMAND_PRECONDITIONS_UNMET"');
   });
 });

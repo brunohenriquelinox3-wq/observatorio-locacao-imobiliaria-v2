@@ -32,6 +32,6 @@ describe("jornada de login Supabase", () => {
   it("encerra somente a sessão local do contexto e deixa alçadas fora do fluxo", () => {
     expect(source).toContain('signOut({ scope: "local" })');
     expect(source).toContain("Não cria organização, membership, grant, escopo, perfil administrativo");
-    expect(source).toContain("MFA e validação do servidor");
+    expect(source).toContain("sessão válida e validação do servidor");
   });
 });

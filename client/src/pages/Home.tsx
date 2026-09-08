@@ -83,7 +83,7 @@ export default function Home() {
           <div>
             <p>CRM IMOBILIÁRIO · OPERAÇÃO GOVERNADA</p>
             <h1 id="crm-entry-title">Acesso por coluna, setor e contexto.</h1>
-            <span>Escolha uma camada de trabalho. A interface organiza as jornadas; servidor, membership, grant, escopo e MFA continuam decidindo a autorização.</span>
+            <span>Escolha uma camada de trabalho. A interface organiza as jornadas; servidor, membership, grant e escopo continuam decidindo a autorização.</span>
           </div>
           <div className="crm-entry__header-status"><FileStack size={17} /><span>SEM CONTEXTO SELECIONADO</span><b>Leitura segura</b></div>
         </header>

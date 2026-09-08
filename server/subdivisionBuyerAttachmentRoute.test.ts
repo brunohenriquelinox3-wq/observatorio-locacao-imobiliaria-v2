@@ -21,11 +21,9 @@ async function requestWithDependencies(dependencies: Parameters<typeof registerP
 
 describe("private buyer attachment route", () => {
   it("denies an unauthenticated request with a redacted response before multipart processing", async () => {
-    const attestMfa = vi.fn();
     const storeAttachment = vi.fn();
     const response = await requestWithDependencies({
       resolveRequestIdentity: vi.fn().mockResolvedValue({ user: null, supabaseSubjectId: null, supabaseAccessToken: undefined }),
-      attestMfa,
       storeAttachment,
     });
 
@@ -34,15 +32,14 @@ describe("private buyer attachment route", () => {
     expect(storeAttachment).not.toHaveBeenCalled();
   });
 
-  it("denies a request without recent MFA before multipart processing", async () => {
+  it("permite que uma sessão Google autenticada prossiga ao validador de arquivo sem sessão de plataforma", async () => {
     const storeAttachment = vi.fn();
     const response = await requestWithDependencies({
-      resolveRequestIdentity: vi.fn().mockResolvedValue({ user: {} as never, supabaseSubjectId: "00000000-0000-4000-8000-000000000001", supabaseAccessToken: "synthetic" }),
-      attestMfa: vi.fn().mockResolvedValue(null),
+      resolveRequestIdentity: vi.fn().mockResolvedValue({ user: null, supabaseSubjectId: "00000000-0000-4000-8000-000000000001", supabaseAccessToken: "synthetic" }),
       storeAttachment,
     });
 
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
     await expect(response.json()).resolves.toEqual({ error: "PRIVATE_ATTACHMENT_REQUEST_REJECTED" });
     expect(storeAttachment).not.toHaveBeenCalled();
   });

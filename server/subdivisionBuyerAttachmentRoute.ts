@@ -1,7 +1,6 @@
 import type { Express, RequestHandler } from "express";
 import multer from "multer";
 import { resolveRequestIdentity } from "./_core/context";
-import { attestSupabaseMfa } from "./supabaseIdentity";
 import { storePrivateBuyerAttachment } from "./subdivisionBuyerAttachmentUpload";
 
 const MAX_ATTACHMENT_BYTES = 2 * 1024 * 1024;
@@ -11,13 +10,11 @@ const purposeCodePattern = /^[A-Z][A-Z0-9_]{2,79}$/;
 
 type PrivateAttachmentRouteDependencies = {
   resolveRequestIdentity: typeof resolveRequestIdentity;
-  attestMfa: typeof attestSupabaseMfa;
   storeAttachment: typeof storePrivateBuyerAttachment;
 };
 
 const defaultDependencies: PrivateAttachmentRouteDependencies = {
   resolveRequestIdentity,
-  attestMfa: attestSupabaseMfa,
   storeAttachment: storePrivateBuyerAttachment,
 };
 
@@ -32,11 +29,10 @@ export function registerPrivateBuyerAttachmentRoute(app: Express, dependencies =
     fileFilter: (_req, file, callback) => callback(null, allowedMimeTypes.has(file.mimetype)),
   });
 
-  const requireRecentMfa: RequestHandler = async (req, res, next) => {
+  const requireAuthenticatedGoogleSession: RequestHandler = async (req, res, next) => {
     try {
       const identity = await dependencies.resolveRequestIdentity(req);
-      const mfa = await dependencies.attestMfa(identity.supabaseAccessToken);
-      if (!identity.user || !identity.supabaseSubjectId || !mfa || mfa.subjectId !== identity.supabaseSubjectId) {
+      if (!identity.supabaseSubjectId) {
         redactedClientError(res, 401);
         return;
       }
@@ -57,7 +53,7 @@ export function registerPrivateBuyerAttachmentRoute(app: Express, dependencies =
     });
   };
 
-  app.post("/api/private/subdivision-buyer-attachments/:attachmentIntentId", requireRecentMfa, parseSingleAttachment, async (req, res) => {
+  app.post("/api/private/subdivision-buyer-attachments/:attachmentIntentId", requireAuthenticatedGoogleSession, parseSingleAttachment, async (req, res) => {
     const attachmentIntentId = req.params.attachmentIntentId;
     const organizationId = typeof req.body.organizationId === "string" ? req.body.organizationId.trim() : "";
     const purposeCode = typeof req.body.purposeCode === "string" ? req.body.purposeCode.trim().toUpperCase() : "";

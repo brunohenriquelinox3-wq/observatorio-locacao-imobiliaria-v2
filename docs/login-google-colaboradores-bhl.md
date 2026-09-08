@@ -21,9 +21,11 @@ O acesso por senha atual permanece apenas como contingência compatível durante
 
 > A autenticação Google substitui a barreira anterior de plataforma nas rotas operacionais. Ela não concede organização, papel, módulo, escopo, grant ou privilégio administrativo.
 
+Uma sessão Google válida também substitui a exigência de novo desafio MFA por comando operacional. A identidade, expiração, logout, revogação, suspensão, contexto, membership, grant, papel, módulo, finalidade, escopo, vigência, correlação, idempotência e auditoria continuam verificados no servidor. O bootstrap e os comandos exclusivos da plataforma permanecem em fluxo separado.
+
 ## Configuração externa necessária
 
-Habilitar o provedor Google no projeto de autenticação Supabase com um cliente OAuth Web próprio da BHL Imóveis. Configurar somente os escopos mínimos de identidade (`openid`, e-mail e perfil), a URL de retorno autorizada pelo provedor e a lista permitida de URLs do CRM. Usar origem exata em produção; usar URLs de prévia apenas quando realmente necessárias e limitadas ao ambiente de desenvolvimento.[1] [2]
+Habilitar o provedor Google no projeto de autenticação Supabase com um cliente OAuth Web próprio da BHL Imóveis. Configurar somente os escopos mínimos de identidade (`openid`, e-mail e perfil), a URL de retorno autorizada pelo provedor e a lista permitida de URLs do CRM. O iniciador OAuth deve aceitar somente a origem HTTPS publicada; prévias temporárias e origens locais devem bloquear a operação antes de qualquer redirecionamento.[1] [2]
 
 O ID e o segredo do cliente OAuth pertencem ao console do Google e à configuração do provedor Supabase. Eles não devem ser gravados em código, testes, banco de dados do CRM, artefatos de entrega, documentação operacional ou mensagens.
 

@@ -81,7 +81,7 @@ export type DashboardAccessGate = {
 const defaultAccessGate: DashboardAccessGate = {
   eyebrow: "ACESSO DE TRABALHO · IDENTIDADE ANTES DE PRIVILÉGIO",
   title: "Entre com sua conta Google de trabalho.",
-  description: "O acesso protege organizações, permissões, sessões e trilhas de auditoria. A identidade é só o primeiro passo: vínculo, alçada, escopo e MFA continuam sendo verificados antes de qualquer comando sensível.",
+  description: "O acesso protege organizações, permissões, sessões e trilhas de auditoria. A identidade é só o primeiro passo: vínculo, alçada e escopo continuam sendo verificados antes de qualquer comando.",
   routeTitle: "Rota de acesso",
   routeDetail: "Google → vínculo vigente → escopo → policy",
   actionLabel: "Entrar com Google",

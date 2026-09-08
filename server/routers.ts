@@ -308,25 +308,6 @@ import { authorizedOrganizationContextInputSchema, listAuthorizedOrganizationCon
 import { clientImportCommitInputSchema } from "../shared/clientImportContracts";
 import { commitClientImport } from "./clientImport";
 
-async function requireRecentTotpMfa(ctx: { supabaseAccessToken?: string; supabaseSubjectId?: string | null }) {
-  const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
-  if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2" || attestation.method !== "totp") {
-    throw new TRPCError({ code: "PRECONDITION_FAILED", message: "SUBDIVISION_COMMAND_PRECONDITIONS_UNMET" });
-  }
-}
-
-/**
- * A276: valida a sessão AAL2 que já foi estabelecida no login/revalidação.
- * Não inicia desafio, QR ou TOTP por comando. Identidade, expiração, revogação
- * e todos os guardas de contexto continuam confirmados antes da chamada SQL.
- */
-async function requireVerifiedAal2Session(ctx: { supabaseAccessToken?: string; supabaseSubjectId?: string | null }) {
-  const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
-  if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2") {
-    throw new TRPCError({ code: "PRECONDITION_FAILED", message: "SUBDIVISION_COMMAND_PRECONDITIONS_UNMET" });
-  }
-}
-
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
@@ -440,13 +421,7 @@ export const appRouter = router({
   clientImport: router({
     commit: protectedProcedure
       .input(clientImportCommitInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
-        if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2" || attestation.method !== "totp") {
-          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "CLIENT_IMPORT_PRECONDITIONS_UNMET" });
-        }
-        return commitClientImport(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => commitClientImport(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 
   domainFoundation: router({
@@ -575,96 +550,61 @@ export const appRouter = router({
       .query(({ ctx, input }) => listDraftSubdivisionDevelopments(ctx.supabaseSubjectId ?? undefined, input)),
     createDraftDevelopment: protectedProcedure
       .input(draftSubdivisionDevelopmentInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
-        return createDraftSubdivisionDevelopment(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => createDraftSubdivisionDevelopment(ctx.supabaseSubjectId ?? undefined, input)),
     listDevelopmentStudio: protectedProcedure
       .input(subdivisionContextSchema)
       .query(({ ctx, input }) => listSubdivisionDevelopmentStudio(ctx.supabaseSubjectId ?? undefined, input)),
     createDevelopmentStudio: protectedProcedure
       .input(createSubdivisionDevelopmentStudioInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
-        return createSubdivisionDevelopmentStudio(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => createSubdivisionDevelopmentStudio(ctx.supabaseSubjectId ?? undefined, input)),
     updateDevelopmentStudio: protectedProcedure
       .input(updateSubdivisionDevelopmentStudioInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
-        return updateSubdivisionDevelopmentStudio(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => updateSubdivisionDevelopmentStudio(ctx.supabaseSubjectId ?? undefined, input)),
     archiveDevelopmentStudio: protectedProcedure
       .input(archiveSubdivisionDevelopmentStudioInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
-        return archiveSubdivisionDevelopmentStudio(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => archiveSubdivisionDevelopmentStudio(ctx.supabaseSubjectId ?? undefined, input)),
     listDevelopmentAttachments: protectedProcedure
       .input(subdivisionContextSchema.extend({ developmentId: z.string().uuid() }))
       .query(({ ctx, input }) => listSubdivisionDevelopmentAttachments(ctx.supabaseSubjectId ?? undefined, input, input.developmentId)),
     createDevelopmentAttachmentIntent: protectedProcedure
       .input(createSubdivisionDevelopmentAttachmentIntentInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
-        return createSubdivisionDevelopmentAttachmentIntent(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => createSubdivisionDevelopmentAttachmentIntent(ctx.supabaseSubjectId ?? undefined, input)),
     archiveDevelopmentAttachment: protectedProcedure
       .input(archiveSubdivisionDevelopmentAttachmentInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
-        return archiveSubdivisionDevelopmentAttachment(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => archiveSubdivisionDevelopmentAttachment(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftStructure: protectedProcedure
       .input(subdivisionContextSchema.extend({ developmentId: z.string().uuid() }))
       .query(({ ctx, input }) => listDraftSubdivisionStructure(ctx.supabaseSubjectId ?? undefined, input, input.developmentId)),
     applyDraftStructure: protectedProcedure
       .input(applySubdivisionDraftStructureInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
-        return applyDraftSubdivisionStructure(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => applyDraftSubdivisionStructure(ctx.supabaseSubjectId ?? undefined, input)),
     archiveDraftBlock: protectedProcedure
       .input(archiveSubdivisionDraftBlockInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
-        return archiveDraftSubdivisionBlock(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => archiveDraftSubdivisionBlock(ctx.supabaseSubjectId ?? undefined, input)),
     listArchivedDraftStructure: protectedProcedure
       .input(subdivisionContextSchema.extend({ developmentId: z.string().uuid() }))
       .query(({ ctx, input }) => listArchivedDraftSubdivisionStructure(ctx.supabaseSubjectId ?? undefined, input, input.developmentId)),
     restoreDraftBlock: protectedProcedure
       .input(restoreSubdivisionDraftBlockInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
-        return restoreDraftSubdivisionBlock(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => restoreDraftSubdivisionBlock(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftPhysicalStructure: protectedProcedure
       .input(subdivisionContextSchema.extend({ developmentId: z.string().uuid() }))
       .query(({ ctx, input }) => listDraftSubdivisionPhysicalStructure(ctx.supabaseSubjectId ?? undefined, input, input.developmentId)),
     applyDraftPhysicalStructure: protectedProcedure
       .input(applySubdivisionPhysicalStructureInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
-        return applySubdivisionPhysicalStructure(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => applySubdivisionPhysicalStructure(ctx.supabaseSubjectId ?? undefined, input)),
     upsertDraftLotPhysicalReservation: protectedProcedure
       .input(upsertSubdivisionLotPhysicalReservationInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
-        return upsertDraftSubdivisionLotPhysicalReservation(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => upsertDraftSubdivisionLotPhysicalReservation(ctx.supabaseSubjectId ?? undefined, input)),
     upsertDraftLotOperationalProfile: protectedProcedure
       .input(upsertSubdivisionLotOperationalProfileInputSchema)
       .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
         await upsertDraftSubdivisionLotOperationalProfile(ctx.supabaseSubjectId ?? undefined, input);
         return { ok: true } as const;
       }),
     upsertDraftBlockOperationalProfile: protectedProcedure
       .input(upsertSubdivisionBlockOperationalProfileInputSchema)
       .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
         await upsertDraftSubdivisionBlockOperationalProfile(ctx.supabaseSubjectId ?? undefined, input);
         return { ok: true } as const;
       }),
@@ -673,10 +613,7 @@ export const appRouter = router({
       .query(({ ctx, input }) => listDraftSubdivisionDevelopmentRequirements(ctx.supabaseSubjectId ?? undefined, input, input.developmentId)),
     upsertDraftDevelopmentRequirement: protectedProcedure
       .input(upsertSubdivisionDevelopmentRequirementInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await requireRecentTotpMfa(ctx);
-        return upsertDraftSubdivisionDevelopmentRequirement(ctx.supabaseSubjectId ?? undefined, input);
-      }),
+      .mutation(({ ctx, input }) => upsertDraftSubdivisionDevelopmentRequirement(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftDevelopmentPreparationProfiles: protectedProcedure
       .input(subdivisionContextSchema)
       .query(({ ctx, input }) => listDraftSubdivisionDevelopmentPreparationProfiles(ctx.supabaseSubjectId ?? undefined, input)),
@@ -702,32 +639,28 @@ export const appRouter = router({
     listInternalLotInventoryProfiles: protectedProcedure.input(listSubdivisionLotInternalInventoryProfilesInputSchema).query(({ ctx, input }) =>
       listSubdivisionLotInternalInventoryProfiles(ctx.supabaseSubjectId ?? undefined, input)),
     upsertInternalLotInventoryProfile: protectedProcedure.input(upsertSubdivisionLotInternalInventoryProfileInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return upsertSubdivisionLotInternalInventoryProfile(ctx.supabaseSubjectId ?? undefined, input);
     }),
     listDraftInternalPartyRoles: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionInternalPartyRoles(ctx.supabaseSubjectId ?? undefined, input)),
     linkDraftInternalPartyRole: protectedProcedure.input(subdivisionContextSchema.extend({ developmentId: z.string().uuid(), partyRoleId: z.string().uuid(), correlationId: z.string().uuid() })).mutation(({ ctx, input }) => linkDraftSubdivisionInternalPartyRole(ctx.supabaseSubjectId ?? undefined, input)),
-    upsertInternalPartyProfile: protectedProcedure.input(upsertSubdivisionInternalPartyProfileInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return upsertSubdivisionInternalPartyProfile(ctx.supabaseSubjectId ?? undefined, input); }),
+    upsertInternalPartyProfile: protectedProcedure.input(upsertSubdivisionInternalPartyProfileInputSchema).mutation(({ ctx, input }) => upsertSubdivisionInternalPartyProfile(ctx.supabaseSubjectId ?? undefined, input)),
     lookupInternalPartyByFiscalReference: protectedProcedure.input(lookupSubdivisionInternalPartyByFiscalReferenceInputSchema).query(({ ctx, input }) => lookupSubdivisionInternalPartyByFiscalReference(ctx.supabaseSubjectId ?? undefined, input)),
     listParticipationPolicyVersions: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionParticipationPolicyVersions(ctx.supabaseSubjectId ?? undefined, input)),
     listParticipationPolicyRules: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionParticipationPolicyRules(ctx.supabaseSubjectId ?? undefined, input)),
-    createParticipationPolicyVersion: protectedProcedure.input(createSubdivisionParticipationPolicyVersionInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return createSubdivisionParticipationPolicyVersion(ctx.supabaseSubjectId ?? undefined, input); }),
-    addParticipationPolicyRule: protectedProcedure.input(addSubdivisionParticipationPolicyRuleInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return addSubdivisionParticipationPolicyRule(ctx.supabaseSubjectId ?? undefined, input); }),
-    addParticipationRuleLotScope: protectedProcedure.input(addSubdivisionParticipationRuleLotScopeInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return addSubdivisionParticipationRuleLotScope(ctx.supabaseSubjectId ?? undefined, input); }),
-    activateParticipationPolicyVersion: protectedProcedure.input(activateSubdivisionParticipationPolicyVersionInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return activateSubdivisionParticipationPolicyVersion(ctx.supabaseSubjectId ?? undefined, input); }),
+    createParticipationPolicyVersion: protectedProcedure.input(createSubdivisionParticipationPolicyVersionInputSchema).mutation(({ ctx, input }) => createSubdivisionParticipationPolicyVersion(ctx.supabaseSubjectId ?? undefined, input)),
+    addParticipationPolicyRule: protectedProcedure.input(addSubdivisionParticipationPolicyRuleInputSchema).mutation(({ ctx, input }) => addSubdivisionParticipationPolicyRule(ctx.supabaseSubjectId ?? undefined, input)),
+    addParticipationRuleLotScope: protectedProcedure.input(addSubdivisionParticipationRuleLotScopeInputSchema).mutation(({ ctx, input }) => addSubdivisionParticipationRuleLotScope(ctx.supabaseSubjectId ?? undefined, input)),
+    activateParticipationPolicyVersion: protectedProcedure.input(activateSubdivisionParticipationPolicyVersionInputSchema).mutation(({ ctx, input }) => activateSubdivisionParticipationPolicyVersion(ctx.supabaseSubjectId ?? undefined, input)),
     listDraftBuyerClients: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClients(ctx.supabaseSubjectId ?? undefined, input)),
     createDraftBuyerClient: protectedProcedure.input(draftSubdivisionBuyerClientInputSchema).mutation(({ ctx, input }) => createDraftSubdivisionBuyerClient(ctx.supabaseSubjectId ?? undefined, input)),
     registerBuyerClientDirect: protectedProcedure.input(registerSubdivisionBuyerClientDirectInputSchema).mutation(({ ctx, input }) => registerSubdivisionBuyerClientDirect(ctx.supabaseSubjectId ?? undefined, input)),
     registerClientDirect: protectedProcedure.input(registerSubdivisionClientDirectInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return registerSubdivisionClientDirect(ctx.supabaseSubjectId ?? undefined, input);
     }),
     archiveClient: protectedProcedure.input(archiveSubdivisionClientInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return archiveSubdivisionClient(ctx.supabaseSubjectId ?? undefined, input);
     }),
     restoreClient: protectedProcedure.input(restoreSubdivisionClientInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return restoreSubdivisionClient(ctx.supabaseSubjectId ?? undefined, input);
     }),
     listArchivedClients: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listArchivedSubdivisionClients(ctx.supabaseSubjectId ?? undefined, input)),
@@ -738,21 +671,17 @@ export const appRouter = router({
     listDraftBuyerClientProfileSummaries: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientProfileSummaries(ctx.supabaseSubjectId ?? undefined, input)),
     getDraftBuyerClientProfile: protectedProcedure.input(subdivisionBuyerClientProfileLookupInputSchema).query(({ ctx, input }) => getDraftSubdivisionBuyerClientProfile(ctx.supabaseSubjectId ?? undefined, input)),
     upsertDraftBuyerClientProfile: protectedProcedure.input(upsertSubdivisionBuyerClientProfileInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return upsertDraftSubdivisionBuyerClientProfile(ctx.supabaseSubjectId ?? undefined, input);
     }),
     updateDraftBuyerClientName: protectedProcedure.input(updateSubdivisionBuyerClientNameInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return updateDraftSubdivisionBuyerClientName(ctx.supabaseSubjectId ?? undefined, input);
     }),
     listDraftBuyerClientRequirements: protectedProcedure.input(subdivisionBuyerClientProfileLookupInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientRequirements(ctx.supabaseSubjectId ?? undefined, input)),
     upsertDraftBuyerClientRequirement: protectedProcedure.input(upsertSubdivisionBuyerClientRequirementInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return upsertDraftSubdivisionBuyerClientRequirement(ctx.supabaseSubjectId ?? undefined, input);
     }),
     listDraftBuyerClientContactPreferences: protectedProcedure.input(subdivisionBuyerClientProfileLookupInputSchema).query(({ ctx, input }) => listDraftSubdivisionBuyerClientContactPreferences(ctx.supabaseSubjectId ?? undefined, input)),
     upsertDraftBuyerClientContactPreference: protectedProcedure.input(upsertSubdivisionBuyerClientContactPreferenceInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return upsertDraftSubdivisionBuyerClientContactPreference(ctx.supabaseSubjectId ?? undefined, input);
     }),
     listBuyerAttachmentIntents: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listBuyerAttachmentIntents(ctx.supabaseSubjectId ?? undefined, input)),
@@ -768,54 +697,42 @@ export const appRouter = router({
     listLotInternalPriceReferences: protectedProcedure.input(listSubdivisionLotInternalPriceReferencesInputSchema).query(({ ctx, input }) =>
       listSubdivisionLotInternalPriceReferences(ctx.supabaseSubjectId ?? undefined, input)),
     previewPriceBaseSource: protectedProcedure.input(previewSubdivisionPriceBaseSourceInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return previewSubdivisionPriceBaseSource(ctx.supabaseSubjectId ?? undefined, input);
     }),
     preparePriceBasePolicy: protectedProcedure.input(prepareSubdivisionPriceBasePolicyInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return prepareSubdivisionPriceBasePolicy(ctx.supabaseSubjectId ?? undefined, input);
     }),
     prepareManualPriceBaseCorrection: protectedProcedure.input(prepareManualSubdivisionPriceBaseCorrectionInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return prepareManualSubdivisionPriceBaseCorrection(ctx.supabaseSubjectId ?? undefined, input);
     }),
     submitPriceBasePolicy: protectedProcedure.input(submitSubdivisionPriceBasePolicyInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return submitSubdivisionPriceBasePolicy(ctx.supabaseSubjectId ?? undefined, input);
     }),
     approvePriceBasePolicy: protectedProcedure.input(approveSubdivisionPriceBasePolicyInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return approveSubdivisionPriceBasePolicy(ctx.supabaseSubjectId ?? undefined, input);
     }),
     withdrawPriceBasePolicy: protectedProcedure.input(withdrawSubdivisionPriceBasePolicyInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return withdrawSubdivisionPriceBasePolicy(ctx.supabaseSubjectId ?? undefined, input);
     }),
     listPriceConditions: protectedProcedure.input(listSubdivisionPriceConditionsInputSchema).query(({ ctx, input }) => listSubdivisionPriceConditions(ctx.supabaseSubjectId ?? undefined, input)),
     listPriceEvidenceSummary: protectedProcedure.input(listSubdivisionPriceEvidenceSummaryInputSchema).query(({ ctx, input }) => listSubdivisionPriceEvidenceSummary(ctx.supabaseSubjectId ?? undefined, input)),
     linkPriceEvidence: protectedProcedure.input(linkSubdivisionPriceEvidenceInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return linkSubdivisionPriceEvidence(ctx.supabaseSubjectId ?? undefined, input);
     }),
     archivePriceEvidenceLink: protectedProcedure.input(archiveSubdivisionPriceEvidenceLinkInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return archiveSubdivisionPriceEvidenceLink(ctx.supabaseSubjectId ?? undefined, input);
     }),
     getLotPriceContext: protectedProcedure.input(getSubdivisionLotPriceContextInputSchema).query(({ ctx, input }) => getSubdivisionLotPriceContext(ctx.supabaseSubjectId ?? undefined, input)),
     createPriceCondition: protectedProcedure.input(createSubdivisionPriceConditionInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return createSubdivisionPriceCondition(ctx.supabaseSubjectId ?? undefined, input);
     }),
     submitPriceCondition: protectedProcedure.input(submitSubdivisionPriceConditionInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return submitSubdivisionPriceCondition(ctx.supabaseSubjectId ?? undefined, input);
     }),
     approvePriceCondition: protectedProcedure.input(approveSubdivisionPriceConditionInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return approveSubdivisionPriceCondition(ctx.supabaseSubjectId ?? undefined, input);
     }),
     withdrawPriceCondition: protectedProcedure.input(withdrawSubdivisionPriceConditionInputSchema).mutation(async ({ ctx, input }) => {
-      await requireRecentTotpMfa(ctx);
       return withdrawSubdivisionPriceCondition(ctx.supabaseSubjectId ?? undefined, input);
     }),
     createSaleDraft: protectedProcedure.input(draftSubdivisionSaleDraftInputSchema).mutation(({ ctx, input }) => createSubdivisionSaleDraft(ctx.supabaseSubjectId ?? undefined, input)),
@@ -828,19 +745,15 @@ export const appRouter = router({
     listSaleCases: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleCases(ctx.supabaseSubjectId ?? undefined, input)),
     listSaleCaseParties: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleCaseParties(ctx.supabaseSubjectId ?? undefined, input)),
     openSaleCase: protectedProcedure.input(openSubdivisionSaleCaseInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return openSubdivisionSaleCase(ctx.supabaseSubjectId ?? undefined, input);
     }),
     saveSaleCaseTerms: protectedProcedure.input(saveSubdivisionSaleCaseTermsInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return saveSubdivisionSaleCaseTerms(ctx.supabaseSubjectId ?? undefined, input);
     }),
     addSaleCaseJointProponent: protectedProcedure.input(addSubdivisionSaleCaseJointProponentInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return addSubdivisionSaleCaseJointProponent(ctx.supabaseSubjectId ?? undefined, input);
     }),
     removeSaleCaseJointProponent: protectedProcedure.input(removeSubdivisionSaleCaseJointProponentInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return removeSubdivisionSaleCaseJointProponent(ctx.supabaseSubjectId ?? undefined, input);
     }),
     listInternalSaleContracts: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionInternalSaleContracts(ctx.supabaseSubjectId ?? undefined, input)),
@@ -848,26 +761,22 @@ export const appRouter = router({
     listInternalReceivableBatches: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionInternalReceivableBatches(ctx.supabaseSubjectId ?? undefined, input)),
     listLotCommercialStates: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionLotCommercialStates(ctx.supabaseSubjectId ?? undefined, input)),
     formalizeSaleCase: protectedProcedure.input(formalizeSubdivisionSaleCaseInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return formalizeSubdivisionSaleCase(ctx.supabaseSubjectId ?? undefined, input);
     }),
     approveSaleCase: protectedProcedure.input(approveSubdivisionSaleCaseInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return approveSubdivisionSaleCase(ctx.supabaseSubjectId ?? undefined, input);
     }),
     requestSaleReversal: protectedProcedure.input(requestSubdivisionSaleReversalInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return requestSubdivisionSaleReversal(ctx.supabaseSubjectId ?? undefined, input);
     }),
     releaseInternalReceivableBatch: protectedProcedure.input(releaseSubdivisionInternalReceivableBatchInputSchema).mutation(async ({ ctx, input }) => {
-      await requireVerifiedAal2Session(ctx);
       return releaseSubdivisionInternalReceivableBatch(ctx.supabaseSubjectId ?? undefined, input);
     }),
     configureInternalReceivableAlerts: protectedProcedure.input(configureSubdivisionInternalReceivableAlertsInputSchema).mutation(({ ctx, input }) => configureSubdivisionInternalReceivableAlerts(ctx.supabaseSubjectId ?? undefined, input)),
     getInternalReceivableAlertConfiguration: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => getSubdivisionInternalReceivableAlertConfiguration(ctx.supabaseSubjectId ?? undefined, input)),
     manageInternalReceivableAlertSchedule: protectedProcedure.input(manageSubdivisionInternalReceivableAlertScheduleInputSchema).mutation(({ ctx, input }) => manageSubdivisionInternalReceivableAlertSchedule(ctx.supabaseSubjectId ?? undefined, input, ctx.req.headers.cookie)),
-    createSaleCaseDocumentIntent: protectedProcedure.input(createSubdivisionSaleCaseDocumentIntentInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return createSubdivisionSaleCaseDocumentIntent(ctx.supabaseSubjectId ?? undefined, input); }),
-    setSaleCaseDossierReview: protectedProcedure.input(setSubdivisionSaleCaseDossierReviewInputSchema).mutation(async ({ ctx, input }) => { await requireVerifiedAal2Session(ctx); return setSubdivisionSaleCaseDossierReview(ctx.supabaseSubjectId ?? undefined, input); }),
+    createSaleCaseDocumentIntent: protectedProcedure.input(createSubdivisionSaleCaseDocumentIntentInputSchema).mutation(({ ctx, input }) => createSubdivisionSaleCaseDocumentIntent(ctx.supabaseSubjectId ?? undefined, input)),
+    setSaleCaseDossierReview: protectedProcedure.input(setSubdivisionSaleCaseDossierReviewInputSchema).mutation(({ ctx, input }) => setSubdivisionSaleCaseDossierReview(ctx.supabaseSubjectId ?? undefined, input)),
     listSaleCaseDossiers: protectedProcedure.input(subdivisionContextSchema).query(({ ctx, input }) => listSubdivisionSaleCaseDossiers(ctx.supabaseSubjectId ?? undefined, input)),
   }),
 

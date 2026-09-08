@@ -132,7 +132,7 @@ export default function SupabaseLogin() {
           <p className="mt-5 max-w-sm text-sm leading-6 text-[#c9e0dc]">A sessão de trabalho é autenticada pelo Google. Ela permite apenas a leitura que o servidor autorizar para a organização, módulo e finalidade vigentes.</p>
           <div className="mt-10 border-t border-white/15 pt-6 text-sm leading-6 text-[#c9e0dc]">
             <p className="font-semibold text-white">O que este acesso não faz</p>
-            <p className="mt-2">Não cria organização, membership, grant, escopo, perfil administrativo ou qualquer autorização. Comandos sensíveis continuam exigindo MFA e validação do servidor.</p>
+            <p className="mt-2">Não cria organização, membership, grant, escopo, perfil administrativo ou qualquer autorização. Comandos operacionais continuam exigindo sessão válida e validação do servidor.</p>
           </div>
         </aside>
 
