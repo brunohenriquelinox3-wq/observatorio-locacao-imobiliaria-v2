@@ -107,12 +107,12 @@ export default function PlatformAdmin() {
   const [membershipAction, setMembershipAction] = useState<"suspend" | "revoke">("suspend");
   const [membershipId, setMembershipId] = useState("");
   const [membershipReason, setMembershipReason] = useState("");
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const canLoadIdentity = canLoadIdentityState(isAuthenticated);
   const identityQuery = trpc.foundation.identity.useQuery(undefined, { retry: false, enabled: canLoadIdentity });
   const canLoadBootstrapStatus = canLoadIdentity && identityQuery.data?.state === "connected";
   const commandStatusQuery = trpc.foundation.commandStatus.useQuery(undefined, { retry: false, enabled: canLoadBootstrapStatus });
-  const canLoadAdministrativeData = canLoadAdministrativeState(isAuthenticated, user?.role) || commandStatusQuery.data?.commandMode === "ready_for_controlled_commands";
+  const canLoadAdministrativeData = canLoadAdministrativeState(isAuthenticated, undefined) || commandStatusQuery.data?.commandMode === "ready_for_controlled_commands";
   const readinessQuery = trpc.foundation.readiness.useQuery(undefined, { retry: false, enabled: canLoadAdministrativeData });
   const selfAdministrationTargetsQuery = trpc.administration.listSelfAdministrationOrganizationTargets.useQuery(undefined, {
     retry: false,

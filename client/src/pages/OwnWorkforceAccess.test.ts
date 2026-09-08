@@ -21,6 +21,7 @@ describe("OwnWorkforceAccess", () => {
     expect(source).not.toContain('type="email"');
     expect(source).not.toContain('type="password"');
     expect(source).not.toContain("window.location.href");
-    expect(source).toContain("A sessão da plataforma, isoladamente, não libera solicitação nem leitura.");
+    expect(source).toContain("Entre com sua conta Google para iniciar a confirmação de identidade.");
+    expect(source).toContain("Sem sessão válida, nenhuma solicitação ou leitura é liberada.");
   });
 });

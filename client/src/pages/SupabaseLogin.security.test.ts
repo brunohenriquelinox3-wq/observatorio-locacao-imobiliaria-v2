@@ -13,6 +13,12 @@ describe("jornada de login Supabase", () => {
     expect(source).not.toContain("window.location.assign(data.url)");
   });
 
+  it("não exige mais sessão de plataforma antes de oferecer o login Google", () => {
+    expect(source).not.toContain("useAuth");
+    expect(source).not.toContain("startLogin");
+    expect(source).toContain('const showSignInForm = state === "missing"');
+  });
+
   it("mantém a senha de contingência apenas na interação local e não registra seu conteúdo", () => {
     expect(source).toContain("signInWithPassword");
     expect(source).toContain('autoComplete="current-password"');

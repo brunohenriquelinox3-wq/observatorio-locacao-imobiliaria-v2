@@ -1,5 +1,6 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { crmNavigationItems } from "@/lib/crmNavigation";
+import { trpc } from "@/lib/trpc";
 import { Building2, ClipboardList, FileStack, Landmark, LayoutDashboard, MapPinned, ShieldCheck, UsersRound } from "lucide-react";
 import "../crm-entry.css";
 import "../crm-entry-overrides.css";
@@ -48,6 +49,32 @@ const columns = [
 ] as const;
 
 export default function Home() {
+  const queryOptions = { retry: false, refetchOnWindowFocus: false };
+  const loteadoraContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "loteadora" }, queryOptions);
+  const urbanSalesContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "vendas_urbanas" }, queryOptions);
+  const rentalContextsQuery = trpc.organizationContext.listAuthorizedForModule.useQuery({ module: "locacao" }, queryOptions);
+  const isContextAvailabilityResolved = loteadoraContextsQuery.isSuccess && urbanSalesContextsQuery.isSuccess && rentalContextsQuery.isSuccess;
+  const hasAuthorizedWorkContext = Boolean(
+    loteadoraContextsQuery.data?.length || urbanSalesContextsQuery.data?.length || rentalContextsQuery.data?.length,
+  );
+
+  if (isContextAvailabilityResolved && !hasAuthorizedWorkContext) {
+    return (
+      <DashboardLayout navigationItems={crmNavigationItems} navigationTitle="CRM">
+        <main className="crm-entry" aria-labelledby="workforce-request-title">
+          <section className="crm-entry__guidance max-w-3xl" aria-label="Acesso aguardando vínculo">
+            <article className="min-h-48 flex-col items-start gap-4 p-8">
+              <p className="text-xs font-bold tracking-[0.16em] text-[#1d8775]">CONTA GOOGLE CONFIRMADA</p>
+              <h1 id="workforce-request-title" className="text-3xl font-semibold tracking-[-0.04em] text-[#173b4d]">Seu acesso de trabalho ainda precisa de vínculo interno.</h1>
+              <p className="max-w-2xl text-sm leading-6 text-[#506a6e]">A conta foi autenticada, mas não recebeu organização, papel, módulo ou escopo automaticamente. Solicite seu vínculo para que um administrador da BHL Imóveis prepare a alçada apropriada.</p>
+              <a href="/acesso-equipe" className="inline-flex min-h-11 items-center rounded-lg bg-[#c85732] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#ab4829] active:scale-[0.97] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#f2bb9d]/50">Solicitar vínculo de trabalho</a>
+            </article>
+          </section>
+        </main>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout navigationItems={crmNavigationItems} navigationTitle="CRM">
       <main className="crm-entry" aria-labelledby="crm-entry-title">

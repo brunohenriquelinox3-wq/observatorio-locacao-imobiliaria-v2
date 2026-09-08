@@ -34,7 +34,6 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
 import { filterNavigationByAuthorizedModules } from "@/lib/dashboardAuthorizedNavigation";
 import { shouldCloseMobileNavigationAfterRouteChange } from "@/lib/dashboardNavigationBehavior";
@@ -80,12 +79,12 @@ export type DashboardAccessGate = {
 };
 
 const defaultAccessGate: DashboardAccessGate = {
-  eyebrow: "CAMADA RESTRITA · EVIDÊNCIA ANTES DE PRIVILÉGIO",
-  title: "Entre na central que governa a plataforma — não os dados de cada cliente.",
-  description: "Este acesso protege organizações, permissões, sessões e trilhas de auditoria. A identidade é só o primeiro passo: alçada, escopo e MFA continuam sendo verificados antes de qualquer comando sensível.",
+  eyebrow: "ACESSO DE TRABALHO · IDENTIDADE ANTES DE PRIVILÉGIO",
+  title: "Entre com sua conta Google de trabalho.",
+  description: "O acesso protege organizações, permissões, sessões e trilhas de auditoria. A identidade é só o primeiro passo: vínculo, alçada, escopo e MFA continuam sendo verificados antes de qualquer comando sensível.",
   routeTitle: "Rota de acesso",
-  routeDetail: "Autenticação → MFA → escopo vigente → policy",
-  actionLabel: "Acessar área governada",
+  routeDetail: "Google → vínculo vigente → escopo → policy",
+  actionLabel: "Entrar com Google",
   footerLabel: "CAMPO DE LEITURA",
   footerValue: "23° 33′ S · 46° 38′ W",
   footerNote: "Nenhum e-mail ou login recebe privilégio por si só.",
@@ -156,7 +155,10 @@ export default function DashboardLayout({
               <LockKeyhole size={18} />
               <span><b>{accessGate.routeTitle}</b><small>{accessGate.routeDetail}</small></span>
             </div>
-            <Button onClick={() => startLogin()} size="lg" className="admin-access-gate__cta">
+            <Button onClick={() => {
+              const currentPath = `${window.location.pathname}${window.location.search}`;
+              window.location.assign(`/entrar?proximo=${encodeURIComponent(currentPath)}`);
+            }} size="lg" className="admin-access-gate__cta">
               {accessGate.actionLabel} <ArrowUpRight size={17} />
             </Button>
           </section>

@@ -27,6 +27,7 @@ import {
   preparePlatformWorkforceAccess,
   requestOwnWorkforceAccess,
 } from "./adminWorkforceAccess";
+import { ensureAuthenticatedGoogleIdentity } from "./authenticatedGoogleIdentity";
 import { attestSupabaseMfa } from "./supabaseIdentity";
 import {
   acceptOwnWorkforceAccessInputSchema,
@@ -330,7 +331,11 @@ export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   auth: router({
-    me: publicProcedure.query(opts => opts.ctx.user),
+    me: publicProcedure.query(async ({ ctx }) => {
+      if (!ctx.supabaseSubjectId) return null;
+      await ensureAuthenticatedGoogleIdentity(ctx.supabaseSubjectId);
+      return { authenticated: true, provider: "supabase" as const };
+    }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
@@ -407,13 +412,7 @@ export const appRouter = router({
       .query(({ ctx }) => listOwnWorkforceAccessRequests(ctx.supabaseSubjectId ?? null)),
     acceptOwnWorkforceAccess: protectedProcedure
       .input(acceptOwnWorkforceAccessInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
-        if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2" || attestation.method !== "totp" || !attestation.verifiedRecoveryChannel) {
-          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ADMIN_COMMAND_PRECONDITIONS_UNMET" });
-        }
-        return acceptOwnWorkforceAccess(ctx.supabaseSubjectId ?? null, input);
-      }),
+      .mutation(({ ctx, input }) => acceptOwnWorkforceAccess(ctx.supabaseSubjectId ?? null, input)),
     listPlatformWorkforceAccessRequests: platformActiveProcedure
       .query(({ ctx }) => listPlatformWorkforceAccessRequests(ctx.supabaseSubjectId ?? null)),
     preparePlatformWorkforceAccess: platformActiveProcedure
@@ -429,13 +428,7 @@ export const appRouter = router({
       .query(({ ctx }) => listOrganizationWorkforceAccessRequests(ctx.supabaseSubjectId ?? null)),
     prepareOrganizationWorkforceAccess: protectedProcedure
       .input(prepareWorkforceAccessInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        const attestation = await attestSupabaseMfa(ctx.supabaseAccessToken);
-        if (!attestation || attestation.subjectId !== ctx.supabaseSubjectId || attestation.assuranceLevel !== "aal2" || attestation.method !== "totp" || !attestation.verifiedRecoveryChannel) {
-          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ADMIN_COMMAND_PRECONDITIONS_UNMET" });
-        }
-        return prepareOrganizationWorkforceAccess(ctx.supabaseSubjectId ?? null, input);
-      }),
+      .mutation(({ ctx, input }) => prepareOrganizationWorkforceAccess(ctx.supabaseSubjectId ?? null, input)),
   }),
 
   organizationContext: router({

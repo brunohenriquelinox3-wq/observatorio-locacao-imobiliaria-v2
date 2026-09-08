@@ -5,13 +5,19 @@ import { resolve } from "node:path";
 const source = readFileSync(resolve(process.cwd(), "server/routers.ts"), "utf8");
 
 describe("roteamento do ciclo de equipe", () => {
-  it("mantém preparação e aceite atrás de procedures protegidas e atestação MFA", () => {
+  it("mantém preparação e aceite atrás de procedures protegidas sem novo desafio durante sessão válida", () => {
     expect(source).toContain("preparePlatformWorkforceAccess: platformActiveProcedure");
     expect(source).toContain("prepareOrganizationWorkforceAccess: protectedProcedure");
     expect(source).toContain("acceptOwnWorkforceAccess: protectedProcedure");
-    expect(source).toContain('attestation.assuranceLevel !== "aal2"');
-    expect(source).toContain('attestation.method !== "totp"');
-    expect(source).toContain("ADMIN_COMMAND_PRECONDITIONS_UNMET");
+    const acceptStart = source.indexOf("acceptOwnWorkforceAccess: protectedProcedure");
+    const organizationStart = source.indexOf("prepareOrganizationWorkforceAccess: protectedProcedure");
+    const acceptBlock = source.slice(acceptStart, source.indexOf("listPlatformWorkforceAccessRequests:", acceptStart));
+    const organizationBlock = source.slice(organizationStart, source.indexOf("\n  organizationContext:", organizationStart));
+    expect(acceptBlock).not.toContain("attestSupabaseMfa");
+    expect(organizationBlock).not.toContain("attestSupabaseMfa");
+    const platformStart = source.indexOf("preparePlatformWorkforceAccess: platformActiveProcedure");
+    const platformBlock = source.slice(platformStart, source.indexOf("listOrganizationWorkforceAccessRequests:", platformStart));
+    expect(platformBlock).toContain("attestSupabaseMfa");
   });
 
   it("não cria endpoint público de delegação", () => {
