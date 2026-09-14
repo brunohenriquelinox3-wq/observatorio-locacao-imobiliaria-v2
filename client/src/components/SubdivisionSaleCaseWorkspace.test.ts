@@ -25,7 +25,7 @@ describe("SubdivisionSaleCaseWorkspace", () => {
     expect(source).toContain("searchedDevelopment");
     expect(source).toContain("onDevelopmentChange(searchedDevelopment.id)");
     expect(source).toContain("Buscar cliente");
-    expect(source).toContain("Nome ou referência do cliente");
+    expect(source).toContain("Nome ou CPF/CNPJ do cliente");
     expect(source).toContain("onSearchBuyer");
     expect(source).toContain("Cliente localizado e vinculado automaticamente ao formulário.");
     expect(source).toContain("uniqueBuyer");
