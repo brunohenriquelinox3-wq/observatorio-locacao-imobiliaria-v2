@@ -33,7 +33,8 @@ describe("setores da coluna Loteadora", () => {
     expect(page).toContain("const isWorkspaceReady = isAuthenticated && isContextReady");
     expect(page).toContain("const selectBuyerClient = useCallback((buyerClientId: string) => {");
     expect(page).toContain('const isCentralSalesJourney = location === "/loteadora/vendas";');
-    expect(page).toContain('listDraftBuyerClients.useQuery(context, { enabled: isWorkspaceReady && isCentralSalesJourney, retry: false })');
+    expect(page).toContain('listDraftBuyerClients.useQuery(context, { enabled: false, retry: false })');
+    expect(page).toContain('buyers={(directoryBuyerClients ?? []).map');
     expect(page).toContain('!isBuyerProfilePage && <details id="subdivision-buyers"');
     expect(page).toContain("Vincular cadastro existente");
     expect(page).not.toContain('directoryBuyerClients.map((client) => <article key={client.buyerClientId}');
@@ -60,7 +61,7 @@ describe("setores da coluna Loteadora", () => {
     expect(page).toContain("setBuyerClientIdForProfile((value) => retainAuthorizedSelection(value, profileBuyerClients");
     expect(page).toContain("setBuyerClientIdForAttachment((value) => retainAuthorizedSelection(value, directoryBuyerClients");
     expect(page).toContain("if (buyerDirectoryQuery.isFetching) return;");
-    expect(page).toContain("[buyerClientsQuery.data, buyerDirectoryQuery.isFetching, directoryBuyerClients, profileBuyerClients]");
+    expect(page).toContain("[buyerDirectoryQuery.isFetching, directoryBuyerClients, profileBuyerClients]");
     expect(page).toContain("listDraftBuyerClientReadiness.useQuery");
   });
 

@@ -11,6 +11,12 @@ describe("SubdivisionSaleCaseWorkspace", () => {
     expect(source).toContain("Localizar cadastro");
     expect(source).toContain("Cadastrar novo Cliente Loteadora");
     expect(source).toContain("Iniciar venda");
+    expect(source).toContain("Buscar loteamento");
+    expect(source).toContain("Nome ou referência interna");
+    expect(source).toContain("Carregando loteamentos autorizados");
+    expect(source).toContain("Carregando quadras autorizadas");
+    expect(source).toContain("Carregando lotes autorizados");
+    expect(source).toContain("Clientes Loteadora autorizados");
   });
 
   it("mantém termos negociáveis separados de cobrança, boleto bancário e pagamento", () => {
