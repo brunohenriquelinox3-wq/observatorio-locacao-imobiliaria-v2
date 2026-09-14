@@ -34,6 +34,8 @@ export async function listAuthorizedOrganizationContexts(
   return data.map((row) => ({
     organizationId: String(row.organization_id),
     organizationLabel: String(row.organization_label),
-    purposeCode: String(row.purpose_code).trim().toUpperCase(),
+    // A finalidade é parte da chave de autorização e a policy compara o valor
+    // de forma exata. Não alterar caixa aqui: o grant vigente é a fonte canônica.
+    purposeCode: String(row.purpose_code).trim(),
   }));
 }

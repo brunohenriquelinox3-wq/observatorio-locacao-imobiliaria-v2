@@ -11,9 +11,16 @@ describe("authorized organization contexts", () => {
   it("maps only the minimized context fields returned by the protected RPC", async () => {
     const rpc = vi.fn().mockResolvedValue({ data: [{ organization_id: "org-1", organization_label: "Organização autorizada", purpose_code: " cadastro_inicial " }], error: null });
     await expect(listAuthorizedOrganizationContexts("subject-1", { module: "loteadora" }, { rpc } as never)).resolves.toEqual([
-      { organizationId: "org-1", organizationLabel: "Organização autorizada", purposeCode: "CADASTRO_INICIAL" },
+      { organizationId: "org-1", organizationLabel: "Organização autorizada", purposeCode: "cadastro_inicial" },
     ]);
     expect(rpc).toHaveBeenCalledWith("organization_list_authorized_contexts", { p_actor_user_id: "subject-1", p_module: "loteadora" });
+  });
+
+  it("preserves the exact purpose code used by the grant policy", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: [{ organization_id: "org-1", organization_label: "Organização autorizada", purpose_code: "operacao_interna" }], error: null });
+    await expect(listAuthorizedOrganizationContexts("subject-1", { module: "loteadora" }, { rpc } as never)).resolves.toMatchObject([
+      { purposeCode: "operacao_interna" },
+    ]);
   });
 
   it("accepts the other authorized operating modules without adding a wildcard", async () => {
