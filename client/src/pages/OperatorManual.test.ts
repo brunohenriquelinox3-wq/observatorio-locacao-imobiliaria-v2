@@ -15,6 +15,7 @@ describe("Manual do Operador", () => {
     expect(page).toContain('title: "Jurídico e contábil"');
     expect(page).toContain('title: "Permutante"');
     expect(page).toContain('title: "Sócios e parceiros"');
+    expect(page).toContain('title: "Usar o painel do Permutante"');
   });
 
   it("mantém prática segura, dados fictícios e progresso local", () => {
@@ -23,6 +24,9 @@ describe("Manual do Operador", () => {
     expect(page).toContain("operator-manual-completed");
     expect(page).toContain("Marcar como estudada");
     expect(page).toContain("Buscar por setor, função ou assunto");
+    expect(page).toContain("GALERIA DE PRINTS GUIADOS");
+    expect(page).toContain("Clique em uma tela para abrir a aula correspondente");
+    expect(page).toContain("firstLessonByTrack");
   });
 
   it("inclui as regras internas do CRM no conteúdo didático", () => {
