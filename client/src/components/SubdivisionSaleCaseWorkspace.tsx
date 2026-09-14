@@ -2,6 +2,7 @@ import { Calculator, CircleAlert, Landmark, Search, ShieldCheck, UserPlus, Walle
 import { useEffect, useMemo, useState } from "react";
 
 type Option = { id: string; label: string };
+type ReadState = "loading" | "ready" | "error";
 type PriceContext = { state: string; availabilityReason: string | null; policyReference: string | null; conditionReference: string | null; effectivePricePerSqmBrl: number | null; lotAreaSqm: number | null; effectiveLotTotalBrl: number | null } | null | undefined;
 type SaleCase = { saleCaseId: string; state: string; termsVersion: number | null; negotiatedTotalCents: number | null; entryAmountCents: number | null; entryDueDate: string | null; entryInstallmentCount: number; entryInstallmentAmountCents: number | null; entryFirstDueDate: string | null; entryDueDay: number | null; installmentCount: number; installmentAmountCents: number | null; firstDueDate: string | null; dueDay: number | null; settlementMode: "cash" | "structured"; cashSettlementAmountCents: number | null; cashSettlementDueDate: string | null; supplementalAmountCents: number | null; supplementalDueDate: string | null; tradeInCreditCents: number | null; tradeInDueDate: string | null; tradeInCategory: string | null; tradeInDescription: string | null };
 type SaleCaseParty = { saleCaseId: string; buyerClientId: string; partyRole: "primary_proponent" | "joint_proponent" };
@@ -11,6 +12,9 @@ type InternalBatch = { batchId: string; saleCaseId: string; batchState: "release
 
 type Props = {
   isWorkspaceReady: boolean;
+  developmentReadState: ReadState;
+  blockReadState: ReadState;
+  lotReadState: ReadState;
   developments: readonly Option[];
   blocks: readonly Option[];
   lots: readonly Option[];
@@ -99,6 +103,7 @@ export function buildMonthlyDueDates(firstDueDate: string, dueDay: number | null
 }
 
 export function SubdivisionSaleCaseWorkspace(props: Props) {
+  const [developmentSearch, setDevelopmentSearch] = useState("");
   const [totalBrl, setTotalBrl] = useState("");
   const [entryBrl, setEntryBrl] = useState("");
   const [entryDueDate, setEntryDueDate] = useState("");
@@ -189,6 +194,11 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
     setEntryDueDay(String(Number(entryFirstDueDate.slice(-2))));
   }, [entryFirstDueDate]);
   const availableJointProponents = props.buyers.filter((buyer) => !selectedCaseParties.some((party) => party.buyerClientId === buyer.id));
+  const filteredDevelopments = useMemo(() => {
+    const search = developmentSearch.trim().toLocaleLowerCase("pt-BR");
+    if (!search) return props.developments;
+    return props.developments.filter((option) => option.label.toLocaleLowerCase("pt-BR").includes(search));
+  }, [developmentSearch, props.developments]);
   const isFiscalReferenceValid = /^\D*(?:\d\D*){11}$|^\D*(?:\d\D*){14}$/.test(props.fiscalReference);
 
   const submitTerms = (event: React.FormEvent<HTMLFormElement>) => {
@@ -259,14 +269,15 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
         <form className="subdivision-foundation-card subdivision-sale-case-workspace__selector" onSubmit={(event) => { event.preventDefault(); props.onOpenCase(); }}>
           <div className="subdivision-foundation-card__title"><Landmark size={19} /><h3>1. Selecione o lote e o proponente principal</h3></div>
           <p>O Loteamento continua sendo a fonte física e de estoque. Aqui, a venda reúne o lote disponível e o Cliente Loteadora já cadastrado.</p>
-          <label htmlFor="sale-case-development">Loteamento<select id="sale-case-development" value={props.selectedDevelopmentId} onChange={(event) => props.onDevelopmentChange(event.target.value)} disabled={!props.isWorkspaceReady} required><option value="">Selecione um loteamento autorizado</option>{props.developments.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label>
-          <label htmlFor="sale-case-block">Quadra<select id="sale-case-block" value={props.selectedBlockId} onChange={(event) => props.onBlockChange(event.target.value)} disabled={!props.isWorkspaceReady || !props.selectedDevelopmentId} required><option value="">Selecione uma quadra autorizada</option>{props.blocks.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label>
-          <label htmlFor="sale-case-lot">Lote<select id="sale-case-lot" value={props.selectedLotId} onChange={(event) => props.onLotChange(event.target.value)} disabled={!props.isWorkspaceReady || !props.selectedBlockId} required><option value="">Selecione um lote autorizado</option>{props.lots.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label>
+          <label htmlFor="sale-case-development-search">Buscar loteamento<input id="sale-case-development-search" type="search" value={developmentSearch} onChange={(event) => setDevelopmentSearch(event.target.value)} placeholder="Nome ou referência interna" disabled={!props.isWorkspaceReady || props.developmentReadState !== "ready"} /></label>
+          <label htmlFor="sale-case-development">Loteamento<select id="sale-case-development" value={props.selectedDevelopmentId} onChange={(event) => props.onDevelopmentChange(event.target.value)} disabled={!props.isWorkspaceReady || props.developmentReadState !== "ready"} required><option value="">{props.developmentReadState === "loading" ? "Carregando loteamentos autorizados" : props.developmentReadState === "error" ? "Leitura de loteamentos indisponível" : filteredDevelopments.length ? "Selecione um loteamento autorizado" : developmentSearch ? "Nenhum loteamento encontrado" : "Nenhum loteamento disponível"}</option>{filteredDevelopments.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label>
+          <label htmlFor="sale-case-block">Quadra<select id="sale-case-block" value={props.selectedBlockId} onChange={(event) => props.onBlockChange(event.target.value)} disabled={!props.isWorkspaceReady || !props.selectedDevelopmentId || props.blockReadState !== "ready"} required><option value="">{!props.selectedDevelopmentId ? "Selecione primeiro o loteamento" : props.blockReadState === "loading" ? "Carregando quadras autorizadas" : props.blockReadState === "error" ? "Leitura de quadras indisponível" : props.blocks.length ? "Selecione uma quadra autorizada" : "Nenhuma quadra cadastrada neste loteamento"}</option>{props.blocks.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label>
+          <label htmlFor="sale-case-lot">Lote<select id="sale-case-lot" value={props.selectedLotId} onChange={(event) => props.onLotChange(event.target.value)} disabled={!props.isWorkspaceReady || !props.selectedBlockId || props.lotReadState !== "ready"} required><option value="">{!props.selectedBlockId ? "Selecione primeiro a quadra" : props.lotReadState === "loading" ? "Carregando lotes autorizados" : props.lotReadState === "error" ? "Leitura de lotes indisponível" : props.lots.length ? "Selecione um lote autorizado" : "Nenhum lote cadastrado nesta quadra"}</option>{props.lots.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label>
           <div className="subdivision-sale-case-workspace__client-lookup"><label htmlFor="sale-case-fiscal-reference">CPF/CNPJ declarado<small>Consulte um cadastro já autorizado; o valor não entra no histórico desta tela.</small><input id="sale-case-fiscal-reference" inputMode="numeric" autoComplete="off" value={props.fiscalReference} onChange={(event) => props.onFiscalReferenceChange(event.target.value)} placeholder="Digite CPF ou CNPJ" disabled={!props.isWorkspaceReady} /></label><button type="button" onClick={props.onLookupBuyer} disabled={!props.isWorkspaceReady || !isFiscalReferenceValid || props.lookupState === "loading"}><Search size={15} />{props.lookupState === "loading" ? "Consultando" : "Localizar cadastro"}</button></div>
           {props.lookupState === "found" && <p className="subdivision-sale-case-workspace__success"><ShieldCheck size={15} />Cadastro localizado e selecionado no contexto autorizado.</p>}
           {props.lookupState === "not_found" && <p className="subdivision-sale-case-workspace__notice"><CircleAlert size={15} />Nenhum cadastro ativo foi localizado. Cadastre o cliente antes de abrir o caso.</p>}
           {props.lookupState === "error" && <p className="subdivision-sale-case-workspace__notice"><CircleAlert size={15} />A consulta não foi liberada. Revise o contexto sem tentar inferir dados.</p>}
-          <label htmlFor="sale-case-buyer">Cliente selecionado<select id="sale-case-buyer" value={props.selectedBuyerClientId} onChange={(event) => props.onBuyerChange(event.target.value)} disabled={!props.isWorkspaceReady} required><option value="">Selecione ou localize um cliente</option>{props.buyers.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label>
+          <label htmlFor="sale-case-buyer">Cliente selecionado<select id="sale-case-buyer" value={props.selectedBuyerClientId} onChange={(event) => props.onBuyerChange(event.target.value)} disabled={!props.isWorkspaceReady} required><option value="">{props.buyers.length ? "Selecione ou localize um Cliente Loteadora" : "Carregando Clientes Loteadora autorizados"}</option>{props.buyers.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</select><small>Os clientes disponíveis são os cadastros já autorizados na Central de Clientes.</small></label>
           <a className="subdivision-sale-case-workspace__new-client" href="/loteadora/clientes"><UserPlus size={16} />Cadastrar novo Cliente Loteadora</a>
           <button type="submit" disabled={!props.isWorkspaceReady || !props.selectedLotId || !props.selectedBuyerClientId || props.openingCase}>{props.openingCase ? "Iniciando venda" : "Iniciar venda"}</button>
         </form>

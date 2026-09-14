@@ -4,7 +4,12 @@ function ordinal(index: number) {
   return String(Math.max(1, index + 1)).padStart(2, "0");
 }
 
-export function formatSubdivisionDevelopmentLabel(index: number) {
+export function formatSubdivisionDevelopmentLabel(index: number, displayName?: string | null, internalReference?: string | null) {
+  const name = displayName?.trim();
+  const reference = internalReference?.trim();
+  if (name && reference && name !== reference) return `${name} · ${reference}`;
+  if (name) return name;
+  if (reference) return reference;
   return `Loteamento ${ordinal(index)}`;
 }
 

@@ -22,4 +22,10 @@ describe("Central de Vendas — entrada da venda de lote", () => {
     expect(source).toContain("não dá baixa");
     expect(source).toContain("não registra pagamento");
   });
+
+  it("usa o diretório contextual de Clientes Loteadora no seletor da venda", () => {
+    expect(source).toContain("buyers={(directoryBuyerClients ?? []).map");
+    expect(source).toContain("label: client.displayName");
+    expect(source).toContain("listDraftBuyerClients.useQuery(context, { enabled: false");
+  });
 });

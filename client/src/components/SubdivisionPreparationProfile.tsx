@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { formatSubdivisionDevelopmentLabel } from "@/lib/subdivisionOperationalReference";
 
-type DevelopmentOption = { developmentId: string; internalReference: string };
+type DevelopmentOption = { developmentId: string; internalReference: string; displayName?: string | null };
 type InternalRoleOption = { linkId: string; developmentId: string; role: string };
 
 type SubdivisionPreparationProfileProps = {
@@ -126,7 +126,7 @@ export function SubdivisionPreparationProfile({
           <label htmlFor="subdivision-preparation-development">Loteamento em rascunho</label>
           <select id="subdivision-preparation-development" value={developmentId} onChange={(event) => setDevelopmentId(event.target.value)} disabled={!isWorkspaceReady || profilesQuery.isLoading} required>
             <option value="">{!isWorkspaceReady ? "Defina um contexto autorizado" : developments?.length ? "Selecione um loteamento autorizado" : "Nenhum loteamento em rascunho neste contexto"}</option>
-            {developments?.map((development, index) => <option key={development.developmentId} value={development.developmentId}>{formatSubdivisionDevelopmentLabel(index)}</option>)}
+            {developments?.map((development, index) => <option key={development.developmentId} value={development.developmentId}>{formatSubdivisionDevelopmentLabel(index, development.displayName, development.internalReference)}</option>)}
           </select>
 
           <label htmlFor="subdivision-preparation-planning">Situação de planejamento</label>

@@ -26,8 +26,8 @@ describe("apresentação de referências internas em Loteamentos", () => {
   });
 
   it("aplica o padrão curto também aos seletores de cadastro e preparação", () => {
-    expect(foundation).toContain("formatSubdivisionDevelopmentLabel(index)");
-    expect(preparation).toContain("formatSubdivisionDevelopmentLabel(index)");
+    expect(foundation).toContain("formatSubdivisionDevelopmentLabel(index, development.displayName, development.internalReference)");
+    expect(preparation).toContain("formatSubdivisionDevelopmentLabel(index, development.displayName, development.internalReference)");
     expect(foundation).not.toContain(">{development.internalReference}</option>");
     expect(preparation).not.toContain(">{development.internalReference}</option>");
   });

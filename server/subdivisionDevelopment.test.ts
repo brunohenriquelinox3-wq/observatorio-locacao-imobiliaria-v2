@@ -15,10 +15,10 @@ describe("subdivision development server boundary", () => {
     expect(rpc).not.toHaveBeenCalled();
   });
 
-  it("reads only the minimized contextual development summary", async () => {
-    rpc.mockResolvedValueOnce({ data: [{ development_id: developmentId, internal_reference: "LT_NORTE_01", working_phase: "structuring", created_at: "2026-08-28T00:00:00+00:00" }], error: null });
-    await expect(listDraftSubdivisionDevelopments(subjectId, context, client)).resolves.toEqual([{ developmentId, internalReference: "LT_NORTE_01", workingPhase: "structuring", createdAt: "2026-08-28T00:00:00+00:00" }]);
-    expect(rpc).toHaveBeenLastCalledWith("subdivision_list_draft_developments", expect.objectContaining({ p_actor_user_id: subjectId, p_module: "loteadora" }));
+  it("reads the complete contextual development identity for selectors", async () => {
+    rpc.mockResolvedValueOnce({ data: [{ development_id: developmentId, internal_reference: "LT_NORTE_01", display_name: "Vista do Sol", municipality: "Cidade", state_code: "SP", working_phase: "structuring", created_at: "2026-08-28T00:00:00+00:00" }], error: null });
+    await expect(listDraftSubdivisionDevelopments(subjectId, context, client)).resolves.toEqual([{ developmentId, internalReference: "LT_NORTE_01", displayName: "Vista do Sol", municipality: "Cidade", stateCode: "SP", workingPhase: "structuring", createdAt: "2026-08-28T00:00:00+00:00" }]);
+    expect(rpc).toHaveBeenLastCalledWith("subdivision_list_draft_developments_v3", expect.objectContaining({ p_actor_user_id: subjectId, p_module: "loteadora" }));
   });
 
   it("uses a protected contextual RPC to create the draft development", async () => {
