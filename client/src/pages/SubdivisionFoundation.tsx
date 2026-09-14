@@ -24,7 +24,7 @@ import { SubdivisionSaleCaseDossier } from "@/components/SubdivisionSaleCaseDoss
 import { SubdivisionInternalReceivableBatchPanel } from "@/components/SubdivisionInternalReceivableBatchPanel";
 import { ReportExportActions } from "@/components/ReportExportActions";
 import { crmNavigationItems } from "@/lib/crmNavigation";
-import { Building2, CalendarClock, CircleAlert, Compass, FileStack, House, LandPlot, Layers3, LockKeyhole, Map, ShieldCheck, UsersRound, Workflow } from "lucide-react";
+import { Building2, CalendarClock, CircleAlert, CirclePlus, Compass, FileStack, House, LandPlot, Layers3, LockKeyhole, Map, ShieldCheck, UsersRound, Workflow } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
@@ -373,7 +373,7 @@ export default function SubdivisionFoundation() {
 
         {activeSector === "clients" && <nav className="subdivision-central-navigation" aria-label="Áreas da Central de Vendas">
           <a href="/loteadora/clientes" aria-current={!isCentralSalesJourney ? "page" : undefined}><UsersRound size={17} aria-hidden="true" /><span><b>Clientes e documentos</b><small>Cadastros, busca, ficha e dossiê privado</small></span></a>
-          <a href="/loteadora/vendas" aria-current={isCentralSalesJourney ? "page" : undefined}><Workflow size={17} aria-hidden="true" /><span><b>Preparação de venda</b><small>Escolha de lote e vínculo cadastral</small></span></a>
+          <a href="/loteadora/vendas" aria-current={isCentralSalesJourney ? "page" : undefined}><CirclePlus size={17} aria-hidden="true" /><span><b>Nova venda</b><small>Escolha lote, proponentes, negociação e agenda interna</small></span></a>
         </nav>}
 
         {activeSector === "developments" && <>
@@ -408,6 +408,16 @@ export default function SubdivisionFoundation() {
         </section>}
         {activeSector === "clients" && !isCentralSalesJourney && <>
         <ReportExportActions report={{ title: "Resumo da Central de Vendas", scopeLabel: "Clientes no contexto selecionado", rows: [{ section: "Cadastro", indicator: "Clientes em organização", status: directoryBuyerClients ? `${directoryBuyerClients.length} registro(s) autorizado(s)` : "Leitura pendente ou bloqueada" }, { section: "Anexos", indicator: "Cobertura", status: "Estado privado e redigido" }, { section: "Segurança", indicator: "Contexto", status: isWorkspaceReady ? "Confirmado pelo servidor" : "Não selecionado" }] }} isAuthorized={isWorkspaceReady} description="Exporte um resumo redigido dos clientes da Central; nomes, documentos e identificadores não são incluídos." />
+        <section className="subdivision-sales-entry" aria-labelledby="subdivision-sales-entry-title">
+          <div className="subdivision-sales-entry__content">
+            <p className="subdivision-foundation-eyebrow">AÇÃO PRINCIPAL · VENDAS DE LOTES</p>
+            <h2 id="subdivision-sales-entry-title">Cadastre uma nova venda de lote.</h2>
+            <p>Use esta jornada para selecionar o lote, localizar um ou mais proponentes, definir a negociação e gerar a agenda de parcelas para revisão. A aprovação marca o lote como vendido e cria automaticamente o <b>lote interno de parcelas</b> no Financeiro.</p>
+            <ol aria-label="Etapas da venda de lote"><li><b>1</b> Escolha o lote e o proponente principal.</li><li><b>2</b> Informe a forma de negociação e os vencimentos.</li><li><b>3</b> Revise o dossiê e confirme a venda.</li></ol>
+          </div>
+          <a className="subdivision-sales-entry__action" href="/loteadora/vendas"><CirclePlus size={20} aria-hidden="true" /><span><small>Central de Vendas</small><b>Iniciar nova venda</b><em>Abre a jornada completa</em></span></a>
+          <p className="subdivision-sales-entry__notice">Controle interno: não emite boleto bancário, não envia mensagem, não acessa banco, não dá baixa e não registra pagamento.</p>
+        </section>
         {!isBuyerProfilePage && <SubdivisionBuyerClientDirectory context={context} isContextReady={isContextReady} isWorkspaceReady={isWorkspaceReady} selectedBuyerClientId={buyerClientIdForProfile} onSelectBuyerClient={selectBuyerClient} onOpenProfilePage={() => setLocation("/loteadora/clientes/ficha")} />}
 		{isBuyerProfilePage && <section id="buyer-profile-standalone" className="subdivision-foundation-workspace" aria-labelledby="buyer-profile-standalone-title">
 		  <div className="subdivision-foundation-heading"><div><p className="subdivision-foundation-eyebrow">06 · ESTOQUE CADASTRAL</p><h2 id="buyer-profile-standalone-title">Busca e edição na Central de Vendas</h2></div><p>Encontre o cadastro pela informação disponível e edite a ficha no próprio resultado. Inclusão, arquivamento e restauração continuam disponíveis na Central de Vendas.</p></div>

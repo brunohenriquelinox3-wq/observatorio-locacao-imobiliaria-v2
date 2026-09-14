@@ -6,26 +6,33 @@ import { buildMonthlyDueDates, deriveEqualInstallmentCents, deriveEqualInstallme
 const source = readFileSync(path.resolve(process.cwd(), "client/src/components/SubdivisionSaleCaseWorkspace.tsx"), "utf8");
 
 describe("SubdivisionSaleCaseWorkspace", () => {
-  it("reúne lote, CPF/CNPJ declarado e cliente antes de abrir uma preparação", () => {
+  it("reúne lote, CPF/CNPJ declarado e cliente antes de iniciar uma venda", () => {
     expect(source).toContain("CPF/CNPJ declarado");
     expect(source).toContain("Localizar cadastro");
     expect(source).toContain("Cadastrar novo Cliente Loteadora");
-    expect(source).toContain("Abrir caso em preparação");
+    expect(source).toContain("Iniciar venda");
   });
 
-  it("mantém termos negociáveis separados de cobrança, boleto e pagamento", () => {
+  it("mantém termos negociáveis separados de cobrança, boleto bancário e pagamento", () => {
     expect(source).toContain("Valor negociado (R$)");
     expect(source).toContain("Modalidade principal");
     expect(source).toContain("Parcelas de entrada");
     expect(source).toContain("Parcelas regulares");
     expect(source).toContain("Primeiro vencimento regular");
     expect(source).toContain("Crédito de bem entregue (R$)");
-    expect(source).toContain("não cria recebíveis, boletos ou calendário financeiro");
+    expect(source).toContain("não cria recebíveis bancários, cobrança ou pagamento");
     expect(source).toContain("Valores ficam em centavos no servidor");
     expect(source).toContain("Preparar lembretes internos");
     expect(source).toContain("Ativar lembrete diário interno");
     expect(source).toContain("Pausar lembrete interno");
-    expect(source).toContain("Não há boleto, código de barras, remessa, pagamento, baixa ou comunicação externa");
+    expect(source).toContain("Não há boleto bancário, código de barras, remessa, pagamento, baixa ou comunicação externa");
+  });
+
+  it("deixa explícito que a confirmação marca o lote vendido e cria o lote interno automaticamente", () => {
+    expect(source).toContain("Confirmar venda e marcar lote vendido");
+    expect(source).toContain("Lote interno de parcelas criado automaticamente");
+    expect(source).toContain("Recuperar lote interno de controle");
+    expect(source).toContain("controle do Financeiro");
   });
 
   it("valida parcelamento no cliente antes de chamar o servidor", () => {
