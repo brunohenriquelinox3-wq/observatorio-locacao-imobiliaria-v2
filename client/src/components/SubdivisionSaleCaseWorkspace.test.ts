@@ -19,6 +19,11 @@ describe("SubdivisionSaleCaseWorkspace", () => {
     expect(source).toContain("Clientes Loteadora autorizados");
     expect(source).toContain("A política-base está em preparação e aguarda validação.");
     expect(source).toContain("A política-base foi enviada e aguarda aprovação interna.");
+    expect(source).toContain("Carregar loteamento encontrado");
+    expect(source).toContain("Loteamento localizado. Clique para carregar quadras, lotes e a referência.");
+    expect(source).toContain("Loteamento localizado. Carregando quadras e, em seguida, os lotes.");
+    expect(source).toContain("searchedDevelopment");
+    expect(source).toContain("onDevelopmentChange(searchedDevelopment.id)");
   });
 
   it("mantém termos negociáveis separados de cobrança, boleto bancário e pagamento", () => {
