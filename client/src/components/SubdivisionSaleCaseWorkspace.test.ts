@@ -36,6 +36,17 @@ describe("SubdivisionSaleCaseWorkspace", () => {
     expect(source).toContain("Não há boleto bancário, código de barras, remessa, pagamento, baixa ou comunicação externa");
   });
 
+  it("oferece feedback visual e acessível durante cada ação assíncrona", () => {
+    expect(source).toContain("function ActionButton");
+    expect(source).toContain("aria-busy={busy || undefined}");
+    expect(source).toContain("subdivision-action-spinner");
+    expect(source).toContain("busyLabel=\"Consultando\"");
+    expect(source).toContain("busyLabel=\"Salvando negociação\"");
+    expect(source).toContain("busyLabel=\"Confirmando venda\"");
+    expect(source).toContain("busyLabel=\"Preparando lembretes\"");
+    expect(source).toContain("busyLabel=\"Gerando agenda interna\"");
+  });
+
   it("deixa explícito que a confirmação marca o lote vendido e cria o lote interno automaticamente", () => {
     expect(source).toContain("Confirmar venda e marcar lote vendido");
     expect(source).toContain("Lote interno de parcelas criado automaticamente");
