@@ -64,6 +64,17 @@ type Props = {
 
 const formatBrl = (value: number | null) => value === null ? "Não informado" : value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 const centsToInput = (value: number | null) => value === null ? "" : (value / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const describePriceAvailability = (reason: string | null) => {
+  switch (reason) {
+    case "no_policy": return "Ainda não existe política-base de preço aprovada para este loteamento.";
+    case "prepared_with_exceptions": return "A política-base está em preparação e possui pendências de validação.";
+    case "prepared_pending_validation": return "A política-base está em preparação e aguarda validação.";
+    case "submitted_pending_approval": return "A política-base foi enviada e aguarda aprovação interna.";
+    case "approved_outside_vigency": return "Existe uma política aprovada, mas ela está fora da vigência atual.";
+    case "policy_not_available": return "A política-base não está disponível para consulta neste contexto.";
+    default: return "A referência econômica do lote ainda não está disponível para consulta neste contexto.";
+  }
+};
 const centsFromBrl = (raw: string) => {
   const normalized = raw.trim().replace(/\s|R\$/gi, "").includes(",")
     ? raw.trim().replace(/\s|R\$/gi, "").replace(/\./g, "").replace(",", ".")
@@ -284,7 +295,7 @@ export function SubdivisionSaleCaseWorkspace(props: Props) {
 
         <aside className="subdivision-sale-case-workspace__price" aria-live="polite">
           <div><Calculator size={19} /><span>REFERÊNCIA DO LOTE</span></div>
-          {!props.selectedLotId ? <p>Selecione loteamento, quadra e lote para carregar a referência física e econômica já autorizada.</p> : props.priceContext?.state === "active" ? <><dl><div><dt>Área física</dt><dd>{props.priceContext.lotAreaSqm?.toLocaleString("pt-BR")} m²</dd></div><div><dt>Valor por m²</dt><dd>{formatBrl(props.priceContext.effectivePricePerSqmBrl)}</dd></div><div><dt>Total referencial</dt><dd>{formatBrl(props.priceContext.effectiveLotTotalBrl)}</dd></div></dl><p>Base de consulta: {props.priceContext.conditionReference ?? props.priceContext.policyReference ?? "referência vigente"}. O valor negociado é informado separadamente e continua em preparação.</p></> : <p>{props.priceContext?.availabilityReason ? "A referência econômica do lote ainda não está disponível para consulta neste contexto." : "Carregando referência autorizada do lote."}</p>}
+          {!props.selectedLotId ? <p>Selecione loteamento, quadra e lote para carregar a referência física e econômica já autorizada.</p> : props.priceContext?.state === "active" ? <><dl><div><dt>Área física</dt><dd>{props.priceContext.lotAreaSqm?.toLocaleString("pt-BR")} m²</dd></div><div><dt>Valor por m²</dt><dd>{formatBrl(props.priceContext.effectivePricePerSqmBrl)}</dd></div><div><dt>Total referencial</dt><dd>{formatBrl(props.priceContext.effectiveLotTotalBrl)}</dd></div></dl><p>Base de consulta: {props.priceContext.conditionReference ?? props.priceContext.policyReference ?? "referência vigente"}. O valor negociado é informado separadamente e continua em preparação.</p></> : <p>{props.priceContext?.availabilityReason ? describePriceAvailability(props.priceContext.availabilityReason) : "Carregando referência autorizada do lote."}</p>}
         </aside>
       </div>
 

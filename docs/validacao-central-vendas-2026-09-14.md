@@ -24,3 +24,9 @@ A exibição inicial de "Nenhum loteamento disponível" ocorreu enquanto o conte
 
 Nenhuma rotina de Heartbeat, agendamento, alerta interno ou dado comercial foi executado ou modificado durante a validação.
 
+
+## Validação autenticada posterior
+
+Com contexto autorizado selecionado, a interface carregou três loteamentos, incluindo Vista do Sol, e os cadastros de clientes vindos da Central de Clientes. A seleção de Vista do Sol carregou 14 quadras; a seleção de Quadra 1 carregou três lotes. Nenhuma venda foi iniciada.
+
+A seleção de um lote retornou estado de referência econômica indisponível. A consulta agregada confirmou uma política-base pendente, nenhuma política aprovada e nenhuma política aprovada vigente. Isso explica o estado sem caracterizar falha técnica da cadeia Loteamento → Quadra → Lote. A UI foi ajustada para informar o motivo operacional da pendência, sem aprovar política, alterar preço ou criar dados.

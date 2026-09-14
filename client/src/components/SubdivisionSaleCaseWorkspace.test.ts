@@ -17,6 +17,8 @@ describe("SubdivisionSaleCaseWorkspace", () => {
     expect(source).toContain("Carregando quadras autorizadas");
     expect(source).toContain("Carregando lotes autorizados");
     expect(source).toContain("Clientes Loteadora autorizados");
+    expect(source).toContain("A política-base está em preparação e aguarda validação.");
+    expect(source).toContain("A política-base foi enviada e aguarda aprovação interna.");
   });
 
   it("mantém termos negociáveis separados de cobrança, boleto bancário e pagamento", () => {
