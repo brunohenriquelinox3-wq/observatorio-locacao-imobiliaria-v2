@@ -65,7 +65,11 @@ export function createSupabaseSessionBridge(source: SupabaseSessionSource | null
   return {
     ready: () => boundedInitialSession,
     async getAccessToken(): Promise<string | null> {
-      if (!source || !initialSessionSettled) return accessToken;
+      // A primeira chamada tRPC pode acontecer logo após a montagem do React.
+      // Aguarda a restauração da sessão para não enviar uma requisição protegida
+      // sem token enquanto uma sessão Google válida ainda está sendo recuperada.
+      await boundedInitialSession;
+      if (!source) return null;
       if (pendingTokenRead) return pendingTokenRead;
       if (Date.now() - lastTokenReadAt < TOKEN_REFRESH_INTERVAL_MS) return accessToken;
 

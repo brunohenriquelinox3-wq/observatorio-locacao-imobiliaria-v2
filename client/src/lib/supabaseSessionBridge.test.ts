@@ -35,6 +35,27 @@ describe("Supabase session bridge", () => {
     await expect(bridge.getAccessToken()).resolves.toBe("initial-token");
   });
 
+  it("does not release the first request before a delayed session is restored", async () => {
+    let resolveInitial: (value: { data: { session: SupabaseAccessTokenSession } }) => void = () => undefined;
+    const initialSession = new Promise<{ data: { session: SupabaseAccessTokenSession } }>((resolve) => {
+      resolveInitial = resolve;
+    });
+    const source = sessionSource(null);
+    source.auth.getSession.mockReturnValueOnce(initialSession);
+    const bridge = createSupabaseSessionBridge(source);
+
+    let settled = false;
+    const tokenPromise = bridge.getAccessToken().then((token) => {
+      settled = true;
+      return token;
+    });
+    await Promise.resolve();
+    expect(settled).toBe(false);
+
+    resolveInitial({ data: { session: { access_token: "restored-token" } } });
+    await expect(tokenPromise).resolves.toBe("restored-token");
+  });
+
   it("replaces the access token after the authentication client refreshes the session", async () => {
     const source = sessionSource({ access_token: "old-token" });
     const onSessionChange = vi.fn();
