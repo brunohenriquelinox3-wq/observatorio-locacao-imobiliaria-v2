@@ -34,7 +34,8 @@ describe("setores da coluna Loteadora", () => {
     expect(page).toContain("const selectBuyerClient = useCallback((buyerClientId: string) => {");
     expect(page).toContain('const isCentralSalesJourney = location === "/loteadora/vendas";');
     expect(page).toContain('listDraftBuyerClients.useQuery(context, { enabled: false, retry: false })');
-    expect(page).toContain('buyers={(directoryBuyerClients ?? []).map');
+    expect(page).toContain('buyers={(saleDirectoryBuyerClients ?? []).map');
+    expect(page).toContain("saleBuyerDirectoryQuery");
     expect(page).toContain('!isBuyerProfilePage && <details id="subdivision-buyers"');
     expect(page).toContain("Vincular cadastro existente");
     expect(page).not.toContain('directoryBuyerClients.map((client) => <article key={client.buyerClientId}');

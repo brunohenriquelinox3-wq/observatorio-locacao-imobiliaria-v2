@@ -24,6 +24,12 @@ describe("SubdivisionSaleCaseWorkspace", () => {
     expect(source).toContain("Loteamento localizado. Carregando quadras e, em seguida, os lotes.");
     expect(source).toContain("searchedDevelopment");
     expect(source).toContain("onDevelopmentChange(searchedDevelopment.id)");
+    expect(source).toContain("Buscar cliente");
+    expect(source).toContain("Nome ou referência do cliente");
+    expect(source).toContain("onSearchBuyer");
+    expect(source).toContain("Cliente localizado e vinculado automaticamente ao formulário.");
+    expect(source).toContain("uniqueBuyer");
+    expect(source).toContain("buyerReadState");
   });
 
   it("mantém termos negociáveis separados de cobrança, boleto bancário e pagamento", () => {
