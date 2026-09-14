@@ -23,6 +23,7 @@ const SupabaseLogin = lazy(() => import("./pages/SupabaseLogin"));
 const OwnWorkforceAccess = lazy(() => import("./pages/OwnWorkforceAccess"));
 const ClientImport = lazy(() => import("./pages/ClientImport"));
 const SecurityMfa = lazy(() => import("./pages/SecurityMfa"));
+const OperatorManual = lazy(() => import("./pages/OperatorManual"));
 
 function RouteLoading() {
   return <main className="min-h-screen bg-[#f7f4eb] px-6 py-16 text-[#173b4d]"><p role="status" className="mx-auto max-w-xl font-mono text-xs font-semibold tracking-[.12em]">CARREGANDO ÁREA PROTEGIDA</p></main>;
@@ -61,6 +62,7 @@ function Router() {
     <Route path={"/loteadora/socios-parceiros"} component={SubdivisionFoundation} />
     <Route path={"/loteadora/vendas"} component={SubdivisionFoundation} />
     <Route path={"/loteadora/financeiro"} component={SubdivisionFoundation} />
+    <Route path={"/loteadora/manual"} component={OperatorManual} />
     <Route path={"/loteadora"} component={SubdivisionFoundation} />
     <Route path={"/vendas-urbanas/imoveis-proprietarios"} component={UrbanPipeline} />
     <Route path={"/vendas-urbanas/empreendimentos"} component={UrbanPipeline} />

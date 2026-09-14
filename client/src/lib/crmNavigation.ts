@@ -1,5 +1,5 @@
 import type { DashboardNavigationItem } from "@/components/DashboardLayout";
-import { Building2, CalendarClock, ClipboardCheck, Compass, FileText, House, LandPlot, Layers3, LockKeyhole, Search, ShieldCheck, UsersRound } from "lucide-react";
+import { BookOpenCheck, Building2, CalendarClock, ClipboardCheck, Compass, FileText, House, LandPlot, Layers3, LockKeyhole, Search, ShieldCheck, UsersRound } from "lucide-react";
 
 export const crmNavigationItems: DashboardNavigationItem[] = [
   { icon: Compass, label: "Central de plataforma", path: "/administracao" },
@@ -9,6 +9,7 @@ export const crmNavigationItems: DashboardNavigationItem[] = [
   { icon: UsersRound, label: "Central de Vendas", path: "/loteadora/clientes", description: "Loteadora · clientes, estoque e jornada de vendas" },
   { icon: Building2, label: "Sócios e Parceiros", path: "/loteadora/socios-parceiros", description: "Loteadora · setor 04" },
   { icon: LockKeyhole, label: "Financeiro", path: "/loteadora/financeiro", description: "Loteadora · lotes internos de parcelas e controle operacional" },
+  { icon: BookOpenCheck, label: "Manual do Operador", path: "/loteadora/manual", description: "Loteadora · treinamento passo a passo e simulações seguras" },
   { icon: UsersRound, label: "Clientes e Leads", path: "/vendas-urbanas", description: "Vendas Urbanas · setor 01" },
   { icon: House, label: "Imóveis e Proprietários", path: "/vendas-urbanas/imoveis-proprietarios", description: "Vendas Urbanas · setor 02" },
   { icon: Building2, label: "Empreendimentos e Construtoras", path: "/vendas-urbanas/empreendimentos", description: "Vendas Urbanas · setor 03" },

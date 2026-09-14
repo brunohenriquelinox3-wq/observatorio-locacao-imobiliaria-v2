@@ -5,7 +5,7 @@ describe("navegação setorial do CRM", () => {
   it("mantém a ordem global e incorpora Vendas de Lotes à Central de Vendas", () => {
     expect(crmNavigationItems.map((item) => item.path)).toEqual([
       "/administracao", "/adm", "/seguranca-mfa",
-      "/loteadora", "/loteadora/clientes", "/loteadora/socios-parceiros", "/loteadora/financeiro",
+      "/loteadora", "/loteadora/clientes", "/loteadora/socios-parceiros", "/loteadora/financeiro", "/loteadora/manual",
       "/vendas-urbanas", "/vendas-urbanas/imoveis-proprietarios", "/vendas-urbanas/empreendimentos", "/vendas-urbanas/agenda", "/vendas-urbanas/perfil-busca", "/vendas-urbanas/propostas", "/vendas-urbanas/financeiro",
       "/locacao", "/locacao/imoveis-proprietarios", "/locacao/perfil-busca", "/locacao/agenda", "/locacao/administracao", "/locacao/contratos", "/locacao/financeiro",
       "/cadastro-base", "/ativos-urbanos",

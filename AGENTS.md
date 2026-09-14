@@ -19,3 +19,7 @@ Nenhum teste pode confirmar, enviar, salvar, criar, editar, arquivar, restaurar,
 ## Preservação de conhecimento
 
 Não descartar conhecimento adquirido em estudos, inspeções, validações, decisões de UX, contratos de interface ou evidências de segurança. Registrar cada achado reutilizável em documentação versionada e manter um índice de consulta no projeto. Ao iniciar nova atualização, revisar essas referências antes de decidir, implementar ou remover qualquer coisa.
+
+## Manual do Operador da Loteadora
+
+Toda alteração futura que criar, modificar ou remover de forma autorizada uma jornada, campo, regra, tela ou controle da Loteadora deve atualizar o setor **Manual do Operador** na mesma entrega. A atualização deve incluir a trilha afetada, passo a passo em linguagem simples, tela demonstrativa com dados fictícios, regra de conferência, limite operacional e teste de regressão correspondente. O manual é a porta de treinamento de novos colaboradores e deve permanecer coerente com o CRM; nenhuma funcionalidade operacional da Loteadora é considerada concluída sem essa revisão didática.
