@@ -79,6 +79,9 @@ jobs:
       - name: Instalar dependências com lockfile
         run: pnpm install --frozen-lockfile
 
+      - name: Preparar artefato Netlify sem reconstrução no upload
+        run: pnpm run build:netlify
+
       - name: Conferir segredos de deploy sem exibi-los
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -93,7 +96,9 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         run: |
           pnpm exec netlify deploy \
-            --build \
+            --no-build \
+            --dir=dist/public \
+            --functions=dist/netlify-functions-check \
             --alias=crm-teste \
             --site="$NETLIFY_SITE_ID" \
             --auth="$NETLIFY_AUTH_TOKEN" \
