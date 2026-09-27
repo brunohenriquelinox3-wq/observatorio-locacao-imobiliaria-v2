@@ -1,0 +1,25 @@
+-- A384.2: serializa todos os lotes antes das transições históricas de venda.
+-- O núcleo legado continua responsável pela auditoria e limpeza; a associação é física.
+
+alter function public.subdivision_approve_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid) rename to subdivision_approve_sale_case_legacy_a384;
+alter function public.subdivision_request_sale_reversal(uuid,uuid,public.operating_module,text,uuid,uuid) rename to subdivision_request_sale_reversal_legacy_a384;
+alter function public.subdivision_archive_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid) rename to subdivision_archive_sale_case_legacy_a384;
+alter function public.subdivision_restore_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid) rename to subdivision_restore_sale_case_legacy_a384;
+alter function public.subdivision_delete_archived_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid) rename to subdivision_delete_archived_sale_case_legacy_a384;
+
+create or replace function public.subdivision_approve_sale_case(p_actor_user_id uuid,p_organization_id uuid,p_module public.operating_module,p_purpose_code text,p_sale_case_id uuid,p_correlation_id uuid) returns jsonb language plpgsql security definer set search_path = '' as $$ begin perform private.subdivision_lock_sale_case_lots(p_organization_id,p_sale_case_id); return public.subdivision_approve_sale_case_legacy_a384(p_actor_user_id,p_organization_id,p_module,p_purpose_code,p_sale_case_id,p_correlation_id); end; $$;
+create or replace function public.subdivision_request_sale_reversal(p_actor_user_id uuid,p_organization_id uuid,p_module public.operating_module,p_purpose_code text,p_sale_case_id uuid,p_correlation_id uuid) returns jsonb language plpgsql security definer set search_path = '' as $$ begin perform private.subdivision_lock_sale_case_lots(p_organization_id,p_sale_case_id); return public.subdivision_request_sale_reversal_legacy_a384(p_actor_user_id,p_organization_id,p_module,p_purpose_code,p_sale_case_id,p_correlation_id); end; $$;
+create or replace function public.subdivision_archive_sale_case(p_actor_user_id uuid,p_organization_id uuid,p_module public.operating_module,p_purpose_code text,p_sale_case_id uuid,p_correlation_id uuid) returns jsonb language plpgsql security definer set search_path = '' as $$ begin perform private.subdivision_lock_sale_case_lots(p_organization_id,p_sale_case_id); return public.subdivision_archive_sale_case_legacy_a384(p_actor_user_id,p_organization_id,p_module,p_purpose_code,p_sale_case_id,p_correlation_id); end; $$;
+create or replace function public.subdivision_restore_sale_case(p_actor_user_id uuid,p_organization_id uuid,p_module public.operating_module,p_purpose_code text,p_sale_case_id uuid,p_correlation_id uuid) returns jsonb language plpgsql security definer set search_path = '' as $$ begin perform private.subdivision_lock_sale_case_lots(p_organization_id,p_sale_case_id); return public.subdivision_restore_sale_case_legacy_a384(p_actor_user_id,p_organization_id,p_module,p_purpose_code,p_sale_case_id,p_correlation_id); end; $$;
+create or replace function public.subdivision_delete_archived_sale_case(p_actor_user_id uuid,p_organization_id uuid,p_module public.operating_module,p_purpose_code text,p_sale_case_id uuid,p_correlation_id uuid) returns jsonb language plpgsql security definer set search_path = '' as $$
+declare v_result jsonb;
+begin
+  perform private.subdivision_lock_sale_case_lots(p_organization_id,p_sale_case_id);
+  v_result:=public.subdivision_delete_archived_sale_case_legacy_a384(p_actor_user_id,p_organization_id,p_module,p_purpose_code,p_sale_case_id,p_correlation_id);
+  delete from public.subdivision_sale_case_lots link where link.organization_id=p_organization_id and link.sale_case_id=p_sale_case_id;
+  return v_result;
+end;
+$$;
+revoke all on function public.subdivision_approve_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid),public.subdivision_request_sale_reversal(uuid,uuid,public.operating_module,text,uuid,uuid),public.subdivision_archive_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid),public.subdivision_restore_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid),public.subdivision_delete_archived_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid) from public,anon,authenticated;
+grant execute on function public.subdivision_approve_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid),public.subdivision_request_sale_reversal(uuid,uuid,public.operating_module,text,uuid,uuid),public.subdivision_archive_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid),public.subdivision_restore_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid),public.subdivision_delete_archived_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid) to service_role;
+comment on function public.subdivision_approve_sale_case(uuid,uuid,public.operating_module,text,uuid,uuid) is 'A384.2: serializa todos os lotes; núcleo histórico preserva uma única agenda e batch nominal.';
